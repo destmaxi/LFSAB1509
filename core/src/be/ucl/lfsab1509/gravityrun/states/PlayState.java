@@ -70,10 +70,9 @@ public class PlayState extends State {
                 marble.colliding = true;
                 gameOver = true;
             }
-
         }
 
-        if(marble.getPosition().x <= 0){
+        if(marble.getPosition().x <= 0 || marble.getPosition().x >= (cam.viewportWidth - marble.getWidth())){
             marble.colliding = true;
             gameOver = true;
         }

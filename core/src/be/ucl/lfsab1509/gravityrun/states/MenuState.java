@@ -17,6 +17,7 @@ public class MenuState extends State {
     public MenuState(GameStateManager gsm) {
         super(gsm);
         cam.setToOrtho(false, GravityRun.WIDTH/2, GravityRun.HEIGHT/2);
+
         playBtn = new Texture("playbtn.png");
     }
 

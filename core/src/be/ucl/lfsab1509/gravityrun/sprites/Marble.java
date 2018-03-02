@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-
 /**
  * Created by maxime on 01/03/2018.
  */
@@ -40,6 +39,10 @@ public class Marble {
 
     public Vector3 getPosition() {
         return position;
+    }
+
+    public float getWidth(){
+        return marble.getWidth();
     }
 
     public Texture getMarble() {

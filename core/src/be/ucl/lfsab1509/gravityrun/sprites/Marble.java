@@ -29,6 +29,10 @@ public class Marble {
         velocity.scl(dt);
         if(!colliding)
             position.add(2*Gdx.input.getGyroscopeY(),MOVEMENT*dt,0);
+        else{
+            position.add(2*Gdx.input.getGyroscopeY(), 0,0);
+        }
+
 
         if(position.x < 0)
             position.x = 0;

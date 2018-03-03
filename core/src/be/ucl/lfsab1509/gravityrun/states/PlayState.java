@@ -37,7 +37,7 @@ public class PlayState extends State {
         gameOverImage = new Texture("gameover.png");
         // bg1 = new Vector2(0, cam.position.y - cam.viewportHeight/2); //will be usefull when we got a background picture
         //  bg2 = new Vector2(0, (cam.position.y - cam.viewportHeight/2) + bg.getHeight() );//will be usefull when we got a background picture
-        marble = new Marble(100,0);
+        marble = new Marble(100 ,0);
         tubes = new Array<Tube>();
 
         for(int i=1; i<=TUBE_COUNT;i++)
@@ -56,7 +56,7 @@ public class PlayState extends State {
     @Override
     public void update(float dt) {
         handleInput();
-        // updateGround(); //will be usefull when we got a background picture
+        // updateGround(); //will be usefull when we get a background picture
         marble.update(dt);
         cam.position.y = marble.getPosition().y + 80;
 
@@ -66,11 +66,21 @@ public class PlayState extends State {
             if ((cam.position.y - cam.viewportHeight / 2) >= tube.getPosTopTube().y + tube.getTopTube().getHeight())
                 tube.reposition(tube.getPosTopTube().y + ((Tube.TUBE_WIDTH + TUBE_SPACING) * TUBE_COUNT));
 
+            if(marble.colliding && marble.getPosition().x > tube.getBottomTube().getWidth() + (tube.getPosTopTube().x - Tube.TUBE_GAP - tube.getBottomTube().getWidth())){
+                marble.colliding = false;
+                System.out.println("avant update");
+                marble.update(dt);
+                System.out.println("apres update");
+            }
+
             if(tube.collides(marble.getBounds())){
                 marble.colliding = true;
-                gameOver = true;
+                System.out.println("colliding");
             }
+
+
         }
+
 
         if(marble.getPosition().x <= 0 || marble.getPosition().x >= (cam.viewportWidth - marble.getWidth())){
             marble.colliding = true;

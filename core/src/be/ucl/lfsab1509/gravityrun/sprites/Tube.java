@@ -13,7 +13,7 @@ import java.util.Random;
 public class Tube {
     public static final int TUBE_WIDTH = 52;
     private static final int FLUCTUATION = 95;
-    private static final int TUBE_GAP = 100;
+    public static final int TUBE_GAP = 100;
     private static final int LOWEST_OPENING =50;
     private Texture topTube, bottomTube;
     private Vector2 posTopTube, posBotTube;
@@ -63,5 +63,13 @@ public class Tube {
     public void dispose(){
         topTube.dispose();
         bottomTube.dispose();
+    }
+
+    public Rectangle getBoundsTop() {
+        return boundsTop;
+    }
+
+    public Rectangle getBoundsBot() {
+        return boundsBot;
     }
 }

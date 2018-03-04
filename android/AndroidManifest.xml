@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="be.ucl.lfsab1509.gravityrun" >
+    xmlns:tools="http://schemas.android.com/tools"
+    package="be.ucl.lfsab1509.gravityrun">
 
-    <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="27" />
+    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="27"/>
     <uses-feature android:name="android.hardware.sensor.gyroscope" android:required="true" />
 
     <application

@@ -10,6 +10,9 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Marble {
     private static final int MOVEMENT = 100;
+    public static int LVL = 1;
+
+
     private Vector3 position;
     private Vector3 velocity;
     private Texture marble;
@@ -28,14 +31,11 @@ public class Marble {
         velocity.add(-2*Gdx.input.getGyroscopeY(), 0,0);
         velocity.scl(dt);
         if(!colliding)
-            position.add(2*Gdx.input.getGyroscopeY(),MOVEMENT*dt,0);
-        else{
-            position.add(2*Gdx.input.getGyroscopeY(), 0,0);
-        }
-
+            position.add(2*Gdx.input.getGyroscopeY(),LVL*MOVEMENT*dt,0);
 
         if(position.x < 0)
             position.x = 0;
+
 
         velocity.scl(1/dt);
         bounds.setPosition(position.x, position.y);

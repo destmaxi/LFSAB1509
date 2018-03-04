@@ -11,7 +11,8 @@ com.badlogic.gdx.graphics.Color: {
 com.badlogic.gdx.graphics.g2d.BitmapFont: {
 	font-button: { file: font-button.fnt },
 	font-label: { file: font-label.fnt },
-	font-title: { file: font-title.fnt }
+	font-title: { file: font-title.fnt },
+	arial: "arial"
 },
 com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	dialogDim: {
@@ -33,7 +34,7 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		down: button-down
 	},
 	round: {
-		font: font-title,
+		font: arial,
 		fontColor: { a: 1, b: 1, g: 1, r: 1 },
 		downFontColor: { a: 1, b: 1, g: 0.2, r: 1 },
 		up: round-button,
@@ -57,7 +58,7 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	}
 },
 com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
-	default: { up: button, down: button-down }
+	default: { up: button, down: button-down },
 },
 com.badlogic.gdx.scenes.scene2d.ui.SplitPane$SplitPaneStyle: {
 	default-vertical: { handle: vertical-splitpane },
@@ -119,11 +120,11 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 }
 	},
 	default: {
-		font: font-label,
+		font: arial,
 		fontColor: { a: 1, b: 1, g: 1, r: 1 }
 	},
 	error: {
-		font: font-label,
+		font: arial,
 		fontColor: { a: 1, r: 1 }
 	},
 	title-plain: {
@@ -136,17 +137,18 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 		background: label
 	},
 	title: {
-		font: font-title,
+		font: arial,
 		fontColor: { a: 1, b: 1, g: 1, r: 1 },
 		background: panel2
 	}
 },
 com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
 	default: {
-		font: font-label,
+		font: arial,
 		fontColorSelected: { a: 1, b: 1, g: 0.2, r: 1 },
 		fontColorUnselected: { a: 1, b: 1, g: 1, r: 1 },
-		selection: list-selection
+		selection: list-selection,
+		background: round-button
 	},
 	dimmed: {
 		font: font-label,

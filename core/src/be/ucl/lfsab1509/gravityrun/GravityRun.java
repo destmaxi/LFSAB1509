@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import be.ucl.lfsab1509.gravityrun.states.GameStateManager;
 import be.ucl.lfsab1509.gravityrun.states.MenuState;
+import be.ucl.lfsab1509.gravityrun.states.OptionState;
+import be.ucl.lfsab1509.gravityrun.states.PlayState;
 
 public class GravityRun extends ApplicationAdapter {
 	public static final int WIDTH = 480;
@@ -23,7 +25,8 @@ public class GravityRun extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		gsm = new GameStateManager();
-		//Gdx.gl.glClearColor(1, 0, 0, 1);
+		gsm.push(new OptionState(gsm));
+		gsm.push(new PlayState(gsm));
 		gsm.push(new MenuState(gsm));
 	}
 

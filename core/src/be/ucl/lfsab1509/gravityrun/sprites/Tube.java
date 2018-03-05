@@ -3,28 +3,25 @@ package be.ucl.lfsab1509.gravityrun.sprites;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-
 import java.util.Random;
 
-/**
- * Created by maxime on 01/03/2018.
- */
-
 public class Tube {
-    public static final int TUBE_WIDTH = 52;
-    private static final int FLUCTUATION = 95;
-    private static final int TUBE_GAP = 100;
-    private static final int LOWEST_OPENING =50;
-    private Texture topTube, bottomTube;
-    private Vector2 posTopTube, posBotTube;
-    private Rectangle boundsTop, boundsBot;
-    private Random rand;
 
+    private static final int FLUCTUATION = 95;
+    private static final int LOWEST_OPENING = 50;
+    private static final int TUBE_GAP = 100;
+    public static final int TUBE_WIDTH = 52;
+
+    private Random rand;
+    private Rectangle boundsBot, boundsTop;
+    private Texture bottomTube, topTube;
+    private Vector2 posBotTube, posTopTube;
 
     public Tube(float y){
+        rand = new Random();
+
         topTube = new Texture("toptube.png");
         bottomTube = new Texture("bottomtube.png");
-        rand = new Random();
 
         posTopTube = new Vector2(rand.nextInt(FLUCTUATION) + LOWEST_OPENING + TUBE_GAP, y);
         posBotTube = new Vector2(posTopTube.x - TUBE_GAP - bottomTube.getWidth(),y);
@@ -49,10 +46,10 @@ public class Tube {
         return posBotTube;
     }
 
-    public void reposition(float y){
+    public void reposition(float y) {
         posTopTube.set(rand.nextInt(FLUCTUATION) + LOWEST_OPENING + TUBE_GAP, y);
         posBotTube.set(posTopTube.x - TUBE_GAP - bottomTube.getWidth(), y);
-        boundsTop.setPosition(posTopTube.x,y );
+        boundsTop.setPosition(posTopTube.x, y);
         boundsBot.setPosition(posBotTube.x, y);
     }
 
@@ -61,7 +58,7 @@ public class Tube {
     }
 
     public void dispose(){
-        topTube.dispose();
         bottomTube.dispose();
+        topTube.dispose();
     }
 }

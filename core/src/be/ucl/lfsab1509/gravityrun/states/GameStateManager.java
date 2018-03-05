@@ -3,15 +3,16 @@ package be.ucl.lfsab1509.gravityrun.states;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.Stack;
 
-/**
- * Created by maxime on 01/03/2018.
- */
-
 public class GameStateManager {
+
     private Stack<State> states;
 
     public GameStateManager(){
         states = new Stack<State>();
+    }
+
+    public void pop() {
+        states.pop().dispose();
     }
 
     public void push(State state){
@@ -19,7 +20,7 @@ public class GameStateManager {
     }
 
     public void set(State state){
-        states.pop();
+        states.pop().dispose();
         states.push(state);
     }
 
@@ -30,4 +31,5 @@ public class GameStateManager {
     public void render(SpriteBatch sb){
         states.peek().render(sb);
     }
+
 }

@@ -20,10 +20,8 @@ public class Skin extends com.badlogic.gdx.scenes.scene2d.ui.Skin {
         parameter.size = size * (int) Gdx.graphics.getDensity();
         font12 = generator.generateFont(parameter); // Font size : 12 pixels
         generator.dispose();
-
         skin = new com.badlogic.gdx.scenes.scene2d.ui.Skin();
         this.add("arial",font12);
-
         this.addRegions(new TextureAtlas("skin/uiskin.atlas"));
         this.load(Gdx.files.internal("skin/uiskin.json"));
     }

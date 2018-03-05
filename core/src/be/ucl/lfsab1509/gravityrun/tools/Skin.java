@@ -19,14 +19,13 @@ public class Skin extends com.badlogic.gdx.scenes.scene2d.ui.Skin {
     public void createSkin(int size){
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("arial.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = size;
+        parameter.size = size* (int) Gdx.graphics.getDensity();
         BitmapFont font12 = generator.generateFont(parameter); // font size 12 pixels
         generator.dispose();
 
-        com.badlogic.gdx.scenes.scene2d.ui.Skin skin = new com.badlogic.gdx.scenes.scene2d.ui.Skin();
         this.add("arial",font12);
 
-        this.addRegions(new TextureAtlas("skin/uiskin.atlas"));
-        this.load(Gdx.files.internal("skin/uiskin.json"));
+        this.addRegions(new TextureAtlas("skin1/uiskin.atlas"));
+        this.load(Gdx.files.internal("skin1/uiskin.json"));
     }
 }

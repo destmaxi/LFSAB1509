@@ -58,7 +58,7 @@ public class PlayState extends State {
         cam.setToOrtho(false, GravityRun.WIDTH/2, GravityRun.HEIGHT/2);
 
         Texture gameOverImage = new Texture("gameover.png");
-
+        TextureRegion= new TextureRegion(gameOverImage)
         marble = new Marble(100,0);
         tubes = new Array<Tube>();
         endStage = new Stage(new ScreenViewport());
@@ -84,9 +84,9 @@ public class PlayState extends State {
 
         ImageButton gameOverButton = new ImageButton(new TextureRegionDrawable(new TextureRegion( gameOverImage)));
         TextButton menuTextButton = new TextButton(string.format("menu"), skin,"round" );
-        TextButton replayTextButton = new TextButton(string.format("replay"), skin,"round" );
+        TextButton replayTextButton = new TextButton(string.format("replay"), skin,"round");
         timeLabel = new Label(string.format("score"), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        scoreLabel = new Label(string.format("final_score"), skin,"error");
+        scoreLabel = new Label(string.format("final_score"), skin,"title");
 
         timeLabel.setText(string.format("score", score));
 

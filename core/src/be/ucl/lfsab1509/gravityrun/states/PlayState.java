@@ -5,6 +5,7 @@ import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import be.ucl.lfsab1509.gravityrun.sprites.Tube;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -43,6 +44,8 @@ public class PlayState extends State {
         Locale locale = new Locale("fr", "BE", "VAR1");
         string = I18NBundle.createBundle(baseFileHandle, locale);
 
+        Gdx.input.setCatchBackKey(true);
+
         // Will be usefull when we got a background picture
         // bg1 = new Vector2(0, cam.position.y - cam.viewportHeight/2);
         // bg2 = new Vector2(0, (cam.position.y - cam.viewportHeight/2) + bg.getHeight() );
@@ -69,10 +72,14 @@ public class PlayState extends State {
 
     @Override
     protected void handleInput() {
-            if (gameOver && Gdx.input.justTouched()) {
-                GravityRun.lastScore = score;
-                gsm.set(new GameOverState(gsm));
-            }
+        if (gameOver && Gdx.input.justTouched()) {
+            GravityRun.lastScore = score;
+            Gdx.input.setCatchBackKey(false);
+            gsm.set(new GameOverState(gsm));
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.BACK))
+            gsm.push(new PauseState(gsm));
     }
 
     @Override
@@ -89,13 +96,13 @@ public class PlayState extends State {
 
         cam.position.y = marble.getPosition().y + 80;
 
-        for(int i=0; i<tubes.size;i++) {
+        for (int i = 0; i < tubes.size; i++) {
             Tube tube = tubes.get(i);
 
             if ((cam.position.y - cam.viewportHeight / 2) >= tube.getPosTopTube().y + tube.getTopTube().getHeight())
                 tube.reposition(tube.getPosTopTube().y + ((Tube.TUBE_WIDTH + TUBE_SPACING) * TUBE_COUNT));
 
-            if(tube.collides(marble.getBounds())){
+            if (tube.collides(marble.getBounds())) {
                 marble.colliding = true;
                 gameOver = true;
             }

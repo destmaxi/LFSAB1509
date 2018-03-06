@@ -34,7 +34,7 @@ public class OptionState extends State {
 
     private Stage stage;
     private final List<String> listBox;
-    private boolean isClickedLangButton, isCheckedLangButton, isClickedReturnImButton;
+    private boolean isClickedLangButton, isCheckedLangButton, isClickedReturnImButton,isClickedScoreButton;
 
     public OptionState (GameStateManager gsm) {
 
@@ -60,6 +60,7 @@ public class OptionState extends State {
         isClickedLangButton = false;
         isCheckedLangButton = false;
         isClickedReturnImButton = false;
+        isClickedScoreButton = false;
 
         Texture returnImage = new Texture("back.png");
 
@@ -90,7 +91,7 @@ public class OptionState extends State {
         scoreButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                isClickedScoreButton = true;
             }
         });
 
@@ -140,6 +141,8 @@ public class OptionState extends State {
     protected void handleInput() {
         if(isClickedReturnImButton)
             gsm.set(new MenuState(gsm));
+        if(isClickedScoreButton)
+            gsm.set(new ScoreboardState(gsm));
     }
 
     @Override

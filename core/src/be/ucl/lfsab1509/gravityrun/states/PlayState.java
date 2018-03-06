@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
@@ -38,14 +39,16 @@ public class PlayState extends State {
 
 
     private Marble marble;
+    private ScoreboardState dataScore;
     //private Texture bg; //will be usefull when we got a background picture
     //private Vector2 bg1, bg2; //will be usefull when we got a background picture
     private boolean isClickedMenuTextButton,isClickedReplayTextButton,gameOver;
-    private Integer score;
+    private static Integer score = null;
     private Label timeLabel,scoreLabel;
     private Stage endStage, scoreStage;
     private float time;
     private Array<Tube> tubes;
+    public static ArrayList<Integer> scoreList = null;
     private I18NBundle string;
 
     public static int lvl;
@@ -58,7 +61,6 @@ public class PlayState extends State {
         cam.setToOrtho(false, GravityRun.WIDTH/2, GravityRun.HEIGHT/2);
 
         Texture gameOverImage = new Texture("gameover.png");
-        TextureRegion= new TextureRegion(gameOverImage)
         marble = new Marble(100,0);
         tubes = new Array<Tube>();
         endStage = new Stage(new ScreenViewport());
@@ -70,9 +72,14 @@ public class PlayState extends State {
         endTable.top();
         endTable.setFillParent(true);
 
+        dataScore = new ScoreboardState();
+
         isClickedMenuTextButton = false;
         isClickedReplayTextButton = false;
         gameOver = false;
+
+        if(scoreList == null)
+            scoreList = new ArrayList<Integer>();
 
         score = 0;
         time = 0;
@@ -128,10 +135,12 @@ public class PlayState extends State {
 
     @Override
     protected void handleInput() {
-            if(isClickedMenuTextButton)
+            if(isClickedMenuTextButton){
                 gsm.set(new MenuState(gsm));
-            if(isClickedReplayTextButton)
+            }
+            if(isClickedReplayTextButton){
                 gsm.set(new PlayState(gsm));
+            }
     }
 
     @Override
@@ -139,12 +148,9 @@ public class PlayState extends State {
         handleInput();
         // updateGround(); //will be usefull when we got a background picture
         marble.update(dt);
-        time += dt;
-        if(time >= 1 && !gameOver){
-            score ++;
-            timeLabel.setText(string.format("score", score));
-            time = 0;
-        }
+        score = (Integer)(int) marble.getPosition().y;
+        timeLabel.setText(string.format("score",score));
+
 
         cam.position.y = marble.getPosition().y + 80;
 
@@ -183,6 +189,8 @@ public class PlayState extends State {
         sb.draw(marble.getMarble(), marble.getPosition().x, marble.getPosition().y);
 
         if(gameOver){
+            scoreList.add(score);
+            dataScore.add();
             scoreLabel.setText(string.format("final_score", score));
             endStage.act();
             endStage.draw();

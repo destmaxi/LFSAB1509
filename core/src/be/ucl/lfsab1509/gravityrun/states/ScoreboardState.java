@@ -52,10 +52,6 @@ public class ScoreboardState extends State {
     private static final String DATABASE_CREATE = "create table if not exists " + TABLE_COMMENTS + "(" + COLUMN_ID
             + " integer primary key autoincrement, " + COLUMN_COMMENT + " integer not null);";
 
-    private TextButton textButton;
-    private Label statusLabel;
-    private be.ucl.lfsab1509.gravityrun.tools.Skin skin;
-
     public ScoreboardState(GameStateManager gsm){
         super(gsm);
         cam.setToOrtho(false, GravityRun.WIDTH/2, GravityRun.HEIGHT/2);
@@ -75,7 +71,7 @@ public class ScoreboardState extends State {
         Skin menuSkin = new Skin();
         Skin tableSkin = new Skin();
 
-        tableSkin.createSkin(18);
+        tableSkin.createSkin(24);
         menuSkin.createSkin(62);
 
         isClickedReturnImButton = false;
@@ -106,9 +102,9 @@ public class ScoreboardState extends State {
 
         Collections.sort(arrayList);
 
-        table.add(returnImageButton).expandX().top().width(50).padTop(40);
+        table.add(returnImageButton).top().width(50*Gdx.graphics.getDensity()).padTop(30*Gdx.graphics.getDensity());
         table.add(title).expandX().top().left();
-        table.add().expandX().top().left().width(100);
+        table.add().expandX().top().left().width(100*Gdx.graphics.getDensity());
         table.row();
 
 
@@ -119,8 +115,8 @@ public class ScoreboardState extends State {
             else
                 label = new TextButton(arrayList.size()-i + ".     " +arrayList.get(i).toString(), tableSkin, "round");
 
-            table.add().top().left().width(90);
-            table.add(label).padTop(25*Gdx.graphics.getHeight()/800);
+            table.add().top().left().width(90*Gdx.graphics.getDensity());
+            table.add(label).padTop(25*Gdx.graphics.getDensity());
             table.row();
         }
 

@@ -16,7 +16,6 @@ import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Tree;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.I18NBundle;
@@ -50,7 +49,7 @@ public class OptionState extends State {
         Skin menuSkin = new Skin();
         Skin tableSkin = new Skin();
 
-        tableSkin.createSkin(18);
+        tableSkin.createSkin(42);
         menuSkin.createSkin(62);
 
         Table table = new Table();
@@ -118,17 +117,17 @@ public class OptionState extends State {
         });
 
 
-        table.add(returnImageButton).expandX().top().width(50).padTop(40);
-        table.add(title).expandX().top().left();
-        table.add().expandX().top().left().width(100);
+        table.add(returnImageButton).top().width(50*Gdx.graphics.getDensity()).padTop(30*Gdx.graphics.getDensity());
+        table.add(title).expandX().top().center();
+        table.add().expandX().top().left().width(100*Gdx.graphics.getDensity());
         table.row();
-        table.add().top().left().width(90);
-        table.add(scoreButton).top().padTop(20);
+        table.add().top().left().width(90*Gdx.graphics.getDensity());
+        table.add(scoreButton).top().padTop(150*Gdx.graphics.getDensity());
         table.row();
-        table.add().top().left().width(90);
-        table.add(lvlButton).top().center();
+        table.add().top().left().width(90*Gdx.graphics.getDensity());
+        table.add(lvlButton).top().center().padTop(30*Gdx.graphics.getDensity());
         table.row();
-        table.add().top().left().width(90);
+        table.add().top().left().width(90*Gdx.graphics.getDensity());
         table.add(listBox).top().center();
 
         stage.addActor(table);

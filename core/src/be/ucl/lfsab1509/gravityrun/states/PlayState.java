@@ -3,7 +3,6 @@ package be.ucl.lfsab1509.gravityrun.states;
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import be.ucl.lfsab1509.gravityrun.sprites.Tube;
-import be.ucl.lfsab1509.gravityrun.tools.DataBase;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -24,19 +23,18 @@ public class PlayState extends State {
     private static final int TUBE_COUNT = 4;
     private static final int TUBE_SPACING = 80;
 
-    //private Texture bg; //will be usefull when we got a background picture
-    //private Vector2 bg1, bg2; //will be usefull when we got a background picture
+    public static int score = 0;
+
     private Array<Tube> tubes;
     private boolean gameOver = false;
-    private I18NBundle string;
-    public static int score = 0;
+    private final I18NBundle string;
     private Label timeLabel;
     private Marble marble;
     private Stage scoreStage;
     private Skin skin;
     private Texture gameOverImage = new Texture("gameover.png");
-    // private Texture bg; //will be usefull when we got a background picture
-    // private Vector2 bg1, bg2; //will be usefull when we got a background picture
+    // private Texture bg; // Will be usefull when we got a background picture
+    // private Vector2 bg1, bg2; // Will be usefull when we got a background picture
 
     public PlayState(GameStateManager gsm) {
         super(gsm);
@@ -45,7 +43,7 @@ public class PlayState extends State {
         Locale locale = new Locale("fr", "BE", "VAR1");
         string = I18NBundle.createBundle(baseFileHandle, locale);
 
-        if(GravityRun.scoreList == null)
+        if (GravityRun.scoreList == null)
             GravityRun.scoreList = new ArrayList<Integer>();
 
         // Will be usefull when we got a background picture

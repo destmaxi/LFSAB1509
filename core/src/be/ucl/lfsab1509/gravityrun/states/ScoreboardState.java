@@ -25,15 +25,15 @@ import java.util.Locale;
 
 public class ScoreboardState extends State {
 
+    private Skin labelSkin, menuSkin, tableSkin;
     private Stage stage;
     private Texture returnTexture;
-    private Skin menuSkin, tableSkin, labelSkin;
 
     private boolean isClickedReturnImButton;
 
     public ScoreboardState(GameStateManager gsm){
         super(gsm);
-        cam.setToOrtho(false, GravityRun.WIDTH/2, GravityRun.HEIGHT/2);
+        cam.setToOrtho(false, GravityRun.WIDTH / 2, GravityRun.HEIGHT / 2);
 
         FileHandle baseFileHandle = Gdx.files.internal("strings/string");
         Locale locale = new Locale("fr", "CA", "VAR1");
@@ -71,17 +71,16 @@ public class ScoreboardState extends State {
             }
         });
 
-        //create date base
+        // Create date base
         DataBase dataBase = new DataBase();
-
 
         String[] stringTab = {DataBase.COLUMN_BEGINNER, DataBase.COLUMN_INTERMEDIATE, DataBase.COLUMN_EXPERT};
         List[] list = {beginnerScoreList, intermediateScoreList, expertScoreList};
         ArrayList<Integer> myArrayList;
-        for(int i=0; i<3; i++){
+        for (int i = 0; i < 3; i++) {
             myArrayList = dataBase.getColumn(stringTab[i]);
             dataBase.sortDESC(myArrayList);
-            switch (myArrayList.size()){
+            switch (myArrayList.size()) {
                 case 0: break;
                 case 1: list[i].setItems("1.     "+myArrayList.get(0),"2.     "+0,"3.     "+0);
                 break;
@@ -101,16 +100,15 @@ public class ScoreboardState extends State {
         float sw = Gdx.graphics.getWidth();
         float sh = Gdx.graphics.getHeight();
 
-        float cw = sw*0.9f;
-        float ch = sh*0.9f;
-
+        float cw = sw * 0.9f;
+        float ch = sh * 0.9f;
 
         tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((sw-cw)/2,(sh-ch)/2 );
+        tableContainer.setPosition((sw - cw) / 2,(sh - ch) / 2 );
         tableContainer.top().fillX().fillY();
 
         titleTable.row();
-        titleTable.add(returnImageButton).expandX().left().size(cw/6);
+        titleTable.add(returnImageButton).expandX().left().size(cw / 6);
         titleTable.add(title).colspan(6).expandX().left();
         titleTable.row().expandX().expandY().colspan(7).fillX();
 
@@ -154,10 +152,10 @@ public class ScoreboardState extends State {
 
     @Override
     public void dispose() {
-        returnTexture.dispose();
-        menuSkin.dispose();
-        tableSkin.dispose();
         labelSkin.dispose();
+        menuSkin.dispose();
+        returnTexture.dispose();
         stage.dispose();
+        tableSkin.dispose();
     }
 }

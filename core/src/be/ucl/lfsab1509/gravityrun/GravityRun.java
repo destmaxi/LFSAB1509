@@ -14,11 +14,11 @@ public class GravityRun extends ApplicationAdapter {
     public static final int WIDTH = 480;
 	public static final String TITLE = "Gravity Run";
 
-	private GameStateManager gsm;
-	private SpriteBatch batch;
+    public static ArrayList<Integer> scoreList;
+    public static int indexSelected = 0;
 
-	public static ArrayList<Integer> scoreList;
-	public static int indexSelected = 0;
+    private GameStateManager gsm;
+	private SpriteBatch batch;
 
 	@Override
 	public void create() {

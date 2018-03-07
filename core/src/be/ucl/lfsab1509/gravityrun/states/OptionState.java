@@ -27,9 +27,9 @@ public class OptionState extends State {
 
     private boolean isCheckedLangButton = false, isClickedLangButton = false, isClickedReturnImButton = false, isClickedScoreButton = false;
     private final List<String> listBox;
+    private Skin menuSkin, tableSkin;
     private Stage stage;
     private Texture returnImage;
-    private Skin menuSkin, tableSkin;
 
     public OptionState(GameStateManager gsm) {
         super(gsm);
@@ -46,11 +46,6 @@ public class OptionState extends State {
 
         tableSkin.createSkin(42);
         menuSkin.createSkin(62);
-
-        isCheckedLangButton = false;
-        isClickedLangButton = false;
-        isClickedReturnImButton = false;
-        isClickedScoreButton = false;
 
         returnImage = new Texture("back.png");
 
@@ -83,7 +78,7 @@ public class OptionState extends State {
             }
         });
 
-        returnImageButton.addListener(new ClickListener(){
+        returnImageButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 isClickedReturnImButton = true;
@@ -117,26 +112,25 @@ public class OptionState extends State {
         float sw = Gdx.graphics.getWidth();
         float sh = Gdx.graphics.getHeight();
 
-        float cw = sw*0.9f;
-        float ch = sh*0.9f;
-
+        float cw = sw * 0.9f;
+        float ch = sh * 0.9f;
 
         tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((sw-cw)/2,(sh-ch)/2 );
+        tableContainer.setPosition((sw - cw) / 2,(sh - ch) / 2 );
         tableContainer.top().fillX();
 
         titleTable.row().expandY();
-        titleTable.add(returnImageButton).expandX().left().size(cw/6);
+        titleTable.add(returnImageButton).expandX().left().size(cw / 6);
         titleTable.add(title).colspan(6).expandX().left();
         titleTable.row().colspan(7).fillX();
 
         titleTable.add(table);
         table.row();
 
-        table.add(scoreButton).expandX().fillX().padTop(sh-ch);
+        table.add(scoreButton).expandX().fillX().padTop(sh - ch);
         table.row();
 
-        table.add(lvlButton).expandX().fillX().padTop(sh-ch);
+        table.add(lvlButton).expandX().fillX().padTop(sh - ch);
         table.row();
 
         table.add(listBox).fillX().top();
@@ -178,8 +172,8 @@ public class OptionState extends State {
     @Override
     public void dispose() {
         menuSkin.dispose();
-        tableSkin.dispose();
         returnImage.dispose();
+        tableSkin.dispose();
         stage.dispose();
     }
 

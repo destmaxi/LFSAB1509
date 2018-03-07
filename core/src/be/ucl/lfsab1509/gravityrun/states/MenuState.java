@@ -40,50 +40,45 @@ public class MenuState extends State {
         tableSkin.createSkin(42);
         TextButton optionButton = new TextButton(string.format("option"), tableSkin, "round");
         TextButton startGameButton = new TextButton(string.format("new_game"), tableSkin, "round");
-        startGameButton.addListener(new ClickListener(){
+        startGameButton.addListener(new ClickListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y){
+            public void clicked(InputEvent event, float x, float y) {
                 isClickedStartGameButton = true;
             }
         });
-        optionButton.addListener(new ClickListener(){
+        optionButton.addListener(new ClickListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y){
+            public void clicked(InputEvent event, float x, float y) {
                 isClickedOptionButton = true;
             }
         });
 
-
         Container<Table> tableContainer = new Container<Table>();
-
         Table table = new Table();
-
         stage = new Stage(new ScreenViewport());
 
         float sw = Gdx.graphics.getWidth();
         float sh = Gdx.graphics.getHeight();
 
-        float cw = sw*0.9f;
-        float ch = sh*0.9f;
+        float cw = sw * 0.9f;
+        float ch = sh * 0.9f;
 
 
         tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((sw-cw)/2,(sh-ch)/2 );
+        tableContainer.setPosition((sw - cw) / 2,(sh - ch) / 2 );
         tableContainer.top().fillX();
 
         table.add(title).top();
         table.row();
 
-        table.add(optionButton).expandX().fillX().padTop(sh-ch);
+        table.add(optionButton).expandX().fillX().padTop(sh - ch);
         table.row();
 
-        table.add(startGameButton).expandX().fillX().padTop(sh-ch);
+        table.add(startGameButton).expandX().fillX().padTop(sh - ch);
         table.row();
 
         tableContainer.setActor(table);
         stage.addActor(tableContainer);
-
-        Gdx.input.setInputProcessor(stage);
     }
 
     @Override

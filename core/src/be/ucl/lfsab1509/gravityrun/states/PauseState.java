@@ -28,9 +28,7 @@ public class PauseState extends State {
 
         FileHandle baseFileHandle = Gdx.files.internal("strings/string");
         Locale locale = new Locale("fr", "BE", "VAR1");
-        I18NBundle string = I18NBundle.createBundle(baseFileHandle, locale);
-
-        // Gdx.input.setCatchBackKey(true);
+        final I18NBundle string = I18NBundle.createBundle(baseFileHandle, locale);
 
         titleSkin = new Skin();
         titleSkin.createSkin(62);
@@ -58,29 +56,26 @@ public class PauseState extends State {
         });
 
         Container<Table> tableContainer = new Container<Table>();
-
         Table table = new Table();
-
         stage = new Stage(new ScreenViewport());
 
         float sw = Gdx.graphics.getWidth();
         float sh = Gdx.graphics.getHeight();
 
-        float cw = sw*0.9f;
-        float ch = sh*0.9f;
-
+        float cw = sw * 0.9f;
+        float ch = sh * 0.9f;
 
         tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((sw-cw)/2,(sh-ch)/2 );
+        tableContainer.setPosition((sw - cw) / 2,(sh - ch) / 2 );
         tableContainer.top().fillX();
 
         table.add(title).top();
         table.row();
-        table.add(score).padTop(sh-ch);
+        table.add(score).padTop(sh - ch);
         table.row();
-        table.add(continueButton).expandX().fillX().padTop((sh-ch)*2);
+        table.add(continueButton).expandX().fillX().padTop((sh - ch) * 2);
         table.row();
-        table.add(quitButton).expandX().fillX().padTop(sh-ch);
+        table.add(quitButton).expandX().fillX().padTop(sh - ch);
 
         stage = new Stage(new ScreenViewport());
         tableContainer.setActor(table);

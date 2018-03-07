@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
@@ -34,6 +35,9 @@ public class OptionState extends State {
     private Stage stage;
     private final List<String> listBox;
     private boolean isClickedLangButton, isCheckedLangButton, isClickedReturnImButton,isClickedScoreButton;
+    Texture returnImage;
+    Skin menuSkin, tableSkin;
+
 
     public OptionState (GameStateManager gsm) {
 
@@ -46,22 +50,18 @@ public class OptionState extends State {
 
         stage = new Stage(new ScreenViewport());
 
-        Skin menuSkin = new Skin();
-        Skin tableSkin = new Skin();
+        menuSkin = new Skin();
+        tableSkin = new Skin();
 
         tableSkin.createSkin(42);
         menuSkin.createSkin(62);
-
-        Table table = new Table();
-        table.top();
-        table.setFillParent(true);
 
         isClickedLangButton = false;
         isCheckedLangButton = false;
         isClickedReturnImButton = false;
         isClickedScoreButton = false;
 
-        Texture returnImage = new Texture("back.png");
+        returnImage = new Texture("back.png");
 
 
         Label title = new Label(string.get("option"),menuSkin, "title");
@@ -70,7 +70,7 @@ public class OptionState extends State {
         ImageButton returnImageButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(returnImage)));
         listBox = new List<String>(tableSkin);
 
-        listBox.setItems(string.format("beginer"), string.format("inter"), string.format("expert"));
+        listBox.setItems(string.format("beginner"), string.format("inter"), string.format("expert"));
         listBox.setVisible(false);
 
         lvlButton.addListener(new ClickListener(){
@@ -107,30 +107,49 @@ public class OptionState extends State {
         listBox.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (listBox.getSelected().equals(string.format("beginer")))
+                if (listBox.getSelected().equals(string.format("beginner")))
                     Marble.LVL=1;
                 else if(listBox.getSelected().equals(string.format("inter")))
-                    Marble.LVL = 2;
+                    Marble.LVL=2;
                 else if(listBox.getSelected().equals(string.format("expert")))
                     Marble.LVL=3;
             }
         });
 
+        Container<Table> tableContainer = new Container<Table>();
 
-        table.add(returnImageButton).top().width(50*Gdx.graphics.getDensity()).padTop(30*Gdx.graphics.getDensity());
-        table.add(title).expandX().top().center();
-        table.add().expandX().top().left().width(100*Gdx.graphics.getDensity());
-        table.row();
-        table.add().top().left().width(90*Gdx.graphics.getDensity());
-        table.add(scoreButton).top().padTop(150*Gdx.graphics.getDensity());
-        table.row();
-        table.add().top().left().width(90*Gdx.graphics.getDensity());
-        table.add(lvlButton).top().center().padTop(30*Gdx.graphics.getDensity());
-        table.row();
-        table.add().top().left().width(90*Gdx.graphics.getDensity());
-        table.add(listBox).top().center();
+        Table table = new Table();
+        Table titleTable = new Table();
 
-        stage.addActor(table);
+        float sw = Gdx.graphics.getWidth();
+        float sh = Gdx.graphics.getHeight();
+
+        float cw = sw*0.9f;
+        float ch = sh*0.9f;
+
+
+        tableContainer.setSize(cw, ch);
+        tableContainer.setPosition((sw-cw)/2,(sh-ch)/2 );
+        tableContainer.top().fillX();
+
+        titleTable.row().top().expandY();
+        titleTable.add(returnImageButton).expandX().left();
+        titleTable.add(title).colspan(4).expandX().left();
+        titleTable.row().colspan(5).fillX();
+
+        titleTable.add(table);
+        table.row();
+
+        table.add(scoreButton).expandX().fillX().padTop(sh-ch);
+        table.row();
+
+        table.add(lvlButton).expandX().fillX().padTop(sh-ch);
+        table.row();
+
+        table.add(listBox).fillX().top();
+
+        tableContainer.setActor(titleTable);
+        stage.addActor(tableContainer);
 
         Gdx.input.setInputProcessor(stage);
 
@@ -167,6 +186,9 @@ public class OptionState extends State {
 
     @Override
     public void dispose() {
+        menuSkin.dispose();
+        tableSkin.dispose();
+        returnImage.dispose();
         stage.dispose();
     }
 }

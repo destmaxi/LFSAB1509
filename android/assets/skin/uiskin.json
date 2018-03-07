@@ -138,9 +138,9 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 		font: font-title,
 		fontColor: { a: 1, b: 1, g: 1, r: 1 }
 	},
-	subtitle: {
+	round: {
 		font: arial,
-		fontColor: { a: 1 },
+		fontColor: {  a: 1, b: 1, g: 1, r: 1 },
 		background: round-button
 	},
 	subtitle-red: {

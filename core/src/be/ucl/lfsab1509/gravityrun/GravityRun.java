@@ -6,6 +6,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import java.util.ArrayList;
+
 public class GravityRun extends ApplicationAdapter {
 
     public static final int HEIGHT = 800;
@@ -15,7 +17,7 @@ public class GravityRun extends ApplicationAdapter {
 	private GameStateManager gsm;
 	private SpriteBatch batch;
 
-	public static int lastScore = 0;
+	public static ArrayList<Integer> scoreList;
 
 	@Override
 	public void create() {

@@ -1,12 +1,11 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
-import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -20,7 +19,6 @@ import java.util.Locale;
 public class PauseState extends State {
 
     private boolean isClickedContinue = false, isClickedQuit = false;
-    private I18NBundle string;
     private Stage stage;
     private Skin buttonSkin, scoreSkin, titleSkin;
 
@@ -29,7 +27,7 @@ public class PauseState extends State {
 
         FileHandle baseFileHandle = Gdx.files.internal("strings/string");
         Locale locale = new Locale("fr", "BE", "VAR1");
-        string = I18NBundle.createBundle(baseFileHandle, locale);
+        I18NBundle string = I18NBundle.createBundle(baseFileHandle, locale);
 
         // Gdx.input.setCatchBackKey(true);
 
@@ -39,7 +37,7 @@ public class PauseState extends State {
 
         scoreSkin = new Skin();
         scoreSkin.createSkin(28);
-        Label score = new Label(string.format("score"), scoreSkin);
+        Label score = new Label(string.format("score", PlayState.score), scoreSkin);
 
         buttonSkin = new Skin();
         buttonSkin.createSkin(42);
@@ -58,19 +56,34 @@ public class PauseState extends State {
             }
         });
 
+        Container<Table> tableContainer = new Container<Table>();
+
         Table table = new Table();
-        table.top();
-        table.setFillParent(true);
-        table.add(title);
-        table.row();
-        table.add(score).padTop(Gdx.graphics.getHeight() * 150 / GravityRun.HEIGHT);
-        table.row();
-        table.add(continueButton).padTop(Gdx.graphics.getHeight() * 150 / GravityRun.HEIGHT);
-        table.row();
-        table.add(quitButton).padTop(Gdx.graphics.getHeight() * 30 / GravityRun.HEIGHT);
 
         stage = new Stage(new ScreenViewport());
-        stage.addActor(table);
+
+        float sw = Gdx.graphics.getWidth();
+        float sh = Gdx.graphics.getHeight();
+
+        float cw = sw*0.9f;
+        float ch = sh*0.9f;
+
+
+        tableContainer.setSize(cw, ch);
+        tableContainer.setPosition((sw-cw)/2,(sh-ch)/2 );
+        tableContainer.top().fillX();
+
+        table.add(title).top();
+        table.row();
+        table.add(score).padTop(sh-ch);
+        table.row();
+        table.add(continueButton).expandX().fillX().padTop((sh-ch)*2);
+        table.row();
+        table.add(quitButton).expandX().fillX().padTop(sh-ch);
+
+        stage = new Stage(new ScreenViewport());
+        tableContainer.setActor(table);
+        stage.addActor(tableContainer);
 
         Gdx.input.setInputProcessor(stage);
     }

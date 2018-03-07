@@ -3,6 +3,7 @@ package be.ucl.lfsab1509.gravityrun.states;
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import be.ucl.lfsab1509.gravityrun.sprites.Tube;
+import be.ucl.lfsab1509.gravityrun.tools.DataBase;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -11,7 +12,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -23,14 +24,12 @@ public class PlayState extends State {
     private static final int TUBE_COUNT = 4;
     private static final int TUBE_SPACING = 80;
 
-    private ScoreboardState dataScore;
     //private Texture bg; //will be usefull when we got a background picture
     //private Vector2 bg1, bg2; //will be usefull when we got a background picture
-    public static ArrayList<Integer> scoreList = null;
     private Array<Tube> tubes;
     private boolean gameOver = false;
     private I18NBundle string;
-    private Integer score = 0;
+    public static Integer score = 0;
     private Label timeLabel;
     private  Texture gameOverImage = new Texture("gameover.png");
     private Marble marble;
@@ -48,9 +47,8 @@ public class PlayState extends State {
 
         Gdx.input.setCatchBackKey(true);
 
-        if(dataScore == null)
-            dataScore = new ScoreboardState();
-        scoreList = new ArrayList<Integer>();
+        if(GravityRun.scoreList == null)
+            GravityRun.scoreList = new ArrayList<Integer>();
 
         // Will be usefull when we got a background picture
         // bg1 = new Vector2(0, cam.position.y - cam.viewportHeight/2);
@@ -77,9 +75,8 @@ public class PlayState extends State {
     @Override
     protected void handleInput() {
         if (gameOver && Gdx.input.justTouched()) {
-            GravityRun.lastScore = score;
             Gdx.input.setCatchBackKey(false);
-            gsm.set(new GameOverState(gsm));
+            gsm.push(new GameOverState(gsm));
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.BACK))
@@ -131,8 +128,7 @@ public class PlayState extends State {
         sb.draw(marble.getMarble(), marble.getPosition().x, marble.getPosition().y);
 
         if (gameOver) {
-            scoreList.add(score);
-            dataScore.add();
+            GravityRun.scoreList.add(score);
             sb.draw(gameOverImage,
                     cam.position.x - gameOverImage.getWidth() / 2,
                     cam.position.y - gameOverImage.getHeight() / 2);

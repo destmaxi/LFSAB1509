@@ -7,6 +7,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -19,7 +20,6 @@ import java.util.Locale;
 public class MenuState extends State {
 
     private boolean isClickedStartGameButton = false, isClickedOptionButton = false;
-    private I18NBundle string;
     private Stage stage;
     private Skin menuSkin, tableSkin;
 
@@ -28,7 +28,7 @@ public class MenuState extends State {
 
         FileHandle baseFileHandle = Gdx.files.internal("strings/string");
         Locale locale = new Locale("fr", "BE", "VAR1");
-        string = I18NBundle.createBundle(baseFileHandle, locale);
+        I18NBundle string = I18NBundle.createBundle(baseFileHandle, locale);
 
         cam.setToOrtho(false, GravityRun.WIDTH / 2, GravityRun.HEIGHT / 2);
 
@@ -54,17 +54,34 @@ public class MenuState extends State {
         });
 
 
+        Container<Table> tableContainer = new Container<Table>();
+
         Table table = new Table();
-        table.top();
-        table.setFillParent(true);
-        table.add(title).expandX();
-        table.row();
-        table.add(optionButton).padTop(150*Gdx.graphics.getDensity());
-        table.row();
-        table.add(startGameButton).padTop(30*Gdx.graphics.getDensity());
 
         stage = new Stage(new ScreenViewport());
-        stage.addActor(table);
+
+        float sw = Gdx.graphics.getWidth();
+        float sh = Gdx.graphics.getHeight();
+
+        float cw = sw*0.9f;
+        float ch = sh*0.9f;
+
+
+        tableContainer.setSize(cw, ch);
+        tableContainer.setPosition((sw-cw)/2,(sh-ch)/2 );
+        tableContainer.top().fillX();
+
+        table.add(title).top();
+        table.row();
+
+        table.add(optionButton).expandX().fillX().padTop(sh-ch);
+        table.row();
+
+        table.add(startGameButton).expandX().fillX().padTop(sh-ch);
+        table.row();
+
+        tableContainer.setActor(table);
+        stage.addActor(tableContainer);
 
         Gdx.input.setInputProcessor(stage);
     }

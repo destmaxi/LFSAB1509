@@ -7,24 +7,21 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.sql.Database;
-import com.badlogic.gdx.sql.DatabaseCursor;
-import com.badlogic.gdx.sql.DatabaseFactory;
-import com.badlogic.gdx.sql.SQLiteGdxException;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Locale;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
+import be.ucl.lfsab1509.gravityrun.tools.DataBase;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 
 /**
@@ -32,32 +29,16 @@ import be.ucl.lfsab1509.gravityrun.tools.Skin;
  */
 
 public class ScoreboardState extends State {
-    public static ArrayList<Integer> myScores;
     private Stage stage;
-
-    private Database dbHandler;
-    private ArrayList<Integer> arrayList;
+    private Texture returnTexture;
+    private Skin menuSkin, tableSkin, labelSkin;
 
 
     private boolean isClickedReturnImButton;
 
-    private static final String TABLE_COMMENTS = "comments";
-    private static final String COLUMN_ID = "_id";
-    private static final String COLUMN_COMMENT = "comment";
-
-    private static final String DATABASE_NAME = "scoreboard.db";
-    private static final int DATABASE_VERSION = 1;
-
-    // Database creation sql statement
-    private static final String DATABASE_CREATE = "create table if not exists " + TABLE_COMMENTS + "(" + COLUMN_ID
-            + " integer primary key autoincrement, " + COLUMN_COMMENT + " integer not null);";
-
     public ScoreboardState(GameStateManager gsm){
         super(gsm);
         cam.setToOrtho(false, GravityRun.WIDTH/2, GravityRun.HEIGHT/2);
-
-        if(PlayState.scoreList ==null)
-            PlayState.scoreList = new ArrayList<Integer>();
 
         FileHandle baseFileHandle = Gdx.files.internal("strings/string");
         Locale locale = new Locale("fr", "CA", "VAR1");
@@ -65,19 +46,28 @@ public class ScoreboardState extends State {
 
         stage = new Stage(new ScreenViewport());
         Table table = new Table();
-        table.top();
-        table.setFillParent(true);
+        Table titleTable = new Table();
 
-        Skin menuSkin = new Skin();
-        Skin tableSkin = new Skin();
+        menuSkin = new Skin();
+        tableSkin = new Skin();
+        labelSkin = new Skin();
 
         tableSkin.createSkin(24);
+        labelSkin.createSkin(38);
         menuSkin.createSkin(62);
 
         isClickedReturnImButton = false;
 
-        Label title = new Label(string.get("my_score"),menuSkin, "title");
-        ImageButton returnImageButton= new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture("back.png"))));
+        returnTexture = new Texture("back.png");
+
+        Label title = new Label(string.format("my_score"),menuSkin, "title");
+        Label beginnerLabel = new Label(string.format("beginner")+" :",labelSkin,"round");
+        Label intermediateLabel = new Label(string.format("inter")+" :",labelSkin,"round");
+        Label expertLabel = new Label(string.format("expert")+" :",labelSkin,"round");
+        ImageButton returnImageButton= new ImageButton(new TextureRegionDrawable(new TextureRegion(returnTexture)));
+        List beginnerScoreList = new List(tableSkin);
+        List intermediateScoreList = new List(tableSkin);
+        List expertScoreList = new List(tableSkin);
 
         returnImageButton.addListener(new ClickListener(){
             @Override
@@ -86,58 +76,65 @@ public class ScoreboardState extends State {
             }
         });
 
+        //create date base
+        DataBase dataBase = new DataBase();
 
-        dbHandler = DatabaseFactory.getNewDatabase(DATABASE_NAME, DATABASE_VERSION, DATABASE_CREATE, null);
 
-        dbHandler.setupDatabase();
-        try {
-            dbHandler.openOrCreateDatabase();
-            dbHandler.execSQL(DATABASE_CREATE);
-        } catch (SQLiteGdxException e) {
-            e.printStackTrace();
+        String[] stringTab = {DataBase.COLUMN_BEGINNER, DataBase.COLUMN_INTERMEDIATE, DataBase.COLUMN_EXPERT};
+        List[] list = {beginnerScoreList, intermediateScoreList, expertScoreList};
+        ArrayList<Integer> myArrayList;
+        for(int i=0; i<3; i++){
+            myArrayList = dataBase.getColumn(stringTab[i]);
+            dataBase.sortDESC(myArrayList);
+            switch (myArrayList.size()){
+                case 1: list[i].setItems("1.     "+myArrayList.get(0),"2.     "+0,"3.     "+0);
+                break;
+                case 2: list[i].setItems("1.     "+myArrayList.get(0),"2.     "+ myArrayList.get(1),"3.     "+0);
+                break;
+                case 3: list[i].setItems("1.     "+myArrayList.get(0),"2.     "+ myArrayList.get(1),"3.     "+ myArrayList.get(2));
+                break;
+                default: list[i].setItems("1.     "+myArrayList.get(0),"2.     "+ myArrayList.get(1),"3.     "+ myArrayList.get(2));
+            }
         }
 
+        dataBase.dispose();
 
-       add();
+        Container<Table> tableContainer = new Container<Table>();
 
-        Collections.sort(arrayList);
+        float sw = Gdx.graphics.getWidth();
+        float sh = Gdx.graphics.getHeight();
 
-        table.add(returnImageButton).top().width(50*Gdx.graphics.getDensity()).padTop(30*Gdx.graphics.getDensity());
-        table.add(title).expandX().top().left();
-        table.add().expandX().top().left().width(100*Gdx.graphics.getDensity());
-        table.row();
+        float cw = sw*0.9f;
+        float ch = sh*0.9f;
 
 
-        for(int i=arrayList.size()-1; i>=0 && i < 10;i--){
-            TextButton label;
-            if(arrayList.size()-i <= 3)
-                label = new TextButton(arrayList.size()-i + ".     " +arrayList.get(i).toString(), tableSkin, "subtitle-red");
-            else
-                label = new TextButton(arrayList.size()-i + ".     " +arrayList.get(i).toString(), tableSkin, "round");
+        tableContainer.setSize(cw, ch);
+        tableContainer.setPosition((sw-cw)/2,(sh-ch)/2 );
+        tableContainer.top().fillX().fillY();
 
-            table.add().top().left().width(90*Gdx.graphics.getDensity());
-            table.add(label).padTop(25*Gdx.graphics.getDensity());
-            table.row();
-        }
+        titleTable.row().top();
+        titleTable.add(returnImageButton).expandX().left();
+        titleTable.add(title).colspan(4).expandX().left();
+        titleTable.row().expandX().expandY().colspan(5).fillX();
 
-        stage.addActor(table);
+        titleTable.add(table).colspan(5).top().fillX().fillY().expandY().expandX();
+        table.row().colspan(5).expandX().expandY();
+
+        table.add(beginnerLabel).expandY().colspan(3).fillX().left();
+        table.add(beginnerScoreList).expandY().colspan(2).center();
+        table.row().colspan(5);
+
+        table.add(intermediateLabel).expandY().colspan(3).fillX().left();
+        table.add(intermediateScoreList).expandY().colspan(2).center();
+        table.row().colspan(5);
+
+        table.add(expertLabel).expandY().colspan(3).fillX().left();
+        table.add(expertScoreList).expandY().colspan(2).center();
+
+        tableContainer.setActor(titleTable);
+        stage.addActor(tableContainer);
 
         Gdx.input.setInputProcessor(stage);
-    }
-
-    public ScoreboardState(){
-        super();
-
-        dbHandler = DatabaseFactory.getNewDatabase(DATABASE_NAME, DATABASE_VERSION, DATABASE_CREATE, null);
-
-        dbHandler.setupDatabase();
-        try {
-            dbHandler.openOrCreateDatabase();
-            dbHandler.execSQL(DATABASE_CREATE);
-        } catch (SQLiteGdxException e) {
-            e.printStackTrace();
-        }
-
     }
 
     @Override
@@ -160,48 +157,10 @@ public class ScoreboardState extends State {
 
     @Override
     public void dispose() {
-
-    }
-
-    public void add(){
-        DatabaseCursor cursor = null;
-        int length;
-
-        if(arrayList == null)
-            arrayList = new ArrayList<Integer>();
-
-        try {
-            cursor = dbHandler.rawQuery("SELECT "+COLUMN_COMMENT+" FROM comments");
-            while(cursor.next()){
-                arrayList.add(cursor.getInt(0));
-            }
-        } catch (SQLiteGdxException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            Collections.sort(arrayList);
-
-            for(int i = 0; i< PlayState.scoreList.size(); i++){
-                length = arrayList.size();
-                if(length < 10 && !(arrayList.contains(PlayState.scoreList.get(i)))){
-                    dbHandler.execSQL("INSERT INTO comments ('comment') VALUES (" + PlayState.scoreList.get(i)+ ")");
-                    arrayList.add(PlayState.scoreList.get(i));
-                }
-                else if(PlayState.scoreList.get(i) > arrayList.get(0) && !(arrayList.contains(PlayState.scoreList.get(i)))){
-                    Integer remove = arrayList.get(0);
-                    arrayList.remove(0);
-                    dbHandler.execSQL("DELETE FROM "+ TABLE_COMMENTS +" WHERE "+ COLUMN_COMMENT + "="+ remove);
-                    dbHandler.execSQL("INSERT INTO comments ('comment') VALUES (" + PlayState.scoreList.get(i)+ ")");
-                    arrayList.add(PlayState.scoreList.get(i));
-
-                    Collections.sort(arrayList);
-                }
-            }
-
-
-        } catch (SQLiteGdxException e) {
-            e.printStackTrace();
-        }
+        returnTexture.dispose();
+        menuSkin.dispose();
+        tableSkin.dispose();
+        labelSkin.dispose();
+        stage.dispose();
     }
 }

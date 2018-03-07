@@ -90,6 +90,7 @@ public class MenuState extends State {
     public void handleInput() {
         if (isClickedOptionButton)
             gsm.set(new OptionState(gsm));
+
         if (isClickedStartGameButton)
             gsm.set(new PlayState(gsm));
     }

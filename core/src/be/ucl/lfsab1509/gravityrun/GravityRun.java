@@ -18,6 +18,7 @@ public class GravityRun extends ApplicationAdapter {
 	private SpriteBatch batch;
 
 	public static ArrayList<Integer> scoreList;
+	public static int indexSelected = 0;
 
 	@Override
 	public void create() {

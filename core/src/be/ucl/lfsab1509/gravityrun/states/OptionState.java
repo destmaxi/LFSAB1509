@@ -103,16 +103,22 @@ public class OptionState extends State {
 
 
 
-
+        listBox.setSelectedIndex(GravityRun.indexSelected);
         listBox.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (listBox.getSelected().equals(string.format("beginner")))
+                if (listBox.getSelected().equals(string.format("beginner"))){
                     Marble.LVL=1;
-                else if(listBox.getSelected().equals(string.format("inter")))
+                    GravityRun.indexSelected = 0;
+                }
+                else if(listBox.getSelected().equals(string.format("inter"))){
                     Marble.LVL=2;
-                else if(listBox.getSelected().equals(string.format("expert")))
+                    GravityRun.indexSelected = 1;
+                }
+                else if(listBox.getSelected().equals(string.format("expert"))){
                     Marble.LVL=3;
+                    GravityRun.indexSelected = 2;
+                }
             }
         });
 
@@ -157,10 +163,12 @@ public class OptionState extends State {
 
     @Override
     protected void handleInput() {
-        if(isClickedReturnImButton)
+        if(isClickedReturnImButton){
             gsm.set(new MenuState(gsm));
-        if(isClickedScoreButton)
+        }
+        if(isClickedScoreButton){
             gsm.set(new ScoreboardState(gsm));
+        }
     }
 
     @Override

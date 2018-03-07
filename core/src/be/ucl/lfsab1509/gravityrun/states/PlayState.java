@@ -44,8 +44,6 @@ public class PlayState extends State {
         Locale locale = new Locale("fr", "BE", "VAR1");
         string = I18NBundle.createBundle(baseFileHandle, locale);
 
-        Gdx.input.setCatchBackKey(true);
-
         // Will be usefull when we got a background picture
         // bg1 = new Vector2(0, cam.position.y - cam.viewportHeight/2);
         // bg2 = new Vector2(0, (cam.position.y - cam.viewportHeight/2) + bg.getHeight() );
@@ -74,11 +72,10 @@ public class PlayState extends State {
     protected void handleInput() {
         if (gameOver && Gdx.input.justTouched()) {
             GravityRun.lastScore = score;
-            Gdx.input.setCatchBackKey(false);
             gsm.set(new GameOverState(gsm));
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.BACK))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK))
             gsm.push(new PauseState(gsm));
     }
 

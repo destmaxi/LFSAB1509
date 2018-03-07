@@ -3,6 +3,7 @@ package be.ucl.lfsab1509.gravityrun.states;
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -64,20 +65,25 @@ public class MenuState extends State {
 
         stage = new Stage(new ScreenViewport());
         stage.addActor(table);
-
-        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void handleInput() {
-        if (isClickedOptionButton)
-            gsm.set(new OptionState(gsm));
-        if (isClickedStartGameButton)
-            gsm.set(new PlayState(gsm));
+        if (isClickedOptionButton) {
+            isClickedOptionButton = false;
+            gsm.push(new OptionState(gsm));
+        }
+        if (isClickedStartGameButton) {
+            isClickedStartGameButton = false;
+            gsm.push(new PlayState(gsm));
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK))
+            Gdx.app.exit();
     }
 
     @Override
     public void update(float dt) {
+        Gdx.input.setInputProcessor(stage);
         handleInput();
     }
 

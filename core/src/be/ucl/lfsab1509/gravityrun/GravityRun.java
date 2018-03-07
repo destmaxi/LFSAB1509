@@ -19,7 +19,8 @@ public class GravityRun extends ApplicationAdapter {
 
 	@Override
 	public void create() {
-		batch = new SpriteBatch();
+        Gdx.input.setCatchBackKey(true);
+        batch = new SpriteBatch();
 		gsm = new GameStateManager();
 		gsm.push(new MenuState(gsm));
 	}

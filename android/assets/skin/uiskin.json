@@ -116,7 +116,7 @@ com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 },
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	optional: {
-		font: font-label,
+		font: arial,
 		fontColor: { a: 1, b: 0.8, g: 0.8, r: 0.8 }
 	},
 	default: {

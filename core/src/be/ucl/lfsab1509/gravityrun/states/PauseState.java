@@ -39,7 +39,7 @@ public class PauseState extends State {
 
         scoreSkin = new Skin();
         scoreSkin.createSkin(28);
-        Label score = new Label(string.format("score"), scoreSkin);
+        Label score = new Label(string.format("score"), scoreSkin, "optional");
 
         buttonSkin = new Skin();
         buttonSkin.createSkin(42);
@@ -77,11 +77,11 @@ public class PauseState extends State {
 
     @Override
     protected void handleInput() {
-        if (isClickedContinue)// || Gdx.input.isKeyPressed(Input.Keys.BACK))
+        if (isClickedContinue || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
             gsm.pop();
         if (isClickedQuit) {
             gsm.pop();
-            gsm.set(new MenuState(gsm));
+            gsm.pop();
         }
     }
 

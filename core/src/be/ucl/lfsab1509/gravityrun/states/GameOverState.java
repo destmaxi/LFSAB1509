@@ -3,6 +3,7 @@ package be.ucl.lfsab1509.gravityrun.states;
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -35,7 +36,7 @@ public class GameOverState extends State {
 
         scoreSkin = new Skin();
         scoreSkin.createSkin(28);
-        Label score = new Label(string.format("final_score", GravityRun.lastScore), scoreSkin);
+        Label score = new Label(string.format("final_score", GravityRun.lastScore), scoreSkin, "optional");
 
         buttonSkin = new Skin();
         buttonSkin.createSkin(42);
@@ -73,8 +74,8 @@ public class GameOverState extends State {
 
     @Override
     protected void handleInput() {
-        if (isClickedMenuTextButton)
-            gsm.set(new MenuState(gsm));
+        if (isClickedMenuTextButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
+            gsm.pop();
         if (isClickedReplayTextButton)
             gsm.set(new PlayState(gsm));
     }

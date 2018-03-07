@@ -1,6 +1,10 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
+import be.ucl.lfsab1509.gravityrun.GravityRun;
+import be.ucl.lfsab1509.gravityrun.sprites.Marble;
+import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -9,40 +13,27 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-
-import be.ucl.lfsab1509.gravityrun.sprites.Marble;
-import be.ucl.lfsab1509.gravityrun.tools.Skin;
-
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Tree;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
 import java.util.Locale;
-
-import be.ucl.lfsab1509.gravityrun.GravityRun;
-
-/**
- * Created by maxime on 04/03/2018.
- */
 
 public class OptionState extends State {
 
-    private Stage stage;
+    private boolean isCheckedLangButton = false, isClickedLangButton = false, isClickedReturnImButton = false;
     private final List<String> listBox;
-    private boolean isClickedLangButton, isCheckedLangButton, isClickedReturnImButton;
+    private Stage stage;
 
     public OptionState (GameStateManager gsm) {
-
         super(gsm);
         cam.setToOrtho(false, GravityRun.WIDTH/2, GravityRun.HEIGHT/2);
 
         FileHandle baseFileHandle = Gdx.files.internal("strings/string");
-        Locale locale = new Locale("fr", "CA", "VAR1");
+        Locale locale = new Locale("fr", "BE", "VAR1");
         final I18NBundle string = I18NBundle.createBundle(baseFileHandle, locale);
 
         stage = new Stage(new ScreenViewport());
@@ -57,12 +48,7 @@ public class OptionState extends State {
         table.top();
         table.setFillParent(true);
 
-        isClickedLangButton = false;
-        isCheckedLangButton = false;
-        isClickedReturnImButton = false;
-
         Texture returnImage = new Texture("back.png");
-
 
         Label title = new Label(string.get("option"),menuSkin, "title");
         TextButton lvlButton = new TextButton(string.format("chose_lvl"),tableSkin,"round");
@@ -73,21 +59,20 @@ public class OptionState extends State {
         listBox.setItems(string.format("beginer"), string.format("inter"), string.format("expert"));
         listBox.setVisible(false);
 
-        lvlButton.addListener(new ClickListener(){
+        lvlButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(!isCheckedLangButton){
+                if (!isCheckedLangButton) {
                     isClickedLangButton = true;
                     isCheckedLangButton = true;
-                }
-                else{
+                } else {
                     isClickedLangButton = false;
                     isCheckedLangButton = false;
                 }
             }
         });
 
-        scoreButton.addListener(new ClickListener(){
+        scoreButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
 
@@ -101,21 +86,17 @@ public class OptionState extends State {
             }
         });
 
-
-
-
         listBox.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (listBox.getSelected().equals(string.format("beginer")))
-                    Marble.LVL=1;
-                else if(listBox.getSelected().equals(string.format("inter")))
+                    Marble.LVL = 1;
+                else if (listBox.getSelected().equals(string.format("inter")))
                     Marble.LVL = 2;
-                else if(listBox.getSelected().equals(string.format("expert")))
-                    Marble.LVL=3;
+                else if (listBox.getSelected().equals(string.format("expert")))
+                    Marble.LVL = 3;
             }
         });
-
 
         table.add(returnImageButton).expandX().top().width(50).padTop(40);
         table.add(title).expandX().top().left();
@@ -133,13 +114,12 @@ public class OptionState extends State {
         stage.addActor(table);
 
         Gdx.input.setInputProcessor(stage);
-
     }
 
     @Override
     protected void handleInput() {
-        if(isClickedReturnImButton)
-            gsm.set(new MenuState(gsm));
+        if (isClickedReturnImButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
+            gsm.pop();
     }
 
     @Override
@@ -154,17 +134,16 @@ public class OptionState extends State {
         stage.act();
         stage.draw();
 
-        if(isClickedLangButton){
+        if (isClickedLangButton) {
             listBox.setVisible(true);
-        }
-        else{
+        } else {
             listBox.setVisible(false);
         }
-
     }
 
     @Override
     public void dispose() {
         stage.dispose();
     }
+
 }

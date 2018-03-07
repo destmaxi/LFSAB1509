@@ -63,7 +63,6 @@ public class OptionState extends State {
 
         returnImage = new Texture("back.png");
 
-
         Label title = new Label(string.get("option"),menuSkin, "title");
         TextButton lvlButton = new TextButton(string.format("chose_lvl"),tableSkin,"round");
         TextButton scoreButton = new TextButton(string.format("my_score"),tableSkin,"round");
@@ -138,10 +137,10 @@ public class OptionState extends State {
         tableContainer.setPosition((sw-cw)/2,(sh-ch)/2 );
         tableContainer.top().fillX();
 
-        titleTable.row().top().expandY();
-        titleTable.add(returnImageButton).expandX().left();
-        titleTable.add(title).colspan(4).expandX().left();
-        titleTable.row().colspan(5).fillX();
+        titleTable.row().expandY();
+        titleTable.add(returnImageButton).expandX().left().size(cw/6);
+        titleTable.add(title).colspan(6).expandX().left();
+        titleTable.row().colspan(7).fillX();
 
         titleTable.add(table);
         table.row();

@@ -87,13 +87,15 @@ public class ScoreboardState extends State {
             myArrayList = dataBase.getColumn(stringTab[i]);
             dataBase.sortDESC(myArrayList);
             switch (myArrayList.size()){
+                case 0: break;
                 case 1: list[i].setItems("1.     "+myArrayList.get(0),"2.     "+0,"3.     "+0);
                 break;
                 case 2: list[i].setItems("1.     "+myArrayList.get(0),"2.     "+ myArrayList.get(1),"3.     "+0);
                 break;
                 case 3: list[i].setItems("1.     "+myArrayList.get(0),"2.     "+ myArrayList.get(1),"3.     "+ myArrayList.get(2));
                 break;
-                default: list[i].setItems("1.     "+myArrayList.get(0),"2.     "+ myArrayList.get(1),"3.     "+ myArrayList.get(2));
+                default : list[i].setItems("1.     "+myArrayList.get(0),"2.     "+ myArrayList.get(1),"3.     "+ myArrayList.get(2));
+                break;
             }
         }
 
@@ -112,10 +114,10 @@ public class ScoreboardState extends State {
         tableContainer.setPosition((sw-cw)/2,(sh-ch)/2 );
         tableContainer.top().fillX().fillY();
 
-        titleTable.row().top();
-        titleTable.add(returnImageButton).expandX().left();
-        titleTable.add(title).colspan(4).expandX().left();
-        titleTable.row().expandX().expandY().colspan(5).fillX();
+        titleTable.row();
+        titleTable.add(returnImageButton).expandX().left().size(cw/6);
+        titleTable.add(title).colspan(6).expandX().left();
+        titleTable.row().expandX().expandY().colspan(7).fillX();
 
         titleTable.add(table).colspan(5).top().fillX().fillY().expandY().expandX();
         table.row().colspan(5).expandX().expandY();

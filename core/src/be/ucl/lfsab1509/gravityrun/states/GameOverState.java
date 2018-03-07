@@ -110,7 +110,6 @@ public class GameOverState extends State {
             GravityRun.scoreList.clear();
             GravityRun.scoreList = null;*/
             gsm.pop();
-            gsm.pop();
         }
 
         if (isClickedReplayButton)

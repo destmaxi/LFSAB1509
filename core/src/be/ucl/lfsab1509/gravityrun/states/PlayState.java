@@ -47,8 +47,8 @@ public class PlayState extends State {
             GravityRun.scoreList = new ArrayList<Integer>();
 
         // Will be usefull when we got a background picture
-        // bg1 = new Vector2(0, cam.position.y - cam.viewportHeight/2);
-        // bg2 = new Vector2(0, (cam.position.y - cam.viewportHeight/2) + bg.getHeight() );
+        // bg1 = new Vector2(0, cam.position.y - cam.viewportHeight / 2);
+        // bg2 = new Vector2(0, (cam.position.y - cam.viewportHeight / 2) + bg.getHeight() );
 
         cam.setToOrtho(false, GravityRun.WIDTH / 2, GravityRun.HEIGHT / 2);
 
@@ -58,7 +58,6 @@ public class PlayState extends State {
         skin = new Skin();
         skin.createSkin(28);
         timeLabel = new Label(string.format("score"), skin, "optional");
-
         timeLabel.setText(string.format("score", score));
 
         scoreStage = new Stage(new ScreenViewport());
@@ -70,11 +69,11 @@ public class PlayState extends State {
 
     @Override
     protected void handleInput() {
-        if (gameOver && Gdx.input.justTouched()) {
-            gsm.push(new GameOverState(gsm));
+        if (gameOver && (Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.BACK))) {
+            gsm.set(new GameOverState(gsm));
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK))
+        if (!gameOver && Gdx.input.isKeyJustPressed(Input.Keys.BACK))
             gsm.push(new PauseState(gsm));
     }
 

@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
@@ -24,11 +25,13 @@ import java.util.Locale;
 
 public class OptionState extends State {
 
-    private boolean isCheckedLangButton = false, isClickedLangButton = false, isClickedReturnImButton = false;
+    private boolean isCheckedLangButton = false, isClickedLangButton = false, isClickedReturnImButton = false, isClickedScoreButton = false;
     private final List<String> listBox;
     private Stage stage;
+    private Texture returnImage;
+    private Skin menuSkin, tableSkin;
 
-    public OptionState (GameStateManager gsm) {
+    public OptionState(GameStateManager gsm) {
         super(gsm);
         cam.setToOrtho(false, GravityRun.WIDTH/2, GravityRun.HEIGHT/2);
 
@@ -38,17 +41,18 @@ public class OptionState extends State {
 
         stage = new Stage(new ScreenViewport());
 
-        Skin menuSkin = new Skin();
-        Skin tableSkin = new Skin();
+        menuSkin = new Skin();
+        tableSkin = new Skin();
 
-        tableSkin.createSkin(18);
+        tableSkin.createSkin(42);
         menuSkin.createSkin(62);
 
-        Table table = new Table();
-        table.top();
-        table.setFillParent(true);
+        isCheckedLangButton = false;
+        isClickedLangButton = false;
+        isClickedReturnImButton = false;
+        isClickedScoreButton = false;
 
-        Texture returnImage = new Texture("back.png");
+        returnImage = new Texture("back.png");
 
         Label title = new Label(string.get("option"),menuSkin, "title");
         TextButton lvlButton = new TextButton(string.format("chose_lvl"),tableSkin,"round");
@@ -56,7 +60,7 @@ public class OptionState extends State {
         ImageButton returnImageButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(returnImage)));
         listBox = new List<String>(tableSkin);
 
-        listBox.setItems(string.format("beginer"), string.format("inter"), string.format("expert"));
+        listBox.setItems(string.format("beginner"), string.format("inter"), string.format("expert"));
         listBox.setVisible(false);
 
         lvlButton.addListener(new ClickListener() {
@@ -75,7 +79,7 @@ public class OptionState extends State {
         scoreButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                isClickedScoreButton = true;
             }
         });
 
@@ -86,44 +90,74 @@ public class OptionState extends State {
             }
         });
 
+        listBox.setSelectedIndex(GravityRun.indexSelected);
         listBox.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (listBox.getSelected().equals(string.format("beginer")))
-                    Marble.LVL = 1;
-                else if (listBox.getSelected().equals(string.format("inter")))
-                    Marble.LVL = 2;
-                else if (listBox.getSelected().equals(string.format("expert")))
-                    Marble.LVL = 3;
+                if (listBox.getSelected().equals(string.format("beginner"))){
+                    Marble.LVL=1;
+                    GravityRun.indexSelected = 0;
+                }
+                else if(listBox.getSelected().equals(string.format("inter"))){
+                    Marble.LVL=2;
+                    GravityRun.indexSelected = 1;
+                }
+                else if(listBox.getSelected().equals(string.format("expert"))){
+                    Marble.LVL=3;
+                    GravityRun.indexSelected = 2;
+                }
             }
         });
 
-        table.add(returnImageButton).expandX().top().width(50).padTop(40);
-        table.add(title).expandX().top().left();
-        table.add().expandX().top().left().width(100);
-        table.row();
-        table.add().top().left().width(90);
-        table.add(scoreButton).top().padTop(20);
-        table.row();
-        table.add().top().left().width(90);
-        table.add(lvlButton).top().center();
-        table.row();
-        table.add().top().left().width(90);
-        table.add(listBox).top().center();
+        Container<Table> tableContainer = new Container<Table>();
 
-        stage.addActor(table);
+        Table table = new Table();
+        Table titleTable = new Table();
 
-        Gdx.input.setInputProcessor(stage);
+        float sw = Gdx.graphics.getWidth();
+        float sh = Gdx.graphics.getHeight();
+
+        float cw = sw*0.9f;
+        float ch = sh*0.9f;
+
+
+        tableContainer.setSize(cw, ch);
+        tableContainer.setPosition((sw-cw)/2,(sh-ch)/2 );
+        tableContainer.top().fillX();
+
+        titleTable.row().expandY();
+        titleTable.add(returnImageButton).expandX().left().size(cw/6);
+        titleTable.add(title).colspan(6).expandX().left();
+        titleTable.row().colspan(7).fillX();
+
+        titleTable.add(table);
+        table.row();
+
+        table.add(scoreButton).expandX().fillX().padTop(sh-ch);
+        table.row();
+
+        table.add(lvlButton).expandX().fillX().padTop(sh-ch);
+        table.row();
+
+        table.add(listBox).fillX().top();
+
+        tableContainer.setActor(titleTable);
+        stage.addActor(tableContainer);
     }
 
     @Override
     protected void handleInput() {
         if (isClickedReturnImButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
             gsm.pop();
+        if (isClickedScoreButton) {
+            isClickedScoreButton = false;
+            gsm.push(new ScoreboardState(gsm));
+        }
     }
 
     @Override
     public void update(float dt) {
+        Gdx.input.setInputProcessor(stage);
         handleInput();
     }
 
@@ -143,6 +177,9 @@ public class OptionState extends State {
 
     @Override
     public void dispose() {
+        menuSkin.dispose();
+        tableSkin.dispose();
+        returnImage.dispose();
         stage.dispose();
     }
 

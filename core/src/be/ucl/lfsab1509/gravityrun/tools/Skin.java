@@ -17,6 +17,7 @@ public class Skin extends com.badlogic.gdx.scenes.scene2d.ui.Skin {
     public void createSkin(int size) {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("arial.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+
         parameter.size = size * (int) Gdx.graphics.getDensity();
         font12 = generator.generateFont(parameter); // Font size : 12 pixels
         generator.dispose();

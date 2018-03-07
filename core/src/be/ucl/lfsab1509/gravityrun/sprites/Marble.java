@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
 public class Marble {
-
     private static final int MOVEMENT = 100;
     public static int LVL = 1;
 

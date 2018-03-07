@@ -3,6 +3,7 @@ package be.ucl.lfsab1509.gravityrun.states;
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import be.ucl.lfsab1509.gravityrun.sprites.Tube;
+import be.ucl.lfsab1509.gravityrun.tools.DataBase;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -11,10 +12,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class PlayState extends State {
@@ -22,18 +24,17 @@ public class PlayState extends State {
     private static final int TUBE_COUNT = 4;
     private static final int TUBE_SPACING = 80;
 
-    public static int lvl;
-
+    //private Texture bg; //will be usefull when we got a background picture
+    //private Vector2 bg1, bg2; //will be usefull when we got a background picture
     private Array<Tube> tubes;
     private boolean gameOver = false;
-    private float time = 0f;
     private I18NBundle string;
-    private int score = 0;
-    private Label scoreLabel, timeLabel;
+    public static int score = 0;
+    private Label timeLabel;
     private Marble marble;
     private Stage scoreStage;
     private Skin skin;
-    private Texture gameOverImage;
+    private Texture gameOverImage = new Texture("gameover.png");
     // private Texture bg; //will be usefull when we got a background picture
     // private Vector2 bg1, bg2; //will be usefull when we got a background picture
 
@@ -44,19 +45,20 @@ public class PlayState extends State {
         Locale locale = new Locale("fr", "BE", "VAR1");
         string = I18NBundle.createBundle(baseFileHandle, locale);
 
+        if(GravityRun.scoreList == null)
+            GravityRun.scoreList = new ArrayList<Integer>();
+
         // Will be usefull when we got a background picture
         // bg1 = new Vector2(0, cam.position.y - cam.viewportHeight/2);
         // bg2 = new Vector2(0, (cam.position.y - cam.viewportHeight/2) + bg.getHeight() );
 
         cam.setToOrtho(false, GravityRun.WIDTH / 2, GravityRun.HEIGHT / 2);
 
-        gameOverImage = new Texture("gameover.png");
         marble = new Marble(100,0);
         tubes = new Array<Tube>();
 
         skin = new Skin();
         skin.createSkin(28);
-        scoreLabel = new Label(string.format("final_score"), skin, "error");
         timeLabel = new Label(string.format("score"), skin, "optional");
 
         timeLabel.setText(string.format("score", score));
@@ -71,8 +73,7 @@ public class PlayState extends State {
     @Override
     protected void handleInput() {
         if (gameOver && Gdx.input.justTouched()) {
-            GravityRun.lastScore = score;
-            gsm.set(new GameOverState(gsm));
+            gsm.push(new GameOverState(gsm));
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK))
@@ -84,12 +85,9 @@ public class PlayState extends State {
         handleInput();
         // updateGround(); // Will be usefull when we got a background picture
         marble.update(dt);
-        time += dt;
-        if (time >= 1 && !gameOver){
-            score++;
-            timeLabel.setText(string.format("score", score));
-            time = 0;
-        }
+
+        score = (Integer)(int) marble.getPosition().y;
+        timeLabel.setText(string.format("score",score));
 
         cam.position.y = marble.getPosition().y + 80;
 
@@ -125,7 +123,9 @@ public class PlayState extends State {
             sb.draw(tube.getTopTube(), tube.getPosTopTube().x, tube.getPosTopTube().y);
         }
         sb.draw(marble.getMarble(), marble.getPosition().x, marble.getPosition().y);
+
         if (gameOver) {
+            GravityRun.scoreList.add(score);
             sb.draw(gameOverImage,
                     cam.position.x - gameOverImage.getWidth() / 2,
                     cam.position.y - gameOverImage.getHeight() / 2);

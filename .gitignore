@@ -355,7 +355,6 @@ cmake-build-debug/
 # Mobile Tools for Java (J2ME)
 
 # Package Files #
-*.jar
 *.zip
 *.tar.gz
 *.rar

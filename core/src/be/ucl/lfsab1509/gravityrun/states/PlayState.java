@@ -71,7 +71,7 @@ public class PlayState extends State {
     @Override
     protected void handleInput() {
         if (gameOver && Gdx.input.justTouched()) {
-            gsm.push(new GameOverState(gsm));
+            gsm.set(new GameOverState(gsm));
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK))
@@ -123,6 +123,9 @@ public class PlayState extends State {
         sb.draw(marble.getMarble(), marble.getPosition().x, marble.getPosition().y);
 
         if (gameOver) {
+            if(GravityRun.scoreList == null)
+                GravityRun.scoreList = new ArrayList<Integer>();
+
             GravityRun.scoreList.add(score);
             sb.draw(gameOverImage,
                     cam.position.x - gameOverImage.getWidth() / 2,

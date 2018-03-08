@@ -10,8 +10,12 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -26,13 +30,13 @@ public class PlayState extends State {
     public static int score = 0;
 
     private Array<Tube> tubes;
-    private boolean gameOver = false;
+    private boolean gameOver = false, isClickedPauseButton = false;
     private final I18NBundle string;
     private Label timeLabel;
     private Marble marble;
     private Stage scoreStage;
     private Skin skin;
-    private Texture gameOverImage = new Texture("gameover.png");
+    private Texture gameOverImage, pauseImage;
     // private Texture bg; // Will be usefull when we got a background picture
     // private Vector2 bg1, bg2; // Will be usefull when we got a background picture
 
@@ -52,6 +56,19 @@ public class PlayState extends State {
 
         cam.setToOrtho(false, GravityRun.WIDTH / 2, GravityRun.HEIGHT / 2);
 
+        int h = Gdx.graphics.getHeight(), w = Gdx.graphics.getWidth();
+        gameOverImage = new Texture("gameover.png");
+        pauseImage = new Texture("pause.png");
+        ImageButton pauseButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(pauseImage)));
+        pauseButton.setSize(w / 10, w / 10);
+        pauseButton.setPosition(0, h - pauseButton.getHeight());
+        pauseButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                isClickedPauseButton = true;
+            }
+        });
+
         marble = new Marble(100,0);
         tubes = new Array<Tube>();
 
@@ -62,6 +79,7 @@ public class PlayState extends State {
 
         scoreStage = new Stage(new ScreenViewport());
         scoreStage.addActor(timeLabel);
+        scoreStage.addActor(pauseButton);
 
         for (int i = 1; i <= TUBE_COUNT; i++)
             tubes.add(new Tube(i * (TUBE_SPACING + Tube.TUBE_WIDTH)));
@@ -73,12 +91,15 @@ public class PlayState extends State {
             gsm.set(new GameOverState(gsm));
         }
 
-        if (!gameOver && Gdx.input.isKeyJustPressed(Input.Keys.BACK))
+        if (!gameOver && (isClickedPauseButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK))) {
+            isClickedPauseButton = false;
             gsm.push(new PauseState(gsm));
+        }
     }
 
     @Override
     public void update(float dt) {
+        Gdx.input.setInputProcessor(scoreStage);
         handleInput();
         // updateGround(); // Will be usefull when we got a background picture
         marble.update(dt);
@@ -139,6 +160,7 @@ public class PlayState extends State {
     public void dispose() {
         gameOverImage.dispose();
         marble.dispose();
+        pauseImage.dispose();
         scoreStage.dispose();
         skin.dispose();
         for (Tube tube : tubes) {

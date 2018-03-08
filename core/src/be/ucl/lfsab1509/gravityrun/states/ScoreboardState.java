@@ -112,16 +112,16 @@ public class ScoreboardState extends State {
         titleTable.add(title).colspan(6).expandX().left();
         titleTable.row().expandX().expandY().colspan(7).fillX();
 
-        titleTable.add(table).colspan(5).top().fillX().fillY().expandY().expandX();
-        table.row().colspan(5).expandX().expandY();
+        titleTable.add(table).colspan(7).top().fillX().fillY().expandY().expandX();
+        table.row().colspan(7).expandX().expandY();
 
         table.add(beginnerLabel).expandY().colspan(3).fillX().left();
         table.add(beginnerScoreList).expandY().colspan(2).center();
-        table.row().colspan(5);
+        table.row().colspan(7);
 
         table.add(intermediateLabel).expandY().colspan(3).fillX().left();
         table.add(intermediateScoreList).expandY().colspan(2).center();
-        table.row().colspan(5);
+        table.row().colspan(7);
 
         table.add(expertLabel).expandY().colspan(3).fillX().left();
         table.add(expertScoreList).expandY().colspan(2).center();
@@ -158,4 +158,5 @@ public class ScoreboardState extends State {
         stage.dispose();
         tableSkin.dispose();
     }
+
 }

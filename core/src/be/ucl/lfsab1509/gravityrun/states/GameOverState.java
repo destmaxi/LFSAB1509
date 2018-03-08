@@ -90,7 +90,7 @@ public class GameOverState extends State {
     @Override
     protected void handleInput() {
         if (isClickedMenuButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
-            /*DataBase dataBase = new DataBase();
+            DataBase dataBase = new DataBase();
             String col = null;
 
             for (int i = 0; i < GravityRun.scoreList.size(); i++) {
@@ -105,10 +105,8 @@ public class GameOverState extends State {
                 dataBase.add(col);
             }
             dataBase.dispose();
-            DataBase.scoreList.clear();
             DataBase.scoreList = null;
-            GravityRun.scoreList.clear();
-            GravityRun.scoreList = null;*/
+            GravityRun.scoreList = null;
             gsm.pop();
         }
 

@@ -25,7 +25,7 @@ import java.util.Locale;
 
 public class OptionState extends State {
 
-    private boolean isCheckedLangButton = false, isClickedLangButton = false, isClickedReturnImButton = false, isClickedScoreButton = false;
+    private boolean isCheckedLangButton = false, isClickedLangButton = false, isClickedReturnButton = false, isClickedScoreButton = false;
     private final List<String> listBox;
     private Skin menuSkin, tableSkin;
     private Stage stage;
@@ -52,7 +52,7 @@ public class OptionState extends State {
         Label title = new Label(string.get("option"),menuSkin, "title");
         TextButton lvlButton = new TextButton(string.format("chose_lvl"),tableSkin,"round");
         TextButton scoreButton = new TextButton(string.format("my_score"),tableSkin,"round");
-        ImageButton returnImageButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(returnImage)));
+        ImageButton returnButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(returnImage)));
         listBox = new List<String>(tableSkin);
 
         listBox.setItems(string.format("beginner"), string.format("inter"), string.format("expert"));
@@ -78,10 +78,10 @@ public class OptionState extends State {
             }
         });
 
-        returnImageButton.addListener(new ClickListener() {
+        returnButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                isClickedReturnImButton = true;
+                isClickedReturnButton = true;
             }
         });
 
@@ -116,23 +116,20 @@ public class OptionState extends State {
         float ch = sh * 0.9f;
 
         tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((sw - cw) / 2,(sh - ch) / 2 );
+        tableContainer.setPosition((sw - cw) / 2,(sh - ch) / 2);
         tableContainer.top().fillX();
 
         titleTable.row().expandY();
-        titleTable.add(returnImageButton).expandX().left().size(cw / 6);
+        titleTable.add(returnButton).expandX().left().size(cw / 6);
         titleTable.add(title).colspan(6).expandX().left();
         titleTable.row().colspan(7).fillX();
-
         titleTable.add(table);
-        table.row();
 
+        table.row();
         table.add(scoreButton).expandX().fillX().padTop(sh - ch);
         table.row();
-
         table.add(lvlButton).expandX().fillX().padTop(sh - ch);
         table.row();
-
         table.add(listBox).fillX().top();
 
         tableContainer.setActor(titleTable);
@@ -141,7 +138,7 @@ public class OptionState extends State {
 
     @Override
     protected void handleInput() {
-        if (isClickedReturnImButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
+        if (isClickedReturnButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
             gsm.pop();
         if (isClickedScoreButton) {
             isClickedScoreButton = false;

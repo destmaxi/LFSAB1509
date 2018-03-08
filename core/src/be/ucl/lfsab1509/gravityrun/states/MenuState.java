@@ -1,10 +1,8 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
-import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -13,9 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import java.util.Locale;
 
 public class MenuState extends State {
 
@@ -25,12 +21,6 @@ public class MenuState extends State {
 
     public MenuState(GameStateManager gsm) {
         super(gsm);
-
-        FileHandle baseFileHandle = Gdx.files.internal("strings/string");
-        Locale locale = new Locale("fr", "BE", "VAR1");
-        I18NBundle string = I18NBundle.createBundle(baseFileHandle, locale);
-
-        cam.setToOrtho(false, GravityRun.WIDTH / 2, GravityRun.HEIGHT / 2);
 
         menuSkin = new Skin();
         menuSkin.createSkin(62);

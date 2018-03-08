@@ -1,11 +1,9 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
-import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.DataBase;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -18,26 +16,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class ScoreboardState extends State {
 
+    private boolean isClickedReturnImButton = false;
     private Skin labelSkin, menuSkin, tableSkin;
     private Stage stage;
     private Texture returnTexture;
 
-    private boolean isClickedReturnImButton;
-
     public ScoreboardState(GameStateManager gsm){
         super(gsm);
-        cam.setToOrtho(false, GravityRun.WIDTH / 2, GravityRun.HEIGHT / 2);
-
-        FileHandle baseFileHandle = Gdx.files.internal("strings/string");
-        Locale locale = new Locale("fr", "CA", "VAR1");
-        final I18NBundle string = I18NBundle.createBundle(baseFileHandle, locale);
 
         stage = new Stage(new ScreenViewport());
         Table table = new Table();
@@ -51,15 +41,13 @@ public class ScoreboardState extends State {
         labelSkin.createSkin(38);
         menuSkin.createSkin(62);
 
-        isClickedReturnImButton = false;
-
         returnTexture = new Texture("back.png");
 
         Label title = new Label(string.format("my_score"),menuSkin, "title");
         Label beginnerLabel = new Label(string.format("beginner")+" :",labelSkin,"round");
         Label intermediateLabel = new Label(string.format("inter")+" :",labelSkin,"round");
         Label expertLabel = new Label(string.format("expert")+" :",labelSkin,"round");
-        ImageButton returnImageButton= new ImageButton(new TextureRegionDrawable(new TextureRegion(returnTexture)));
+        ImageButton returnImageButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(returnTexture)));
         List beginnerScoreList = new List(tableSkin);
         List intermediateScoreList = new List(tableSkin);
         List expertScoreList = new List(tableSkin);

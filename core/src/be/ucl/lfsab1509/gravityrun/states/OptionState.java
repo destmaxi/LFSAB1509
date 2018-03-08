@@ -5,7 +5,6 @@ import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -19,9 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import java.util.Locale;
 
 public class OptionState extends State {
 
@@ -33,11 +30,6 @@ public class OptionState extends State {
 
     public OptionState(GameStateManager gsm) {
         super(gsm);
-        cam.setToOrtho(false, GravityRun.WIDTH/2, GravityRun.HEIGHT/2);
-
-        FileHandle baseFileHandle = Gdx.files.internal("strings/string");
-        Locale locale = new Locale("fr", "BE", "VAR1");
-        final I18NBundle string = I18NBundle.createBundle(baseFileHandle, locale);
 
         stage = new Stage(new ScreenViewport());
 

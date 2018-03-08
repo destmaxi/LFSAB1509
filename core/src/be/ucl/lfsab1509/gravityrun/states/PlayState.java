@@ -6,7 +6,6 @@ import be.ucl.lfsab1509.gravityrun.sprites.Tube;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -17,21 +16,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class PlayState extends State {
 
+    public static int score = 0;
     private static final int TUBE_COUNT = 4;
     private static final int TUBE_SPACING = 80;
 
-    public static int score = 0;
-
     private Array<Tube> tubes;
     private boolean gameOver = false, isClickedPauseButton = false;
-    private final I18NBundle string;
     private Label timeLabel;
     private Marble marble;
     private Stage scoreStage;
@@ -42,10 +37,6 @@ public class PlayState extends State {
 
     public PlayState(GameStateManager gsm) {
         super(gsm);
-
-        FileHandle baseFileHandle = Gdx.files.internal("strings/string");
-        Locale locale = new Locale("fr", "BE", "VAR1");
-        string = I18NBundle.createBundle(baseFileHandle, locale);
 
         if (GravityRun.scoreList == null)
             GravityRun.scoreList = new ArrayList<Integer>();

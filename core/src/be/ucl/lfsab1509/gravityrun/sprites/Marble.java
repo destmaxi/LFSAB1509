@@ -2,27 +2,33 @@ package be.ucl.lfsab1509.gravityrun.sprites;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
 public class Marble {
+
+    private static final int FRAME_COUNT = 5;
     private static final int MOVEMENT = 100;
     public static int LVL = 1;
 
-    public boolean colliding;
-    private Vector3 position, velocity;
+    public boolean colliding = false;
+    private MarbleAnimation marbleAnimation;
     private Rectangle bounds;
     private Texture marble;
+    private Vector3 position, velocity;
 
-    public Marble(int x, int y){
-        position = new Vector3(x,y,0);
-        velocity = new Vector3(0,0,0);
-        marble = new Texture("marble.jpg");
-        bounds = new Rectangle(x, y, marble.getWidth(), marble.getHeight());
-        colliding = false;
+    public Marble(int x, int y) {
+        position = new Vector3(x, y, 0);
+        velocity = new Vector3(0, 0, 0);
+        marble = new Texture("marbles.png");
+        marbleAnimation = new MarbleAnimation(marble, FRAME_COUNT, 1);
+        bounds = new Rectangle(x, y, marble.getWidth(), marble.getHeight() / 5);
     }
 
-    public void update(float dt){
+    public void update(float dt) {
+        marbleAnimation.update(dt);
         velocity.add(-2 * Gdx.input.getGyroscopeY(), 0,0);
         velocity.scl(dt);
         if (!colliding)
@@ -43,16 +49,17 @@ public class Marble {
         return marble.getWidth();
     }
 
-    public Texture getMarble() {
-        return marble;
+    public TextureRegion getMarble() {
+        return marbleAnimation.getFrame();
     }
 
-    public Rectangle getBounds(){
+    public Rectangle getBounds() {
         return bounds;
     }
 
-    public void dispose(){
+    public void dispose() {
         marble.dispose();
+        marbleAnimation.dispose();
     }
 
 }

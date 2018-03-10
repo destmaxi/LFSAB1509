@@ -14,8 +14,8 @@ public class Marble {
     public static int LVL = 1;
 
     public boolean colliding = false;
+    private Circle bounds;
     private MarbleAnimation marbleAnimation;
-    private Rectangle bounds;
     private Texture marble;
     private Vector3 position, velocity;
 
@@ -24,21 +24,18 @@ public class Marble {
         velocity = new Vector3(0, 0, 0);
         marble = new Texture("marbles.png");
         marbleAnimation = new MarbleAnimation(marble, FRAME_COUNT, 1);
-        bounds = new Rectangle(x, y, marble.getWidth(), marble.getHeight() / 5);
+        bounds = new Circle(x + marble.getWidth() / 2, y + marble.getHeight() / FRAME_COUNT / 2, marble.getWidth() / 2);
     }
 
     public void update(float dt) {
         marbleAnimation.update(dt);
         velocity.add(-2 * Gdx.input.getGyroscopeY(), 0,0);
-        velocity.scl(dt);
         if (!colliding)
             position.add(2 * Gdx.input.getGyroscopeY(),LVL * MOVEMENT * dt,0);
 
         if (position.x < 0)
             position.x = 0;
-
-        velocity.scl(1 / dt);
-        bounds.setPosition(position.x, position.y);
+        bounds.setPosition(position.x + marble.getWidth() / 2, position.y + marble.getHeight() / FRAME_COUNT / 2);
     }
 
     public Vector3 getPosition() {
@@ -53,7 +50,7 @@ public class Marble {
         return marbleAnimation.getFrame();
     }
 
-    public Rectangle getBounds() {
+    public Circle getBounds() {
         return bounds;
     }
 

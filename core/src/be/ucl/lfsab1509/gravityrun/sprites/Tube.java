@@ -1,16 +1,17 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import java.util.Random;
 
 public class Tube {
 
-    public static final int TUBE_WIDTH = 52;
     private static final int MIN_SPACE = 3 * 34;
+    public static final int TUBE_WIDTH = 52;
 
     private Random rand;
     private Rectangle boundsBot, boundsTop;
@@ -53,8 +54,8 @@ public class Tube {
         boundsBot.setPosition(posBotTube.x, y);
     }
 
-    public boolean collides(Rectangle player) {
-        return player.overlaps(boundsTop) || player.overlaps(boundsBot);
+    public boolean collides(Circle player) {
+        return Intersector.overlaps(player, boundsBot) || Intersector.overlaps(player, boundsTop);
     }
 
     public void dispose(){

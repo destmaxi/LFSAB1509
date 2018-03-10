@@ -27,8 +27,8 @@ public class Marble {
         bounds = new Circle(x + marble.getWidth() / 2, y + marble.getHeight() / FRAME_COUNT / 2, marble.getWidth() / 2);
     }
 
-    public void update(float dt) {
-        marbleAnimation.update(dt);
+    public void update(float dt, boolean gameOver) {
+        marbleAnimation.update(dt, gameOver);
         velocity.add(-2 * Gdx.input.getGyroscopeY(), 0,0);
         if (!colliding)
             position.add(2 * Gdx.input.getGyroscopeY(),LVL * MOVEMENT * dt,0);

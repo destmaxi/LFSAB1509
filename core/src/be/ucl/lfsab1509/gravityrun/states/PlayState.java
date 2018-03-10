@@ -94,7 +94,7 @@ public class PlayState extends State {
         Gdx.input.setInputProcessor(scoreStage);
         handleInput();
         // updateGround(); // Will be usefull when we got a background picture
-        marble.update(dt);
+        marble.update(dt, gameOver);
 
         score = (Integer)(int) marble.getPosition().y;
         timeLabel.setText(string.format("score",score));

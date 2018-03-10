@@ -25,8 +25,9 @@ public class MarbleAnimation {
         maxFrameTime = cycleTime / frameCount;
     }
 
-    public void update(float dt) {
-        currentFrameTime += dt;
+    public void update(float dt, boolean gameOver) {
+        if (!gameOver)
+            currentFrameTime += dt;
         if (currentFrameTime > maxFrameTime) {
             frame = (frame + 1) % frameCount;
             currentFrameTime = 0;

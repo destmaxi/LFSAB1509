@@ -78,7 +78,7 @@ public class PauseState extends State {
 
     @Override
     protected void handleInput() {
-        if (isClickedContinue || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
+        if (isClickedContinue || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
             gsm.pop();
         if (isClickedQuit) {
             gsm.pop();

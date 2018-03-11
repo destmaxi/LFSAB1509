@@ -55,7 +55,7 @@ public class MenuState extends State {
 
 
         tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((sw - cw) / 2,(sh - ch) / 2 );
+        tableContainer.setPosition((sw - cw) / 2,(sh - ch) / 2);
         tableContainer.top().fillX();
 
         table.add(title).top();
@@ -81,7 +81,7 @@ public class MenuState extends State {
             isClickedStartGameButton = false;
             gsm.push(new PlayState(gsm));
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
             Gdx.app.exit();
     }
 
@@ -96,9 +96,8 @@ public class MenuState extends State {
         sb.setProjectionMatrix(cam.combined);
         stage.act();
         stage.draw();
-        if (isClickedOptionButton || isClickedStartGameButton){
+        if (isClickedOptionButton || isClickedStartGameButton)
             gsm.update(Gdx.graphics.getDeltaTime());
-        }
     }
 
     @Override

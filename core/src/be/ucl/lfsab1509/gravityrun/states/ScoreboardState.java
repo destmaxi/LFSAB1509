@@ -26,7 +26,7 @@ public class ScoreboardState extends State {
     private Stage stage;
     private Texture returnTexture;
 
-    public ScoreboardState(GameStateManager gsm){
+    public ScoreboardState(GameStateManager gsm) {
         super(gsm);
 
         stage = new Stage(new ScreenViewport());
@@ -43,16 +43,16 @@ public class ScoreboardState extends State {
 
         returnTexture = new Texture("back.png");
 
-        Label title = new Label(string.format("my_score"),menuSkin, "title");
-        Label beginnerLabel = new Label(string.format("beginner")+" :",labelSkin,"round");
-        Label intermediateLabel = new Label(string.format("inter")+" :",labelSkin,"round");
-        Label expertLabel = new Label(string.format("expert")+" :",labelSkin,"round");
+        Label title = new Label(string.format("my_score"), menuSkin, "title");
+        Label beginnerLabel = new Label(string.format("beginner") + " :", labelSkin, "round");
+        Label intermediateLabel = new Label(string.format("inter") + " :", labelSkin, "round");
+        Label expertLabel = new Label(string.format("expert") + " :", labelSkin, "round");
         ImageButton returnImageButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(returnTexture)));
         List beginnerScoreList = new List(tableSkin);
         List intermediateScoreList = new List(tableSkin);
         List expertScoreList = new List(tableSkin);
 
-        returnImageButton.addListener(new ClickListener(){
+        returnImageButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 isClickedReturnImButton = true;
@@ -122,7 +122,7 @@ public class ScoreboardState extends State {
 
     @Override
     protected void handleInput() {
-        if (isClickedReturnImButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
+        if (isClickedReturnImButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
             gsm.pop();
     }
 

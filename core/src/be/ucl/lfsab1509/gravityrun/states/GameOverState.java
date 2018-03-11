@@ -82,12 +82,12 @@ public class GameOverState extends State {
 
     @Override
     protected void handleInput() {
-        if (isClickedMenuButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK)) {
+        if (isClickedMenuButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             DataBase dataBase = new DataBase();
             String col = null;
 
             for (int i = 0; i < GravityRun.scoreList.size(); i++) {
-                switch (Marble.LVL){
+                switch (Marble.LVL) {
                     case 1: col = DataBase.COLUMN_BEGINNER;
                         break;
                     case 2: col = DataBase.COLUMN_INTERMEDIATE;

@@ -41,9 +41,9 @@ public class OptionState extends State {
 
         returnImage = new Texture("back.png");
 
-        Label title = new Label(string.get("option"),menuSkin, "title");
-        TextButton lvlButton = new TextButton(string.format("chose_lvl"),tableSkin,"round");
-        TextButton scoreButton = new TextButton(string.format("my_score"),tableSkin,"round");
+        Label title = new Label(string.get("option"), menuSkin, "title");
+        TextButton lvlButton = new TextButton(string.format("chose_lvl"), tableSkin, "round");
+        TextButton scoreButton = new TextButton(string.format("my_score"), tableSkin, "round");
         ImageButton returnButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(returnImage)));
         listBox = new List<String>(tableSkin);
 
@@ -81,16 +81,16 @@ public class OptionState extends State {
         listBox.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (listBox.getSelected().equals(string.format("beginner"))){
-                    Marble.LVL=1;
+                if (listBox.getSelected().equals(string.format("beginner"))) {
+                    Marble.LVL = 1;
                     GravityRun.indexSelected = 0;
                 }
-                else if(listBox.getSelected().equals(string.format("inter"))){
-                    Marble.LVL=2;
+                else if(listBox.getSelected().equals(string.format("inter"))) {
+                    Marble.LVL = 2;
                     GravityRun.indexSelected = 1;
                 }
-                else if(listBox.getSelected().equals(string.format("expert"))){
-                    Marble.LVL=3;
+                else if(listBox.getSelected().equals(string.format("expert"))) {
+                    Marble.LVL = 3;
                     GravityRun.indexSelected = 2;
                 }
             }
@@ -130,7 +130,7 @@ public class OptionState extends State {
 
     @Override
     protected void handleInput() {
-        if (isClickedReturnButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
+        if (isClickedReturnButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
             gsm.pop();
         if (isClickedScoreButton) {
             isClickedScoreButton = false;
@@ -151,11 +151,10 @@ public class OptionState extends State {
         stage.act();
         stage.draw();
 
-        if (isClickedLangButton) {
+        if (isClickedLangButton)
             listBox.setVisible(true);
-        } else {
+        else
             listBox.setVisible(false);
-        }
     }
 
     @Override

@@ -60,7 +60,7 @@ public class PlayState extends State {
             }
         });
 
-        marble = new Marble(100,0);
+        marble = new Marble(100, 0);
         tubes = new Array<Tube>();
 
         skin = new Skin();
@@ -79,11 +79,11 @@ public class PlayState extends State {
     @Override
     protected void handleInput() {
 
-        if (gameOver && (Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.BACK))) {
+        if (gameOver && (Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))) {
             gsm.set(new GameOverState(gsm));
         }
 
-        if (!gameOver && (isClickedPauseButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK))) {
+        if (!gameOver && (isClickedPauseButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))) {
             isClickedPauseButton = false;
             gsm.push(new PauseState(gsm));
         }
@@ -164,7 +164,7 @@ public class PlayState extends State {
     }
 
     //will be usefull when we got a background picture
-   /* private void updateGround(){
+   /* private void updateGround() {
         if (cam.position.y - (cam.viewportHeight / 2) > bg1.y + bg.getHeight())
             bg1.add(0, bg.getHeight() * 2);
         if (cam.position.y - (cam.viewportHeight / 2) > bg2.y + bg.getHeight())

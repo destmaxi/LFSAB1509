@@ -1,5 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
+import be.ucl.lfsab1509.gravityrun.GravityRun;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -34,11 +35,17 @@ public class Marble {
 
         if (position.x < 0)
             position.x = 0;
+        if (position.x > GravityRun.WIDTH / 2 - marble.getWidth())
+            position.x = GravityRun.WIDTH / 2 - marble.getWidth();
         bounds.setPosition(position.x + marble.getWidth() / 2, position.y + marble.getHeight() / FRAME_COUNT / 2);
     }
 
     public Vector3 getPosition() {
         return position;
+    }
+
+    public void setPositionX(float x) {
+        position.x = x;
     }
 
     public float getWidth(){

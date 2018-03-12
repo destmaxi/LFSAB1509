@@ -32,4 +32,8 @@ public class GameStateManager {
         states.peek().render(sb);
     }
 
+    public void forceCrash(){
+        throw new RuntimeException("this is a crash");
+    }
+
 }

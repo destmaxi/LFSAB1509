@@ -31,7 +31,6 @@ public class ScoreboardState extends State {
 
         stage = new Stage(new ScreenViewport());
         Table table = new Table();
-        Table titleTable = new Table();
 
         menuSkin = new Skin();
         tableSkin = new Skin();
@@ -69,7 +68,8 @@ public class ScoreboardState extends State {
             myArrayList = dataBase.getColumn(stringTab[i]);
             dataBase.sortDESC(myArrayList);
             switch (myArrayList.size()) {
-                case 0: break;
+                case 0: list[i].setItems("1.     "+0,"2.     "+0,"3.     "+0);
+                    break;
                 case 1: list[i].setItems("1.     "+myArrayList.get(0),"2.     "+0,"3.     "+0);
                 break;
                 case 2: list[i].setItems("1.     "+myArrayList.get(0),"2.     "+ myArrayList.get(1),"3.     "+0);
@@ -95,26 +95,21 @@ public class ScoreboardState extends State {
         tableContainer.setPosition((sw - cw) / 2,(sh - ch) / 2 );
         tableContainer.top().fillX().fillY();
 
-        titleTable.row();
-        titleTable.add(returnImageButton).expandX().left().size(cw / 6);
-        titleTable.add(title).colspan(6).expandX().left();
-        titleTable.row().expandX().expandY().colspan(7).fillX();
-
-        titleTable.add(table).colspan(7).top().fillX().fillY().expandY().expandX();
-        table.row().colspan(7).expandX().expandY();
+        table.add(title).colspan(5).expandX();
+        table.row().expandX().expandY();
 
         table.add(beginnerLabel).expandY().colspan(3).fillX().left();
         table.add(beginnerScoreList).expandY().colspan(2).center();
-        table.row().colspan(7);
+        table.row().colspan(5);
 
         table.add(intermediateLabel).expandY().colspan(3).fillX().left();
         table.add(intermediateScoreList).expandY().colspan(2).center();
-        table.row().colspan(7);
+        table.row().colspan(5);
 
         table.add(expertLabel).expandY().colspan(3).fillX().left();
         table.add(expertScoreList).expandY().colspan(2).center();
 
-        tableContainer.setActor(titleTable);
+        tableContainer.setActor(table);
         stage.addActor(tableContainer);
 
         Gdx.input.setInputProcessor(stage);

@@ -112,8 +112,7 @@ public class OptionState extends State {
         tableContainer.top().fillX();
 
         titleTable.row().expandY();
-        titleTable.add(returnButton).expandX().left().size(cw / 6);
-        titleTable.add(title).colspan(6).expandX().left();
+        titleTable.add(title).colspan(7).expandX();
         titleTable.row().colspan(7).fillX();
         titleTable.add(table);
 

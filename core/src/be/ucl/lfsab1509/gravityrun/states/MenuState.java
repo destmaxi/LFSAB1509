@@ -1,5 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
+import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -69,6 +70,7 @@ public class MenuState extends State {
 
         tableContainer.setActor(table);
         stage.addActor(tableContainer);
+
     }
 
     @Override

@@ -3,10 +3,12 @@ package be.ucl.lfsab1509.gravityrun;
 import be.ucl.lfsab1509.gravityrun.states.*;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class GravityRun extends ApplicationAdapter {
 
@@ -16,6 +18,7 @@ public class GravityRun extends ApplicationAdapter {
 
     public static ArrayList<Integer> scoreList;
     public static int indexSelected = 0;
+    public static Preferences pref;
 
     private GameStateManager gsm;
 	private SpriteBatch batch;
@@ -25,7 +28,13 @@ public class GravityRun extends ApplicationAdapter {
         Gdx.input.setCatchBackKey(true);
         batch = new SpriteBatch();
 		gsm = new GameStateManager();
-		gsm.push(new MenuState(gsm));
+		pref = Gdx.app.getPreferences("Player");
+		pref.putString("username","0");
+		pref.flush();
+		if(pref.getString("username")== "0")
+			gsm.push(new FirstState(gsm));
+		else
+			gsm.push(new MenuState(gsm));
 	}
 
 	@Override

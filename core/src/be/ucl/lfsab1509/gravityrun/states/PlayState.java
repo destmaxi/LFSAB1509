@@ -96,7 +96,7 @@ public class PlayState extends State {
         // updateGround(); // Will be usefull when we got a background picture
         marble.update(dt, gameOver);
 
-        score = (Integer)(int) marble.getPosition().y;
+        score = (Integer)(int) (marble.getPosition().y / 10);
         timeLabel.setText(string.format("score",score));
 
         cam.position.y = marble.getPosition().y + 80;

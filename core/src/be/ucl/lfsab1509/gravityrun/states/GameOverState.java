@@ -2,7 +2,6 @@ package be.ucl.lfsab1509.gravityrun.states;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.sprites.Marble;
-import be.ucl.lfsab1509.gravityrun.tools.DataBase;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -15,6 +14,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class GameOverState extends State {
 
@@ -83,29 +86,65 @@ public class GameOverState extends State {
     @Override
     protected void handleInput() {
         if (isClickedMenuButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            DataBase dataBase = new DataBase();
+
             String col = null;
 
-            for (int i = 0; i < GravityRun.scoreList.size(); i++) {
-                switch (Marble.LVL) {
-                    case 1: col = DataBase.COLUMN_BEGINNER;
-                        break;
-                    case 2: col = DataBase.COLUMN_INTERMEDIATE;
-                        break;
-                    case 3: col = DataBase.COLUMN_EXPERT;
-                        break;
-                }
-                dataBase.add(col);
+            switch (Marble.LVL) {
+                case 1: col = GravityRun.DEB;
+                    break;
+                case 2: col = GravityRun.INTER;
+                    break;
+                case 3: col = GravityRun.EXPERT;
+                    break;
             }
-            dataBase.dispose();
-            DataBase.scoreList = null;
-            GravityRun.scoreList = null;
 
+            add(col);
+            GravityRun.scoreList = null;
             gsm.pop();
         }
 
         if (isClickedReplayButton)
             gsm.set(new PlayState(gsm));
+    }
+
+    public void add(String col){
+       sortDESC(GravityRun.scoreList);
+        int score1 = GravityRun.pref.getInteger(col+"_1");
+        int score2 = GravityRun.pref.getInteger(col+"_2");
+        int score3 = GravityRun.pref.getInteger(col+"_3");
+       for (int i=0; i <GravityRun.scoreList.size(); i++){
+           if(score1 < GravityRun.scoreList.get(i)){
+               GravityRun.pref.putInteger(col+"_1",GravityRun.scoreList.get(i));
+               GravityRun.pref.putInteger(col+"_2",score1);
+               GravityRun.pref.putInteger(col+"_3",score2);
+               GravityRun.pref.flush();
+               score3 = score2;
+               score2 = score1;
+               score1 = GravityRun.scoreList.get(i);
+           }
+           else if(score1 > GravityRun.scoreList.get(i) && score2 < GravityRun.scoreList.get(i)){
+               GravityRun.pref.putInteger(col+"_2",GravityRun.scoreList.get(i));
+               GravityRun.pref.putInteger(col+"_3",score2);
+               GravityRun.pref.flush();
+               score3 = score2;
+               score2 = GravityRun.scoreList.get(i);
+           }
+           else if(score2 > GravityRun.scoreList.get(i) && score3 < GravityRun.scoreList.get(i)){
+               GravityRun.pref.putInteger(col+"_3",GravityRun.scoreList.get(i));
+               GravityRun.pref.flush();
+               score3 = GravityRun.scoreList.get(i);
+           }
+
+       }
+    }
+
+    private void sortDESC(ArrayList<Integer> arrayList){
+        Collections.sort(arrayList, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer integer, Integer t1) {
+                return t1.compareTo(integer);
+            }
+        });
     }
 
     @Override

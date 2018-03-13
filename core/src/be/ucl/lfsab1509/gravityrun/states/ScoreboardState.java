@@ -1,6 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
-import be.ucl.lfsab1509.gravityrun.tools.DataBase;
+import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -58,30 +58,13 @@ public class ScoreboardState extends State {
             }
         });
 
-        // Create date base
-        DataBase dataBase = new DataBase();
-
-        String[] stringTab = {DataBase.COLUMN_BEGINNER, DataBase.COLUMN_INTERMEDIATE, DataBase.COLUMN_EXPERT};
+        String[] stringTab = {GravityRun.DEB, GravityRun.INTER, GravityRun.EXPERT};
         List[] list = {beginnerScoreList, intermediateScoreList, expertScoreList};
         ArrayList<Integer> myArrayList;
         for (int i = 0; i < 3; i++) {
-            myArrayList = dataBase.getColumn(stringTab[i]);
-            dataBase.sortDESC(myArrayList);
-            switch (myArrayList.size()) {
-                case 0: list[i].setItems("1.     "+0,"2.     "+0,"3.     "+0);
-                    break;
-                case 1: list[i].setItems("1.     "+myArrayList.get(0),"2.     "+0,"3.     "+0);
-                break;
-                case 2: list[i].setItems("1.     "+myArrayList.get(0),"2.     "+ myArrayList.get(1),"3.     "+0);
-                break;
-                case 3: list[i].setItems("1.     "+myArrayList.get(0),"2.     "+ myArrayList.get(1),"3.     "+ myArrayList.get(2));
-                break;
-                default : list[i].setItems("1.     "+myArrayList.get(0),"2.     "+ myArrayList.get(1),"3.     "+ myArrayList.get(2));
-                break;
-            }
+            myArrayList = getColumn(stringTab[i]);
+            list[i].setItems("1.     "+myArrayList.get(0),"2.     "+ myArrayList.get(1),"3.     "+ myArrayList.get(2));
         }
-
-        dataBase.dispose();
 
         Container<Table> tableContainer = new Container<Table>();
 
@@ -113,6 +96,14 @@ public class ScoreboardState extends State {
         stage.addActor(tableContainer);
 
         Gdx.input.setInputProcessor(stage);
+    }
+
+    private ArrayList<Integer> getColumn(String col){
+        ArrayList<Integer> arrayList = new ArrayList<Integer>();
+        for (int i = 1; i < 4; i++)
+            arrayList.add(GravityRun.pref.getInteger(col+"_"+i));
+
+        return arrayList;
     }
 
     @Override

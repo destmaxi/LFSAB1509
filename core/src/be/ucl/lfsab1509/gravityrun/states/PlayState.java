@@ -80,6 +80,7 @@ public class PlayState extends State {
     protected void handleInput() {
 
         if (gameOver && (Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))) {
+            GravityRun.scoreList.add(score);
             gsm.set(new GameOverState(gsm));
         }
 
@@ -138,7 +139,6 @@ public class PlayState extends State {
             if(GravityRun.scoreList == null)
                 GravityRun.scoreList = new ArrayList<Integer>();
 
-            GravityRun.scoreList.add(score);
             sb.draw(gameOverImage,
                     cam.position.x - gameOverImage.getWidth() / 2,
                     cam.position.y - gameOverImage.getHeight() / 2);

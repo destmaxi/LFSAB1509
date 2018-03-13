@@ -11,7 +11,7 @@ public class Marble {
 
     private static final int FRAME_COUNT = 5;
     private static final int MOVEMENT = 100;
-    public static int LVL = 1;
+    public static int LVL = GravityRun.indexSelected+1;
     private int speed;
 
     public boolean colliding = false;

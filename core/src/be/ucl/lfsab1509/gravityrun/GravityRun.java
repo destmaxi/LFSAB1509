@@ -14,6 +14,7 @@ public class GravityRun extends ApplicationAdapter {
 
     public static final int HEIGHT = 800;
     public static final int WIDTH = 480;
+    public static final String DEB = "beginner", INTER = "intermediate",EXPERT = "expert",DIFFICULTY = "difficulty";
 	public static final String TITLE = "Gravity Run";
 
     public static ArrayList<Integer> scoreList;
@@ -29,12 +30,15 @@ public class GravityRun extends ApplicationAdapter {
         batch = new SpriteBatch();
 		gsm = new GameStateManager();
 		pref = Gdx.app.getPreferences("Player");
-		//pref.putBoolean("firstTime",true);
 		pref.flush();
-		if(!pref.getBoolean("firstTime"))
+		if(!pref.getBoolean("firstTime")){
+			init();
 			gsm.push(new FirstState(gsm));
-		else
+		}
+		else{
+			indexSelected = pref.getInteger(DIFFICULTY);
 			gsm.push(new MenuState(gsm));
+		}
 	}
 
 	@Override
@@ -48,6 +52,16 @@ public class GravityRun extends ApplicationAdapter {
 	@Override
 	public void dispose() {
 		batch.dispose();
+	}
+
+	private void init(){
+		String[] stringTab = {DEB,INTER,EXPERT};
+		for(int i=1; i < 4; i++)
+			pref.putInteger(stringTab[i-1]+"_"+i,0);
+
+		pref.putInteger(DIFFICULTY,indexSelected);
+
+		pref.flush();
 	}
 
 }

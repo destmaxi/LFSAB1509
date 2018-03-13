@@ -84,14 +84,20 @@ public class OptionState extends State {
                 if (listBox.getSelected().equals(string.format("beginner"))) {
                     Marble.LVL = 1;
                     GravityRun.indexSelected = 0;
+                    GravityRun.pref.putInteger(GravityRun.DIFFICULTY,0);
+                    GravityRun.pref.flush();
                 }
                 else if(listBox.getSelected().equals(string.format("inter"))) {
                     Marble.LVL = 2;
                     GravityRun.indexSelected = 1;
+                    GravityRun.pref.putInteger(GravityRun.DIFFICULTY,1);
+                    GravityRun.pref.flush();
                 }
                 else if(listBox.getSelected().equals(string.format("expert"))) {
                     Marble.LVL = 3;
                     GravityRun.indexSelected = 2;
+                    GravityRun.pref.putInteger(GravityRun.DIFFICULTY,2);
+                    GravityRun.pref.flush();
                 }
             }
         });

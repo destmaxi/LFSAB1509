@@ -29,9 +29,9 @@ public class GravityRun extends ApplicationAdapter {
         batch = new SpriteBatch();
 		gsm = new GameStateManager();
 		pref = Gdx.app.getPreferences("Player");
-		pref.putString("username","0");
+		//pref.putBoolean("firstTime",true);
 		pref.flush();
-		if(pref.getString("username")== "0")
+		if(!pref.getBoolean("firstTime"))
 			gsm.push(new FirstState(gsm));
 		else
 			gsm.push(new MenuState(gsm));

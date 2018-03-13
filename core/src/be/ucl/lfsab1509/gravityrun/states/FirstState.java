@@ -103,6 +103,8 @@ public class FirstState extends State {
     protected void handleInput() {
         if(isClickedStartButton){
             GravityRun.pref.putString("username", username);
+            GravityRun.pref.putBoolean("firstTime", true);
+            GravityRun.pref.flush();
             gsm.set(new MenuState(gsm));
         }
     }

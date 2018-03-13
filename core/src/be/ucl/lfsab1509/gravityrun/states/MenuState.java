@@ -44,6 +44,8 @@ public class MenuState extends State {
             }
         });
 
+        Label hyLabel = new Label(string.format("hello")+GravityRun.pref.getString("username"),tableSkin);
+
         Container<Table> tableContainer = new Container<Table>();
         Table table = new Table();
         stage = new Stage(new ScreenViewport());
@@ -60,6 +62,9 @@ public class MenuState extends State {
         tableContainer.top().fillX();
 
         table.add(title).top();
+        table.row();
+
+        table.add(hyLabel).expandX().padTop(sh - ch).center();
         table.row();
 
         table.add(optionButton).expandX().fillX().padTop(sh - ch);

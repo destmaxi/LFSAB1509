@@ -106,36 +106,6 @@ public class GameOverState extends State {
             gsm.set(new PlayState(gsm));
     }
 
-    /*public void add(String col){
-        int score1 = GravityRun.pref.getInteger(col+"_1");
-        int score2 = GravityRun.pref.getInteger(col+"_2");
-        int score3 = GravityRun.pref.getInteger(col+"_3");
-       for (int i=0; i <GravityRun.scoreList.size(); i++){
-           if(score1 < GravityRun.scoreList.get(i)){
-               GravityRun.pref.putInteger(col+"_1",GravityRun.scoreList.get(i));
-               GravityRun.pref.putInteger(col+"_2",score1);
-               GravityRun.pref.putInteger(col+"_3",score2);
-               GravityRun.pref.flush();
-               score3 = score2;
-               score2 = score1;
-               score1 = GravityRun.scoreList.get(i);
-           }
-           else if(score1 > GravityRun.scoreList.get(i) && score2 < GravityRun.scoreList.get(i)){
-               GravityRun.pref.putInteger(col+"_2",GravityRun.scoreList.get(i));
-               GravityRun.pref.putInteger(col+"_3",score2);
-               GravityRun.pref.flush();
-               score3 = score2;
-               score2 = GravityRun.scoreList.get(i);
-           }
-           else if(score2 > GravityRun.scoreList.get(i) && score3 < GravityRun.scoreList.get(i)){
-               GravityRun.pref.putInteger(col+"_3",GravityRun.scoreList.get(i));
-               GravityRun.pref.flush();
-               score3 = GravityRun.scoreList.get(i);
-           }
-
-       }
-    }*/
-
     private void sortDESC(ArrayList<Integer> arrayList){
         Collections.sort(arrayList, new Comparator<Integer>() {
             @Override
@@ -155,15 +125,22 @@ public class GameOverState extends State {
     }
 
     public ArrayList<Integer> add(ArrayList<Integer> userList){
-        ArrayList<Integer> arrayList = new ArrayList<Integer>();
-        sortDESC(GravityRun.scoreList);
-        sortASC(userList);
-        
-        for (int i=0; i < 3; i++)
-            if(!arrayList.contains(GravityRun.scoreList.get(i)))
-                arrayList.add(GravityRun.scoreList.get(i));
 
-        return arrayList;
+        for (int i=0; i < GravityRun.scoreList.size(); i++){
+            if(userList != null)
+                sortASC(userList);
+            else
+                userList = new ArrayList<Integer>();
+
+            if(!userList.contains(GravityRun.scoreList.get(i)) && userList.size() < 3)
+                userList.add(GravityRun.scoreList.get(i));
+            else if(!userList.contains(GravityRun.scoreList.get(i)) && userList.get(0) < GravityRun.scoreList.get(i)){
+                userList.remove(0);
+                userList.add(GravityRun.scoreList.get(i));
+            }
+        }
+
+        return userList;
     }
 
     @Override

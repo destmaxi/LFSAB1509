@@ -25,6 +25,12 @@ public class MenuState extends State {
     public MenuState(GameStateManager gsm) {
         super(gsm);
 
+        float sw = Gdx.graphics.getWidth();
+        float sh = Gdx.graphics.getHeight();
+
+        float cw = sw * 0.9f;
+        float ch = sh * 0.9f;
+
         menuSkin = new Skin();
         menuSkin.createSkin(62);
         Label title = new Label(string.format("menu"), menuSkin, "title");
@@ -51,12 +57,6 @@ public class MenuState extends State {
         Container<Table> tableContainer = new Container<Table>();
         Table table = new Table();
         stage = new Stage(new ScreenViewport());
-
-        float sw = Gdx.graphics.getWidth();
-        float sh = Gdx.graphics.getHeight();
-
-        float cw = sw * 0.9f;
-        float ch = sh * 0.9f;
 
 
         tableContainer.setSize(cw, ch);
@@ -90,8 +90,11 @@ public class MenuState extends State {
             isClickedStartGameButton = false;
             gsm.push(new PlayState(gsm));
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+            GravityRun.pref.put(GravityRun.user.toMap());
+            GravityRun.pref.flush();
             Gdx.app.exit();
+        }
     }
 
     @Override
@@ -103,7 +106,7 @@ public class MenuState extends State {
     @Override
     public void render(SpriteBatch sb) {
         sb.setProjectionMatrix(cam.combined);
-        hyLabel.setText(string.format("hello")+ GravityRun.pref.getString(GravityRun.USERNAME));
+        hyLabel.setText(string.format("hello")+ GravityRun.user.getUsername());
         stage.act();
         stage.draw();
         if (isClickedOptionButton || isClickedStartGameButton)

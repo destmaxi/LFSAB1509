@@ -18,6 +18,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class ScoreboardState extends State {
 
@@ -58,12 +60,42 @@ public class ScoreboardState extends State {
             }
         });
 
-        String[] stringTab = {GravityRun.DEB, GravityRun.INTER, GravityRun.EXPERT};
+        /*String[] stringTab = {GravityRun.DEB, GravityRun.INTER, GravityRun.EXPERT};
         List[] list = {beginnerScoreList, intermediateScoreList, expertScoreList};
         ArrayList<Integer> myArrayList;
         for (int i = 0; i < 3; i++) {
             myArrayList = getColumn(stringTab[i]);
             list[i].setItems("1.     "+myArrayList.get(0),"2.     "+ myArrayList.get(1),"3.     "+ myArrayList.get(2));
+        }*/
+
+        java.util.List[] lists = {GravityRun.user.getBeginner(),GravityRun.user.getInter(),GravityRun.user.getExpert()};
+        List[] list = {beginnerScoreList, intermediateScoreList, expertScoreList};
+        ArrayList<Integer> myArrayList;
+
+        for (int i = 0; i < 3; i++) {
+            myArrayList = (ArrayList<Integer>) lists[i];
+            int length;
+
+            if(myArrayList != null){
+                sortDESC(myArrayList);
+                length = myArrayList.size();
+            }
+            else
+                length = 0;
+
+
+            switch (length) {
+                case 0: list[i].setItems("1.     "+0,"2.     "+0,"3.     "+0);
+                    break;
+                case 1: list[i].setItems("1.     "+myArrayList.get(0),"2.     "+0,"3.     "+0);
+                    break;
+                case 2: list[i].setItems("1.     "+myArrayList.get(0),"2.     "+ myArrayList.get(1),"3.     "+0);
+                    break;
+                case 3: list[i].setItems("1.     "+myArrayList.get(0),"2.     "+ myArrayList.get(1),"3.     "+ myArrayList.get(2));
+                    break;
+                default : list[i].setItems("1.     "+myArrayList.get(0),"2.     "+ myArrayList.get(1),"3.     "+ myArrayList.get(2));
+                    break;
+            }
         }
 
         Container<Table> tableContainer = new Container<Table>();
@@ -96,6 +128,15 @@ public class ScoreboardState extends State {
         stage.addActor(tableContainer);
 
         Gdx.input.setInputProcessor(stage);
+    }
+
+    private void sortDESC(ArrayList<Integer> arrayList){
+        Collections.sort(arrayList, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer integer, Integer t1) {
+                return t1.compareTo(integer);
+            }
+        });
     }
 
     private ArrayList<Integer> getColumn(String col){

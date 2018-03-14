@@ -32,6 +32,12 @@ public class OptionState extends State {
     public OptionState(GameStateManager gsm) {
         super(gsm);
 
+        float sw = Gdx.graphics.getWidth();
+        float sh = Gdx.graphics.getHeight();
+
+        float cw = sw * 0.9f;
+        float ch = sh * 0.9f;
+
         stage = new Stage(new ScreenViewport());
 
         menuSkin = new Skin();
@@ -92,35 +98,29 @@ public class OptionState extends State {
 
         saveButton.setVisible(false);
 
-        listBox.setSelectedIndex(GravityRun.indexSelected);
+        listBox.setSelectedIndex(GravityRun.user.getIndexSelected());
         listBox.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (listBox.getSelected().equals(string.format("beginner"))) {
                     Marble.LVL = 1;
-                    GravityRun.indexSelected = 0;
-                    GravityRun.pref.putInteger(GravityRun.DIFFICULTY,0);
-                    GravityRun.pref.flush();
+                    GravityRun.user.setIndexSelected(0);
                     isClickedLVLButton = true;
                 }
                 else if(listBox.getSelected().equals(string.format("inter"))) {
                     Marble.LVL = 2;
-                    GravityRun.indexSelected = 1;
-                    GravityRun.pref.putInteger(GravityRun.DIFFICULTY,1);
-                    GravityRun.pref.flush();
+                    GravityRun.user.setIndexSelected(1);
                     isClickedLVLButton = true;
                 }
                 else if(listBox.getSelected().equals(string.format("expert"))) {
                     Marble.LVL = 3;
-                    GravityRun.indexSelected = 2;
-                    GravityRun.pref.putInteger(GravityRun.DIFFICULTY,2);
-                    GravityRun.pref.flush();
+                    GravityRun.user.setIndexSelected(2);
                     isClickedLVLButton = true;
                 }
             }
         });
 
-        username = GravityRun.pref.getString(GravityRun.USERNAME);
+        username = GravityRun.user.getUsername();
         usernameField = new TextField(username, tableSkin);
         usernameField.setText(username);
 
@@ -145,17 +145,11 @@ public class OptionState extends State {
         Table table = new Table();
         Table titleTable = new Table();
 
-        float sw = Gdx.graphics.getWidth();
-        float sh = Gdx.graphics.getHeight();
-
-        float cw = sw * 0.9f;
-        float ch = sh * 0.9f;
-
         tableContainer.setSize(cw, ch);
         tableContainer.setPosition((sw - cw) / 2,(sh - ch) / 2);
         tableContainer.top().fillX();
 
-        titleTable.row().expandY();
+        /*titleTable.row().expandY();
         titleTable.add(title).colspan(7).expandX();
         titleTable.row().colspan(7).fillX();
         titleTable.add(table);
@@ -170,7 +164,25 @@ public class OptionState extends State {
         table.row().colspan(2);
         table.add(lvlButton).expandX().fillX().padTop((sh - ch)/2);
         table.row().colspan(2);
+        table.add(listBox).fillX().top();*/
+
+        titleTable.row().expandY();
+        titleTable.add(title).colspan(7).expandX();
+        titleTable.row().colspan(7).fillX();
+        titleTable.add(table);
+
+        table.row().colspan(2);
+        table.add(scoreButton).expandX().fillX().padTop(sh - ch);
+        table.row().colspan(2);
+        table.add(usernameButton).expandX().fillX().padTop(sh - ch).maxWidth(cw);
+        table.row();
+        table.add(usernameField).expandX().fillX();
+        table.add(saveButton).expandX().fillX();
+        table.row().colspan(2);
+        table.add(lvlButton).expandX().fillX().padTop((sh - ch)/2).maxWidth(cw);
+        table.row().colspan(2);
         table.add(listBox).fillX().top();
+
 
         tableContainer.setActor(titleTable);
         stage.addActor(tableContainer);
@@ -185,7 +197,8 @@ public class OptionState extends State {
             gsm.push(new ScoreboardState(gsm));
         }
         if(isClickedSaveButton){
-            GravityRun.pref.putString(GravityRun.USERNAME, username);
+            GravityRun.user.setUsername(username);
+            GravityRun.pref.put(GravityRun.user.toMap());
             GravityRun.pref.flush();
             usernameField.setVisible(false);
             saveButton.setVisible(false);

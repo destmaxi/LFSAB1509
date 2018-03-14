@@ -1,6 +1,8 @@
 package be.ucl.lfsab1509.gravityrun;
 
 import be.ucl.lfsab1509.gravityrun.states.*;
+import be.ucl.lfsab1509.gravityrun.tools.User;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -14,12 +16,12 @@ public class GravityRun extends ApplicationAdapter {
 
     public static final int HEIGHT = 800;
     public static final int WIDTH = 480;
-    public static final String DEB = "beginner", INTER = "intermediate",EXPERT = "expert",DIFFICULTY = "difficulty",USERNAME="username";
+    public static final String DEB = "beginner", INTER = "intermediate",EXPERT = "expert",USERNAME="username",FIRSTTIME="firstTime",INDEX = "index";
 	public static final String TITLE = "Gravity Run";
 
     public static ArrayList<Integer> scoreList;
-    public static int indexSelected = 0;
     public static Preferences pref;
+    public static User user;
 
     private GameStateManager gsm;
 	private SpriteBatch batch;
@@ -31,12 +33,15 @@ public class GravityRun extends ApplicationAdapter {
 		gsm = new GameStateManager();
 		pref = Gdx.app.getPreferences("Player");
 		pref.flush();
-		if(!pref.getBoolean("firstTime")){
-			init();
+
+		Map<String,?> map = pref.get();
+
+		if(!pref.getBoolean(FIRSTTIME)){
+			user = new User();
 			gsm.push(new FirstState(gsm));
 		}
 		else{
-			indexSelected = pref.getInteger(DIFFICULTY);
+			user = new User(map);
 			gsm.push(new MenuState(gsm));
 		}
 	}
@@ -58,8 +63,6 @@ public class GravityRun extends ApplicationAdapter {
 		String[] stringTab = {DEB,INTER,EXPERT};
 		for(int i=1; i < 4; i++)
 			pref.putInteger(stringTab[i-1]+"_"+i,0);
-
-		pref.putInteger(DIFFICULTY,indexSelected);
 
 		pref.flush();
 	}

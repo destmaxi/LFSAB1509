@@ -87,19 +87,18 @@ public class GameOverState extends State {
     protected void handleInput() {
         if (isClickedMenuButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 
-            String col = null;
-
             switch (Marble.LVL) {
-                case 1: col = GravityRun.DEB;
+                case 1: GravityRun.user.setBeginner(add());
                     break;
-                case 2: col = GravityRun.INTER;
+                case 2: GravityRun.user.setInter(add());
                     break;
-                case 3: col = GravityRun.EXPERT;
+                case 3: GravityRun.user.setExpert(add());
                     break;
             }
 
-            add(col);
             GravityRun.scoreList = null;
+            GravityRun.pref.put(GravityRun.user.toMap());
+            GravityRun.pref.flush();
             gsm.pop();
         }
 
@@ -107,8 +106,7 @@ public class GameOverState extends State {
             gsm.set(new PlayState(gsm));
     }
 
-    public void add(String col){
-       sortDESC(GravityRun.scoreList);
+    /*public void add(String col){
         int score1 = GravityRun.pref.getInteger(col+"_1");
         int score2 = GravityRun.pref.getInteger(col+"_2");
         int score3 = GravityRun.pref.getInteger(col+"_3");
@@ -136,7 +134,7 @@ public class GameOverState extends State {
            }
 
        }
-    }
+    }*/
 
     private void sortDESC(ArrayList<Integer> arrayList){
         Collections.sort(arrayList, new Comparator<Integer>() {
@@ -145,6 +143,17 @@ public class GameOverState extends State {
                 return t1.compareTo(integer);
             }
         });
+    }
+
+    public ArrayList<Integer> add(){
+        ArrayList<Integer> arrayList = new ArrayList<Integer>();
+        sortDESC(GravityRun.scoreList);
+
+        for (int i=0; i < 3; i++)
+            if(!arrayList.contains(GravityRun.scoreList.get(i)))
+                arrayList.add(GravityRun.scoreList.get(i));
+
+        return arrayList;
     }
 
     @Override

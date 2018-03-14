@@ -14,6 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.util.ArrayList;
+
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 
@@ -25,11 +27,17 @@ public class FirstState extends State {
     private boolean isClickedStartButton = false;
     private Stage stage;
     private String username= string.format("username");
-    private Skin menuSkin, tableSkin;
+    private Skin menuSkin, tableSkin, errorSkin;
     private Label errorLabel;
 
     public FirstState(GameStateManager gsm){
         super(gsm);
+
+        float sw = Gdx.graphics.getWidth();
+        float sh = Gdx.graphics.getHeight();
+
+        float cw = sw * 0.9f;
+        float ch = sh * 0.9f;
 
         menuSkin = new Skin();
         menuSkin.createSkin(62);
@@ -38,6 +46,9 @@ public class FirstState extends State {
         tableSkin = new Skin();
         tableSkin.createSkin(42);
         TextButton startButton = new TextButton(string.format("start"), tableSkin, "round");
+
+        errorSkin = new Skin();
+        errorSkin.createSkin(28);
 
         startButton.addListener(new ClickListener() {
             @Override
@@ -63,18 +74,12 @@ public class FirstState extends State {
             }
         });
 
-        errorLabel = new Label(string.format("error"), tableSkin,"error");
+        errorLabel = new Label(string.format("error"), errorSkin,"error");
         errorLabel.setVisible(false);
 
         Container<Table> tableContainer = new Container<Table>();
         Table table = new Table();
         stage = new Stage(new ScreenViewport());
-
-        float sw = Gdx.graphics.getWidth();
-        float sh = Gdx.graphics.getHeight();
-
-        float cw = sw * 0.9f;
-        float ch = sh * 0.9f;
 
 
         tableContainer.setSize(cw, ch);
@@ -86,9 +91,9 @@ public class FirstState extends State {
 
         table.add(usernameField).expandX().fillX().padTop(sh - ch);
         table.row();
-        table.add(errorLabel).expandX().fillX().padTop(sh - ch);
-        table.row();
         table.add(startButton).expandX().fillX().padTop(sh - ch);
+        table.row();
+        table.add(errorLabel).expandX().fillX().padTop(sh - ch).center();
         table.row();
 
         tableContainer.setActor(table);
@@ -100,8 +105,13 @@ public class FirstState extends State {
     @Override
     protected void handleInput() {
         if(isClickedStartButton){
-            GravityRun.pref.putString(GravityRun.USERNAME, username);
-            GravityRun.pref.putBoolean("firstTime", true);
+            GravityRun.user.setUsername(username);
+            GravityRun.user.setFirstTime(true);
+            GravityRun.user.setBeginner(new ArrayList<Integer>());
+            GravityRun.user.setInter(new ArrayList<Integer>());
+            GravityRun.user.setExpert(new ArrayList<Integer>());
+            GravityRun.user.setIndexSelected(0);
+            GravityRun.pref.put(GravityRun.user.toMap());
             GravityRun.pref.flush();
             gsm.set(new MenuState(gsm));
         }
@@ -129,6 +139,9 @@ public class FirstState extends State {
 
     @Override
     public void dispose() {
-
+        tableSkin.dispose();
+        errorSkin.dispose();
+        menuSkin.dispose();
+        stage.dispose();
     }
 }

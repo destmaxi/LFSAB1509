@@ -2,13 +2,11 @@ package be.ucl.lfsab1509.gravityrun;
 
 import be.ucl.lfsab1509.gravityrun.states.*;
 import be.ucl.lfsab1509.gravityrun.tools.User;
-
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -16,7 +14,6 @@ public class GravityRun extends ApplicationAdapter {
 
     public static final int HEIGHT = 800;
     public static final int WIDTH = 480;
-    public static final String DEB = "beginner", INTER = "intermediate",EXPERT = "expert",USERNAME="username",FIRSTTIME="firstTime",INDEX = "index";
 	public static final String TITLE = "Gravity Run";
 
     public static ArrayList<Integer> scoreList;
@@ -36,7 +33,7 @@ public class GravityRun extends ApplicationAdapter {
 
 		Map<String,?> map = pref.get();
 
-		if(!pref.getBoolean(FIRSTTIME)){
+		if(!pref.getBoolean(User.FIRSTTIME)){
 			user = new User();
 			gsm.push(new FirstState(gsm));
 		}
@@ -57,14 +54,6 @@ public class GravityRun extends ApplicationAdapter {
 	@Override
 	public void dispose() {
 		batch.dispose();
-	}
-
-	private void init(){
-		String[] stringTab = {DEB,INTER,EXPERT};
-		for(int i=1; i < 4; i++)
-			pref.putInteger(stringTab[i-1]+"_"+i,0);
-
-		pref.flush();
 	}
 
 }

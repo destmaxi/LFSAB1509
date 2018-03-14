@@ -29,7 +29,7 @@ public class OptionState extends State {
     private TextField usernameField;
     private TextButton saveButton;
 
-    public OptionState(GameStateManager gsm) {
+    OptionState(GameStateManager gsm) {
         super(gsm);
 
         float sw = Gdx.graphics.getWidth();

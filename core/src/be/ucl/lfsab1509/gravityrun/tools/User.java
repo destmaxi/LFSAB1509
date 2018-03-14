@@ -1,43 +1,43 @@
 package be.ucl.lfsab1509.gravityrun.tools;
 
 import com.badlogic.gdx.utils.Json;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import be.ucl.lfsab1509.gravityrun.GravityRun;
-
 public class User {
+
     private String username;
     private boolean firstTime;
     private ArrayList<Integer> beginner, inter, expert;
     private Integer indexSelected;
+    private static final String DEB = "beginner", INTER = "intermediate",EXPERT = "expert",USERNAME="username",INDEX = "index";
+    public static final String FIRSTTIME = "firstTime";
 
-    public User(Map<String,?> userMap){
 
-        username = userMap.get(GravityRun.USERNAME).toString();
-        firstTime = (Boolean) userMap.get(GravityRun.FIRSTTIME);
-        indexSelected = (Integer) userMap.get(GravityRun.INDEX);
-        beginner = convertStoA((String)userMap.get(GravityRun.DEB));
-        inter = convertStoA((String)userMap.get(GravityRun.INTER));
-        expert = convertStoA((String)userMap.get(GravityRun.EXPERT));
+    public User(Map<String,?> userMap) {
+        username = userMap.get(USERNAME).toString();
+        firstTime = (Boolean) userMap.get(FIRSTTIME);
+        indexSelected = (Integer) userMap.get(INDEX);
+        beginner = convertStoA((String)userMap.get(DEB));
+        inter = convertStoA((String)userMap.get(INTER));
+        expert = convertStoA((String)userMap.get(EXPERT));
     }
 
-    public User(){
+    public User() {
         firstTime = false;
     }
 
-    private String convertAtoS(ArrayList<Integer> arrayList){
+    private String convertAtoS(ArrayList<Integer> arrayList) {
         Json json = new Json();
         return json.toJson(arrayList, ArrayList.class);
     }
 
-    private ArrayList<Integer> convertStoA(String text){
+    @SuppressWarnings("unchecked")
+    private ArrayList<Integer> convertStoA(String text) {
         Json json = new Json();
         if(text == null)
             return new ArrayList<Integer>();
-
         return json.fromJson(ArrayList.class, text);
     }
 
@@ -73,20 +73,21 @@ public class User {
         this.expert = expert;
     }
 
-    public Map<String,Object> toMap(){
+    public Map<String,Object> toMap() {
         HashMap<String,Object> map = new HashMap<String, Object>();
-        map.put(GravityRun.USERNAME,username);
-        map.put(GravityRun.DEB,convertAtoS(beginner));
-        map.put(GravityRun.INTER,convertAtoS(inter));
-        map.put(GravityRun.EXPERT,convertAtoS(expert));
-        map.put(GravityRun.FIRSTTIME,firstTime);
-        map.put(GravityRun.INDEX,indexSelected);
+
+        map.put(USERNAME,username);
+        map.put(DEB,convertAtoS(beginner));
+        map.put(INTER,convertAtoS(inter));
+        map.put(EXPERT,convertAtoS(expert));
+        map.put(FIRSTTIME,firstTime);
+        map.put(INDEX,indexSelected);
 
         return map;
     }
 
-    public void setFirstTime(boolean firstTime) {
-        this.firstTime = firstTime;
+    public void setFirstTimeTrue() {
+        this.firstTime = true;
     }
 
     public Integer getIndexSelected() {

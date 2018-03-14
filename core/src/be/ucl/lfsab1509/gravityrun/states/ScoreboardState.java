@@ -28,7 +28,8 @@ public class ScoreboardState extends State {
     private Stage stage;
     private Texture returnTexture;
 
-    public ScoreboardState(GameStateManager gsm) {
+    @SuppressWarnings("unchecked")
+    ScoreboardState(GameStateManager gsm) {
         super(gsm);
 
         stage = new Stage(new ScreenViewport());
@@ -60,14 +61,6 @@ public class ScoreboardState extends State {
             }
         });
 
-        /*String[] stringTab = {GravityRun.DEB, GravityRun.INTER, GravityRun.EXPERT};
-        List[] list = {beginnerScoreList, intermediateScoreList, expertScoreList};
-        ArrayList<Integer> myArrayList;
-        for (int i = 0; i < 3; i++) {
-            myArrayList = getColumn(stringTab[i]);
-            list[i].setItems("1.     "+myArrayList.get(0),"2.     "+ myArrayList.get(1),"3.     "+ myArrayList.get(2));
-        }*/
-
         java.util.List[] lists = {GravityRun.user.getBeginner(),GravityRun.user.getInter(),GravityRun.user.getExpert()};
         List[] list = {beginnerScoreList, intermediateScoreList, expertScoreList};
         ArrayList<Integer> myArrayList;
@@ -85,15 +78,15 @@ public class ScoreboardState extends State {
 
 
             switch (length) {
-                case 0: list[i].setItems("1.     "+0,"2.     "+0,"3.     "+0);
+                case 0: list[i].setItems("1.  "+0,"2.  "+0,"3.  "+0);
                     break;
-                case 1: list[i].setItems("1.     "+myArrayList.get(0),"2.     "+0,"3.     "+0);
+                case 1: list[i].setItems("1.  "+myArrayList.get(0),"2.  "+0,"3.  "+0);
                     break;
-                case 2: list[i].setItems("1.     "+myArrayList.get(0),"2.     "+ myArrayList.get(1),"3.     "+0);
+                case 2: list[i].setItems("1.  "+myArrayList.get(0),"2.  "+ myArrayList.get(1),"3.  "+0);
                     break;
-                case 3: list[i].setItems("1.     "+myArrayList.get(0),"2.     "+ myArrayList.get(1),"3.     "+ myArrayList.get(2));
+                case 3: list[i].setItems("1.  "+myArrayList.get(0),"2.  "+ myArrayList.get(1),"3.  "+ myArrayList.get(2));
                     break;
-                default : list[i].setItems("1.     "+myArrayList.get(0),"2.     "+ myArrayList.get(1),"3.     "+ myArrayList.get(2));
+                default : list[i].setItems("1.  "+myArrayList.get(0),"2.  "+ myArrayList.get(1),"3.  "+ myArrayList.get(2));
                     break;
             }
         }
@@ -130,21 +123,13 @@ public class ScoreboardState extends State {
         Gdx.input.setInputProcessor(stage);
     }
 
-    private void sortDESC(ArrayList<Integer> arrayList){
+    private void sortDESC(ArrayList<Integer> arrayList) {
         Collections.sort(arrayList, new Comparator<Integer>() {
             @Override
             public int compare(Integer integer, Integer t1) {
                 return t1.compareTo(integer);
             }
         });
-    }
-
-    private ArrayList<Integer> getColumn(String col){
-        ArrayList<Integer> arrayList = new ArrayList<Integer>();
-        for (int i = 1; i < 4; i++)
-            arrayList.add(GravityRun.pref.getInteger(col+"_"+i));
-
-        return arrayList;
     }
 
     @Override

@@ -11,7 +11,7 @@ public class MarbleAnimation {
     private float currentFrameTime, maxFrameTime;
     private int frame, frameCount;
 
-    public MarbleAnimation(Texture marbles, int frameCount, float cycleTime) {
+    MarbleAnimation(Texture marbles, int frameCount, float cycleTime) {
         TextureRegion region = new TextureRegion(marbles);
         frames = new Array<TextureRegion>();
         int frameHeight = region.getRegionHeight() / frameCount;
@@ -38,7 +38,7 @@ public class MarbleAnimation {
 
     }
 
-    public TextureRegion getFrame() {
+    TextureRegion getFrame() {
         return frames.get(frame);
     }
 

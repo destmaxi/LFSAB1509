@@ -19,7 +19,7 @@ public class PauseState extends State {
     private Stage stage;
     private Skin buttonSkin, scoreSkin, titleSkin;
 
-    protected PauseState(GameStateManager gsm) {
+    PauseState(GameStateManager gsm) {
         super(gsm);
 
         titleSkin = new Skin();

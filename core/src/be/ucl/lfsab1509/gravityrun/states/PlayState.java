@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class PlayState extends State {
 
-    public static int score = 0;
+    static int score = 0;
     private static final int TUBE_COUNT = 4;
     private static final int TUBE_SPACING = 80;
 
@@ -32,18 +32,12 @@ public class PlayState extends State {
     private Stage scoreStage;
     private Skin skin;
     private Texture gameOverImage, pauseImage;
-    // private Texture bg; // Will be usefull when we got a background picture
-    // private Vector2 bg1, bg2; // Will be usefull when we got a background picture
 
-    public PlayState(GameStateManager gsm) {
+    PlayState(GameStateManager gsm) {
         super(gsm);
 
         if (GravityRun.scoreList == null)
             GravityRun.scoreList = new ArrayList<Integer>();
-
-        // Will be usefull when we got a background picture
-        // bg1 = new Vector2(0, cam.position.y - cam.viewportHeight / 2);
-        // bg2 = new Vector2(0, (cam.position.y - cam.viewportHeight / 2) + bg.getHeight() );
 
         cam.setToOrtho(false, GravityRun.WIDTH / 2, GravityRun.HEIGHT / 2);
 
@@ -162,13 +156,4 @@ public class PlayState extends State {
             tube.dispose();
         }
     }
-
-    //will be usefull when we got a background picture
-   /* private void updateGround() {
-        if (cam.position.y - (cam.viewportHeight / 2) > bg1.y + bg.getHeight())
-            bg1.add(0, bg.getHeight() * 2);
-        if (cam.position.y - (cam.viewportHeight / 2) > bg2.y + bg.getHeight())
-            bg2.add(0, bg.getHeight() * 2);
-    }*/
-
 }

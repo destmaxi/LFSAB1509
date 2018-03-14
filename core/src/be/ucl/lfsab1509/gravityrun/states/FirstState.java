@@ -1,5 +1,7 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
+import be.ucl.lfsab1509.gravityrun.GravityRun;
+import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -12,25 +14,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
 import java.util.ArrayList;
 
-import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.tools.Skin;
-
-/**
- * Created by maxde on 13-03-18.
- */
-
 public class FirstState extends State {
+
     private boolean isClickedStartButton = false;
     private Stage stage;
-    private String username= string.format("username");
+    private String username = string.format("username");
     private Skin menuSkin, tableSkin, errorSkin;
     private Label errorLabel;
 
-    public FirstState(GameStateManager gsm){
+    public FirstState(GameStateManager gsm) {
         super(gsm);
 
         float sw = Gdx.graphics.getWidth();
@@ -75,6 +71,9 @@ public class FirstState extends State {
         });
 
         errorLabel = new Label(string.format("error"), errorSkin,"error");
+        errorLabel.setWrap(true);
+        errorLabel.setWidth(cw);
+        errorLabel.setAlignment(Align.center);
         errorLabel.setVisible(false);
 
         Container<Table> tableContainer = new Container<Table>();
@@ -93,7 +92,7 @@ public class FirstState extends State {
         table.row();
         table.add(startButton).expandX().fillX().padTop(sh - ch);
         table.row();
-        table.add(errorLabel).expandX().fillX().padTop(sh - ch).center();
+        table.add(errorLabel).expandX().fillX().padTop(sh - ch).width(cw);
         table.row();
 
         tableContainer.setActor(table);
@@ -104,15 +103,17 @@ public class FirstState extends State {
 
     @Override
     protected void handleInput() {
-        if(isClickedStartButton){
+        if (isClickedStartButton) {
             GravityRun.user.setUsername(username);
-            GravityRun.user.setFirstTime(true);
+            GravityRun.user.setFirstTimeTrue();
             GravityRun.user.setBeginner(new ArrayList<Integer>());
             GravityRun.user.setInter(new ArrayList<Integer>());
             GravityRun.user.setExpert(new ArrayList<Integer>());
             GravityRun.user.setIndexSelected(0);
+
             GravityRun.pref.put(GravityRun.user.toMap());
             GravityRun.pref.flush();
+
             gsm.set(new MenuState(gsm));
         }
     }

@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,7 +24,7 @@ public class GameOverState extends State {
     private Stage stage;
     private Skin buttonSkin, scoreSkin, titleSkin;
 
-    public GameOverState(GameStateManager gsm) {
+    GameOverState(GameStateManager gsm) {
         super(gsm);
 
         titleSkin = new Skin();
@@ -106,15 +105,6 @@ public class GameOverState extends State {
 
         if (isClickedReplayButton)
             gsm.set(new PlayState(gsm));
-    }
-
-    private void sortDESC(ArrayList<Integer> arrayList){
-        Collections.sort(arrayList, new Comparator<Integer>() {
-            @Override
-            public int compare(Integer integer, Integer t1) {
-                return t1.compareTo(integer);
-            }
-        });
     }
 
     private void sortASC(ArrayList<Integer> arrayList){

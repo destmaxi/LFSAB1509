@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class MenuState extends State {
@@ -53,6 +54,9 @@ public class MenuState extends State {
         });
 
         hyLabel = new Label(string.format("hello")+GravityRun.pref.getString("username"),tableSkin);
+        hyLabel.setWrap(true);
+        hyLabel.setWidth(cw);
+        hyLabel.setAlignment(Align.center);
 
         Container<Table> tableContainer = new Container<Table>();
         Table table = new Table();
@@ -66,7 +70,7 @@ public class MenuState extends State {
         table.add(title).top();
         table.row();
 
-        table.add(hyLabel).expandX().padTop(sh - ch).center();
+        table.add(hyLabel).expandX().width(cw).padTop(sh - ch);
         table.row();
 
         table.add(optionButton).expandX().fillX().padTop(sh - ch);

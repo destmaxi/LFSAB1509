@@ -15,9 +15,7 @@ public class AndroidLauncher extends AndroidApplication {
 		Fabric.with(this, new Crashlytics());
 		AndroidApplicationConfiguration config;
 		config = new AndroidApplicationConfiguration();
-		config.useGyroscope = true;  //default is false
-
-
+		config.useGyroscope = true;
 		config.useAccelerometer = true;
 		config.useCompass = false;
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);

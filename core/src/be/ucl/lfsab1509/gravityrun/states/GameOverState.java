@@ -88,11 +88,11 @@ public class GameOverState extends State {
         if (isClickedMenuButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 
             switch (Marble.LVL) {
-                case 1: GravityRun.user.setBeginner(add());
+                case 1: GravityRun.user.setBeginner(add(GravityRun.user.getBeginner()));
                     break;
-                case 2: GravityRun.user.setInter(add());
+                case 2: GravityRun.user.setInter(add(GravityRun.user.getInter()));
                     break;
-                case 3: GravityRun.user.setExpert(add());
+                case 3: GravityRun.user.setExpert(add(GravityRun.user.getExpert()));
                     break;
             }
 
@@ -145,10 +145,20 @@ public class GameOverState extends State {
         });
     }
 
-    public ArrayList<Integer> add(){
+    private void sortASC(ArrayList<Integer> arrayList){
+        Collections.sort(arrayList, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer integer, Integer t1) {
+                return integer.compareTo(t1);
+            }
+        });
+    }
+
+    public ArrayList<Integer> add(ArrayList<Integer> userList){
         ArrayList<Integer> arrayList = new ArrayList<Integer>();
         sortDESC(GravityRun.scoreList);
-
+        sortASC(userList);
+        
         for (int i=0; i < 3; i++)
             if(!arrayList.contains(GravityRun.scoreList.get(i)))
                 arrayList.add(GravityRun.scoreList.get(i));

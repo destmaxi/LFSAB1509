@@ -96,9 +96,11 @@ public class GameOverState extends State {
                     break;
             }
 
-            GravityRun.scoreList = null;
             GravityRun.pref.put(GravityRun.user.toMap());
             GravityRun.pref.flush();
+            
+            GravityRun.scoreList = null;
+
             gsm.pop();
         }
 

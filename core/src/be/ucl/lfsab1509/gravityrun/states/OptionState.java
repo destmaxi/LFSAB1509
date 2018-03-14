@@ -5,28 +5,29 @@ import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class OptionState extends State {
 
-    private boolean isCheckedLangButton = false, isClickedLangButton = false, isClickedReturnButton = false, isClickedScoreButton = false;
+    private boolean isCheckedLangButton = false, isClickedLangButton = false, isClickedScoreButton = false, isClickedUsernameButton = false, isClickedSaveButton = false, isCheckedUsernameButton = false, isClickedLVLButton = false;
     private final List<String> listBox;
     private Skin menuSkin, tableSkin;
     private Stage stage;
-    private Texture returnImage;
+    private String username;
+    private TextField usernameField;
+    private TextButton saveButton;
 
     public OptionState(GameStateManager gsm) {
         super(gsm);
@@ -39,12 +40,11 @@ public class OptionState extends State {
         tableSkin.createSkin(42);
         menuSkin.createSkin(62);
 
-        returnImage = new Texture("back.png");
-
         Label title = new Label(string.get("option"), menuSkin, "title");
         TextButton lvlButton = new TextButton(string.format("chose_lvl"), tableSkin, "round");
         TextButton scoreButton = new TextButton(string.format("my_score"), tableSkin, "round");
-        ImageButton returnButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(returnImage)));
+        saveButton = new TextButton(string.format("save"), tableSkin, "round");
+        TextButton usernameButton = new TextButton(string.format("mod_username"),tableSkin,"round");
         listBox = new List<String>(tableSkin);
 
         listBox.setItems(string.format("beginner"), string.format("inter"), string.format("expert"));
@@ -63,6 +63,26 @@ public class OptionState extends State {
             }
         });
 
+        saveButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                isClickedSaveButton = true;
+            }
+        });
+
+        usernameButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (!isCheckedUsernameButton) {
+                    isClickedUsernameButton = true;
+                    isCheckedUsernameButton = true;
+                } else {
+                    isClickedUsernameButton = false;
+                    isCheckedUsernameButton = false;
+                }
+            }
+        });
+
         scoreButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -70,12 +90,7 @@ public class OptionState extends State {
             }
         });
 
-        returnButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                isClickedReturnButton = true;
-            }
-        });
+        saveButton.setVisible(false);
 
         listBox.setSelectedIndex(GravityRun.indexSelected);
         listBox.addListener(new ClickListener() {
@@ -86,21 +101,44 @@ public class OptionState extends State {
                     GravityRun.indexSelected = 0;
                     GravityRun.pref.putInteger(GravityRun.DIFFICULTY,0);
                     GravityRun.pref.flush();
+                    isClickedLVLButton = true;
                 }
                 else if(listBox.getSelected().equals(string.format("inter"))) {
                     Marble.LVL = 2;
                     GravityRun.indexSelected = 1;
                     GravityRun.pref.putInteger(GravityRun.DIFFICULTY,1);
                     GravityRun.pref.flush();
+                    isClickedLVLButton = true;
                 }
                 else if(listBox.getSelected().equals(string.format("expert"))) {
                     Marble.LVL = 3;
                     GravityRun.indexSelected = 2;
                     GravityRun.pref.putInteger(GravityRun.DIFFICULTY,2);
                     GravityRun.pref.flush();
+                    isClickedLVLButton = true;
                 }
             }
         });
+
+        username = GravityRun.pref.getString(GravityRun.USERNAME);
+        usernameField = new TextField(username, tableSkin);
+        usernameField.setText(username);
+
+        usernameField.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                usernameField.selectAll();
+            }
+        });
+        usernameField.addListener(new ChangeListener() {
+
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                username = usernameField.getText();
+            }
+        });
+
+        usernameField.setVisible(false);
 
         Container<Table> tableContainer = new Container<Table>();
 
@@ -122,11 +160,16 @@ public class OptionState extends State {
         titleTable.row().colspan(7).fillX();
         titleTable.add(table);
 
-        table.row();
+        table.row().colspan(2);
         table.add(scoreButton).expandX().fillX().padTop(sh - ch);
+        table.row().colspan(2);
+        table.add(usernameButton).expandX().fillX().padTop(sh - ch);
         table.row();
-        table.add(lvlButton).expandX().fillX().padTop(sh - ch);
-        table.row();
+        table.add(usernameField).expandX().fillX();
+        table.add(saveButton).expandX().fillX();
+        table.row().colspan(2);
+        table.add(lvlButton).expandX().fillX().padTop((sh - ch)/2);
+        table.row().colspan(2);
         table.add(listBox).fillX().top();
 
         tableContainer.setActor(titleTable);
@@ -135,12 +178,30 @@ public class OptionState extends State {
 
     @Override
     protected void handleInput() {
-        if (isClickedReturnButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
             gsm.pop();
         if (isClickedScoreButton) {
             isClickedScoreButton = false;
             gsm.push(new ScoreboardState(gsm));
         }
+        if(isClickedSaveButton){
+            GravityRun.pref.putString(GravityRun.USERNAME, username);
+            GravityRun.pref.flush();
+            usernameField.setVisible(false);
+            saveButton.setVisible(false);
+            isCheckedUsernameButton = false;
+            isClickedUsernameButton = false;
+            isClickedSaveButton = false;
+        }
+
+        if(isClickedLVLButton){
+            listBox.setVisible(false);
+            isCheckedLangButton = false;
+            isClickedLangButton = false;
+            isClickedLVLButton = false;
+        }
+
+
     }
 
     @Override
@@ -160,12 +221,21 @@ public class OptionState extends State {
             listBox.setVisible(true);
         else
             listBox.setVisible(false);
+
+        if (isClickedUsernameButton){
+            usernameField.setVisible(true);
+            saveButton.setVisible(true);
+        }
+        else{
+            usernameField.setVisible(false);
+            saveButton.setVisible(false);
+        }
+
     }
 
     @Override
     public void dispose() {
         menuSkin.dispose();
-        returnImage.dispose();
         tableSkin.dispose();
         stage.dispose();
     }

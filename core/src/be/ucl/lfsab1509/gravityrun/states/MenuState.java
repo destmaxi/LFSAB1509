@@ -19,6 +19,8 @@ public class MenuState extends State {
     private boolean isClickedStartGameButton = false, isClickedOptionButton = false;
     private Stage stage;
     private Skin menuSkin, tableSkin;
+    private Label hyLabel;
+
 
     public MenuState(GameStateManager gsm) {
         super(gsm);
@@ -44,7 +46,7 @@ public class MenuState extends State {
             }
         });
 
-        Label hyLabel = new Label(string.format("hello")+GravityRun.pref.getString("username"),tableSkin);
+        hyLabel = new Label(string.format("hello")+GravityRun.pref.getString("username"),tableSkin);
 
         Container<Table> tableContainer = new Container<Table>();
         Table table = new Table();
@@ -101,6 +103,7 @@ public class MenuState extends State {
     @Override
     public void render(SpriteBatch sb) {
         sb.setProjectionMatrix(cam.combined);
+        hyLabel.setText(string.format("hello")+ GravityRun.pref.getString(GravityRun.USERNAME));
         stage.act();
         stage.draw();
         if (isClickedOptionButton || isClickedStartGameButton)

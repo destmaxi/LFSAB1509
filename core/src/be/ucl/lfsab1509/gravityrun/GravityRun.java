@@ -14,7 +14,7 @@ public class GravityRun extends ApplicationAdapter {
 
     public static final int HEIGHT = 800;
     public static final int WIDTH = 480;
-    public static final String DEB = "beginner", INTER = "intermediate",EXPERT = "expert",DIFFICULTY = "difficulty";
+    public static final String DEB = "beginner", INTER = "intermediate",EXPERT = "expert",DIFFICULTY = "difficulty",USERNAME="username";
 	public static final String TITLE = "Gravity Run";
 
     public static ArrayList<Integer> scoreList;

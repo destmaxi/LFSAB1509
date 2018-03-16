@@ -1,9 +1,5 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
-import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.sprites.Marble;
-import be.ucl.lfsab1509.gravityrun.sprites.Tube;
-import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
@@ -12,22 +8,33 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
 import java.util.ArrayList;
+
+import be.ucl.lfsab1509.gravityrun.GravityRun;
+import be.ucl.lfsab1509.gravityrun.sprites.Hole;
+import be.ucl.lfsab1509.gravityrun.sprites.LargeHole;
+import be.ucl.lfsab1509.gravityrun.sprites.LeftWall;
+import be.ucl.lfsab1509.gravityrun.sprites.Marble;
+import be.ucl.lfsab1509.gravityrun.sprites.Obstacle;
+import be.ucl.lfsab1509.gravityrun.sprites.RightWall;
+import be.ucl.lfsab1509.gravityrun.tools.Skin;
 
 public class PlayState extends State {
 
     static int score = 0;
-    private static final int TUBE_COUNT = 4;
-    private static final int TUBE_SPACING = 80;
+    private static final int OBSTACLE_COUNT = 4;
+    private static final int OBSTACLE_SPACING = 80;
 
-    private Array<Tube> tubes;
+    private Array<Obstacle> obstacles;
     private boolean gameOver = false, isClickedPauseButton = false;
-    private Label timeLabel;
+    private Label scoreLabel;
     private Marble marble;
     private Stage scoreStage;
     private Skin skin;
@@ -42,6 +49,7 @@ public class PlayState extends State {
         cam.setToOrtho(false, GravityRun.WIDTH / 2, GravityRun.HEIGHT / 2);
 
         int h = Gdx.graphics.getHeight(), w = Gdx.graphics.getWidth();
+
         gameOverImage = new Texture("gameover.png");
         pauseImage = new Texture("pause.png");
         ImageButton pauseButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(pauseImage)));
@@ -55,24 +63,28 @@ public class PlayState extends State {
         });
 
         marble = new Marble(100, 0);
-        tubes = new Array<Tube>();
+        obstacles = new Array<Obstacle>();
 
         skin = new Skin();
         skin.createSkin(28);
-        timeLabel = new Label(string.format("score"), skin, "optional");
-        timeLabel.setText(string.format("score", score));
+
+        scoreLabel = new Label(string.format("score"), skin, "optional");
+        scoreLabel.setText(string.format("score", score));
 
         scoreStage = new Stage(new ScreenViewport());
-        scoreStage.addActor(timeLabel);
+        scoreStage.addActor(scoreLabel);
         scoreStage.addActor(pauseButton);
 
-        for (int i = 1; i <= TUBE_COUNT; i++)
-            tubes.add(new Tube(i * (TUBE_SPACING + Tube.TUBE_WIDTH)));
+        for (int i = 1; i <= OBSTACLE_COUNT; ) {
+            obstacles.add(new Hole(i++ * (OBSTACLE_SPACING + Hole.HOLE_WIDTH)));
+            obstacles.add(new LargeHole( i++ * (OBSTACLE_SPACING + LargeHole.HOLE_WIDTH)));
+            obstacles.add(new LeftWall(i++ * (OBSTACLE_SPACING + LeftWall.HOLE_WIDTH)));
+            obstacles.add(new RightWall(i++ * (OBSTACLE_SPACING + RightWall.HOLE_WIDTH)));
+        }
     }
 
     @Override
     protected void handleInput() {
-
         if (gameOver && (Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))) {
             GravityRun.scoreList.add(score);
             gsm.set(new GameOverState(gsm));
@@ -88,21 +100,20 @@ public class PlayState extends State {
     public void update(float dt) {
         Gdx.input.setInputProcessor(scoreStage);
         handleInput();
-        // updateGround(); // Will be usefull when we got a background picture
         marble.update(dt, gameOver);
 
-        score = (Integer)(int) (marble.getPosition().y / 10);
-        timeLabel.setText(string.format("score",score));
+        score = (int) (marble.getPosition().y / 10);
+        scoreLabel.setText(string.format("score", score));
 
         cam.position.y = marble.getPosition().y + 80;
 
-        for (int i = 0; i < tubes.size; i++) {
-            Tube tube = tubes.get(i);
+        for (int i = 0; i < obstacles.size; i++){
+            Obstacle obs = obstacles.get(i);
 
-            if ((cam.position.y - cam.viewportHeight / 2) >= tube.getPosTopTube().y + tube.getTopTube().getHeight())
-                tube.reposition(tube.getPosTopTube().y + ((Tube.TUBE_WIDTH + TUBE_SPACING) * TUBE_COUNT));
+            if ((cam.position.y - cam.viewportHeight / 2) >= obs.getPosition().y + obs.getObstacleTexture().getHeight())
+                obs.reposition(obs.getPosition().y + (Hole.HOLE_WIDTH + OBSTACLE_SPACING) * OBSTACLE_COUNT);
 
-            if (tube.collides(marble.getBounds())) {
+            if (obs.collides(marble)) {
                 marble.colliding = true;
                 gameOver = true;
             }
@@ -123,22 +134,18 @@ public class PlayState extends State {
 
         sb.begin();
         sb.setProjectionMatrix(cam.combined);
-        for (Tube tube : tubes) {
-            sb.draw(tube.getBottomTube(), tube.getPosBotTube().x, tube.getPosBotTube().y);
-            sb.draw(tube.getTopTube(), tube.getPosTopTube().x, tube.getPosTopTube().y);
-        }
+
+        for (Obstacle obs : obstacles)
+            sb.draw(obs.getObstacleTexture(), obs.getPosition().x, obs.getPosition().y);
+
         sb.draw(marble.getMarble(), marble.getPosition().x, marble.getPosition().y);
 
         if (gameOver) {
-            if(GravityRun.scoreList == null)
-                GravityRun.scoreList = new ArrayList<Integer>();
-
             sb.draw(gameOverImage,
                     cam.position.x - gameOverImage.getWidth() / 2,
                     cam.position.y - gameOverImage.getHeight() / 2);
-            if (Gdx.input.justTouched())
-                handleInput();
         }
+
         sb.end();
 
         scoreStage.act();
@@ -152,8 +159,8 @@ public class PlayState extends State {
         pauseImage.dispose();
         scoreStage.dispose();
         skin.dispose();
-        for (Tube tube : tubes) {
-            tube.dispose();
-        }
+
+        for (Obstacle obstacle : obstacles)
+            obstacle.dispose();
     }
 }

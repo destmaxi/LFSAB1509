@@ -2,6 +2,7 @@ package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.states.PlayState;
+import be.ucl.lfsab1509.gravityrun.tools.SensorHelper;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,6 +12,12 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Marble {
 
+    public static final float SQRT2 = (float) Math.sqrt(2);
+
+    static final int FRAME_COUNT = 5;
+
+    public static final int MOVEMENT = (int) (GravityRun.HEIGHT / 5);
+    public static final float GYRO_COMPENSATION = 2;
     public static final float GRAVITY_COMPENSATION = 1.4f;
     public static final float GYRO_COMPENSATION = 2;
     static final int JUMP_HEIGHT = 600;
@@ -60,16 +67,27 @@ public class Marble {
             position.z = 0;
 
         if (!gameOver) {
-            if ((isBlockedOnRight && Gdx.input.getGyroscopeY() > 0) || (isBlockedOnLeft && Gdx.input.getGyroscopeY() < 0))
-                position.add(0, lvl * (MOVEMENT * speed * SlowDown.slowDown) * dt, 0);
-            else if ((isBlockedOnLeft && Gdx.input.getGyroscopeY() < 0) && isBlockedOnTop)
+	    float gyroscopeY = Gdx.input.getGyroscopeY();
+            if ((isBlockedOnRight && gyroscopeY > 0) || (isBlockedOnLeft && gyroscopeY < 0))
+                position.add(0, lvl * (MOVEMENT + speed + SlowDown.SLOW_DOWN) * dt, 0);
+            else if ((isBlockedOnLeft && gyroscopeY < 0) && isBlockedOnTop)
                 position.add(0, 0, 0);
-            else if ((isBlockedOnRight && Gdx.input.getGyroscopeY() > 0) && isBlockedOnTop)
+            else if ((isBlockedOnRight && gyroscopeY > 0) && isBlockedOnTop)
                 position.add(0, 0, 0);
             else if (isBlockedOnTop)
-                position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, 0, 0);
+                position.add(gyroscopeY * GravityRun.WIDTH / 75, 0, 0);
             else
-                position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, lvl * (MOVEMENT * speed * SlowDown.slowDown) * dt, 0);
+                position.add(gyroscopeY * GravityRun.WIDTH / 75, LVL * (MOVEMENT + speed + SlowDown.SLOW_DOWN) * dt,0);
+	}
+
+	// TODO inclure ce bout de code au sein du bloc précédent
+        if (!gameOver) {
+            // old version : there was a bug with dt not appearing in gyroscope
+            // position.add(GYRO_COMPENSATION * SensorHelper.MAIN.getYGyroscope(),LVL * (MOVEMENT + speed) * dt,0);
+            // FIXME 4 parce que camera etc
+            float positionX = (GravityRun.WIDTH / 4) * (SensorHelper.MAIN.getGravityDirectionVector()[0] * GRAVITY_COMPENSATION + 1);
+            position.add(0, LVL * (MOVEMENT + speed) * dt, 0);
+            position.x = positionX;
         }
 
         if (position.x < marbleAnimation.getDiameter(position.z) / 2)

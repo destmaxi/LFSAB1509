@@ -6,6 +6,7 @@ import be.ucl.lfsab1509.gravityrun.screens.ScreenManager;
 import be.ucl.lfsab1509.gravityrun.tools.BluetoothManager;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
+import be.ucl.lfsab1509.gravityrun.tools.SensorHelper;
 import be.ucl.lfsab1509.gravityrun.tools.User;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -31,15 +32,17 @@ public class GravityRun extends Game {
     public I18NBundle i18n;
     public Preferences preferences;
     public ScreenManager screenManager;
+    public SensorHelper sensorHelper;
     public Skin aaronScoreSkin, labelScoreBoardSkin, tableScoreBoardSkin, tableSkin, titleSkin;
     public SoundManager soundManager;
     public SpriteBatch spriteBatch;
     private TextureAtlas skinTextureAtlas;
     public User user;
 
-    public GravityRun(BluetoothManager bluetoothManager) {
+    public GravityRun(BluetoothManager bluetoothManager, SensorHelper sensorHelper) {
         super();
         this.bluetoothManager = bluetoothManager;
+        this.sensorHelper = sensorHelper;
     }
 
     @Override
@@ -87,6 +90,7 @@ public class GravityRun extends Game {
     @Override
     public void pause() {
         super.pause();
+        sensorHelper.pauseSensors();
     }
 
     @Override
@@ -105,6 +109,7 @@ public class GravityRun extends Game {
     @Override
     public void resume() {
         super.resume();
+        sensorHelper.resumeSensors();
     }
 
     private void disposeSkins() {

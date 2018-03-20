@@ -8,6 +8,7 @@ import android.widget.Toast;
 import be.ucl.lfsab1509.gravityrun.screens.AbstractMultiPlayScreen;
 import be.ucl.lfsab1509.gravityrun.screens.MultiPlayFirstModeScreen;
 import be.ucl.lfsab1509.gravityrun.tools.AndroidBluetoothManager;
+import be.ucl.lfsab1509.gravityrun.tools.AndroidSensorHelper;
 import be.ucl.lfsab1509.gravityrun.tools.BluetoothConstants;
 import be.ucl.lfsab1509.gravityrun.tools.BluetoothFragment;
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -59,7 +60,7 @@ public class AndroidLauncher extends AndroidApplication {
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        GravityRun gravityRun = new GravityRun(bluetoothFragment);
+        GravityRun gravityRun = new GravityRun(bluetoothFragment, new AndroidSensorHelper(this));
 
         multiPlayScreen = new MultiPlayFirstModeScreen(gravityRun, false);
 

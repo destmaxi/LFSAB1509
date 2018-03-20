@@ -7,10 +7,10 @@ import com.badlogic.gdx.math.Vector2;
 
 public class LeftWall extends Obstacle {
 
-    public LeftWall(float y) {
+    public LeftWall(float y, int sw) {
         super();
 
-        obstacleTexture = new Texture("wall.png");
+        obstacleTexture = new Texture("drawable-" + sw + "/wall.png");
         position = new Vector2(0, y);
         bounds = new Rectangle(position.x, position.y, obstacleTexture.getWidth(), obstacleTexture.getHeight());
     }
@@ -25,4 +25,5 @@ public class LeftWall extends Obstacle {
     public boolean collides(Marble marble) {
         return Intersector.overlaps(marble.getBounds(), (Rectangle) bounds);
     }
+
 }

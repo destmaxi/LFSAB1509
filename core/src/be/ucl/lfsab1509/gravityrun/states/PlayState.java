@@ -68,21 +68,8 @@ public class PlayState extends State {
         else
             sw = 480;
 
-        if (d >= 3.5f)          // xxxhdpi
-            sd = "xxxhdpi";         // 4x
-        else if (d >= 2.5f)     // xxhdpi
-            sd = "xxhdpi";          // 3x
-        else if (d >= 1.75f)    // xhdpi
-            sd = "xhdpi";           // 2x
-        else if (d >= 1.25f)    // hdpi
-            sd = "hdpi";            // 1.5x
-        else if (d >= 0.875f)   // mdpi
-            sd = "mdpi";            // 1x
-        else                    // ldpi
-            sd = "ldpi";            // 0.75x
-
         gameOverImage = new Texture("drawable-" + sw + "/gameover.png");
-        pauseImage = new Texture("drawable-" + sd + "/pause.png");
+        pauseImage = new Texture("drawable-" + sw + "/pause.png");
         ImageButton pauseButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(pauseImage)));
         // pauseButton.setSize(w / 10, w / 10);
         pauseButton.setPosition(0, GravityRun.HEIGHT - pauseButton.getHeight());
@@ -107,13 +94,13 @@ public class PlayState extends State {
         scoreStage.addActor(scoreLabel);
         scoreStage.addActor(pauseButton);
 
-        for (int i = 1; i <= obstacleCount; ) {
-            obstacles.add(new Hole(i++ * (obstacleSpacing + Hole.HOLE_WIDTH)));
-            obstacles.add(new LargeHole( i++ * (obstacleSpacing + LargeHole.HOLE_WIDTH)));
-            obstacles.add(new LeftWall(i++ * (obstacleSpacing + LeftWall.HOLE_WIDTH)));
-            obstacles.add(new RightWall(i++ * (obstacleSpacing + RightWall.HOLE_WIDTH)));
-        }
         int marbleWidth = (int) marble.getWidth();
+        for (int i = 1; i <= obstacleCount; ) {
+            obstacles.add(new Hole(i++ * (obstacleSpacing + Hole.HOLE_WIDTH), sw));
+            obstacles.add(new LargeHole( i++ * (obstacleSpacing + LargeHole.HOLE_WIDTH), sw));
+            obstacles.add(new LeftWall(i++ * (obstacleSpacing + LeftWall.HOLE_WIDTH), sw));
+            obstacles.add(new RightWall(i++ * (obstacleSpacing + RightWall.HOLE_WIDTH), sw));
+        }
         /*Tube tube = new Tube(tubeSpacing + Tube.TUBE_HEIGHT, true, marbleWidth, sw);
         tubeSpacing = (int) (2 * Tube.TUBE_HEIGHT);
         tubeCount = (int) (1.5 * h / (tubeSpacing + Tube.TUBE_HEIGHT));

@@ -9,9 +9,9 @@ public class User {
 
     private String username;
     private boolean firstTime;
-    private ArrayList<Integer> beginner, inter, expert;
+    private ArrayList<Integer> beginner, inter, expert, highScore;
     private Integer indexSelected;
-    private static final String DEB = "beginner", INTER = "intermediate",EXPERT = "expert",USERNAME="username",INDEX = "index";
+    private static final String DEB = "beginner", INTER = "intermediate",EXPERT = "expert",USERNAME="username",INDEX = "index", HIGHSCORE = "highscore";
     public static final String FIRSTTIME = "firstTime";
 
 
@@ -19,6 +19,7 @@ public class User {
         username = userMap.get(USERNAME).toString();
         firstTime = (Boolean) userMap.get(FIRSTTIME);
         indexSelected = (Integer) userMap.get(INDEX);
+        highScore =  convertStoA((String)userMap.get(HIGHSCORE));
         beginner = convertStoA((String)userMap.get(DEB));
         inter = convertStoA((String)userMap.get(INTER));
         expert = convertStoA((String)userMap.get(EXPERT));
@@ -57,6 +58,14 @@ public class User {
         return expert;
     }
 
+    public ArrayList<Integer> getHighScore() {
+        return highScore;
+    }
+
+    public void setHighScore(ArrayList<Integer> highScore) {
+        this.highScore = highScore;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }
@@ -82,6 +91,7 @@ public class User {
         map.put(EXPERT,convertAtoS(expert));
         map.put(FIRSTTIME,firstTime);
         map.put(INDEX,indexSelected);
+        map.put(HIGHSCORE,convertAtoS(highScore));
 
         return map;
     }

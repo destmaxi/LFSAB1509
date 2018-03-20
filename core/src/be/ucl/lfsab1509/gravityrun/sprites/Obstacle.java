@@ -8,7 +8,7 @@ import java.util.Random;
 
 public abstract class Obstacle {
 
-    public static final int HOLE_WIDTH = 52;
+    public static final int HOLE_HEIGHT = 52;
 
     Random rand;
     Texture obstacleTexture;

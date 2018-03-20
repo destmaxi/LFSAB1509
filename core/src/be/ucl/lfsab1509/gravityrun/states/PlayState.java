@@ -23,20 +23,22 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class PlayState extends State {
 
     static int score = 0;
-    private static int obstacleCount = 4;
+    private static int obstacleCount = 14;
     private static int obstacleSpacing = 80;
 
     private Array<Obstacle> obstacles;
     private boolean gameOver = false, isClickedPauseButton = false;
     private Label scoreLabel;
     private float d, h, w;//, tubeCount, tubeSpacing;
-    private int sw;
+    private int marbleWidth, sw;
     private String sd;
     private Marble marble;
+    private Random random;
     private Stage scoreStage;
     private Skin skin;
     private Texture gameOverImage, pauseImage;
@@ -94,13 +96,20 @@ public class PlayState extends State {
         scoreStage.addActor(scoreLabel);
         scoreStage.addActor(pauseButton);
 
-        int marbleWidth = (int) marble.getWidth();
-        for (int i = 1; i <= obstacleCount; ) {
-            obstacles.add(new Hole(i++ * (obstacleSpacing + Hole.HOLE_WIDTH), sw));
-            obstacles.add(new LargeHole( i++ * (obstacleSpacing + LargeHole.HOLE_WIDTH), sw));
-            obstacles.add(new LeftWall(i++ * (obstacleSpacing + LeftWall.HOLE_WIDTH), sw));
-            obstacles.add(new RightWall(i++ * (obstacleSpacing + RightWall.HOLE_WIDTH), sw));
-        }
+        marbleWidth = (int) marble.getWidth();
+        obstacleSpacing = 2 * Obstacle.HOLE_HEIGHT;
+        obstacleCount = (int) (1.5f * h / (obstacleSpacing + Obstacle.HOLE_HEIGHT));
+        /*for (int i = 1; i <= obstacleCount; ) {
+            obstacles.add(new Hole(i++ * (obstacleSpacing + Hole.HOLE_HEIGHT), true, marbleWidth, sw));
+            obstacles.add(new LargeHole( i++ * (obstacleSpacing + LargeHole.HOLE_HEIGHT), true, marbleWidth, sw));
+            obstacles.add(new LeftWall(i++ * (obstacleSpacing + LeftWall.HOLE_HEIGHT), true, marbleWidth, sw));
+            obstacles.add(new RightWall(i++ * (obstacleSpacing + RightWall.HOLE_HEIGHT), true, marbleWidth, sw));
+        }*/
+
+        random = new Random();
+        for (int i = 1; i <= obstacleCount; i++)
+            obstacles.add(newObstacle(true, marbleWidth, i * (obstacleSpacing + Hole.HOLE_HEIGHT)));
+
         /*Tube tube = new Tube(tubeSpacing + Tube.TUBE_HEIGHT, true, marbleWidth, sw);
         tubeSpacing = (int) (2 * Tube.TUBE_HEIGHT);
         tubeCount = (int) (1.5 * h / (tubeSpacing + Tube.TUBE_HEIGHT));
@@ -139,8 +148,11 @@ public class PlayState extends State {
         for (int i = 0; i < obstacles.size; i++){
             Obstacle obs = obstacles.get(i);
 
-            if ((cam.position.y - cam.viewportHeight / 2) >= obs.getPosition().y + obs.getObstacleTexture().getHeight())
-                obs.reposition(obs.getPosition().y + (Hole.HOLE_WIDTH + obstacleSpacing) * obstacleCount);
+            if ((cam.position.y - cam.viewportHeight / 2) >= obs.getPosition().y + obs.getObstacleTexture().getHeight()) {
+                //obs.reposition(obs.getPosition().y + (Hole.HOLE_HEIGHT + obstacleSpacing) * obstacleCount);
+                obstacles.get(i).dispose();
+                obstacles.set(i, newObstacle(true, marbleWidth, obs.getPosition().y + (Hole.HOLE_HEIGHT + obstacleSpacing) * obstacleCount));
+            }
 
             if (obs.collides(marble)) {
                 marble.colliding = true;
@@ -193,4 +205,26 @@ public class PlayState extends State {
         for (Obstacle obstacle : obstacles)
             obstacle.dispose();
     }
+
+    private Obstacle newObstacle(boolean first, int marbleWidth, float position) {
+        Obstacle obstacle;
+        switch (random.nextInt(4)) {
+            case 0:
+                obstacle =  new Hole(position, first, marbleWidth, sw);
+                break;
+            case 1:
+                obstacle =  new LargeHole(position, first, marbleWidth, sw);
+                break;
+            case 2:
+                obstacle =  new LeftWall(position, first, marbleWidth, sw);
+                break;
+            case 3:
+                obstacle =  new RightWall(position, first, marbleWidth, sw);
+                break;
+            default:
+                obstacle = null;
+        }
+        return obstacle;
+    }
+
 }

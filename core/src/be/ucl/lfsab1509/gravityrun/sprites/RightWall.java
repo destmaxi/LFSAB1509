@@ -8,11 +8,13 @@ import com.badlogic.gdx.math.Vector2;
 
 public class RightWall extends Obstacle {
 
-    public RightWall(float y, int sw) {
+    public RightWall(float y, boolean first, int marbleWidth, int sw) {
         super();
 
         obstacleTexture = new Texture("drawable-" + sw + "/wall.png");
-        position = new Vector2(GravityRun.WIDTH - obstacleTexture.getWidth(), y);
+        position = first
+                ? new Vector2(GravityRun.WIDTH - obstacleTexture.getWidth(), y)
+                :new Vector2(rand.nextInt(GravityRun.WIDTH - 3 * marbleWidth) + 3 * marbleWidth, y);
         bounds = new Rectangle(position.x, position.y, obstacleTexture.getWidth(), obstacleTexture.getHeight());
     }
 

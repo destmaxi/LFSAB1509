@@ -8,11 +8,13 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Hole extends Obstacle {
 
-    public Hole(float y, int sw) {
+    public Hole(float y, boolean first, int marbleWidth, int sw) {
         super();
 
         obstacleTexture = new Texture("drawable-" + sw + "/hole.png");
-        position = new Vector2(rand.nextInt(GravityRun.WIDTH - obstacleTexture.getWidth()), y);
+        position = first
+                ? new Vector2(rand.nextInt(GravityRun.WIDTH - obstacleTexture.getWidth()), y)
+                :new Vector2(3 * marbleWidth, y);
         bounds = new Rectangle(position.x, position.y, obstacleTexture.getWidth(), obstacleTexture.getHeight());
     }
 

@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class LargeHole extends Obstacle {
 
-    public LargeHole(float y, int sw) {
+    public LargeHole(float y, boolean first, int marbleWidth, int sw) {
         super();
 
         obstacleTexture = new Texture("drawable-" + sw + "/largehole.png");

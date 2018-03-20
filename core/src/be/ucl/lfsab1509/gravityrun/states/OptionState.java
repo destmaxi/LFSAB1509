@@ -149,23 +149,6 @@ public class OptionState extends State {
         tableContainer.setPosition((sw - cw) / 2,(sh - ch) / 2);
         tableContainer.top().fillX();
 
-        /*titleTable.row().expandY();
-        titleTable.add(title).colspan(7).expandX();
-        titleTable.row().colspan(7).fillX();
-        titleTable.add(table);
-
-        table.row().colspan(2);
-        table.add(scoreButton).expandX().fillX().padTop(sh - ch);
-        table.row().colspan(2);
-        table.add(usernameButton).expandX().fillX().padTop(sh - ch);
-        table.row();
-        table.add(usernameField).expandX().fillX();
-        table.add(saveButton).expandX().fillX();
-        table.row().colspan(2);
-        table.add(lvlButton).expandX().fillX().padTop((sh - ch)/2);
-        table.row().colspan(2);
-        table.add(listBox).fillX().top();*/
-
         titleTable.row().expandY();
         titleTable.add(title).colspan(7).expandX();
         titleTable.row().colspan(7).fillX();
@@ -190,8 +173,12 @@ public class OptionState extends State {
 
     @Override
     protected void handleInput() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            GravityRun.pref.put(GravityRun.user.toMap());
+            GravityRun.pref.flush();
             gsm.pop();
+        }
+
         if (isClickedScoreButton) {
             isClickedScoreButton = false;
             gsm.push(new ScoreboardState(gsm));

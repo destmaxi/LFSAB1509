@@ -13,6 +13,8 @@ import java.util.ArrayList;
 
 public class Marble {
 
+    public static final float GRAVITY_COMPENSATION = 1.4f;
+    public static final float GYRO_COMPENSATION = 2;
     static final int JUMP_HEIGHT = 666;
     private static int MOVEMENT;
 

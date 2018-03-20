@@ -26,7 +26,6 @@ public class ScoreboardState extends State {
     private boolean isClickedReturnImButton = false;
     private Skin labelSkin, menuSkin, tableSkin;
     private Stage stage;
-    private Texture returnTexture;
 
     @SuppressWarnings("unchecked")
     ScoreboardState(GameStateManager gsm) {
@@ -43,23 +42,13 @@ public class ScoreboardState extends State {
         labelSkin.createSkin(38);
         menuSkin.createSkin(62);
 
-        returnTexture = new Texture("back.png");
-
         Label title = new Label(string.format("my_score"), menuSkin, "title");
         Label beginnerLabel = new Label(string.format("beginner") + " :", labelSkin, "round");
         Label intermediateLabel = new Label(string.format("inter") + " :", labelSkin, "round");
         Label expertLabel = new Label(string.format("expert") + " :", labelSkin, "round");
-        ImageButton returnImageButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(returnTexture)));
         List beginnerScoreList = new List(tableSkin);
         List intermediateScoreList = new List(tableSkin);
         List expertScoreList = new List(tableSkin);
-
-        returnImageButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                isClickedReturnImButton = true;
-            }
-        });
 
         java.util.List[] lists = {GravityRun.user.getBeginner(),GravityRun.user.getInter(),GravityRun.user.getExpert()};
         List[] list = {beginnerScoreList, intermediateScoreList, expertScoreList};
@@ -154,7 +143,6 @@ public class ScoreboardState extends State {
     public void dispose() {
         labelSkin.dispose();
         menuSkin.dispose();
-        returnTexture.dispose();
         stage.dispose();
         tableSkin.dispose();
     }

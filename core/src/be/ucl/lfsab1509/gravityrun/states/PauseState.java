@@ -1,5 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
+import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -23,15 +24,15 @@ public class PauseState extends State {
         super(gsm);
 
         titleSkin = new Skin();
-        titleSkin.createSkin(62);
+        titleSkin.createSkin((int) (1.5f * GravityRun.WIDTH / GravityRun.DENSITY / 10));
         Label title = new Label(string.format("pause"), titleSkin, "title");
 
         scoreSkin = new Skin();
-        scoreSkin.createSkin(28);
+        scoreSkin.createSkin((int) (0.75f * GravityRun.WIDTH / GravityRun.DENSITY / 10));
         Label score = new Label(string.format("score", PlayState.score), scoreSkin);
 
         buttonSkin = new Skin();
-        buttonSkin.createSkin(42);
+        buttonSkin.createSkin((int) (GravityRun.WIDTH / GravityRun.DENSITY / 10));
         TextButton continueButton = new TextButton(string.format("continue"), buttonSkin, "round");
         continueButton.addListener(new ChangeListener() {
             @Override
@@ -78,7 +79,7 @@ public class PauseState extends State {
 
     @Override
     protected void handleInput() {
-        if (isClickedContinue || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
+        if (isClickedContinue || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
             gsm.pop();
         if (isClickedQuit) {
             gsm.pop();

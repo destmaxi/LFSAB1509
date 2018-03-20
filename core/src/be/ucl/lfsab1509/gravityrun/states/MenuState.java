@@ -1,5 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
+import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -23,11 +24,11 @@ public class MenuState extends State {
         super(gsm);
 
         menuSkin = new Skin();
-        menuSkin.createSkin(62);
+        menuSkin.createSkin((int) (1.5f * GravityRun.WIDTH / GravityRun.DENSITY / 10));
         Label title = new Label(string.format("menu"), menuSkin, "title");
 
         tableSkin = new Skin();
-        tableSkin.createSkin(42);
+        tableSkin.createSkin((int) (GravityRun.WIDTH / GravityRun.DENSITY / 10));
         TextButton optionButton = new TextButton(string.format("option"), tableSkin, "round");
         TextButton startGameButton = new TextButton(string.format("new_game"), tableSkin, "round");
         startGameButton.addListener(new ClickListener() {
@@ -81,7 +82,7 @@ public class MenuState extends State {
             isClickedStartGameButton = false;
             gsm.push(new PlayState(gsm));
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
             Gdx.app.exit();
     }
 

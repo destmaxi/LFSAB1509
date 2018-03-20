@@ -22,7 +22,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class OptionState extends State {
 
-    private boolean isCheckedLangButton = false, isClickedLangButton = false, isClickedReturnButton = false, isClickedScoreButton = false;
+    private boolean isCheckedLvlButton = false, isClickedLvlButton = false, isClickedReturnButton = false, isClickedScoreButton = false;
     private final List<String> listBox;
     private Skin menuSkin, tableSkin;
     private Stage stage;
@@ -36,8 +36,12 @@ public class OptionState extends State {
         menuSkin = new Skin();
         tableSkin = new Skin();
 
-        tableSkin.createSkin(42);
-        menuSkin.createSkin(62);
+        int tableSize = (int) (GravityRun.WIDTH / GravityRun.DENSITY / 10);
+        int menuSize = (int) (1.5f * GravityRun.WIDTH / GravityRun.DENSITY / 10);
+        System.out.println("OptionState : size table = " + tableSize);
+        System.out.println("OptionState : size menu = " + menuSize);
+        tableSkin.createSkin(tableSize);
+        menuSkin.createSkin(menuSize);
 
         returnImage = new Texture("back.png");
 
@@ -53,12 +57,12 @@ public class OptionState extends State {
         lvlButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (!isCheckedLangButton) {
-                    isClickedLangButton = true;
-                    isCheckedLangButton = true;
+                if (!isCheckedLvlButton) {
+                    isClickedLvlButton = true;
+                    isCheckedLvlButton = true;
                 } else {
-                    isClickedLangButton = false;
-                    isCheckedLangButton = false;
+                    isClickedLvlButton = false;
+                    isCheckedLvlButton = false;
                 }
             }
         });
@@ -82,15 +86,15 @@ public class OptionState extends State {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (listBox.getSelected().equals(string.format("beginner"))){
-                    Marble.LVL=1;
+                    Marble.LVL = 1;
                     GravityRun.indexSelected = 0;
                 }
                 else if(listBox.getSelected().equals(string.format("inter"))){
-                    Marble.LVL=2;
+                    Marble.LVL = 2;
                     GravityRun.indexSelected = 1;
                 }
                 else if(listBox.getSelected().equals(string.format("expert"))){
-                    Marble.LVL=3;
+                    Marble.LVL = 3;
                     GravityRun.indexSelected = 2;
                 }
             }
@@ -112,8 +116,8 @@ public class OptionState extends State {
         tableContainer.top().fillX();
 
         titleTable.row().expandY();
-        titleTable.add(returnButton).expandX().left().size(cw / 6);
-        titleTable.add(title).colspan(6).expandX().left();
+        //titleTable.add(returnButton).expandX().left().size(cw / 6);
+        titleTable.add(title).colspan(7).expandX();
         titleTable.row().colspan(7).fillX();
         titleTable.add(table);
 
@@ -130,7 +134,7 @@ public class OptionState extends State {
 
     @Override
     protected void handleInput() {
-        if (isClickedReturnButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
+        if (isClickedReturnButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
             gsm.pop();
         if (isClickedScoreButton) {
             isClickedScoreButton = false;
@@ -151,7 +155,7 @@ public class OptionState extends State {
         stage.act();
         stage.draw();
 
-        if (isClickedLangButton) {
+        if (isClickedLvlButton) {
             listBox.setVisible(true);
         } else {
             listBox.setVisible(false);

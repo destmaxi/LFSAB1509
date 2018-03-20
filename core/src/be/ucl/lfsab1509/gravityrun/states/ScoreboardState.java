@@ -1,5 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
+import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.DataBase;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import com.badlogic.gdx.Gdx;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 
 public class ScoreboardState extends State {
 
-    private boolean isClickedReturnImButton = false;
+    private boolean isClickedReturnButton = false;
     private Skin labelSkin, menuSkin, tableSkin;
     private Stage stage;
     private Texture returnTexture;
@@ -37,9 +38,9 @@ public class ScoreboardState extends State {
         tableSkin = new Skin();
         labelSkin = new Skin();
 
-        tableSkin.createSkin(24);
-        labelSkin.createSkin(38);
-        menuSkin.createSkin(62);
+        tableSkin.createSkin((int) (0.5f * GravityRun.WIDTH / GravityRun.DENSITY / 10));
+        labelSkin.createSkin((int) (0.9f * GravityRun.WIDTH / GravityRun.DENSITY / 10));
+        menuSkin.createSkin((int) (1.5f * GravityRun.WIDTH / GravityRun.DENSITY / 10));
 
         returnTexture = new Texture("back.png");
 
@@ -55,7 +56,7 @@ public class ScoreboardState extends State {
         returnImageButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                isClickedReturnImButton = true;
+                isClickedReturnButton = true;
             }
         });
 
@@ -96,8 +97,8 @@ public class ScoreboardState extends State {
         tableContainer.top().fillX().fillY();
 
         titleTable.row();
-        titleTable.add(returnImageButton).expandX().left().size(cw / 6);
-        titleTable.add(title).colspan(6).expandX().left();
+        //titleTable.add(returnImageButton).expandX().left().size(cw / 6);
+        titleTable.add(title).colspan(7).expandX();
         titleTable.row().expandX().expandY().colspan(7).fillX();
 
         titleTable.add(table).colspan(7).top().fillX().fillY().expandY().expandX();
@@ -122,7 +123,7 @@ public class ScoreboardState extends State {
 
     @Override
     protected void handleInput() {
-        if (isClickedReturnImButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK))
+        if (isClickedReturnButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
             gsm.pop();
     }
 

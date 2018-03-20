@@ -4,11 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 
 public class Skin extends com.badlogic.gdx.scenes.scene2d.ui.Skin {
 
-    private BitmapFont font12;
-    private com.badlogic.gdx.scenes.scene2d.ui.Skin skin;
+    private BitmapFont font;
 
     public Skin() {
         super();
@@ -16,20 +16,18 @@ public class Skin extends com.badlogic.gdx.scenes.scene2d.ui.Skin {
 
     public void createSkin(int size) {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("arial.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 
-        parameter.size = size * (int) Gdx.graphics.getDensity();
-        font12 = generator.generateFont(parameter); // Font size : 12 pixels
+        parameter.size = (int) (size * Gdx.graphics.getDensity());
+        font = generator.generateFont(parameter);
         generator.dispose();
-        skin = new com.badlogic.gdx.scenes.scene2d.ui.Skin();
-        this.add("arial",font12);
+        this.add("arial", font);
         this.addRegions(new TextureAtlas("skin/uiskin.atlas"));
         this.load(Gdx.files.internal("skin/uiskin.json"));
     }
 
     public void dispose() {
-        font12.dispose();
-        skin.dispose();
+        font.dispose();
     }
 
 }

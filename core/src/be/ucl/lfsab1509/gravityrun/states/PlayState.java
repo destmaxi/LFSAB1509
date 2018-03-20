@@ -1,5 +1,13 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
+import be.ucl.lfsab1509.gravityrun.GravityRun;
+import be.ucl.lfsab1509.gravityrun.sprites.Hole;
+import be.ucl.lfsab1509.gravityrun.sprites.LargeHole;
+import be.ucl.lfsab1509.gravityrun.sprites.LeftWall;
+import be.ucl.lfsab1509.gravityrun.sprites.Marble;
+import be.ucl.lfsab1509.gravityrun.sprites.Obstacle;
+import be.ucl.lfsab1509.gravityrun.sprites.RightWall;
+import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
@@ -14,27 +22,20 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
 import java.util.ArrayList;
-
-import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.sprites.Hole;
-import be.ucl.lfsab1509.gravityrun.sprites.LargeHole;
-import be.ucl.lfsab1509.gravityrun.sprites.LeftWall;
-import be.ucl.lfsab1509.gravityrun.sprites.Marble;
-import be.ucl.lfsab1509.gravityrun.sprites.Obstacle;
-import be.ucl.lfsab1509.gravityrun.sprites.RightWall;
-import be.ucl.lfsab1509.gravityrun.tools.Skin;
 
 public class PlayState extends State {
 
     static int score = 0;
-    private static final int OBSTACLE_COUNT = 4;
-    private static final int OBSTACLE_SPACING = 80;
+    private static int obstacleCount = 4;
+    private static int obstacleSpacing = 80;
 
     private Array<Obstacle> obstacles;
     private boolean gameOver = false, isClickedPauseButton = false;
     private Label scoreLabel;
+    private float d, h, w;//, tubeCount, tubeSpacing;
+    private int sw;
+    private String sd;
     private Marble marble;
     private Stage scoreStage;
     private Skin skin;
@@ -46,15 +47,45 @@ public class PlayState extends State {
         if (GravityRun.scoreList == null)
             GravityRun.scoreList = new ArrayList<Integer>();
 
-        cam.setToOrtho(false, GravityRun.WIDTH / 2, GravityRun.HEIGHT / 2);
+        d = GravityRun.DENSITY;
+        h = GravityRun.HEIGHT;
+        w = GravityRun.WIDTH;
 
-        int h = Gdx.graphics.getHeight(), w = Gdx.graphics.getWidth();
+        cam.setToOrtho(false, w, h);
 
-        gameOverImage = new Texture("gameover.png");
-        pauseImage = new Texture("pause.png");
+        if (w >= 1600)
+            sw = 1600;
+        else if (w >= 1440)
+            sw = 1440;
+        else if (w >= 1280)
+            sw = 1280;
+        else if (w >= 960)
+            sw = 960;
+        else if (w >= 840)
+            sw = 840;
+        else if (w >= 600)
+            sw = 600;
+        else
+            sw = 480;
+
+        if (d >= 3.5f)          // xxxhdpi
+            sd = "xxxhdpi";         // 4x
+        else if (d >= 2.5f)     // xxhdpi
+            sd = "xxhdpi";          // 3x
+        else if (d >= 1.75f)    // xhdpi
+            sd = "xhdpi";           // 2x
+        else if (d >= 1.25f)    // hdpi
+            sd = "hdpi";            // 1.5x
+        else if (d >= 0.875f)   // mdpi
+            sd = "mdpi";            // 1x
+        else                    // ldpi
+            sd = "ldpi";            // 0.75x
+
+        gameOverImage = new Texture("drawable-" + sw + "/gameover.png");
+        pauseImage = new Texture("drawable-" + sd + "/pause.png");
         ImageButton pauseButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(pauseImage)));
-        pauseButton.setSize(w / 10, w / 10);
-        pauseButton.setPosition(0, h - pauseButton.getHeight());
+        // pauseButton.setSize(w / 10, w / 10);
+        pauseButton.setPosition(0, GravityRun.HEIGHT - pauseButton.getHeight());
         pauseButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -62,11 +93,12 @@ public class PlayState extends State {
             }
         });
 
-        marble = new Marble(100, 0);
+        marble = new Marble(100, 0, sw);
         obstacles = new Array<Obstacle>();
+        marble = new Marble((int) w / 2,0, sw);
 
         skin = new Skin();
-        skin.createSkin(28);
+        skin.createSkin((int) (0.75f * GravityRun.WIDTH / GravityRun.DENSITY / 10));
 
         scoreLabel = new Label(string.format("score"), skin, "optional");
         scoreLabel.setText(string.format("score", score));
@@ -75,12 +107,22 @@ public class PlayState extends State {
         scoreStage.addActor(scoreLabel);
         scoreStage.addActor(pauseButton);
 
-        for (int i = 1; i <= OBSTACLE_COUNT; ) {
-            obstacles.add(new Hole(i++ * (OBSTACLE_SPACING + Hole.HOLE_WIDTH)));
-            obstacles.add(new LargeHole( i++ * (OBSTACLE_SPACING + LargeHole.HOLE_WIDTH)));
-            obstacles.add(new LeftWall(i++ * (OBSTACLE_SPACING + LeftWall.HOLE_WIDTH)));
-            obstacles.add(new RightWall(i++ * (OBSTACLE_SPACING + RightWall.HOLE_WIDTH)));
+        for (int i = 1; i <= obstacleCount; ) {
+            obstacles.add(new Hole(i++ * (obstacleSpacing + Hole.HOLE_WIDTH)));
+            obstacles.add(new LargeHole( i++ * (obstacleSpacing + LargeHole.HOLE_WIDTH)));
+            obstacles.add(new LeftWall(i++ * (obstacleSpacing + LeftWall.HOLE_WIDTH)));
+            obstacles.add(new RightWall(i++ * (obstacleSpacing + RightWall.HOLE_WIDTH)));
         }
+        int marbleWidth = (int) marble.getWidth();
+        /*Tube tube = new Tube(tubeSpacing + Tube.TUBE_HEIGHT, true, marbleWidth, sw);
+        tubeSpacing = (int) (2 * Tube.TUBE_HEIGHT);
+        tubeCount = (int) (1.5 * h / (tubeSpacing + Tube.TUBE_HEIGHT));
+        System.out.println("tubeSpacing = " + tubeSpacing);
+        System.out.println("tubeCount = " + tubeCount);
+        tube.dispose();
+        for (int i = 1; i <= tubeCount; i++)
+            tubes.add(new Tube(i * (tubeSpacing + Tube.TUBE_HEIGHT), i <= 1000 * Marble.LVL, marbleWidth, sw));
+            */
     }
 
     @Override
@@ -102,16 +144,16 @@ public class PlayState extends State {
         handleInput();
         marble.update(dt, gameOver);
 
-        score = (int) (marble.getPosition().y / 10);
+        score = (int) (marble.getPosition().y / GravityRun.HEIGHT * 100);
         scoreLabel.setText(string.format("score", score));
 
-        cam.position.y = marble.getPosition().y + 80;
+        cam.position.y = marble.getPosition().y + 3 * marble.getWidth();
 
         for (int i = 0; i < obstacles.size; i++){
             Obstacle obs = obstacles.get(i);
 
             if ((cam.position.y - cam.viewportHeight / 2) >= obs.getPosition().y + obs.getObstacleTexture().getHeight())
-                obs.reposition(obs.getPosition().y + (Hole.HOLE_WIDTH + OBSTACLE_SPACING) * OBSTACLE_COUNT);
+                obs.reposition(obs.getPosition().y + (Hole.HOLE_WIDTH + obstacleSpacing) * obstacleCount);
 
             if (obs.collides(marble)) {
                 marble.colliding = true;
@@ -133,6 +175,7 @@ public class PlayState extends State {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         sb.begin();
+
         sb.setProjectionMatrix(cam.combined);
 
         for (Obstacle obs : obstacles)

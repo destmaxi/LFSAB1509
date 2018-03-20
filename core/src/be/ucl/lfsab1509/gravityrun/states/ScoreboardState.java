@@ -23,10 +23,9 @@ import java.util.Comparator;
 
 public class ScoreboardState extends State {
 
-    private boolean isClickedReturnImButton = false;
+    private boolean isClickedReturnButton = false;
     private Skin labelSkin, menuSkin, tableSkin;
     private Stage stage;
-    private Texture returnTexture;
 
     @SuppressWarnings("unchecked")
     ScoreboardState(GameStateManager gsm) {
@@ -39,27 +38,17 @@ public class ScoreboardState extends State {
         tableSkin = new Skin();
         labelSkin = new Skin();
 
-        tableSkin.createSkin(24);
-        labelSkin.createSkin(38);
-        menuSkin.createSkin(62);
-
-        returnTexture = new Texture("back.png");
+        tableSkin.createSkin((int) (0.5f * GravityRun.WIDTH / GravityRun.DENSITY / 10));
+        labelSkin.createSkin((int) (0.9f * GravityRun.WIDTH / GravityRun.DENSITY / 10));
+        menuSkin.createSkin((int) (1.5f * GravityRun.WIDTH / GravityRun.DENSITY / 10));
 
         Label title = new Label(string.format("my_score"), menuSkin, "title");
         Label beginnerLabel = new Label(string.format("beginner") + " :", labelSkin, "round");
         Label intermediateLabel = new Label(string.format("inter") + " :", labelSkin, "round");
         Label expertLabel = new Label(string.format("expert") + " :", labelSkin, "round");
-        ImageButton returnImageButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(returnTexture)));
         List beginnerScoreList = new List(tableSkin);
         List intermediateScoreList = new List(tableSkin);
         List expertScoreList = new List(tableSkin);
-
-        returnImageButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                isClickedReturnImButton = true;
-            }
-        });
 
         java.util.List[] lists = {GravityRun.user.getBeginner(),GravityRun.user.getInter(),GravityRun.user.getExpert()};
         List[] list = {beginnerScoreList, intermediateScoreList, expertScoreList};
@@ -134,7 +123,7 @@ public class ScoreboardState extends State {
 
     @Override
     protected void handleInput() {
-        if (isClickedReturnImButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
+        if (isClickedReturnButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
             gsm.pop();
     }
 
@@ -154,7 +143,6 @@ public class ScoreboardState extends State {
     public void dispose() {
         labelSkin.dispose();
         menuSkin.dispose();
-        returnTexture.dispose();
         stage.dispose();
         tableSkin.dispose();
     }

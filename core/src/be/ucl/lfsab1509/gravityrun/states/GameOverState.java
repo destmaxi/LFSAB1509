@@ -28,15 +28,15 @@ public class GameOverState extends State {
         super(gsm);
 
         titleSkin = new Skin();
-        titleSkin.createSkin(62);
+        titleSkin.createSkin((int) (1.5f * GravityRun.WIDTH / GravityRun.DENSITY / 10));
         Label title = new Label(string.format("game_over"), titleSkin, "title");
 
         scoreSkin = new Skin();
-        scoreSkin.createSkin(28);
+        scoreSkin.createSkin((int) (0.75f * GravityRun.WIDTH / GravityRun.DENSITY / 10));
         Label score = new Label(string.format("final_score",PlayState.score), scoreSkin);
 
         buttonSkin = new Skin();
-        buttonSkin.createSkin(42);
+        buttonSkin.createSkin((int) (GravityRun.WIDTH / GravityRun.DENSITY / 10));
         TextButton menuButton = new TextButton(string.format("menu"), buttonSkin, "round");
         menuButton.addListener(new ChangeListener() {
             @Override
@@ -97,7 +97,7 @@ public class GameOverState extends State {
 
             GravityRun.pref.put(GravityRun.user.toMap());
             GravityRun.pref.flush();
-            
+
             GravityRun.scoreList = null;
 
             gsm.pop();

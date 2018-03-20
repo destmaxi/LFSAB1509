@@ -33,11 +33,11 @@ public class MenuState extends State {
         float ch = sh * 0.9f;
 
         menuSkin = new Skin();
-        menuSkin.createSkin(62);
+        menuSkin.createSkin((int) (1.5f * GravityRun.WIDTH / GravityRun.DENSITY / 10));
         Label title = new Label(string.format("menu"), menuSkin, "title");
 
         tableSkin = new Skin();
-        tableSkin.createSkin(42);
+        tableSkin.createSkin((int) (GravityRun.WIDTH / GravityRun.DENSITY / 10));
         TextButton optionButton = new TextButton(string.format("option"), tableSkin, "round");
         TextButton startGameButton = new TextButton(string.format("new_game"), tableSkin, "round");
         startGameButton.addListener(new ClickListener() {
@@ -81,7 +81,6 @@ public class MenuState extends State {
 
         tableContainer.setActor(table);
         stage.addActor(tableContainer);
-
     }
 
     @Override

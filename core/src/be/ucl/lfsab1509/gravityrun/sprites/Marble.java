@@ -1,16 +1,16 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
+import be.ucl.lfsab1509.gravityrun.GravityRun;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
 public class Marble {
 
     private static final int FRAME_COUNT = 5;
-    private static final int MOVEMENT = 100;
+    private static final int MOVEMENT = (int) (GravityRun.HEIGHT / 5);//(int)(GravityRun.HEIGHT/GravityRun.DENSITY);//(int)(100*GravityRun.DENSITY/(GravityRun.HEIGHT/1000f));
     public static int LVL = 1;
 
     public boolean colliding = false;
@@ -19,19 +19,22 @@ public class Marble {
     private Texture marble;
     private Vector3 position, velocity;
 
-    public Marble(int x, int y) {
-        position = new Vector3(x, y, 0);
-        velocity = new Vector3(0, 0, 0);
-        marble = new Texture("marbles.png");
+    public Marble(int x, int y, int sw) {
+        marble = new Texture("drawable-" + sw + "/marbles.png");
         marbleAnimation = new MarbleAnimation(marble, FRAME_COUNT, 1);
         bounds = new Circle(x + marble.getWidth() / 2, y + marble.getHeight() / FRAME_COUNT / 2, marble.getWidth() / 2);
+        position = new Vector3(x - marble.getWidth() / 2, y, 0);
+        velocity = new Vector3(0, 0, 0);
+        System.out.println("MOVEMENT = " + MOVEMENT);
     }
 
     public void update(float dt, boolean gameOver) {
         marbleAnimation.update(dt, gameOver);
-        velocity.add(-2 * Gdx.input.getGyroscopeY(), 0,0);
+        // velocity.add(-Gdx.input.getGyroscopeY() * GravityRun.WIDTH / GravityRun.DENSITY / 50, 0,0);
+        velocity.add(-8 * Gdx.input.getGyroscopeY(), 0, 0);
+        // System.out.println("gyroY = " + Gdx.input.getGyroscopeY());
         if (!colliding)
-            position.add(2 * Gdx.input.getGyroscopeY(),LVL * MOVEMENT * dt,0);
+            position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75,LVL * MOVEMENT * dt,0);
 
         if (position.x < 0)
             position.x = 0;
@@ -42,7 +45,7 @@ public class Marble {
         return position;
     }
 
-    public float getWidth(){
+    public int getWidth() {
         return marble.getWidth();
     }
 

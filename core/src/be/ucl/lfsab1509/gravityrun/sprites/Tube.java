@@ -10,57 +10,72 @@ import java.util.Random;
 
 public class Tube {
 
-    private static final int MIN_SPACE = 3 * 34;
-    public static final int TUBE_WIDTH = 52;
+    private static int MIN_SPACE;
+    public static int TUBE_HEIGHT;
 
     private Random rand;
-    private Rectangle boundsBot, boundsTop;
-    private Texture bottomTube, topTube;
-    private Vector2 posBotTube, posTopTube;
+    private Rectangle boundsLeft, boundsRight;
+    private Texture leftTube, rightTube;
+    private Vector2 posLeftTube, posRightTube;
+    private int sw;
 
-    public Tube(float y){
+    public Tube(float y, boolean first, int marbleWidth, int sw) {
         rand = new Random();
+        this.sw = sw;
 
-        topTube = new Texture("toptube.png");
-        bottomTube = new Texture("bottomtube.png");
+        leftTube = new Texture("drawable-" + sw + "/lefttube.png");
+        rightTube = new Texture("drawable-" + sw + "/righttube.png");
 
-        posBotTube = new Vector2(rand.nextInt(GravityRun.WIDTH / 2 - MIN_SPACE) - bottomTube.getWidth(), y);
-        posTopTube = new Vector2(posBotTube.x + topTube.getWidth() + MIN_SPACE, y);
+        posLeftTube = first
+                //? new Vector2((GravityRun.WIDTH) / 2, y)
+                ? new Vector2((GravityRun.WIDTH - MIN_SPACE) / 2 - leftTube.getWidth(), y)
+                : new Vector2(rand.nextInt(sw - MIN_SPACE) - leftTube.getWidth(), y);
+        posRightTube = new Vector2(posLeftTube.x + rightTube.getWidth() + MIN_SPACE, y);
 
-        boundsTop = new Rectangle(posTopTube.x, posTopTube.y, topTube.getWidth(), topTube.getHeight());
-        boundsBot = new Rectangle(posBotTube.x, posBotTube.y, bottomTube.getWidth(), bottomTube.getHeight());
+        System.out.println("W of Ltube : " + leftTube.getWidth());
+        System.out.println("R of Ltube : " + (posLeftTube.x + leftTube.getWidth()));
+        System.out.println("L of Ltube : " + posLeftTube.x);
+        System.out.println("L of Rtube : " + posRightTube.x);
+
+        boundsRight = new Rectangle(posRightTube.x, posRightTube.y, rightTube.getWidth(), rightTube.getHeight());
+        boundsLeft = new Rectangle(posLeftTube.x, posLeftTube.y, leftTube.getWidth(), leftTube.getHeight());
+
+        MIN_SPACE = 3 * marbleWidth;
+        TUBE_HEIGHT = leftTube.getHeight();
     }
 
-    public Texture getTopTube() {
-        return topTube;
+    public Texture getRightTube() {
+        return rightTube;
     }
 
-    public Texture getBottomTube() {
-        return bottomTube;
+    public Texture getLeftTube() {
+        return leftTube;
     }
 
-    public Vector2 getPosTopTube() {
-        return posTopTube;
+    public Vector2 getPosRightTube() {
+        return posRightTube;
     }
 
-    public Vector2 getPosBotTube() {
-        return posBotTube;
+    public Vector2 getPosLeftTube() {
+        return posLeftTube;
     }
 
     public void reposition(float y) {
-        posBotTube = new Vector2(rand.nextInt(GravityRun.WIDTH / 2 - MIN_SPACE) - bottomTube.getWidth(), y);
-        posTopTube = new Vector2(posBotTube.x + topTube.getWidth() + MIN_SPACE, y);
-        boundsTop.setPosition(posTopTube.x, y);
-        boundsBot.setPosition(posBotTube.x, y);
+        // posLeftTube = new Vector2(rand.nextInt(GravityRun.WIDTH - MIN_SPACE) - leftTube.getWidth(), y);
+        // posRightTube = new Vector2(posLeftTube.x + rightTube.getWidth() + MIN_SPACE, y);
+        posLeftTube = new Vector2((GravityRun.WIDTH - MIN_SPACE) / 2 - leftTube.getWidth(), y);
+        posRightTube = new Vector2(posLeftTube.x + rightTube.getWidth() + MIN_SPACE, y);
+        boundsRight.setPosition(posRightTube.x, y);
+        boundsLeft.setPosition(posLeftTube.x, y);
     }
 
     public boolean collides(Circle player) {
-        return Intersector.overlaps(player, boundsBot) || Intersector.overlaps(player, boundsTop);
+        return false;//Intersector.overlaps(player, boundsLeft) || Intersector.overlaps(player, boundsRight);
     }
 
     public void dispose(){
-        bottomTube.dispose();
-        topTube.dispose();
+        leftTube.dispose();
+        rightTube.dispose();
     }
 
 }

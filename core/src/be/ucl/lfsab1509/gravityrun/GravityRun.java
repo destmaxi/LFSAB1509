@@ -2,6 +2,7 @@ package be.ucl.lfsab1509.gravityrun;
 
 import be.ucl.lfsab1509.gravityrun.states.*;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
+import be.ucl.lfsab1509.gravityrun.tools.SensorHelper;
 import be.ucl.lfsab1509.gravityrun.tools.User;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -23,10 +24,16 @@ public class GravityRun extends ApplicationAdapter {
     public static ArrayList<Integer> scoreList;
     public static Preferences pref;
     public static User user;
+    public static SensorHelper sensorHelper = null;
 
     private GameStateManager gsm;
-	private SpriteBatch batch;
-	private SoundManager sound;
+    private SpriteBatch batch;
+    private SoundManager sound;
+
+    public GravityRun(SensorHelper sensorHelper) {
+        GravityRun.sensorHelper = sensorHelper;
+        SensorHelper.MAIN = sensorHelper;
+    }
 
     @Override
     public void create() {
@@ -68,4 +75,17 @@ public class GravityRun extends ApplicationAdapter {
 		sound.dispose();
 	}
 
+	@Override
+	public void pause() {
+		super.pause(); // TODO
+		sensorHelper.pauseSensors();
+	}
+
+	@Override
+	public void resume() {
+		super.resume(); // TODO
+		sensorHelper.resumeSensors();
+	}
+
+	// Eventuellement, il ne reste plus que resize à overrider.
 }

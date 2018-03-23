@@ -1,7 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.states.PlayState;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,8 +10,12 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Marble {
 
+    public static final float SQRT2 = (float) Math.sqrt(2);
+
     private static final int FRAME_COUNT = 5;
     private static final int MOVEMENT = 100;
+    public static final float GYRO_COMPENSATION = 2;
+    public static final float GRAVITY_COMPENSATION = 1.4f;
     public static int LVL = GravityRun.user.getIndexSelected()+1;
 
     public boolean colliding = false;
@@ -20,9 +23,12 @@ public class Marble {
     private MarbleAnimation marbleAnimation;
     private Texture marble;
     private Vector3 position;
+    private Vector3 velocity;
+    private boolean isBlockedOnRight, isBlockedOnLeft, isBlockedOnTop;
 
     public Marble(int x, int y) {
         position = new Vector3(x, y, 0);
+        velocity = new Vector3(0, MOVEMENT, 0);
         marble = new Texture("marbles_360.png");
         marbleAnimation = new MarbleAnimation(marble, FRAME_COUNT, 1);
         bounds = new Circle(x + marble.getWidth() / 2, y + marble.getHeight() / FRAME_COUNT / 2, marble.getWidth() / 2);
@@ -85,4 +91,27 @@ public class Marble {
         marbleAnimation.dispose();
     }
 
+    public boolean isBlockedOnRight() {
+        return isBlockedOnRight;
+    }
+
+    public void setBlockedOnRight(boolean blockedOnRight) {
+        isBlockedOnRight = blockedOnRight;
+    }
+
+    public boolean isBlockedOnLeft() {
+        return isBlockedOnLeft;
+    }
+
+    public void setBlockedOnLeft(boolean blockedOnLeft) {
+        isBlockedOnLeft = blockedOnLeft;
+    }
+
+    public boolean isBlockedOnTop() {
+        return isBlockedOnTop;
+    }
+
+    public void setBlockedOnTop(boolean blockedOnTop) {
+        isBlockedOnTop = blockedOnTop;
+    }
 }

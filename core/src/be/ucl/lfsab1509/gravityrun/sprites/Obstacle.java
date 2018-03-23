@@ -8,12 +8,12 @@ import java.util.Random;
 
 public abstract class Obstacle {
 
-    public static final int HOLE_HEIGHT = 52;
+    public static int OBSTACLE_HEIGHT;
 
     Random rand;
+    Shape2D bounds;
     Texture obstacleTexture;
     Vector2 position;
-    Shape2D bounds;
 
     Obstacle() {
         rand = new Random();
@@ -22,13 +22,15 @@ public abstract class Obstacle {
     public Texture getObstacleTexture() {
         return obstacleTexture;
     }
+
     public Vector2 getPosition() {
         return position;
     }
+
     public Shape2D getBounds() {
         return bounds;
     }
-    public abstract void reposition(float y);
+
     public abstract boolean collides(Marble marble);
     public void dispose() {
         obstacleTexture.dispose();

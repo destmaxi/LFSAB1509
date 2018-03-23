@@ -16,12 +16,6 @@ public class LargeHole extends Obstacle {
     }
 
     @Override
-    public void reposition(float y) {
-        position = new Vector2(0, y);
-        bounds = new Rectangle(position.x, position.y, obstacleTexture.getWidth(), obstacleTexture.getHeight());
-    }
-
-    @Override
     public boolean collides(Marble marble) {
         return false;
        // return Intersector.overlaps(marble.getBounds(), (Rectangle) bounds);

@@ -13,14 +13,8 @@ public class Hole extends Obstacle {
 
         obstacleTexture = new Texture("drawable-" + sw + "/hole.png");
         position = first
-                ? new Vector2(rand.nextInt(GravityRun.WIDTH - obstacleTexture.getWidth()), y)
-                :new Vector2(3 * marbleWidth, y);
-        bounds = new Rectangle(position.x, position.y, obstacleTexture.getWidth(), obstacleTexture.getHeight());
-    }
-
-    @Override
-    public void reposition(float y) {
-        position = new Vector2(rand.nextInt(GravityRun.WIDTH - obstacleTexture.getWidth()), y);
+                ? new Vector2(3 * marbleWidth, y)
+                : new Vector2(rand.nextInt(GravityRun.WIDTH - obstacleTexture.getWidth()), y);
         bounds = new Rectangle(position.x, position.y, obstacleTexture.getWidth(), obstacleTexture.getHeight());
     }
 

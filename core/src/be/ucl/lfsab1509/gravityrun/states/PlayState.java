@@ -28,8 +28,8 @@ import java.util.Random;
 public class PlayState extends State {
 
     static int score = 0;
-    private static int obstacleCount = 14;
-    private static int obstacleSpacing = 80;
+    private static int obstacleCount;
+    private static int obstacleSpacing;
 
     private Array<Obstacle> obstacles;
     private boolean gameOver = false, isClickedPauseButton = false;
@@ -69,6 +69,7 @@ public class PlayState extends State {
             sw = 600;
         else
             sw = 480;
+        Obstacle.OBSTACLE_HEIGHT = sw / 5;
 
         gameOverImage = new Texture("drawable-" + sw + "/gameover.png");
         pauseImage = new Texture("drawable-" + sw + "/pause.png");
@@ -97,18 +98,18 @@ public class PlayState extends State {
         scoreStage.addActor(pauseButton);
 
         marbleWidth = (int) marble.getWidth();
-        obstacleSpacing = 2 * Obstacle.HOLE_HEIGHT;
-        obstacleCount = (int) (1.5f * h / (obstacleSpacing + Obstacle.HOLE_HEIGHT));
+        obstacleSpacing = (int) (1.5f * Obstacle.OBSTACLE_HEIGHT);
+        obstacleCount = (int) (1.5f * h / (obstacleSpacing + Obstacle.OBSTACLE_HEIGHT));
         /*for (int i = 1; i <= obstacleCount; ) {
-            obstacles.add(new Hole(i++ * (obstacleSpacing + Hole.HOLE_HEIGHT), true, marbleWidth, sw));
-            obstacles.add(new LargeHole( i++ * (obstacleSpacing + LargeHole.HOLE_HEIGHT), true, marbleWidth, sw));
-            obstacles.add(new LeftWall(i++ * (obstacleSpacing + LeftWall.HOLE_HEIGHT), true, marbleWidth, sw));
-            obstacles.add(new RightWall(i++ * (obstacleSpacing + RightWall.HOLE_HEIGHT), true, marbleWidth, sw));
+            obstacles.add(new Hole(i++ * (obstacleSpacing + Hole.OBSTACLE_HEIGHT), true, marbleWidth, sw));
+            obstacles.add(new LargeHole( i++ * (obstacleSpacing + LargeHole.OBSTACLE_HEIGHT), true, marbleWidth, sw));
+            obstacles.add(new LeftWall(i++ * (obstacleSpacing + LeftWall.OBSTACLE_HEIGHT), true, marbleWidth, sw));
+            obstacles.add(new RightWall(i++ * (obstacleSpacing + RightWall.OBSTACLE_HEIGHT), true, marbleWidth, sw));
         }*/
 
         random = new Random();
         for (int i = 1; i <= obstacleCount; i++)
-            obstacles.add(newObstacle(true, marbleWidth, i * (obstacleSpacing + Hole.HOLE_HEIGHT)));
+            obstacles.add(newObstacle(i <= Marble.LVL, marbleWidth, (i+1) * (obstacleSpacing + Obstacle.OBSTACLE_HEIGHT)));
 
         /*Tube tube = new Tube(tubeSpacing + Tube.TUBE_HEIGHT, true, marbleWidth, sw);
         tubeSpacing = (int) (2 * Tube.TUBE_HEIGHT);
@@ -149,9 +150,9 @@ public class PlayState extends State {
             Obstacle obs = obstacles.get(i);
 
             if ((cam.position.y - cam.viewportHeight / 2) >= obs.getPosition().y + obs.getObstacleTexture().getHeight()) {
-                //obs.reposition(obs.getPosition().y + (Hole.HOLE_HEIGHT + obstacleSpacing) * obstacleCount);
+                //obs.reposition(obs.getPosition().y + (Hole.OBSTACLE_HEIGHT + obstacleSpacing) * obstacleCount);
                 obstacles.get(i).dispose();
-                obstacles.set(i, newObstacle(true, marbleWidth, obs.getPosition().y + (Hole.HOLE_HEIGHT + obstacleSpacing) * obstacleCount));
+                obstacles.set(i, newObstacle(false, marbleWidth, obs.getPosition().y + (obstacleSpacing + Obstacle.OBSTACLE_HEIGHT) * obstacleCount));
             }
 
             if (obs.collides(marble)) {

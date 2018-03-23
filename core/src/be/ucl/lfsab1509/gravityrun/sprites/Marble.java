@@ -1,6 +1,8 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
+import be.ucl.lfsab1509.gravityrun.states.PlayState;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -42,8 +44,20 @@ public class Marble {
         else
             speed = 100;
 
+        if(Gdx.input.getGyroscopeX() > 2)
+            position.z = 700;
+
+        System.out.println(position.z);
+
+        if(position.z > 0)
+            position.add(0,0, -10);
+        else
+            position.z = 0;
+
         if (!colliding)
             position.add(2 * Gdx.input.getGyroscopeY(),LVL * (MOVEMENT + speed) * dt,0);
+
+
 
         if (position.x < 0)
             position.x = 0;
@@ -66,7 +80,7 @@ public class Marble {
         return marbleAnimation.getFrame();
     }
 
-    public Circle getBounds() {
+    Circle getBounds() {
         return bounds;
     }
 

@@ -25,8 +25,8 @@ public class LargeHole extends Obstacle {
 
     @Override
     public boolean collides(Marble marble) {
-        return false;
-       // return Intersector.overlaps(marble.getBounds(), (Rectangle) bounds);
+        //return false;
+        return Intersector.overlaps(marble.getBounds(), (Rectangle) bounds) && marble.getPosition().z == 0;
     }
 
     @Override

@@ -165,7 +165,9 @@ public class OptionState extends State {
 
     @Override
     protected void handleInput() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            GravityRun.pref.put(GravityRun.user.toMap());
+            GravityRun.pref.flush();
             gsm.pop();
         if (isClickedScoreButton) {
             isClickedScoreButton = false;

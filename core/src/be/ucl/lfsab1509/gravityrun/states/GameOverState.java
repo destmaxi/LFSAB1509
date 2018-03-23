@@ -30,6 +30,11 @@ public class GameOverState extends State {
         float ch = h * 0.9f;
         float cw = w * 0.9f;
 
+        ArrayList<Integer> userList = GravityRun.user.getHighScore();
+        for (int i = 0; i < GravityRun.scoreList.size(); i++)
+            if(GravityRun.scoreList.get(i) > userList.get(Marble.LVL - 1))
+                GravityRun.user.getHighScore().set(Marble.LVL - 1, GravityRun.scoreList.get(i));
+
         buttonSkin = new Skin();
         buttonSkin.createSkin((int) (w / d / 10));
         TextButton menuButton = new TextButton(string.format("menu"), buttonSkin, "round");
@@ -50,6 +55,7 @@ public class GameOverState extends State {
         scoreSkin = new Skin();
         scoreSkin.createSkin((int) (0.75f * w / d / 10));
         Label score = new Label(string.format("final_score", PlayState.score), scoreSkin);
+        Label highScore = new Label(string.format("high_score", GravityRun.user.getHighScore().get(Marble.LVL - 1)), scoreSkin);
 
         titleSkin = new Skin();
         titleSkin.createSkin((int) (1.5f * w / d / 10));
@@ -66,6 +72,8 @@ public class GameOverState extends State {
         table.add(title).top();
         table.row();
         table.add(score).padTop(h - ch);
+        table.row();
+        table.add(highScore).padTop(h - ch);
         table.row();
         table.add(replayButton).expandX().fillX().padTop((h - ch) * 2);
         table.row();

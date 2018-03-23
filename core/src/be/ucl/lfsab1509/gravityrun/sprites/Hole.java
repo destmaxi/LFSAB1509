@@ -20,7 +20,8 @@ public class Hole extends Obstacle {
 
     @Override
     public boolean collides(Marble marble) {
-        return Intersector.overlaps(marble.getBounds(), (Rectangle) bounds);
+        return Intersector.overlaps(marble.getBounds(), (Rectangle) bounds) && marble.getPosition().z == 0;
+
     }
 
     @Override

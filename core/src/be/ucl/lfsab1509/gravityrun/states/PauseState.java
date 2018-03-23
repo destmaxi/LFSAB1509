@@ -23,16 +23,11 @@ public class PauseState extends State {
     PauseState(GameStateManager gsm) {
         super(gsm);
 
-        titleSkin = new Skin();
-        titleSkin.createSkin((int) (1.5f * GravityRun.WIDTH / GravityRun.DENSITY / 10));
-        Label title = new Label(string.format("pause"), titleSkin, "title");
-
-        scoreSkin = new Skin();
-        scoreSkin.createSkin((int) (0.75f * GravityRun.WIDTH / GravityRun.DENSITY / 10));
-        Label score = new Label(string.format("score", PlayState.score), scoreSkin);
+        float ch = h * 0.9f;
+        float cw = w * 0.9f;
 
         buttonSkin = new Skin();
-        buttonSkin.createSkin((int) (GravityRun.WIDTH / GravityRun.DENSITY / 10));
+        buttonSkin.createSkin((int) (w / d / 10));
         TextButton continueButton = new TextButton(string.format("continue"), buttonSkin, "round");
         continueButton.addListener(new ChangeListener() {
             @Override
@@ -48,30 +43,31 @@ public class PauseState extends State {
             }
         });
 
+        scoreSkin = new Skin();
+        scoreSkin.createSkin((int) (0.75f * w / d / 10));
+        Label score = new Label(string.format("score", PlayState.score), scoreSkin);
+
+        titleSkin = new Skin();
+        titleSkin.createSkin((int) (1.5f * w / d / 10));
+        Label title = new Label(string.format("pause"), titleSkin, "title");
+
         Container<Table> tableContainer = new Container<Table>();
         Table table = new Table();
-        stage = new Stage(new ScreenViewport());
-
-        float sw = Gdx.graphics.getWidth();
-        float sh = Gdx.graphics.getHeight();
-
-        float cw = sw * 0.9f;
-        float ch = sh * 0.9f;
 
         tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((sw - cw) / 2,(sh - ch) / 2 );
+        tableContainer.setPosition((w - cw) / 2,(h - ch) / 2 );
         tableContainer.top().fillX();
+        tableContainer.setActor(table);
 
         table.add(title).top();
         table.row();
-        table.add(score).padTop(sh - ch);
+        table.add(score).padTop(h - ch);
         table.row();
-        table.add(continueButton).expandX().fillX().padTop((sh - ch) * 2);
+        table.add(continueButton).expandX().fillX().padTop((h - ch) * 2);
         table.row();
-        table.add(quitButton).expandX().fillX().padTop(sh - ch);
+        table.add(quitButton).expandX().fillX().padTop(h - ch);
 
         stage = new Stage(new ScreenViewport());
-        tableContainer.setActor(table);
         stage.addActor(tableContainer);
 
         Gdx.input.setInputProcessor(stage);

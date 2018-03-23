@@ -21,19 +21,24 @@ import java.util.ArrayList;
 public class FirstState extends State {
 
     private boolean isClickedStartButton = false;
+    private Label errorLabel;
+    private Skin errorSkin, menuSkin, tableSkin;
     private Stage stage;
     private String username = string.format("username");
-    private Skin menuSkin, tableSkin, errorSkin;
-    private Label errorLabel;
 
     public FirstState(GameStateManager gsm) {
         super(gsm);
 
-        float sw = Gdx.graphics.getWidth();
-        float sh = Gdx.graphics.getHeight();
+        float cw = w * 0.9f;
+        float ch = h * 0.9f;
 
-        float cw = sw * 0.9f;
-        float ch = sh * 0.9f;
+        errorSkin = new Skin();
+        errorSkin.createSkin(28);
+        errorLabel = new Label(string.format("error"), errorSkin, "error");
+        errorLabel.setWrap(true);
+        errorLabel.setWidth(cw);
+        errorLabel.setAlignment(Align.center);
+        errorLabel.setVisible(false);
 
         menuSkin = new Skin();
         menuSkin.createSkin(62);
@@ -42,21 +47,15 @@ public class FirstState extends State {
         tableSkin = new Skin();
         tableSkin.createSkin(42);
         TextButton startButton = new TextButton(string.format("start"), tableSkin, "round");
-
-        errorSkin = new Skin();
-        errorSkin.createSkin(28);
-
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 isClickedStartButton = true;
             }
         });
-
         final TextField usernameField = new TextField(username, tableSkin);
         usernameField.setText(username);
-
-        usernameField.addListener(new ClickListener(){
+        usernameField.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 usernameField.selectAll();
@@ -70,32 +69,24 @@ public class FirstState extends State {
             }
         });
 
-        errorLabel = new Label(string.format("error"), errorSkin,"error");
-        errorLabel.setWrap(true);
-        errorLabel.setWidth(cw);
-        errorLabel.setAlignment(Align.center);
-        errorLabel.setVisible(false);
-
         Container<Table> tableContainer = new Container<Table>();
         Table table = new Table();
-        stage = new Stage(new ScreenViewport());
-
 
         tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((sw - cw) / 2,(sh - ch) / 2);
+        tableContainer.setPosition((w - cw) / 2,(h - ch) / 2);
         tableContainer.top().fillX();
+        tableContainer.setActor(table);
 
         table.add(title).top();
         table.row();
+        table.add(usernameField).expandX().fillX().padTop(h - ch);
+        table.row();
+        table.add(startButton).expandX().fillX().padTop(h - ch);
+        table.row();
+        table.add(errorLabel).expandX().fillX().padTop(h - ch).width(cw);
+        table.row();
 
-        table.add(usernameField).expandX().fillX().padTop(sh - ch);
-        table.row();
-        table.add(startButton).expandX().fillX().padTop(sh - ch);
-        table.row();
-        table.add(errorLabel).expandX().fillX().padTop(sh - ch).width(cw);
-        table.row();
-
-        tableContainer.setActor(table);
+        stage = new Stage(new ScreenViewport());
         stage.addActor(tableContainer);
 
         Gdx.input.setInputProcessor(stage);
@@ -129,10 +120,10 @@ public class FirstState extends State {
         sb.setProjectionMatrix(cam.combined);
         stage.act();
         stage.draw();
-        if (isClickedStartButton && !username.equals(string.format("username"))){
+        if (isClickedStartButton && !username.equals(string.format("username"))) {
             gsm.update(Gdx.graphics.getDeltaTime());
         }
-        else if (isClickedStartButton){
+        else if (isClickedStartButton) {
             isClickedStartButton = false;
             errorLabel.setVisible(true);
         }

@@ -27,11 +27,8 @@ public abstract class Obstacle {
         return position;
     }
 
-    public Shape2D getBounds() {
-        return bounds;
-    }
-
     public abstract boolean collides(Marble marble);
+
     public void dispose() {
         obstacleTexture.dispose();
     }

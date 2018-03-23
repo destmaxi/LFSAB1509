@@ -17,28 +17,30 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class MenuState extends State {
 
-    private boolean isClickedStartGameButton = false, isClickedOptionButton = false;
-    private Stage stage;
-    private Skin menuSkin, tableSkin;
+    private boolean isClickedOptionButton = false, isClickedStartGameButton = false;
     private Label hyLabel;
-
+    private Skin menuSkin, tableSkin;
+    private Stage stage;
 
     public MenuState(GameStateManager gsm) {
         super(gsm);
 
-        float sw = Gdx.graphics.getWidth();
-        float sh = Gdx.graphics.getHeight();
-
-        float cw = sw * 0.9f;
-        float ch = sh * 0.9f;
+        float ch = h * 0.9f;
+        float cw = w * 0.9f;
 
         menuSkin = new Skin();
-        menuSkin.createSkin((int) (1.5f * GravityRun.WIDTH / GravityRun.DENSITY / 10));
+        menuSkin.createSkin((int) (1.5f * w / d / 10));
         Label title = new Label(string.format("menu"), menuSkin, "title");
 
         tableSkin = new Skin();
-        tableSkin.createSkin((int) (GravityRun.WIDTH / GravityRun.DENSITY / 10));
+        tableSkin.createSkin((int) (w / d / 10));
         TextButton optionButton = new TextButton(string.format("option"), tableSkin, "round");
+        optionButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                isClickedOptionButton = true;
+            }
+        });
         TextButton startGameButton = new TextButton(string.format("new_game"), tableSkin, "round");
         startGameButton.addListener(new ClickListener() {
             @Override
@@ -46,40 +48,29 @@ public class MenuState extends State {
                 isClickedStartGameButton = true;
             }
         });
-        optionButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                isClickedOptionButton = true;
-            }
-        });
-
-        hyLabel = new Label(string.format("hello")+GravityRun.pref.getString("username"),tableSkin);
+        hyLabel = new Label(string.format("hello") + GravityRun.pref.getString("username"), tableSkin);
         hyLabel.setWrap(true);
         hyLabel.setWidth(cw);
         hyLabel.setAlignment(Align.center);
 
         Container<Table> tableContainer = new Container<Table>();
         Table table = new Table();
-        stage = new Stage(new ScreenViewport());
-
 
         tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((sw - cw) / 2,(sh - ch) / 2);
+        tableContainer.setPosition((w - cw) / 2,(h - ch) / 2);
         tableContainer.top().fillX();
+        tableContainer.setActor(table);
 
         table.add(title).top();
         table.row();
-
-        table.add(hyLabel).expandX().width(cw).padTop(sh - ch);
+        table.add(hyLabel).expandX().width(cw).padTop(h - ch);
+        table.row();
+        table.add(optionButton).expandX().fillX().padTop(h - ch);
+        table.row();
+        table.add(startGameButton).expandX().fillX().padTop(h - ch);
         table.row();
 
-        table.add(optionButton).expandX().fillX().padTop(sh - ch);
-        table.row();
-
-        table.add(startGameButton).expandX().fillX().padTop(sh - ch);
-        table.row();
-
-        tableContainer.setActor(table);
+        stage = new Stage(new ScreenViewport());
         stage.addActor(tableContainer);
     }
 
@@ -109,11 +100,9 @@ public class MenuState extends State {
     @Override
     public void render(SpriteBatch sb) {
         sb.setProjectionMatrix(cam.combined);
-        hyLabel.setText(string.format("hello")+ GravityRun.user.getUsername());
+        hyLabel.setText(string.format("hello") + GravityRun.user.getUsername());
         stage.act();
         stage.draw();
-        if (isClickedOptionButton || isClickedStartGameButton)
-            gsm.update(Gdx.graphics.getDeltaTime());
     }
 
     @Override

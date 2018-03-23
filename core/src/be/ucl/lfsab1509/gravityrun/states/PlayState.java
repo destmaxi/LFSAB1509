@@ -34,9 +34,7 @@ public class PlayState extends State {
     private Array<Obstacle> obstacles;
     private boolean gameOver = false, isClickedPauseButton = false;
     private Label scoreLabel;
-    private float d, h, w;//, tubeCount, tubeSpacing;
     private int marbleWidth, sw;
-    private String sd;
     private Marble marble;
     private Random random;
     private Stage scoreStage;
@@ -48,10 +46,6 @@ public class PlayState extends State {
 
         if (GravityRun.scoreList == null)
             GravityRun.scoreList = new ArrayList<Integer>();
-
-        d = GravityRun.DENSITY;
-        h = GravityRun.HEIGHT;
-        w = GravityRun.WIDTH;
 
         cam.setToOrtho(false, w, h);
 
@@ -74,8 +68,7 @@ public class PlayState extends State {
         gameOverImage = new Texture("drawable-" + sw + "/gameover.png");
         pauseImage = new Texture("drawable-" + sw + "/pause.png");
         ImageButton pauseButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(pauseImage)));
-        // pauseButton.setSize(w / 10, w / 10);
-        pauseButton.setPosition(0, GravityRun.HEIGHT - pauseButton.getHeight());
+        pauseButton.setPosition(0, h - pauseButton.getHeight());
         pauseButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -88,7 +81,7 @@ public class PlayState extends State {
         marble = new Marble((int) w / 2,0, sw);
 
         skin = new Skin();
-        skin.createSkin((int) (0.75f * GravityRun.WIDTH / GravityRun.DENSITY / 10));
+        skin.createSkin((int) (0.75f * w / d / 10));
 
         scoreLabel = new Label(string.format("score"), skin, "optional");
         scoreLabel.setText(string.format("score", score));
@@ -100,26 +93,10 @@ public class PlayState extends State {
         marbleWidth = (int) marble.getWidth();
         obstacleSpacing = (int) (1.5f * Obstacle.OBSTACLE_HEIGHT);
         obstacleCount = (int) (1.5f * h / (obstacleSpacing + Obstacle.OBSTACLE_HEIGHT));
-        /*for (int i = 1; i <= obstacleCount; ) {
-            obstacles.add(new Hole(i++ * (obstacleSpacing + Hole.OBSTACLE_HEIGHT), true, marbleWidth, sw));
-            obstacles.add(new LargeHole( i++ * (obstacleSpacing + LargeHole.OBSTACLE_HEIGHT), true, marbleWidth, sw));
-            obstacles.add(new LeftWall(i++ * (obstacleSpacing + LeftWall.OBSTACLE_HEIGHT), true, marbleWidth, sw));
-            obstacles.add(new RightWall(i++ * (obstacleSpacing + RightWall.OBSTACLE_HEIGHT), true, marbleWidth, sw));
-        }*/
 
         random = new Random();
         for (int i = 1; i <= obstacleCount; i++)
-            obstacles.add(newObstacle(i <= Marble.LVL, marbleWidth, (i+1) * (obstacleSpacing + Obstacle.OBSTACLE_HEIGHT)));
-
-        /*Tube tube = new Tube(tubeSpacing + Tube.TUBE_HEIGHT, true, marbleWidth, sw);
-        tubeSpacing = (int) (2 * Tube.TUBE_HEIGHT);
-        tubeCount = (int) (1.5 * h / (tubeSpacing + Tube.TUBE_HEIGHT));
-        System.out.println("tubeSpacing = " + tubeSpacing);
-        System.out.println("tubeCount = " + tubeCount);
-        tube.dispose();
-        for (int i = 1; i <= tubeCount; i++)
-            tubes.add(new Tube(i * (tubeSpacing + Tube.TUBE_HEIGHT), i <= 1000 * Marble.LVL, marbleWidth, sw));
-            */
+            obstacles.add(newObstacle(i <= Marble.LVL, marbleWidth, (i + 1) * (obstacleSpacing + Obstacle.OBSTACLE_HEIGHT)));
     }
 
     @Override
@@ -141,7 +118,7 @@ public class PlayState extends State {
         handleInput();
         marble.update(dt, gameOver);
 
-        score = (int) (marble.getPosition().y / GravityRun.HEIGHT * 100);
+        score = (int) (marble.getPosition().y / h * 100);
         scoreLabel.setText(string.format("score", score));
 
         cam.position.y = marble.getPosition().y + 3 * marble.getWidth();
@@ -150,7 +127,6 @@ public class PlayState extends State {
             Obstacle obs = obstacles.get(i);
 
             if ((cam.position.y - cam.viewportHeight / 2) >= obs.getPosition().y + obs.getObstacleTexture().getHeight()) {
-                //obs.reposition(obs.getPosition().y + (Hole.OBSTACLE_HEIGHT + obstacleSpacing) * obstacleCount);
                 obstacles.get(i).dispose();
                 obstacles.set(i, newObstacle(false, marbleWidth, obs.getPosition().y + (obstacleSpacing + Obstacle.OBSTACLE_HEIGHT) * obstacleCount));
             }

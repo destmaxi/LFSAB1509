@@ -10,8 +10,8 @@ import com.badlogic.gdx.math.Vector3;
 public class Marble {
 
     private static final int FRAME_COUNT = 5;
-    private static final int MOVEMENT = (int) (GravityRun.HEIGHT / 5);//(int)(GravityRun.HEIGHT/GravityRun.DENSITY);//(int)(100*GravityRun.DENSITY/(GravityRun.HEIGHT/1000f));
-    public static int LVL = GravityRun.user.getIndexSelected()+1;
+    private static final int MOVEMENT = (int) (GravityRun.HEIGHT / 5);
+    public static int LVL = GravityRun.user.getIndexSelected() + 1;
 
     public boolean colliding = false;
     private Circle bounds;

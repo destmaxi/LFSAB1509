@@ -21,7 +21,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class OptionState extends State {
 
-    private boolean isCheckedLvlButton = false, isClickedLvlButton = false, isClickedScoreButton = false, isClickedUsernameButton = false, isClickedSaveButton = false, isCheckedUsernameButton = false, isClickedLVLButton = false, isClickedReturnButton = false;
+    private boolean isCheckedLvlButton = false, isCheckedUsernameButton = false, isClickedLvlButton = false, isClickedSaveButton = false, isClickedScoreButton = false, isClickedUsernameButton = false;
     private final List<String> listBox;
     private Skin menuSkin, tableSkin;
     private Stage stage;
@@ -32,30 +32,17 @@ public class OptionState extends State {
     OptionState(GameStateManager gsm) {
         super(gsm);
 
-        float sw = Gdx.graphics.getWidth();
-        float sh = Gdx.graphics.getHeight();
-
-        float cw = sw * 0.9f;
-        float ch = sh * 0.9f;
-
-        stage = new Stage(new ScreenViewport());
+        float ch = h * 0.9f;
+        float cw = w * 0.9f;
 
         menuSkin = new Skin();
-        tableSkin = new Skin();
-
-        tableSkin.createSkin((int) (GravityRun.WIDTH / GravityRun.DENSITY / 10));
-        menuSkin.createSkin((int) (1.5f * GravityRun.WIDTH / GravityRun.DENSITY / 10));
-
+        menuSkin.createSkin((int) (1.5f * w / d / 10));
         Label title = new Label(string.get("option"), menuSkin, "title");
+
+        tableSkin = new Skin();
+        tableSkin.createSkin((int) (w / d / 10));
+
         TextButton lvlButton = new TextButton(string.format("chose_lvl"), tableSkin, "round");
-        TextButton scoreButton = new TextButton(string.format("my_score"), tableSkin, "round");
-        saveButton = new TextButton(string.format("save"), tableSkin, "round");
-        TextButton usernameButton = new TextButton(string.format("mod_username"),tableSkin,"round");
-        listBox = new List<String>(tableSkin);
-
-        listBox.setItems(string.format("beginner"), string.format("inter"), string.format("expert"));
-        listBox.setVisible(false);
-
         lvlButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -69,13 +56,24 @@ public class OptionState extends State {
             }
         });
 
+        saveButton = new TextButton(string.format("save"), tableSkin, "round");
         saveButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 isClickedSaveButton = true;
             }
         });
+        saveButton.setVisible(false);
 
+        TextButton scoreButton = new TextButton(string.format("my_score"), tableSkin, "round");
+        scoreButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                isClickedScoreButton = true;
+            }
+        });
+
+        TextButton usernameButton = new TextButton(string.format("mod_username"), tableSkin, "round");
         usernameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -89,15 +87,26 @@ public class OptionState extends State {
             }
         });
 
-        scoreButton.addListener(new ClickListener() {
+        username = GravityRun.user.getUsername();
+        usernameField = new TextField(username, tableSkin);
+        usernameField.setText(username);
+        usernameField.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                isClickedScoreButton = true;
+                usernameField.selectAll();
             }
         });
+        usernameField.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                username = usernameField.getText();
+            }
+        });
+        usernameField.setVisible(false);
 
-        saveButton.setVisible(false);
-
+        listBox = new List<String>(tableSkin);
+        listBox.setItems(string.format("beginner"), string.format("inter"), string.format("expert"));
+        listBox.setVisible(false);
         listBox.setSelectedIndex(GravityRun.user.getIndexSelected());
         listBox.addListener(new ClickListener() {
             @Override
@@ -105,69 +114,33 @@ public class OptionState extends State {
                 if (listBox.getSelected().equals(string.format("beginner"))) {
                     Marble.LVL = 1;
                     GravityRun.user.setIndexSelected(0);
-                    isClickedLVLButton = true;
-                }
-                else if(listBox.getSelected().equals(string.format("inter"))) {
+                    isCheckedLvlButton = false;
+                    isClickedLvlButton = false;
+                    listBox.setVisible(false);
+                } else if (listBox.getSelected().equals(string.format("inter"))) {
                     Marble.LVL = 2;
                     GravityRun.user.setIndexSelected(1);
-                    isClickedLVLButton = true;
-                }
-                else if(listBox.getSelected().equals(string.format("expert"))) {
+                    isCheckedLvlButton = false;
+                    isClickedLvlButton = false;
+                    listBox.setVisible(false);
+                } else if (listBox.getSelected().equals(string.format("expert"))) {
                     Marble.LVL = 3;
                     GravityRun.user.setIndexSelected(2);
-                    isClickedLVLButton = true;
+                    isCheckedLvlButton = false;
+                    isClickedLvlButton = false;
+                    listBox.setVisible(false);
                 }
             }
         });
 
-        username = GravityRun.user.getUsername();
-        usernameField = new TextField(username, tableSkin);
-        usernameField.setText(username);
-
-        usernameField.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                usernameField.selectAll();
-            }
-        });
-        usernameField.addListener(new ChangeListener() {
-
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                username = usernameField.getText();
-            }
-        });
-
-        usernameField.setVisible(false);
-
         Container<Table> tableContainer = new Container<Table>();
-
         Table table = new Table();
         Table titleTable = new Table();
 
         tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((sw - cw) / 2,(sh - ch) / 2);
+        tableContainer.setPosition((w - cw) / 2,(h - ch) / 2);
         tableContainer.top().fillX();
-
-        //titleTable.row().expandY();
-        //titleTable.add(returnButton).expandX().left().size(cw / 6);
-        //titleTable.add(title).colspan(7).expandX();
-        /*titleTable.row().expandY();
-        titleTable.add(title).colspan(7).expandX();
-        titleTable.row().colspan(7).fillX();
-        titleTable.add(table);
-
-        table.row().colspan(2);
-        table.add(scoreButton).expandX().fillX().padTop(sh - ch);
-        table.row().colspan(2);
-        table.add(usernameButton).expandX().fillX().padTop(sh - ch);
-        table.row();
-        table.add(usernameField).expandX().fillX();
-        table.add(saveButton).expandX().fillX();
-        table.row().colspan(2);
-        table.add(lvlButton).expandX().fillX().padTop((sh - ch)/2);
-        table.row().colspan(2);
-        table.add(listBox).fillX().top();*/
+        tableContainer.setActor(titleTable);
 
         titleTable.row().expandY();
         titleTable.add(title).colspan(7).expandX();
@@ -175,30 +148,30 @@ public class OptionState extends State {
         titleTable.add(table);
 
         table.row().colspan(2);
-        table.add(scoreButton).expandX().fillX().padTop(sh - ch);
+        table.add(scoreButton).expandX().fillX().padTop(h - ch);
         table.row().colspan(2);
-        table.add(usernameButton).expandX().fillX().padTop(sh - ch).maxWidth(cw);
+        table.add(usernameButton).expandX().fillX().padTop(h - ch).maxWidth(cw);
         table.row();
         table.add(usernameField).expandX().fillX();
         table.add(saveButton).expandX().fillX();
         table.row().colspan(2);
-        table.add(lvlButton).expandX().fillX().padTop((sh - ch)/2).maxWidth(cw);
+        table.add(lvlButton).expandX().fillX().padTop((h - ch) / 2).maxWidth(cw);
         table.row().colspan(2);
         table.add(listBox).fillX().top();
 
-        tableContainer.setActor(titleTable);
+        stage = new Stage(new ScreenViewport());
         stage.addActor(tableContainer);
     }
 
     @Override
     protected void handleInput() {
-        if (isClickedReturnButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
             gsm.pop();
         if (isClickedScoreButton) {
             isClickedScoreButton = false;
             gsm.push(new ScoreboardState(gsm));
         }
-        if(isClickedSaveButton){
+        if (isClickedSaveButton) {
             GravityRun.user.setUsername(username);
             GravityRun.pref.put(GravityRun.user.toMap());
             GravityRun.pref.flush();
@@ -208,15 +181,6 @@ public class OptionState extends State {
             isClickedUsernameButton = false;
             isClickedSaveButton = false;
         }
-
-        if(isClickedLVLButton){
-            listBox.setVisible(false);
-            isCheckedLvlButton = false;
-            isClickedLvlButton = false;
-            isClickedLVLButton = false;
-        }
-
-
     }
 
     @Override
@@ -240,12 +204,10 @@ public class OptionState extends State {
         if (isClickedUsernameButton){
             usernameField.setVisible(true);
             saveButton.setVisible(true);
-        }
-        else{
+        } else {
             usernameField.setVisible(false);
             saveButton.setVisible(false);
         }
-
     }
 
     @Override

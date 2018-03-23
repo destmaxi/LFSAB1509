@@ -1,5 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
+import be.ucl.lfsab1509.gravityrun.GravityRun;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.utils.I18NBundle;
 
 public abstract class State {
 
+    float d = GravityRun.DENSITY, h = GravityRun.HEIGHT, w = GravityRun.WIDTH;
     GameStateManager gsm;
     protected I18NBundle string;
     OrthographicCamera cam;

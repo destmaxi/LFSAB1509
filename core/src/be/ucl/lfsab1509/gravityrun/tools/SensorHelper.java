@@ -8,6 +8,8 @@ public abstract class SensorHelper {
      *
      * - ORIENTATION : utilisation des capteurs liés à l'orientation, en particulier le capteur du rotation vector et de la rotation matrix.
      * - GRAVITY : utilisation du capteur déterminant l'orientation de la gravité, qui lui-même tire parti de l'accéléromètre, du magnétomètre et éventuellement du gyroscope.
+     *   Avantages : logiquement, il est plus stable que les autres.
+     *   Inconvénients : si l'accélération subie par l'appareil est significative et dure suffisament longtemps, l'axe de la gravité sera temporairement fortement déréglé.
      */
     public enum OrientationSensorType {
         ORIENTATION,

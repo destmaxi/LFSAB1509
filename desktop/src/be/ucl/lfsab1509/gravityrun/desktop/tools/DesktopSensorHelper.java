@@ -1,10 +1,16 @@
 package be.ucl.lfsab1509.gravityrun.desktop.tools;
 
+import com.badlogic.gdx.Gdx;
+
+import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.SensorHelper;
 
 public class DesktopSensorHelper extends SensorHelper {
+    private float lastTimestamp;
+    private float[] lastGravityVector;
+
     public DesktopSensorHelper() {
-        //
+        lastGravityVector = new float[] {0.0f, 0.0f};
     }
 
     @Override
@@ -24,7 +30,28 @@ public class DesktopSensorHelper extends SensorHelper {
 
     @Override
     public float[] getGravityDirectionVector() {
-        return new float[2]; // TODO
+        int x = Gdx.input.getX() - GravityRun.WIDTH / 2, y = Gdx.input.getY() - GravityRun.HEIGHT / 2;
+        System.out.println(x + " " + y);
+        int windowWidth = GravityRun.WIDTH, windowHeight = GravityRun.HEIGHT;
+        int minWidth = Math.min(windowWidth, windowHeight);
+        if (x < -minWidth)
+            x = -minWidth;
+        if (x > +minWidth)
+            x = +minWidth;
+        if (y < -minWidth)
+            y = -minWidth;
+        if (y > +minWidth)
+            y = +minWidth;
+        float[] ret = new float[] {((float)x) * 2.0f / minWidth, ((float)y) * 2.0f / minWidth};
+        System.out.println(ret[0] + " " + ret[1]);
+        float[] deltaGravity = new float[] {ret[0] - lastGravityVector[0], ret[1] - lastGravityVector[1]};
+        lastGravityVector[0] = ret[0];
+        lastGravityVector[1] = ret[1];
+        float timestamp = System.nanoTime();
+        float dt = timestamp - lastTimestamp;
+        lastTimestamp = timestamp;
+        // TODO use deltaGravity and dt to measure "angular" velocity of the pointer.
+        return ret;
     }
 
     @Override

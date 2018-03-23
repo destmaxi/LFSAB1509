@@ -14,7 +14,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -102,6 +101,8 @@ public class PlayState extends State {
         random = new Random();
         for (int i = 1; i <= obstacleCount; i++)
             obstacles.add(newObstacle(i <= Marble.LVL, marbleWidth, (i + 1) * (obstacleSpacing + Obstacle.OBSTACLE_HEIGHT)));
+
+        cam.position.y = marble.getPosition().y + 80;
     }
 
     @Override
@@ -121,12 +122,13 @@ public class PlayState extends State {
     public void update(float dt) {
         Gdx.input.setInputProcessor(scoreStage);
         handleInput();
+        // updateGround(); //will be usefull when we get a background picture
         marble.update(dt, gameOver);
 
         score = (int) (marble.getPosition().y / h * 100);
         scoreLabel.setText(string.format("score", score));
 
-        cam.position.y = marble.getPosition().y + 3 * marble.getWidth();
+        cam.position.add(0,(Marble.MOVEMENT + Marble.speed )*dt,0);
 
         for (int i = 0; i < obstacles.size; i++){
             Obstacle obs = obstacles.get(i);
@@ -137,12 +139,14 @@ public class PlayState extends State {
             }
 
             if (obs.collides(marble)) {
+                cam.position.y = marble.getPosition().y + 80;
                 marble.colliding = true;
                 gameOver = true;
             }
         }
 
         if (marble.getPosition().x <= 0 || marble.getPosition().x >= (cam.viewportWidth - marble.getWidth())) {
+            cam.position.y = marble.getPosition().y + 80;
             marble.colliding = true;
             gameOver = true;
         }

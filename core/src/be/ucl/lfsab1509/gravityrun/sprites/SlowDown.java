@@ -9,7 +9,7 @@ import be.ucl.lfsab1509.gravityrun.GravityRun;
 
 public class SlowDown extends Bonus {
 
-    static final int SLOW_DOWN = -50;
+    static final int SLOW_DOWN = 0;
 
     public SlowDown(float y) {
         super();

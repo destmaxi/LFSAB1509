@@ -169,6 +169,7 @@ public class OptionState extends State {
             GravityRun.pref.put(GravityRun.user.toMap());
             GravityRun.pref.flush();
             gsm.pop();
+        }
         if (isClickedScoreButton) {
             isClickedScoreButton = false;
             gsm.push(new ScoreboardState(gsm));

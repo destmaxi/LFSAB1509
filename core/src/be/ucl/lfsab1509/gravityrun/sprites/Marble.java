@@ -46,9 +46,7 @@ public class Marble {
 
         if(Gdx.input.getGyroscopeX() > 2)
             position.z = 700;
-
-        System.out.println(position.z);
-
+        
         if(position.z > 0)
             position.add(0,0, -10);
         else

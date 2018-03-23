@@ -5,6 +5,8 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
+import be.ucl.lfsab1509.gravityrun.states.PlayState;
+
 public class LargeHole extends Obstacle {
 
     public LargeHole(float y, boolean first, int marbleWidth, int sw) {
@@ -17,8 +19,13 @@ public class LargeHole extends Obstacle {
 
     @Override
     public boolean collides(Marble marble) {
-        //return false;
-        return Intersector.overlaps(marble.getBounds(), (Rectangle) bounds) && marble.getPosition().z == 0;
+        if(Intersector.overlaps(marble.getBounds(), (Rectangle) bounds) && marble.getPosition().z == 0) {
+            PlayState.gameOver = true;
+            return true;
+        }
+
+        return false;
+        //return Intersector.overlaps(marble.getBounds(), (Rectangle) bounds) && marble.getPosition().z == 0;
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -39,6 +40,7 @@ public class PlayState extends State {
     private Stage scoreStage;
     private Skin skin;
     private Texture gameOverImage, pauseImage;
+    //private Vector2 bg1, bg2;
 
     PlayState(GameStateManager gsm) {
         super(gsm);
@@ -49,6 +51,9 @@ public class PlayState extends State {
         cam.setToOrtho(false, GravityRun.WIDTH / 2, GravityRun.HEIGHT / 2);
 
         int h = Gdx.graphics.getHeight(), w = Gdx.graphics.getWidth();
+
+        // bg1 = new Vector2(0, cam.position.y - cam.viewportHeight/2); //will be usefull when we got a background picture
+        //  bg2 = new Vector2(0, (cam.position.y - cam.viewportHeight/2) + bg.getHeight() );//will be usefull when we got a backgr
 
         gameOverImage = new Texture("gameover.png");
         pauseImage = new Texture("pause.png");
@@ -100,6 +105,7 @@ public class PlayState extends State {
     public void update(float dt) {
         Gdx.input.setInputProcessor(scoreStage);
         handleInput();
+        // updateGround(); //will be usefull when we get a background picture
         marble.update(dt, gameOver);
 
         score = (int) (marble.getPosition().y / 10);
@@ -151,6 +157,17 @@ public class PlayState extends State {
         scoreStage.act();
         scoreStage.draw();
     }
+
+    //will be usefull when we got a background picture
+   /* private void updateGround(){
+        if(cam.position.y - (cam.viewportHeight/2) > bg1.y + bg.getHeight())
+            bg1.add(0, bg.getHeight()*2);
+
+        if(cam.position.y - (cam.viewportHeight/2) > bg2.y + bg.getHeight())
+            bg2.add(0, bg.getHeight()*2);
+
+    }*/
+
 
     @Override
     public void dispose() {

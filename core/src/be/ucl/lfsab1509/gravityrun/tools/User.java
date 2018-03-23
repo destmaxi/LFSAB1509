@@ -17,9 +17,20 @@ public class User {
 
     public User(Map<String,?> userMap) {
         username = userMap.get(USERNAME).toString();
-        firstTime = (Boolean) userMap.get(FIRSTTIME);
-        indexSelected = (Integer) userMap.get(INDEX);
-        highScore =  convertStoA((String)userMap.get(HIGHSCORE));
+
+        Object firstTime1 = userMap.get(FIRSTTIME);
+        if (firstTime1 instanceof Boolean)
+            firstTime = (Boolean) firstTime1;
+        else
+            firstTime = Boolean.parseBoolean((String)firstTime1);
+
+        Object indexSelected1 = userMap.get(INDEX);
+        if (indexSelected1 instanceof Integer)
+            indexSelected = (Integer) indexSelected1;
+        else
+            indexSelected = Integer.parseInt((String)indexSelected1);
+
+        highScore = convertStoA((String)userMap.get(HIGHSCORE));
         beginner = convertStoA((String)userMap.get(DEB));
         inter = convertStoA((String)userMap.get(INTER));
         expert = convertStoA((String)userMap.get(EXPERT));

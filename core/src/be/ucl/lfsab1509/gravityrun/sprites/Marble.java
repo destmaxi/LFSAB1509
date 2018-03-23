@@ -17,6 +17,7 @@ public class Marble {
     public static final float GYRO_COMPENSATION = 2;
     public static final float GRAVITY_COMPENSATION = 1.4f;
     public static int LVL = GravityRun.user.getIndexSelected()+1;
+    public static int speed;
 
     public boolean colliding = false;
     private Circle bounds;
@@ -36,7 +37,6 @@ public class Marble {
 
     public void update(float dt, boolean gameOver) {
         marbleAnimation.update(dt, gameOver);
-        int speed;
         if (position.y < 1000)
             speed = 0;
         else if (position.y < 2000)
@@ -69,7 +69,7 @@ public class Marble {
 
         bounds.setPosition(position.x + marble.getWidth() / 2, position.y + marble.getHeight() / FRAME_COUNT / 2);
     }
-
+    
     public Vector3 getPosition() {
         return position;
     }

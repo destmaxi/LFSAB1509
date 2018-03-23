@@ -25,6 +25,7 @@ import be.ucl.lfsab1509.gravityrun.sprites.LeftWall;
 import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import be.ucl.lfsab1509.gravityrun.sprites.Obstacle;
 import be.ucl.lfsab1509.gravityrun.sprites.RightWall;
+import be.ucl.lfsab1509.gravityrun.sprites.SlowDown;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 
 public class PlayState extends State {
@@ -86,6 +87,8 @@ public class PlayState extends State {
             obstacles.add(new LeftWall(i++ * (OBSTACLE_SPACING + LeftWall.HOLE_WIDTH)));
             obstacles.add(new RightWall(i++ * (OBSTACLE_SPACING + RightWall.HOLE_WIDTH)));
         }
+
+        cam.position.y = marble.getPosition().y + 80;
     }
 
     @Override
@@ -111,7 +114,7 @@ public class PlayState extends State {
         score = (int) (marble.getPosition().y / 10);
         scoreLabel.setText(string.format("score", score));
 
-        cam.position.y = marble.getPosition().y + 80;
+        cam.position.add(0,(Marble.MOVEMENT + Marble.speed )*dt,0);
 
         for (int i = 0; i < obstacles.size; i++){
             Obstacle obs = obstacles.get(i);
@@ -120,12 +123,14 @@ public class PlayState extends State {
                 obs.reposition(obs.getPosition().y + (Hole.HOLE_WIDTH + OBSTACLE_SPACING) * OBSTACLE_COUNT);
 
             if (obs.collides(marble)) {
+                cam.position.y = marble.getPosition().y + 80;
                 marble.colliding = true;
                 gameOver = true;
             }
         }
 
         if (marble.getPosition().x <= 0 || marble.getPosition().x >= (cam.viewportWidth - marble.getWidth())) {
+            cam.position.y = marble.getPosition().y + 80;
             marble.colliding = true;
             gameOver = true;
         }

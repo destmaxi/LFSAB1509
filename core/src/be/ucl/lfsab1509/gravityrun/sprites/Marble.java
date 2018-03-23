@@ -53,9 +53,7 @@ public class Marble {
             position.z = 0;
 
         if (!colliding)
-            position.add(2 * Gdx.input.getGyroscopeY(),LVL * (MOVEMENT + speed) * dt,0);
-
-
+            position.add(2 * Gdx.input.getGyroscopeY(),LVL * (MOVEMENT + speed + SlowDown.SLOW_DOWN) * dt,0);
 
         if (position.x < 0)
             position.x = 0;

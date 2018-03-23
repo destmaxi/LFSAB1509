@@ -19,13 +19,13 @@ public class Marble {
     public static int LVL = GravityRun.user.getIndexSelected() + 1;
     public static int speed;
 
-    public boolean colliding = false;
     private Circle bounds;
     private MarbleAnimation marbleAnimation;
     private Texture marble;
     private Vector3 position;
     private Vector3 velocity;
     private boolean isBlockedOnRight, isBlockedOnLeft, isBlockedOnTop;
+    public static boolean wallTouched = false, colliding = false;
 
     public Marble(int x, int y, int sw) {
         marble = new Texture("drawable-" + sw + "/marbles.png");
@@ -59,7 +59,10 @@ public class Marble {
         else
             position.z = 0;
 
-        if (!colliding)
+        if(wallTouched && !gameOver)
+            position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, 0, 0);
+
+        if (!colliding && !gameOver)
             position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75,LVL * (MOVEMENT + speed + SlowDown.SLOW_DOWN) * dt,0);
 
         if (position.x < 0)
@@ -77,6 +80,10 @@ public class Marble {
 
     public float getWidth(){
         return marble.getWidth();
+    }
+
+    public float getHeight() {
+        return marble.getHeight();
     }
 
     public TextureRegion getMarble() {

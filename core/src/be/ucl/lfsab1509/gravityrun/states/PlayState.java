@@ -1,12 +1,14 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
+import be.ucl.lfsab1509.gravityrun.sprites.Bonus;
 import be.ucl.lfsab1509.gravityrun.sprites.Hole;
 import be.ucl.lfsab1509.gravityrun.sprites.LargeHole;
 import be.ucl.lfsab1509.gravityrun.sprites.LeftWall;
 import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import be.ucl.lfsab1509.gravityrun.sprites.Obstacle;
 import be.ucl.lfsab1509.gravityrun.sprites.RightWall;
+import be.ucl.lfsab1509.gravityrun.sprites.ScoreBonus;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -35,7 +37,7 @@ public class PlayState extends State {
     private boolean isClickedPauseButton = false;
     public static boolean gameOver = false;
     private Label scoreLabel;
-    private int marbleWidth, sw;
+    private int marbleWidth, sw, SCOREBONUS;
     private Marble marble;
     private Random random;
     private Stage scoreStage;
@@ -101,6 +103,7 @@ public class PlayState extends State {
         obstacleSpacing = (int) (1.5f * Obstacle.OBSTACLE_HEIGHT);
         obstacleCount = (int) (1.5f * h / (obstacleSpacing + Obstacle.OBSTACLE_HEIGHT));
 
+
         random = new Random();
         for (int i = 1; i <= obstacleCount; i++)
             obstacles.add(newObstacle(i <= Marble.LVL, marbleWidth, (i + 1) * (obstacleSpacing + Obstacle.OBSTACLE_HEIGHT)));
@@ -128,7 +131,7 @@ public class PlayState extends State {
         // updateGround(); //will be usefull when we get a background picture
         marble.update(dt, gameOver);
 
-        score = (int) (marble.getPosition().y / h * 100);
+        score = (int) (marble.getPosition().y / h * 100) + SCOREBONUS;
         scoreLabel.setText(string.format("score", score));
 
         if (!gameOver)

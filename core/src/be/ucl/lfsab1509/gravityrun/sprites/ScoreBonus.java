@@ -9,12 +9,10 @@ import com.badlogic.gdx.math.Vector2;
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 
 public class ScoreBonus extends Bonus {
-
-    public static final int BONUS = 10;
-
-    public ScoreBonus(float y) {
+    
+    public ScoreBonus(float y, int sw) {
         super();
-        //bonusTexture = new Texture("invincible.png");
+        bonusTexture = new Texture("drawable-" + sw + "/pause.png");
         position = new Vector2(rand.nextInt(GravityRun.WIDTH - bonusTexture.getWidth()), y);
         bounds = new Rectangle(position.x, position.y, bonusTexture.getWidth(), bonusTexture.getHeight());
     }

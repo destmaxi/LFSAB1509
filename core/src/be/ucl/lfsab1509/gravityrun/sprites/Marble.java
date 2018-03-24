@@ -12,7 +12,7 @@ public class Marble {
 
     public static final float SQRT2 = (float) Math.sqrt(2);
 
-    private static final int FRAME_COUNT = 5;
+    static final int FRAME_COUNT = 5;
     public static final int MOVEMENT = (int) (GravityRun.HEIGHT / 5);
     public static final float GYRO_COMPENSATION = 2;
     public static final float GRAVITY_COMPENSATION = 1.4f;
@@ -25,7 +25,7 @@ public class Marble {
     private Vector3 position;
     private Vector3 velocity;
     private boolean isBlockedOnRight, isBlockedOnLeft, isBlockedOnTop;
-    public static boolean wallTouched = false, colliding = false;
+    public static boolean colliding = false;
 
     public Marble(int x, int y, int sw) {
         marble = new Texture("drawable-" + sw + "/marbles.png");
@@ -59,11 +59,14 @@ public class Marble {
         else
             position.z = 0;
 
-        if(wallTouched && !gameOver)
-            position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, 0, 0);
-
-        if (!colliding && !gameOver)
-            position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75,LVL * (MOVEMENT + speed + SlowDown.SLOW_DOWN) * dt,0);
+        if (!colliding && !gameOver) {
+            if ((isBlockedOnRight && Gdx.input.getGyroscopeY() >= 0) || (isBlockedOnLeft && Gdx.input.getGyroscopeY() >= 0))
+                position.add(0,LVL * (MOVEMENT + speed + SlowDown.SLOW_DOWN) * dt,0);
+            else if (isBlockedOnTop)
+                position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75,0,0);
+            else
+                position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, LVL * (MOVEMENT + speed + SlowDown.SLOW_DOWN) * dt,0);
+        }
 
         if (position.x < 0)
             position.x = 0;

@@ -34,6 +34,7 @@ public class PlayState extends State {
     private static int obstacleSpacing;
 
     private Array<Obstacle> obstacles;
+    private Array<Bonus> bonuses;
     private boolean isClickedPauseButton = false;
     public static boolean gameOver = false;
     private Label scoreLabel;
@@ -108,6 +109,13 @@ public class PlayState extends State {
         for (int i = 1; i <= obstacleCount; i++)
             obstacles.add(newObstacle(i <= Marble.LVL, marbleWidth, (i + 1) * (obstacleSpacing + Obstacle.OBSTACLE_HEIGHT)));
 
+        bonuses = new Array<Bonus>();
+
+        for(int i = 1; i <= obstacleCount; i++) {
+            int offset = random.nextInt(obstacleSpacing - pauseImage.getHeight());
+            bonuses.add(new ScoreBonus((i + 1) * (obstacleSpacing + Obstacle.OBSTACLE_HEIGHT) + Obstacle.OBSTACLE_HEIGHT + offset,sw, offset));
+        }
+
         cam.position.y = marble.getPosition().y + 80;
     }
 
@@ -136,6 +144,25 @@ public class PlayState extends State {
 
         if (!gameOver)
             cam.position.add(0,(Marble.MOVEMENT + Marble.speed )*dt,0);
+
+        for (int i = 0; i < bonuses.size; i++) {
+            Bonus bonus = bonuses.get(i);
+            int offset = random.nextInt(obstacleSpacing - pauseImage.getHeight());
+
+            if ((cam.position.y - cam.viewportHeight / 2) >= bonus.getPosition().y + bonus.getObstacleTexture().getHeight()) {
+                //int previous_Offset = bonus.getOffset();
+                bonuses.get(i).dispose();
+                bonuses.set(i,new ScoreBonus( bonus.getPosition().y - bonus.getOffset() + offset + (obstacleSpacing + Obstacle.OBSTACLE_HEIGHT) * obstacleCount ,sw, offset));
+                //random.nextInt(obstacleSpacing)+(obstacles.get(i).getPosition().y + (obstacleSpacing + Obstacle.OBSTACLE_HEIGHT) * obstacleCount) - (obstacleSpacing - marble.getHeight())
+            }
+
+           if(bonuses.get(i).collides(marble)) {
+                bonuses.add(new ScoreBonus( bonus.getPosition().y - bonus.getOffset() + offset + (obstacleSpacing + Obstacle.OBSTACLE_HEIGHT) * obstacleCount ,sw, offset));
+                bonuses.get(i).dispose();
+                bonuses.removeIndex(i);
+                SCOREBONUS += 100;
+            }
+        }
 
         for (int i = 0; i < obstacles.size; i++){
             Obstacle obs = obstacles.get(i);
@@ -184,6 +211,9 @@ public class PlayState extends State {
 
         for (Obstacle obs : obstacles)
             sb.draw(obs.getObstacleTexture(), obs.getPosition().x, obs.getPosition().y);
+
+        for(Bonus bonus: bonuses)
+            sb.draw(bonus.getObstacleTexture(),bonus.getPosition().x, bonus.getPosition().y);
 
         sb.draw(marble.getMarble(), marble.getPosition().x, marble.getPosition().y);
 

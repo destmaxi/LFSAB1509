@@ -56,7 +56,6 @@ public class RightWall extends Obstacle {
         PlayState.isCollideWall = false;
         Marble.colliding = false;
         return false;
-
     }
 
 }

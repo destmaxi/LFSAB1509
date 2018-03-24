@@ -9,9 +9,11 @@ import com.badlogic.gdx.math.Vector2;
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 
 public class ScoreBonus extends Bonus {
-    
-    public ScoreBonus(float y, int sw) {
+    private int offset;
+
+    public ScoreBonus(float y, int sw, int offset) {
         super();
+        this.offset = offset;
         bonusTexture = new Texture("drawable-" + sw + "/pause.png");
         position = new Vector2(rand.nextInt(GravityRun.WIDTH - bonusTexture.getWidth()), y);
         bounds = new Rectangle(position.x, position.y, bonusTexture.getWidth(), bonusTexture.getHeight());
@@ -26,5 +28,10 @@ public class ScoreBonus extends Bonus {
     @Override
     public boolean collides(Marble marble) {
         return Intersector.overlaps(marble.getBounds(), (Rectangle) bounds);
+    }
+
+    @Override
+    public int getOffset() {
+        return offset;
     }
 }

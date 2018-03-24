@@ -28,4 +28,5 @@ public abstract class Bonus {
     public void dispose() {
         bonusTexture.dispose();
     }
+    public abstract int getOffset();
 }

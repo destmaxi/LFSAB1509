@@ -2,11 +2,11 @@ package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.states.PlayState;
-
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+
+import static be.ucl.lfsab1509.gravityrun.sprites.Marble.FRAME_COUNT;
 
 public class RightWall extends Obstacle {
 
@@ -22,16 +22,41 @@ public class RightWall extends Obstacle {
 
     @Override
     public boolean collides(Marble marble) {
-        if(Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
+
+        float marbleX0 = marble.getPosition().x;
+        float marbleY0 = marble.getPosition().y;
+        float marbleX1 = marble.getPosition().x + marble.getWidth();
+        float marbleY1 = marble.getPosition().y + marble.getHeight() / FRAME_COUNT;
+
+        float rectX0 = position.x;
+        float rectY0 = position.y;
+        float rectX1 = position.x + obstacleTexture.getWidth();
+        float rectY1 = position.y + obstacleTexture.getHeight();
+
+        //marble blocked on left side by wall
+        if (marbleX0 <= rectX1 && marbleY1 > rectY0 && marbleY0 <= rectY1)
+            marble.setBlockedOnLeft(true);
+        else
+            marble.setBlockedOnLeft(false);
+
+        //marble blocked on right side by wall
+        if (marbleX1 >= rectX0 && marbleY1 > rectY0 && marbleY0 <= rectY1)
+            marble.setBlockedOnRight(true);
+        else
+            marble.setBlockedOnRight(false);
+
+        //marble blocked on top with wall
+        if (marbleY1 >= rectY0 && marbleX0 <= rectX1 && marbleX0 >= rectX0) {
+            marble.setBlockedOnTop(true);
             PlayState.isCollideWall = true;
-            Marble.wallTouched = true;
             return true;
         }
 
+        marble.setBlockedOnRight(false);
         PlayState.isCollideWall = false;
         Marble.colliding = false;
-        Marble.wallTouched = false;
         return false;
+
     }
 
 }

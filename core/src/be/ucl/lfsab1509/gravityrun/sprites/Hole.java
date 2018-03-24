@@ -22,13 +22,13 @@ public class Hole extends Obstacle {
 
     @Override
     public boolean collides(Marble marble) {
+
         if(Intersector.overlaps(marble.getBounds(), (Rectangle) bounds) && marble.getPosition().z == 0) {
             PlayState.gameOver = true;
             return true;
         }
 
         return false;
-        //return Intersector.overlaps(marble.getBounds(), (Rectangle) bounds) && marble.getPosition().z == 0;
     }
 
     @Override

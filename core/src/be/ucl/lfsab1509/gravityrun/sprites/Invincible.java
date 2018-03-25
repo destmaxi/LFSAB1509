@@ -25,4 +25,9 @@ public class Invincible extends Bonus {
     public boolean collides(Marble marble) {
         return Intersector.overlaps(marble.getBounds(), (Rectangle) bounds);
     }
+
+    @Override
+    public int getOffset() {
+        return 0;
+    }
 }

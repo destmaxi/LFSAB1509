@@ -106,8 +106,11 @@ public class GameOverState extends State {
             gsm.pop();
         }
 
-        if (isClickedReplayButton)
+        if (isClickedReplayButton) {
+            PlayState.gameOver = false;
+            Marble.colliding = false;
             gsm.set(new PlayState(gsm));
+        }
     }
 
     private void sortASC(ArrayList<Integer> arrayList){

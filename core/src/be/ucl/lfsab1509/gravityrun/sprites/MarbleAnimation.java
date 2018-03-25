@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.Array;
 public class MarbleAnimation {
 
     private static final float CYCLE_TIME = 1;
-    private static final int FRAME_COUNT = 5;
+    public static final int FRAME_COUNT = 5;
     private static final int MARBLE_COUNT = 5;
 
     private Array<Array<TextureRegion>> frames;

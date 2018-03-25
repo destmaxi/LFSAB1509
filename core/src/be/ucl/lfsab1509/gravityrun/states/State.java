@@ -6,6 +6,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.I18NBundle;
+import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 public abstract class State {
 
@@ -13,10 +14,12 @@ public abstract class State {
     GameStateManager gsm;
     protected I18NBundle string;
     OrthographicCamera cam;
+    SoundManager soundManager;
 
-    State (GameStateManager gsm) {
+    State (GameStateManager gsm, SoundManager soundManager) {
         this.gsm = gsm;
         cam = new OrthographicCamera();
+        this.soundManager = soundManager;
         FileHandle baseFileHandle = Gdx.files.internal("strings/string");
         string = I18NBundle.createBundle(baseFileHandle);
     }

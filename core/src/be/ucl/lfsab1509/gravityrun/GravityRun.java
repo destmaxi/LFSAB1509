@@ -1,6 +1,7 @@
 package be.ucl.lfsab1509.gravityrun;
 
 import be.ucl.lfsab1509.gravityrun.states.*;
+import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 import be.ucl.lfsab1509.gravityrun.tools.User;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -23,6 +24,7 @@ public class GravityRun extends ApplicationAdapter {
 
     private GameStateManager gsm;
 	private SpriteBatch batch;
+	private SoundManager sound;
 
 	@Override
 	public void create() {
@@ -35,6 +37,7 @@ public class GravityRun extends ApplicationAdapter {
         System.out.println("width = " + WIDTH);
         batch = new SpriteBatch();
 		gsm = new GameStateManager();
+		sound = new SoundManager();
 		pref = Gdx.app.getPreferences("Player");
 		pref.flush();
 
@@ -42,11 +45,11 @@ public class GravityRun extends ApplicationAdapter {
 
 		if(!pref.getBoolean(User.FIRSTTIME)){
 			user = new User();
-			gsm.push(new FirstState(gsm));
+			gsm.push(new FirstState(gsm, sound));
 		}
 		else{
 			user = new User(map);
-			gsm.push(new MenuState(gsm));
+			gsm.push(new MenuState(gsm, sound));
 		}
 	}
 
@@ -61,6 +64,7 @@ public class GravityRun extends ApplicationAdapter {
 	@Override
 	public void dispose() {
 		batch.dispose();
+		sound.dispose();
 	}
 
 }

@@ -3,6 +3,8 @@ package be.ucl.lfsab1509.gravityrun.states;
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
+import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -29,8 +31,8 @@ public class OptionState extends State {
     private TextField usernameField;
     private TextButton saveButton;
 
-    OptionState(GameStateManager gsm) {
-        super(gsm);
+    OptionState(GameStateManager gsm, SoundManager soundManager) {
+        super(gsm, soundManager);
 
         float ch = h * 0.9f;
         float cw = w * 0.9f;
@@ -172,7 +174,7 @@ public class OptionState extends State {
         }
         if (isClickedScoreButton) {
             isClickedScoreButton = false;
-            gsm.push(new ScoreboardState(gsm));
+            gsm.push(new ScoreboardState(gsm, soundManager));
         }
         if (isClickedSaveButton) {
             GravityRun.user.setUsername(username);

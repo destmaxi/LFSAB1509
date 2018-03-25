@@ -10,6 +10,7 @@ import be.ucl.lfsab1509.gravityrun.sprites.Obstacle;
 import be.ucl.lfsab1509.gravityrun.sprites.RightWall;
 import be.ucl.lfsab1509.gravityrun.sprites.ScoreBonus;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
+import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
@@ -48,8 +49,8 @@ public class PlayState extends State {
     public static boolean isCollideWall = false;
     // private Vector2 bg1, bg2;
 
-    PlayState(GameStateManager gsm) {
-        super(gsm);
+    PlayState(GameStateManager gsm, SoundManager soundManager) {
+        super(gsm, soundManager);
 
         if (GravityRun.scoreList == null)
             GravityRun.scoreList = new ArrayList<Integer>();
@@ -123,12 +124,12 @@ public class PlayState extends State {
     protected void handleInput() {
         if (gameOver && (Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))) {
             GravityRun.scoreList.add(score);
-            gsm.set(new GameOverState(gsm));
+            gsm.set(new GameOverState(gsm, soundManager));
         }
 
         if (!gameOver && (isClickedPauseButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))) {
             isClickedPauseButton = false;
-            gsm.push(new PauseState(gsm));
+            gsm.push(new PauseState(gsm, soundManager));
         }
     }
 
@@ -216,7 +217,7 @@ public class PlayState extends State {
         scoreStage.draw();
     }
 
-    //will be usefull when we got a background picture
+    //will be usefull when we get a background picture
    /* private void updateGround(){
         if(cam.position.y - (cam.viewportHeight/2) > bg1.y + bg.getHeight())
             bg1.add(0, bg.getHeight()*2);

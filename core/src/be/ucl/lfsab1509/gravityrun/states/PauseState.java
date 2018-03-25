@@ -2,6 +2,8 @@ package be.ucl.lfsab1509.gravityrun.states;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
+import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -20,8 +22,8 @@ public class PauseState extends State {
     private Stage stage;
     private Skin buttonSkin, scoreSkin, titleSkin;
 
-    PauseState(GameStateManager gsm) {
-        super(gsm);
+    PauseState(GameStateManager gsm, SoundManager soundManager) {
+        super(gsm, soundManager);
 
         float ch = h * 0.9f;
         float cw = w * 0.9f;

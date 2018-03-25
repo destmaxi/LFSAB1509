@@ -35,6 +35,23 @@ public class SoundManager {
             gameMusic.play();
     }
 
+    public void replayMenu(){
+        if (gameMusic.isPlaying())
+            gameMusic.pause();
+        if (!menuMusic.isPlaying()) {
+            menuMusic.stop();
+            menuMusic.play();
+        }
+    }
+
+    public void replayGame(){
+        if (menuMusic.isPlaying())
+            menuMusic.pause();
+        if (!gameMusic.isPlaying()) {
+            gameMusic.stop();
+            gameMusic.play();
+        }
+    }
     public void marbleBreak(){
         marbleBreak.play();
     }

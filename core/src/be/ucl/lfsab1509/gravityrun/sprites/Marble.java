@@ -10,30 +10,27 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Marble {
 
-    public static final float SQRT2 = (float) Math.sqrt(2);
-
-    private static final int FRAME_COUNT = 5;
-    public static final int MOVEMENT = (int) (GravityRun.HEIGHT / 5);
-    public static final float GYRO_COMPENSATION = 2;
     public static final float GRAVITY_COMPENSATION = 1.4f;
+    public static final float GYRO_COMPENSATION = 2;
+    public static final float SQRT2 = (float) Math.sqrt(2);
+    static final int JUMP_HEIGHT = 700;
+    public static final int MOVEMENT = (int) (GravityRun.HEIGHT / 5);
     public static int LVL = GravityRun.user.getIndexSelected() + 1;
     public static int speed;
 
     public boolean colliding = false;
+    private boolean isBlockedOnLeft = false, isBlockedOnRight = false, isBlockedOnTop = false;
     private Circle bounds;
     private MarbleAnimation marbleAnimation;
     private Texture marble;
-    private Vector3 position;
-    private Vector3 velocity;
-    private boolean isBlockedOnRight, isBlockedOnLeft, isBlockedOnTop;
+    private Vector3 position, velocity;
 
     public Marble(int x, int y, int sw) {
-        marble = new Texture("drawable-" + sw + "/marbles.png");
-        marbleAnimation = new MarbleAnimation(marble, FRAME_COUNT, 1);
-        bounds = new Circle(x + marble.getWidth() / 2, y + marble.getHeight() / FRAME_COUNT / 2, marble.getWidth() / 2);
-        position = new Vector3(x - marble.getWidth() / 2, y, 0);
+        position = new Vector3(x, y, 0);
         velocity = new Vector3(0, MOVEMENT, 0);
-        System.out.println("MOVEMENT = " + MOVEMENT);
+        marble = new Texture("drawable-" + sw + "/marbles.png");
+        marbleAnimation = new MarbleAnimation(marble, sw);
+        bounds = new Circle(x, y, marbleAnimation.getDiameter(position.z) / 2);
     }
 
     public void update(float dt, boolean gameOver) {
@@ -51,10 +48,10 @@ public class Marble {
         else
             speed = 100;
 
-        if(Gdx.input.getGyroscopeX() > 2)
-            position.z = 700;
+        if (Gdx.input.getGyroscopeX() > 2)
+            position.z = JUMP_HEIGHT;
 
-        if(position.z > 0)
+        if (position.z > 0)
             position.add(0,0, -10);
         else
             position.z = 0;
@@ -62,25 +59,25 @@ public class Marble {
         if (!colliding)
             position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75,LVL * (MOVEMENT + speed + SlowDown.SLOW_DOWN) * dt,0);
 
-        if (position.x < 0)
-            position.x = 0;
+        if (position.x < marbleAnimation.getDiameter(position.z) / 2)
+            position.x = marbleAnimation.getDiameter(position.z) / 2;
 
-        if (position.x > GravityRun.WIDTH - marble.getWidth())
-            position.x = GravityRun.WIDTH - marble.getWidth();
+        if (position.x > GravityRun.WIDTH - marbleAnimation.getDiameter(position.z) / 2)
+            position.x = GravityRun.WIDTH - marbleAnimation.getDiameter(position.z) / 2;
 
-        bounds.setPosition(position.x + marble.getWidth() / 2, position.y + marble.getHeight() / FRAME_COUNT / 2);
+        bounds.setPosition(position.x, position.y);
     }
 
     public Vector3 getPosition() {
-        return position;
+        return new Vector3(position.x - marbleAnimation.getDiameter(position.z) / 2, position.y - marbleAnimation.getDiameter(position.z) / 2, position.z);
     }
 
     public float getWidth(){
-        return marble.getWidth();
+        return marbleAnimation.getDiameter(position.z);
     }
 
     public TextureRegion getMarble() {
-        return marbleAnimation.getFrame();
+        return marbleAnimation.getFrame(position.z);
     }
 
     Circle getBounds() {

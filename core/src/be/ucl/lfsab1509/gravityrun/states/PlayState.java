@@ -80,7 +80,6 @@ public class PlayState extends State {
             }
         });
 
-        marble = new Marble(100, 0, sw);
         obstacles = new Array<Obstacle>();
         marble = new Marble((int) w / 2,0, sw);
 

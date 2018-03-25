@@ -1,6 +1,7 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
+import be.ucl.lfsab1509.gravityrun.states.PlayState;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -37,21 +38,22 @@ public class Marble {
 
     public void update(float dt, boolean gameOver) {
         marbleAnimation.update(dt, gameOver);
-        if (position.y < 1000)
+
+        if (PlayState.score < 1000)
             speed = 0;
-        else if (position.y < 2000)
-            speed = 20;
-        else if (position.y < 3000)
-            speed = 40;
-        else if (position.y < 4000)
-            speed = 60;
-        else if (position.y < 5000)
-            speed = 80;
+        else if (PlayState.score < 2000)
+            speed = GravityRun.HEIGHT / 9;
+        else if (PlayState.score < 3000)
+            speed = GravityRun.HEIGHT / 8;
+        else if (PlayState.score < 4000)
+            speed = GravityRun.HEIGHT / 7;
+        else if (PlayState.score < 5000)
+            speed = GravityRun.HEIGHT / 6;
         else
-            speed = 100;
+            speed = GravityRun.HEIGHT / 5;
 
         if(Gdx.input.getGyroscopeX() > 2)
-            position.z = 700;
+            position.z = 600;
 
         if(position.z > 0)
             position.add(0,0, -10);

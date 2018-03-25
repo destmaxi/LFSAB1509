@@ -42,17 +42,17 @@ public class RightWall extends Obstacle {
             }
 
             if (marbleCx < rectX0) {
-                marble.setBlockedOnLeft(true);
+                marble.setBlockedOnRight(true);
                 PlayState.isCollideWall = true;
             }
             else {
-                marble.setBlockedOnLeft(false);
+                marble.setBlockedOnRight(false);
             }
         }
         else {
             PlayState.isCollideWall = false;
             marble.setBlockedOnTop(false);
-            marble.setBlockedOnLeft(false);
+            marble.setBlockedOnRight(false);
         }
 
     }

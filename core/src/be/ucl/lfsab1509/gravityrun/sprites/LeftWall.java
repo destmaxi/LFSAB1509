@@ -34,6 +34,7 @@ public class LeftWall extends Obstacle {
         float rectX1 = position.x + obstacleTexture.getWidth();
 
         if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
+
             if (marbleCy < rectY0) {
                 marble.setBlockedOnTop(true);
                 PlayState.isCollideWall = true;

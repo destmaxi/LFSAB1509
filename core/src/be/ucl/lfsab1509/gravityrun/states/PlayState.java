@@ -29,7 +29,7 @@ import java.util.Random;
 
 public class PlayState extends State {
 
-    static int score = 0;
+    public static int score = 0;
     private static int obstacleCount;
     private static int obstacleSpacing;
 
@@ -170,9 +170,10 @@ public class PlayState extends State {
                 obstacles.set(i, newObstacle(false, marbleWidth, obs.getPosition().y + (obstacleSpacing + Obstacle.OBSTACLE_HEIGHT) * obstacleCount));
             }
 
-            if(isCollideWall)
+            if(isCollideWall) {
                 if (obs.equals(obstacles.get(collidedWall)) && !gameOver)
                     obs.collides((marble));
+            }
             else {
                 obs.collides(marble);
                 collidedWall = i;

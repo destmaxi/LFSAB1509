@@ -143,7 +143,7 @@ public class PlayState extends State {
         scoreLabel.setText(string.format("score", score));
 
         if (!gameOver)
-            cam.position.add(0,(Marble.MOVEMENT + Marble.speed )*dt,0);
+            cam.position.add(0,Marble.LVL * (Marble.MOVEMENT + Marble.speed ) * dt,0);
 
         for (int i = 0; i < bonuses.size; i++) {
             Bonus bonus = bonuses.get(i);

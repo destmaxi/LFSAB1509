@@ -80,6 +80,7 @@ public class PauseState extends State {
         if (isClickedContinue || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
             gsm.pop();
         if (isClickedQuit) {
+            soundManager.replayMenu();
             gsm.pop();
             gsm.pop();
         }

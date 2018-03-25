@@ -84,6 +84,7 @@ public class MenuState extends State {
         }
         if (isClickedStartGameButton) {
             isClickedStartGameButton = false;
+            soundManager.replayGame();
             gsm.push(new PlayState(gsm, soundManager));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){

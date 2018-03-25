@@ -111,6 +111,7 @@ public class GameOverState extends State {
         if (isClickedReplayButton) {
             PlayState.gameOver = false;
             PlayState.isCollideWall = false;
+            soundManager.replayGame();
             gsm.set(new PlayState(gsm, soundManager));
         }
 

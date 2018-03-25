@@ -124,6 +124,7 @@ public class PlayState extends State {
     protected void handleInput() {
         if (gameOver && (Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))) {
             GravityRun.scoreList.add(score);
+            soundManager.replayMenu();
             gsm.set(new GameOverState(gsm, soundManager));
         }
 

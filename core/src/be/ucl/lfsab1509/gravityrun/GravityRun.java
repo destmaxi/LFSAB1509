@@ -43,6 +43,7 @@ public class GravityRun extends ApplicationAdapter {
 
 		Map<String,?> map = pref.get();
 
+		sound.playMenu();
 		if(!pref.getBoolean(User.FIRSTTIME)){
 			user = new User();
 			gsm.push(new FirstState(gsm, sound));

@@ -27,7 +27,7 @@ public abstract class Obstacle {
         return position;
     }
 
-    public abstract boolean collides(Marble marble);
+    public abstract void collides(Marble marble);
 
     public void dispose() {
         obstacleTexture.dispose();

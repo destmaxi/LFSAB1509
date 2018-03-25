@@ -51,7 +51,7 @@ public class Marble {
         if (Gdx.input.getGyroscopeX() > 2)
             position.z = JUMP_HEIGHT;
 
-        if (position.z > 0)
+        if (position.z > 0 && !gameOver)
             position.add(0,0, -10);
         else
             position.z = 0;
@@ -78,7 +78,7 @@ public class Marble {
         return new Vector3(position.x - marbleAnimation.getDiameter(position.z) / 2, position.y - marbleAnimation.getDiameter(position.z) / 2, position.z);
     }
 
-    public float getDiameter() {
+    public int getDiameter() {
         return marbleAnimation.getDiameter(position.z);
     }
 

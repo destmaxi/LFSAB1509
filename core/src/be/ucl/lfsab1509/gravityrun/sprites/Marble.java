@@ -25,7 +25,6 @@ public class Marble {
     private Vector3 position;
     private Vector3 velocity;
     private boolean isBlockedOnRight, isBlockedOnLeft, isBlockedOnTop;
-    public static boolean colliding = false;
 
     public Marble(int x, int y, int sw) {
         marble = new Texture("drawable-" + sw + "/marbles.png");
@@ -59,9 +58,13 @@ public class Marble {
         else
             position.z = 0;
 
-        if (!colliding && !gameOver) {
-            if ((isBlockedOnRight && Gdx.input.getGyroscopeY() >= 0) || (isBlockedOnLeft && Gdx.input.getGyroscopeY() >= 0))
+        if (!gameOver) {
+            if ((isBlockedOnRight && Gdx.input.getGyroscopeY() > 0) || (isBlockedOnLeft && Gdx.input.getGyroscopeY() < 0))
                 position.add(0,LVL * (MOVEMENT + speed + SlowDown.SLOW_DOWN) * dt,0);
+            else if ((isBlockedOnLeft && Gdx.input.getGyroscopeY() < 0) && isBlockedOnTop)
+                position.add(0,0,0);
+            else if ((isBlockedOnRight && Gdx.input.getGyroscopeY() > 0) && isBlockedOnTop)
+                position.add(0,0,0);
             else if (isBlockedOnTop)
                 position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75,0,0);
             else

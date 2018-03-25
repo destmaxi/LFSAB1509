@@ -12,7 +12,8 @@ public class SoundManager {
     private Music menuMusic;
     private Music gameMusic;
     private Sound marbleBreak;
-    private final float breakSoundLevel = 0.5f;
+    private Sound bonus;
+    private final float soundLevel = 0.5f;
 
     public SoundManager(){
         this.gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/6_symphony.mp3"));
@@ -20,6 +21,7 @@ public class SoundManager {
         gameMusic.setLooping(true);
         menuMusic.setLooping(true);
         this.marbleBreak = Gdx.audio.newSound(Gdx.files.internal("sound/break.wav"));
+        this.bonus = Gdx.audio.newSound(Gdx.files.internal("sound/bonus.wav"));
     }
 
     public void playMenu(){
@@ -53,8 +55,13 @@ public class SoundManager {
             gameMusic.play();
         }
     }
+
     public void marbleBreak(){
-        marbleBreak.play(breakSoundLevel);
+        marbleBreak.play(soundLevel);
+    }
+
+    public void gotBonus(){
+        bonus.play(soundLevel);
     }
 
     public void dispose(){

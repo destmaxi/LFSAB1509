@@ -160,6 +160,7 @@ public class PlayState extends State {
                 bonuses.get(i).dispose();
                 bonuses.removeIndex(i);
                 SCOREBONUS += 100;
+                soundManager.gotBonus();
             }
         }
 

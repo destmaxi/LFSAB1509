@@ -44,7 +44,7 @@ public class PlayState extends State {
     private Stage scoreStage;
     private Skin skin;
     private Texture gameOverImage, pauseImage;
-    public static int collidedWall = 0;
+    private int collidedWall = 0;
     public static boolean isCollideWall = false;
     // private Vector2 bg1, bg2;
 

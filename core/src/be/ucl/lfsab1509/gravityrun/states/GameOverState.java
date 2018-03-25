@@ -108,7 +108,7 @@ public class GameOverState extends State {
 
         if (isClickedReplayButton) {
             PlayState.gameOver = false;
-            Marble.colliding = false;
+            PlayState.isCollideWall = false;
             gsm.set(new PlayState(gsm));
         }
     }

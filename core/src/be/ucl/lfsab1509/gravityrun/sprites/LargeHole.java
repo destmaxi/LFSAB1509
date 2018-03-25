@@ -1,11 +1,10 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
+import be.ucl.lfsab1509.gravityrun.states.PlayState;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-
-import be.ucl.lfsab1509.gravityrun.states.PlayState;
 
 public class LargeHole extends Obstacle {
 
@@ -20,7 +19,7 @@ public class LargeHole extends Obstacle {
     @Override
     public boolean collides(Marble marble) {
 
-        if(Intersector.overlaps(marble.getBounds(), (Rectangle) bounds) && marble.getPosition().z == 0) {
+        if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds) && marble.getPosition().z == 0) {
             PlayState.gameOver = true;
             return true;
         }

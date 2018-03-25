@@ -6,8 +6,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-import static be.ucl.lfsab1509.gravityrun.sprites.MarbleAnimation.FRAME_COUNT;
-
 public class RightWall extends Obstacle {
 
     public RightWall(float y, boolean first, int marbleWidth, int sw) {
@@ -26,7 +24,7 @@ public class RightWall extends Obstacle {
         float marbleX0 = marble.getPosition().x;
         float marbleY0 = marble.getPosition().y;
         float marbleX1 = marble.getPosition().x + marble.getDiameter();
-        float marbleY1 = marble.getPosition().y + marble.getDiameter() / FRAME_COUNT;
+        float marbleY1 = marble.getPosition().y + marble.getDiameter() / MarbleAnimation.FRAME_COUNT;
 
         float rectX0 = position.x;
         float rectY0 = position.y;

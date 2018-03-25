@@ -1,20 +1,20 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
-
+import be.ucl.lfsab1509.gravityrun.GravityRun;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-import be.ucl.lfsab1509.gravityrun.GravityRun;
-
 public class ScoreBonus extends Bonus {
+
     private int offset;
 
     public ScoreBonus(float y, int sw, int offset) {
         super();
+
         this.offset = offset;
-        bonusTexture = new Texture("drawable-" + sw + "/pause.png");
+        bonusTexture = new Texture("drawable-" + sw + "/scorebonus.png");
         position = new Vector2(rand.nextInt(GravityRun.WIDTH - bonusTexture.getWidth()), y);
         bounds = new Rectangle(position.x, position.y, bonusTexture.getWidth(), bonusTexture.getHeight());
     }
@@ -34,4 +34,5 @@ public class ScoreBonus extends Bonus {
     public int getOffset() {
         return offset;
     }
+
 }

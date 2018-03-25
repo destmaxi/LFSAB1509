@@ -92,11 +92,14 @@ public class GameOverState extends State {
         if (isClickedMenuButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 
             switch (Marble.LVL) {
-                case 1: GravityRun.user.setBeginner(add(GravityRun.user.getBeginner()));
+                case 1:
+                    GravityRun.user.setBeginner(add(GravityRun.user.getBeginner()));
                     break;
-                case 2: GravityRun.user.setInter(add(GravityRun.user.getInter()));
+                case 2:
+                    GravityRun.user.setInter(add(GravityRun.user.getInter()));
                     break;
-                case 3: GravityRun.user.setExpert(add(GravityRun.user.getExpert()));
+                case 3:
+                    GravityRun.user.setExpert(add(GravityRun.user.getExpert()));
                     break;
             }
 
@@ -114,6 +117,7 @@ public class GameOverState extends State {
             soundManager.replayGame();
             gsm.set(new PlayState(gsm, soundManager));
         }
+    }
 
     private void sortASC(ArrayList<Integer> arrayList){
         Collections.sort(arrayList, new Comparator<Integer>() {

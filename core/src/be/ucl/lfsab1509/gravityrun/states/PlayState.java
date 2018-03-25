@@ -150,7 +150,6 @@ public class PlayState extends State {
         for (int i = 0; i < bonuses.size; i++) {
             Bonus bonus = bonuses.get(i);
             int offset = random.nextInt(obstacleSpacing - pauseImage.getHeight());
-
             if ((cam.position.y - cam.viewportHeight / 2) >= bonus.getPosition().y + bonus.getObstacleTexture().getHeight()) {
                 bonuses.get(i).dispose();
                 bonuses.set(i,new ScoreBonus( bonus.getPosition().y - bonus.getOffset() + offset + (obstacleSpacing + Obstacle.OBSTACLE_HEIGHT) * obstacleCount ,sw, offset));
@@ -172,6 +171,7 @@ public class PlayState extends State {
                 obstacles.set(i, newObstacle(false, marbleWidth, obs.getPosition().y + (obstacleSpacing + Obstacle.OBSTACLE_HEIGHT) * obstacleCount));
             }
 
+            Boolean temp = gameOver;//TODO: éviter les sides-effects
             if(isCollideWall) {
                 if (obs.equals(obstacles.get(collidedWall)) && !gameOver)
                     obs.collides((marble));
@@ -180,9 +180,13 @@ public class PlayState extends State {
                 obs.collides(marble);
                 collidedWall = i;
             }
+            if (gameOver!=temp)
+                soundManager.marbleBreak();
         }
 
         if (marble.getPosition().x <= 0 || marble.getPosition().x >= (cam.viewportWidth - marble.getWidth()) || marble.getPosition().y <= cam.position.y - h/2) {
+            if (!gameOver)
+                soundManager.marbleBreak();
             gameOver = true;
         }
 
@@ -220,8 +224,6 @@ public class PlayState extends State {
 
     //will be usefull when we get a background picture
    /* private void updateGround(){
-        if(cam.position.y - (cam.viewportHeight/2) > bg1.y + bg.getHeight())
-            bg1.add(0, bg.getHeight()*2);
 
         if(cam.position.y - (cam.viewportHeight/2) > bg2.y + bg.getHeight())
             bg2.add(0, bg.getHeight()*2);

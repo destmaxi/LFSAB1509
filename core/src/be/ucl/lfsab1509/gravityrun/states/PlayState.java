@@ -50,20 +50,20 @@ public class PlayState extends State {
 
         cam.setToOrtho(false, w, h);
 
-        if (w >= 1600)
-            sw = 1600;
-        else if (w >= 1440)
-            sw = 1440;
-        else if (w >= 1280)
-            sw = 1280;
-        else if (w >= 960)
-            sw = 960;
-        else if (w >= 840)
-            sw = 840;
-        else if (w >= 600)
-            sw = 600;
-        else
+        if (w <= 480)
             sw = 480;
+        else if (w <= 600)
+            sw = 600;
+        else if (w <= 840)
+            sw = 840;
+        else if (w <= 960)
+            sw = 960;
+        else if (w <= 1280)
+            sw = 1280;
+        else if (w <= 1440)
+            sw = 1440;
+        else
+            sw = 1600;
         Obstacle.OBSTACLE_HEIGHT = sw / 5;
 
         // bg1 = new Vector2(0, cam.position.y - cam.viewportHeight / 2);

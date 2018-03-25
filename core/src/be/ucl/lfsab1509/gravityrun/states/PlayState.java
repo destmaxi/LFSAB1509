@@ -150,10 +150,8 @@ public class PlayState extends State {
             int offset = random.nextInt(obstacleSpacing - pauseImage.getHeight());
 
             if ((cam.position.y - cam.viewportHeight / 2) >= bonus.getPosition().y + bonus.getObstacleTexture().getHeight()) {
-                //int previous_Offset = bonus.getOffset();
                 bonuses.get(i).dispose();
                 bonuses.set(i,new ScoreBonus( bonus.getPosition().y - bonus.getOffset() + offset + (obstacleSpacing + Obstacle.OBSTACLE_HEIGHT) * obstacleCount ,sw, offset));
-                //random.nextInt(obstacleSpacing)+(obstacles.get(i).getPosition().y + (obstacleSpacing + Obstacle.OBSTACLE_HEIGHT) * obstacleCount) - (obstacleSpacing - marble.getHeight())
             }
 
            if(bonuses.get(i).collides(marble)) {
@@ -172,28 +170,16 @@ public class PlayState extends State {
                 obstacles.set(i, newObstacle(false, marbleWidth, obs.getPosition().y + (obstacleSpacing + Obstacle.OBSTACLE_HEIGHT) * obstacleCount));
             }
 
-            if(isCollideWall) {
-                if (obs.equals(obstacles.get(collidedWall)) && obs.collides(marble) && !gameOver) {
-                    // cam.position.y = marble.getPosition().y + 80;
-                    Marble.colliding = true;
-                    //marble.update(dt,gameOver);
-                    //  gameOver = true;
-                }
-            }
+            if(isCollideWall)
+                if (obs.equals(obstacles.get(collidedWall)) && !gameOver)
+                    obs.collides((marble));
             else {
-                if (obs.collides(marble) && !gameOver) {
-                    collidedWall = i;
-                    // cam.position.y = marble.getPosition().y + 80;
-                    Marble.colliding = true;
-                    //marble.update(dt,gameOver);
-                    //  gameOver = true;
-                }
+                obs.collides(marble);
+                collidedWall = i;
             }
         }
 
         if (marble.getPosition().x <= 0 || marble.getPosition().x >= (cam.viewportWidth - marble.getWidth()) || marble.getPosition().y <= cam.position.y - h/2) {
-          //  cam.position.y = marble.getPosition().y + 80;
-            Marble.colliding = true;
             gameOver = true;
         }
 
@@ -218,7 +204,6 @@ public class PlayState extends State {
         sb.draw(marble.getMarble(), marble.getPosition().x, marble.getPosition().y);
 
         if (gameOver) {
-            //cam.position.y = ;
             sb.draw(gameOverImage,
                     cam.position.x - gameOverImage.getWidth() / 2,
                     cam.position.y - gameOverImage.getHeight() / 2);

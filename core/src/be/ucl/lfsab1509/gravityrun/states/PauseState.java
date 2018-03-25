@@ -1,7 +1,7 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
-import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -55,7 +55,7 @@ public class PauseState extends State {
         Table table = new Table();
 
         tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((w - cw) / 2,(h - ch) / 2 );
+        tableContainer.setPosition((w - cw) / 2, (h - ch) / 2);
         tableContainer.top().fillX();
         tableContainer.setActor(table);
 

@@ -10,17 +10,18 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Marble {
 
-    public static boolean colliding = false;
     public static final float GRAVITY_COMPENSATION = 1.4f;
     public static final float GYRO_COMPENSATION = 2;
-    public static final float SQRT2 = (float) Math.sqrt(2);
     static final int JUMP_HEIGHT = 700;
-    public static final int MOVEMENT = (int) (GravityRun.HEIGHT / 5);
-    public static int LVL = GravityRun.user.getIndexSelected() + 1;
-    public static int speed;
+    public static final int MOVEMENT = GravityRun.HEIGHT / 5;
+    public static final float SQRT_2 = (float) Math.sqrt(2);
 
+    public static int lvl = GravityRun.user.getIndexSelected() + 1;
+
+    public boolean colliding = false;
     private boolean isBlockedOnLeft = false, isBlockedOnRight = false, isBlockedOnTop = false;
     private Circle bounds;
+    public float speed;
     private MarbleAnimation marbleAnimation;
     private Texture marble;
     private Vector3 position, velocity;
@@ -36,33 +37,33 @@ public class Marble {
     public void update(float dt, boolean gameOver) {
         marbleAnimation.update(dt, gameOver);
         if (position.y < 1000)
-            speed = 0;
+            speed = 1f;
         else if (position.y < 2000)
-            speed = 20;
+            speed = 1.1f;
         else if (position.y < 3000)
-            speed = 40;
+            speed = 1.2f;
         else if (position.y < 4000)
-            speed = 60;
+            speed = 1.3f;
         else if (position.y < 5000)
-            speed = 80;
+            speed = 1.4f;
         else
-            speed = 100;
+            speed = 1.5f;
 
         if (Gdx.input.getGyroscopeX() > 2)
             position.z = JUMP_HEIGHT;
 
         if (position.z > 0 && !gameOver)
-            position.add(0,0, -10);
+            position.add(0, 0, -10);
         else
             position.z = 0;
 
         if (!colliding && !gameOver) {
             if ((isBlockedOnRight && Gdx.input.getGyroscopeY() >= 0) || (isBlockedOnLeft && Gdx.input.getGyroscopeY() >= 0))
-                position.add(0,LVL * (MOVEMENT + speed + SlowDown.SLOW_DOWN) * dt,0);
+                position.add(0, lvl * (MOVEMENT * speed + SlowDown.SLOW_DOWN) * dt, 0);
             else if (isBlockedOnTop)
-                position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75,0,0);
+                position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, 0, 0);
             else
-                position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, LVL * (MOVEMENT + speed + SlowDown.SLOW_DOWN) * dt,0);
+                position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, lvl * (MOVEMENT * speed + SlowDown.SLOW_DOWN) * dt, 0);
         }
 
         if (position.x < marbleAnimation.getDiameter(position.z) / 2)

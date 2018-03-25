@@ -15,25 +15,21 @@ public class GameStateManager {
         states.pop().dispose();
     }
 
-    public void push(State state){
+    public void push(State state) {
         states.push(state);
     }
 
-    public void set(State state){
+    public void set(State state) {
         states.pop().dispose();
         states.push(state);
     }
 
-    public void update(float dt){
+    public void update(float dt) {
         states.peek().update(dt);
     }
 
-    public void render(SpriteBatch sb){
+    public void render(SpriteBatch sb) {
         states.peek().render(sb);
-    }
-
-    public void forceCrash(){
-        throw new RuntimeException("this is a crash");
     }
 
 }

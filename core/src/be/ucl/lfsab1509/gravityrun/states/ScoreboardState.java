@@ -2,6 +2,7 @@ package be.ucl.lfsab1509.gravityrun.states;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,9 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 public class ScoreboardState extends State {
 
@@ -43,7 +44,7 @@ public class ScoreboardState extends State {
         List intermediateScoreList = new List(tableSkin);
         List expertScoreList = new List(tableSkin);
 
-        java.util.List[] lists = {GravityRun.user.getBeginner(),GravityRun.user.getInter(),GravityRun.user.getExpert()};
+        java.util.List[] lists = {GravityRun.user.getBeginner(), GravityRun.user.getInter(), GravityRun.user.getExpert()};
         List[] list = {beginnerScoreList, intermediateScoreList, expertScoreList};
         ArrayList<Integer> myArrayList;
 
@@ -52,14 +53,14 @@ public class ScoreboardState extends State {
             int length;
 
             if (myArrayList != null) {
-                sortDESC(myArrayList);
+                Collections.sort(myArrayList, Collections.<Integer>reverseOrder());
                 length = myArrayList.size();
             } else
                 length = 0;
 
             switch (length) {
                 case 0:
-                    list[i].setItems("1.  " + 0,"2.  " + 0, "3.  " + 0);
+                    list[i].setItems("1.  " + 0, "2.  " + 0, "3.  " + 0);
                     break;
                 case 1:
                     list[i].setItems("1.  " + myArrayList.get(0), "2.  " + 0, "3.  " + 0);
@@ -80,7 +81,7 @@ public class ScoreboardState extends State {
         Table table = new Table();
 
         tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((w - cw) / 2,(h - ch) / 2 );
+        tableContainer.setPosition((w - cw) / 2, (h - ch) / 2);
         tableContainer.top().fillX().fillY();
         tableContainer.setActor(table);
 
@@ -99,15 +100,6 @@ public class ScoreboardState extends State {
         stage.addActor(tableContainer);
 
         Gdx.input.setInputProcessor(stage);
-    }
-
-    private void sortDESC(ArrayList<Integer> arrayList) {
-        Collections.sort(arrayList, new Comparator<Integer>() {
-            @Override
-            public int compare(Integer integer, Integer t1) {
-                return t1.compareTo(integer);
-            }
-        });
     }
 
     @Override

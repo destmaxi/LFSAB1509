@@ -9,9 +9,10 @@ public class MarbleAnimation {
     private static final float CYCLE_TIME = 1;
     public static final int FRAME_COUNT = 5;
     private static final int MARBLE_COUNT = 5;
+    private static final float MAX_FRAME_TIME = CYCLE_TIME / FRAME_COUNT;
 
     private Array<Array<TextureRegion>> frames;
-    private float currentFrameTime, maxFrameTime;
+    private float currentFrameTime;
     private int frame;
 
     MarbleAnimation(Texture marbles, float sw) {
@@ -28,25 +29,24 @@ public class MarbleAnimation {
         }
         currentFrameTime = 0;
         frame = 0;
-        maxFrameTime = CYCLE_TIME / FRAME_COUNT;
     }
 
     public void update(float dt, boolean gameOver) {
         if (!gameOver)
             currentFrameTime += dt;
-        if (currentFrameTime > maxFrameTime) {
+        if (currentFrameTime > MAX_FRAME_TIME) {
             frame = (frame + 1) % FRAME_COUNT;
             currentFrameTime = 0;
         }
     }
 
+    public void dispose() {
+
+    }
+
     int getDiameter(float z) {
         int marble = getMarble(z);
         return frames.get(marble).get(frame).getRegionWidth();
-    }
-
-    public void dispose() {
-
     }
 
     TextureRegion getFrame(float z) {
@@ -66,4 +66,5 @@ public class MarbleAnimation {
         else
             return 4;
     }
+
 }

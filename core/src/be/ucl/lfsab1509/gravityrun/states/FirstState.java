@@ -106,7 +106,7 @@ public class FirstState extends State {
                 gsm.set(new MenuState(gsm));
             }
         }
-        
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
             Gdx.app.exit();
     }

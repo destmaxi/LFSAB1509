@@ -3,6 +3,7 @@ package be.ucl.lfsab1509.gravityrun.states;
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -21,13 +22,13 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class OptionState extends State {
 
-    private boolean isCheckedLvlButton = false, isCheckedUsernameButton = false, isClickedLvlButton = false, isClickedSaveButton = false, isClickedScoreButton = false, isClickedUsernameButton = false;
-    private final List<String> listBox;
+    private boolean isClickedSaveButton = false, isClickedScoreButton = false;
+    private List<String> listBox;
     private Skin menuSkin, tableSkin;
     private Stage stage;
     private String username;
-    private TextField usernameField;
     private TextButton saveButton;
+    private TextField usernameField;
 
     OptionState(GameStateManager gsm) {
         super(gsm);
@@ -46,24 +47,19 @@ public class OptionState extends State {
         lvlButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (!isCheckedLvlButton) {
-                    isClickedLvlButton = true;
-                    isCheckedLvlButton = true;
-                } else {
-                    isClickedLvlButton = false;
-                    isCheckedLvlButton = false;
-                }
+                listBox.setVisible(!listBox.isVisible());
             }
         });
 
         saveButton = new TextButton(string.format("save"), tableSkin, "round");
+        saveButton.setVisible(false);
         saveButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                Gdx.input.setOnscreenKeyboardVisible(false);
                 isClickedSaveButton = true;
             }
         });
-        saveButton.setVisible(false);
 
         TextButton scoreButton = new TextButton(string.format("my_score"), tableSkin, "round");
         scoreButton.addListener(new ClickListener() {
@@ -77,19 +73,16 @@ public class OptionState extends State {
         usernameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (!isCheckedUsernameButton) {
-                    isClickedUsernameButton = true;
-                    isCheckedUsernameButton = true;
-                } else {
-                    isClickedUsernameButton = false;
-                    isCheckedUsernameButton = false;
-                }
+                Gdx.input.setOnscreenKeyboardVisible(false);
+                saveButton.setVisible(!saveButton.isVisible());
+                usernameField.setVisible(!usernameField.isVisible());
             }
         });
 
         username = GravityRun.user.getUsername();
         usernameField = new TextField(username, tableSkin);
         usernameField.setText(username);
+        usernameField.setVisible(false);
         usernameField.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -102,7 +95,6 @@ public class OptionState extends State {
                 username = usernameField.getText();
             }
         });
-        usernameField.setVisible(false);
 
         listBox = new List<String>(tableSkin);
         listBox.setItems(string.format("beginner"), string.format("inter"), string.format("expert"));
@@ -112,24 +104,16 @@ public class OptionState extends State {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (listBox.getSelected().equals(string.format("beginner"))) {
-                    Marble.LVL = 1;
+                    Marble.lvl = 1;
                     GravityRun.user.setIndexSelected(0);
-                    isCheckedLvlButton = false;
-                    isClickedLvlButton = false;
-                    listBox.setVisible(false);
                 } else if (listBox.getSelected().equals(string.format("inter"))) {
-                    Marble.LVL = 2;
+                    Marble.lvl = 2;
                     GravityRun.user.setIndexSelected(1);
-                    isCheckedLvlButton = false;
-                    isClickedLvlButton = false;
-                    listBox.setVisible(false);
                 } else if (listBox.getSelected().equals(string.format("expert"))) {
-                    Marble.LVL = 3;
+                    Marble.lvl = 3;
                     GravityRun.user.setIndexSelected(2);
-                    isCheckedLvlButton = false;
-                    isClickedLvlButton = false;
-                    listBox.setVisible(false);
                 }
+                listBox.setVisible(false);
             }
         });
 
@@ -138,7 +122,7 @@ public class OptionState extends State {
         Table titleTable = new Table();
 
         tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((w - cw) / 2,(h - ch) / 2);
+        tableContainer.setPosition((w - cw) / 2, (h - ch) / 2);
         tableContainer.top().fillX();
         tableContainer.setActor(titleTable);
 
@@ -165,24 +149,24 @@ public class OptionState extends State {
 
     @Override
     protected void handleInput() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            GravityRun.pref.put(GravityRun.user.toMap());
-            GravityRun.pref.flush();
-            gsm.pop();
-        }
-        if (isClickedScoreButton) {
-            isClickedScoreButton = false;
-            gsm.push(new ScoreboardState(gsm));
-        }
         if (isClickedSaveButton) {
             GravityRun.user.setUsername(username);
             GravityRun.pref.put(GravityRun.user.toMap());
             GravityRun.pref.flush();
-            usernameField.setVisible(false);
             saveButton.setVisible(false);
-            isCheckedUsernameButton = false;
-            isClickedUsernameButton = false;
+            usernameField.setVisible(false);
             isClickedSaveButton = false;
+        }
+
+        if (isClickedScoreButton) {
+            isClickedScoreButton = false;
+            gsm.push(new ScoreboardState(gsm));
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            GravityRun.pref.put(GravityRun.user.toMap());
+            GravityRun.pref.flush();
+            gsm.pop();
         }
     }
 
@@ -195,22 +179,8 @@ public class OptionState extends State {
     @Override
     public void render(SpriteBatch sb) {
         sb.setProjectionMatrix(cam.combined);
-
         stage.act();
         stage.draw();
-
-        if (isClickedLvlButton)
-            listBox.setVisible(true);
-        else
-            listBox.setVisible(false);
-
-        if (isClickedUsernameButton){
-            usernameField.setVisible(true);
-            saveButton.setVisible(true);
-        } else {
-            usernameField.setVisible(false);
-            saveButton.setVisible(false);
-        }
     }
 
     @Override

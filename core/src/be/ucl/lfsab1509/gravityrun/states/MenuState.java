@@ -2,6 +2,7 @@ package be.ucl.lfsab1509.gravityrun.states;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,7 +19,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 public class MenuState extends State {
 
     private boolean isClickedOptionButton = false, isClickedStartGameButton = false;
-    private Label hyLabel;
     private Skin menuSkin, tableSkin;
     private Stage stage;
 
@@ -48,7 +48,7 @@ public class MenuState extends State {
                 isClickedStartGameButton = true;
             }
         });
-        hyLabel = new Label(string.format("hello") + GravityRun.pref.getString("username"), tableSkin);
+        Label hyLabel = new Label(string.format("hello") + GravityRun.pref.getString("username"), tableSkin);
         hyLabel.setWrap(true);
         hyLabel.setWidth(cw);
         hyLabel.setAlignment(Align.center);
@@ -57,7 +57,7 @@ public class MenuState extends State {
         Table table = new Table();
 
         tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((w - cw) / 2,(h - ch) / 2);
+        tableContainer.setPosition((w - cw) / 2, (h - ch) / 2);
         tableContainer.top().fillX();
         tableContainer.setActor(table);
 
@@ -80,11 +80,13 @@ public class MenuState extends State {
             isClickedOptionButton = false;
             gsm.push(new OptionState(gsm));
         }
+
         if (isClickedStartGameButton) {
             isClickedStartGameButton = false;
             gsm.push(new PlayState(gsm));
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             GravityRun.pref.put(GravityRun.user.toMap());
             GravityRun.pref.flush();
             Gdx.app.exit();
@@ -100,7 +102,6 @@ public class MenuState extends State {
     @Override
     public void render(SpriteBatch sb) {
         sb.setProjectionMatrix(cam.combined);
-        hyLabel.setText(string.format("hello") + GravityRun.user.getUsername());
         stage.act();
         stage.draw();
     }

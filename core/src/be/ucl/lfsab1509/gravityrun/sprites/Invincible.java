@@ -1,6 +1,7 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
@@ -8,10 +9,10 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Invincible extends Bonus {
 
-    public Invincible(float y) {
+    public Invincible(float y, int sw) {
         super();
 
-        bonusTexture = new Texture("invincible.png");
+        bonusTexture = new Texture("drawable-" + sw + "/invincible.png");
         position = new Vector2(rand.nextInt(GravityRun.WIDTH - bonusTexture.getWidth()), y);
         bounds = new Rectangle(position.x, position.y, bonusTexture.getWidth(), bonusTexture.getHeight());
     }

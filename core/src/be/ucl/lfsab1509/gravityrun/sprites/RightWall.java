@@ -2,6 +2,7 @@ package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.states.PlayState;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -14,13 +15,12 @@ public class RightWall extends Obstacle {
         obstacleTexture = new Texture("drawable-" + sw + "/wall.png");
         position = first
                 ? new Vector2(GravityRun.WIDTH - obstacleTexture.getWidth(), y)
-                :new Vector2(rand.nextInt(GravityRun.WIDTH - 3 * marbleWidth) + 3 * marbleWidth, y);
+                : new Vector2(rand.nextInt(GravityRun.WIDTH - 3 * marbleWidth) + 3 * marbleWidth, y);
         bounds = new Rectangle(position.x, position.y, obstacleTexture.getWidth(), obstacleTexture.getHeight());
     }
 
     @Override
     public boolean collides(Marble marble) {
-
         float marbleX0 = marble.getPosition().x;
         float marbleY0 = marble.getPosition().y;
         float marbleX1 = marble.getPosition().x + marble.getDiameter();
@@ -52,7 +52,7 @@ public class RightWall extends Obstacle {
 
         marble.setBlockedOnRight(false);
         PlayState.isCollideWall = false;
-        Marble.colliding = false;
+        marble.colliding = false;
         return false;
     }
 

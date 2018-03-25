@@ -3,6 +3,7 @@ package be.ucl.lfsab1509.gravityrun.states;
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -14,9 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 public class GameOverState extends State {
 
@@ -32,8 +33,8 @@ public class GameOverState extends State {
 
         ArrayList<Integer> userList = GravityRun.user.getHighScore();
         for (int i = 0; i < GravityRun.scoreList.size(); i++)
-            if(GravityRun.scoreList.get(i) > userList.get(Marble.LVL - 1))
-                GravityRun.user.getHighScore().set(Marble.LVL - 1, GravityRun.scoreList.get(i));
+            if (GravityRun.scoreList.get(i) > userList.get(Marble.lvl - 1))
+                GravityRun.user.getHighScore().set(Marble.lvl - 1, GravityRun.scoreList.get(i));
 
         buttonSkin = new Skin();
         buttonSkin.createSkin((int) (w / d / 10));
@@ -55,7 +56,7 @@ public class GameOverState extends State {
         scoreSkin = new Skin();
         scoreSkin.createSkin((int) (0.75f * w / d / 10));
         Label score = new Label(string.format("final_score", PlayState.score), scoreSkin);
-        Label highScore = new Label(string.format("high_score", GravityRun.user.getHighScore().get(Marble.LVL - 1)), scoreSkin);
+        Label highScore = new Label(string.format("high_score", GravityRun.user.getHighScore().get(Marble.lvl - 1)), scoreSkin);
 
         titleSkin = new Skin();
         titleSkin.createSkin((int) (1.5f * w / d / 10));
@@ -65,7 +66,7 @@ public class GameOverState extends State {
         Table table = new Table();
 
         tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((w - cw) / 2,(h - ch) / 2);
+        tableContainer.setPosition((w - cw) / 2, (h - ch) / 2);
         tableContainer.top().fillX();
         tableContainer.setActor(table);
 
@@ -87,14 +88,22 @@ public class GameOverState extends State {
 
     @Override
     protected void handleInput() {
-        if (isClickedMenuButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+        if (isClickedReplayButton) {
+            PlayState.gameOver = false;
+            //Marble.colliding = false;
+            gsm.set(new PlayState(gsm));
+        }
 
-            switch (Marble.LVL) {
-                case 1: GravityRun.user.setBeginner(add(GravityRun.user.getBeginner()));
+        if (isClickedMenuButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            switch (Marble.lvl) {
+                case 1:
+                    GravityRun.user.setBeginner(add(GravityRun.user.getBeginner()));
                     break;
-                case 2: GravityRun.user.setInter(add(GravityRun.user.getInter()));
+                case 2:
+                    GravityRun.user.setInter(add(GravityRun.user.getInter()));
                     break;
-                case 3: GravityRun.user.setExpert(add(GravityRun.user.getExpert()));
+                case 3:
+                    GravityRun.user.setExpert(add(GravityRun.user.getExpert()));
                     break;
             }
 
@@ -105,46 +114,11 @@ public class GameOverState extends State {
 
             gsm.pop();
         }
-
-        if (isClickedReplayButton) {
-            PlayState.gameOver = false;
-            Marble.colliding = false;
-            gsm.set(new PlayState(gsm));
-        }
-    }
-
-    private void sortASC(ArrayList<Integer> arrayList){
-        Collections.sort(arrayList, new Comparator<Integer>() {
-            @Override
-            public int compare(Integer integer, Integer t1) {
-                return integer.compareTo(t1);
-            }
-        });
-    }
-
-    public ArrayList<Integer> add(ArrayList<Integer> userList){
-
-        for (int i = 0; i < GravityRun.scoreList.size(); i++){
-            if (userList != null)
-                sortASC(userList);
-            else
-                userList = new ArrayList<Integer>();
-
-            if (!userList.contains(GravityRun.scoreList.get(i)) && userList.size() < 3)
-                userList.add(GravityRun.scoreList.get(i));
-            else if (!userList.contains(GravityRun.scoreList.get(i)) && userList.get(0) < GravityRun.scoreList.get(i)){
-                userList.remove(0);
-                userList.add(GravityRun.scoreList.get(i));
-            }
-        }
-
-        return userList;
     }
 
     @Override
     public void update(float dt) {
         handleInput();
-
     }
 
     @Override
@@ -158,6 +132,24 @@ public class GameOverState extends State {
         scoreSkin.dispose();
         stage.dispose();
         titleSkin.dispose();
+    }
+
+    public ArrayList<Integer> add(ArrayList<Integer> userList) {
+        for (int i = 0; i < GravityRun.scoreList.size(); i++) {
+            if (userList != null)
+                Collections.sort(userList);
+            else
+                userList = new ArrayList<Integer>();
+
+            if (!userList.contains(GravityRun.scoreList.get(i)) && userList.size() < 3)
+                userList.add(GravityRun.scoreList.get(i));
+            else if (!userList.contains(GravityRun.scoreList.get(i)) && userList.get(0) < GravityRun.scoreList.get(i)) {
+                userList.remove(0);
+                userList.add(GravityRun.scoreList.get(i));
+            }
+        }
+
+        return userList;
     }
 
 }

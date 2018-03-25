@@ -1,6 +1,7 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
@@ -10,10 +11,10 @@ public class SlowDown extends Bonus {
 
     static final int SLOW_DOWN = 0;
 
-    public SlowDown(float y) {
+    public SlowDown(float y, int sw) {
         super();
 
-        bonusTexture = new Texture("invincible.png");
+        bonusTexture = new Texture("drawable-" + sw + "/invincible.png");
         position = new Vector2(rand.nextInt(GravityRun.WIDTH - bonusTexture.getWidth()), y);
         bounds = new Rectangle(position.x, position.y, bonusTexture.getWidth(), bonusTexture.getHeight());
     }

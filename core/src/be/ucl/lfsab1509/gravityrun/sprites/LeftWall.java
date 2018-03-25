@@ -2,6 +2,7 @@ package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.states.PlayState;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -20,7 +21,6 @@ public class LeftWall extends Obstacle {
 
     @Override
     public boolean collides(Marble marble) {
-
         float marbleX0 = marble.getPosition().x;
         float marbleY0 = marble.getPosition().y;
         float marbleX1 = marble.getPosition().x + marble.getDiameter();
@@ -52,7 +52,7 @@ public class LeftWall extends Obstacle {
 
         marble.setBlockedOnRight(false);
         PlayState.isCollideWall = false;
-        Marble.colliding = false;
+        marble.colliding = false;
         return false;
     }
 

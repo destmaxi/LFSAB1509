@@ -190,10 +190,6 @@ public class AndroidSensorHelper extends SensorHelper {
         sensorManager.unregisterListener(gyroscopeSensorEventListener);
     }
 
-    public float getYGyroscope() {
-        return Gdx.input.getGyroscopeY();
-    }
-
     @Override
     public float[] getGravityDirectionVector() {
         float[] ret = new float[2];

@@ -28,11 +28,6 @@ public class DesktopSensorHelper extends SensorHelper {
     }
 
     @Override
-    public float getYGyroscope() {
-        return 0; // TODO
-    }
-
-    @Override
     public float[] getGravityDirectionVector() {
         int x = Gdx.input.getX() - GravityRun.WIDTH / 2, y = Gdx.input.getY() - GravityRun.HEIGHT / 2;
         System.out.println(x + " " + y);

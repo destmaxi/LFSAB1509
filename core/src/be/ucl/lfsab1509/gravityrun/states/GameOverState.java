@@ -114,6 +114,9 @@ public class GameOverState extends State {
 
             GravityRun.scoreList = null;
 
+            PlayState.gameOver = false;
+            PlayState.isCollideWall = false;
+            
             gsm.pop();
         }
     }

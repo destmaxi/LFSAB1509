@@ -44,6 +44,7 @@ public class PlayState extends State {
 
     private Array<Bonus> bonuses;
     private Array<Obstacle> obstacles;
+    private Array<Vector2> bgs;
     private boolean isClickedPauseButton = false;
     private int scoreBonus = 0;
     private Label scoreLabel;
@@ -52,7 +53,6 @@ public class PlayState extends State {
     private Skin skin;
     private Stage scoreStage;
     private Texture bg, gameOverImage, pauseImage;
-    private Vector2 bg1, bg2, bg3;
 
     PlayState(GameStateManager gsm, SoundManager soundManager) {
         super(gsm, soundManager);
@@ -79,9 +79,9 @@ public class PlayState extends State {
         Obstacle.OBSTACLE_HEIGHT = WIDTH / 5;
 
         bg = new Texture("drawable-" + WIDTH + "/background.png");
-        bg1 = new Vector2((w - bg.getWidth()) / 2, -h / 2);
-        bg2 = new Vector2((w - bg.getWidth()) / 2, -h / 2 + bg.getHeight());
-        bg3 = new Vector2((w - bg.getWidth()) / 2, -h / 2 + 2 * bg.getHeight());
+        bgs = new Array<Vector2>();
+        for (int i = 0; i < 3; i++)
+            bgs.add(new Vector2((w - bg.getWidth()) / 2, -h / 2 + i * bg.getHeight()));
 
         gameOverImage = new Texture("drawable-" + WIDTH + "/gameover.png");
         pauseImage = new Texture("drawable-" + WIDTH + "/pause.png");
@@ -209,9 +209,8 @@ public class PlayState extends State {
 
         sb.setProjectionMatrix(cam.combined);
 
-        sb.draw(bg, bg1.x, bg1.y);
-        sb.draw(bg, bg2.x, bg2.y);
-        sb.draw(bg, bg3.x, bg3.y);
+        for (Vector2 v : bgs)
+            sb.draw(bg, v.x, v.y);
 
         for (Obstacle obs : obstacles)
             sb.draw(obs.getObstacleTexture(), obs.getPosition().x, obs.getPosition().y);
@@ -286,14 +285,9 @@ public class PlayState extends State {
     }
 
     private void updateGround() {
-        if (cam.position.y - h / 2 > bg1.y + bg.getHeight())
-            bg1.add(0, bg.getHeight() * 3);
-
-        if (cam.position.y - h / 2 > bg2.y + bg.getHeight())
-            bg2.add(0, bg.getHeight() * 3);
-
-        if (cam.position.y - h / 2 > bg3.y + bg.getHeight())
-            bg3.add(0, bg.getHeight() * 3);
+        for (Vector2 v : bgs)
+            if (cam.position.y - h / 2 > v.y + bg.getHeight())
+                v.add(0, 3 * bg.getHeight());
     }
 
 }

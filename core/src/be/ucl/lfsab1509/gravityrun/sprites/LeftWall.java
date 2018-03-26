@@ -9,10 +9,12 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class LeftWall extends Obstacle {
+    private boolean wait;
 
     public LeftWall(float y, boolean first, int marbleWidth, int sw) {
         super();
 
+        wait = false;
         obstacleTexture = new Texture("drawable-" + sw + "/wall.png");
         position = first
                 ? new Vector2(0, y)
@@ -30,7 +32,26 @@ public class LeftWall extends Obstacle {
         float rectY0 = position.y;
         float rectX1 = position.x + obstacleTexture.getWidth();
 
-        if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds) && !Invincible.isInvicible) {
+        if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds) && Invincible.inWall) {
+            System.out.println("after invicible timed out in a wall");
+
+            wait = true;
+          //  PlayState.isCollideWall = false;
+          //  marble.setBlockedOnTop(false);
+          //  marble.setBlockedOnLeft(false);
+        }
+        else if (wait) {
+            System.out.println("went out wall, now no more invincible");
+
+            wait = false;
+            Invincible.inWall = false;
+           // PlayState.isCollideWall = false;
+           // marble.setBlockedOnTop(false);
+           // marble.setBlockedOnLeft(false);
+        }
+
+        if (!wait && !Invincible.isInvicible && !Invincible.inWall && Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
+            System.out.println("no more in wall and invincible");
 
             if (marbleCy < rectY0) {
                 marble.setBlockedOnTop(true);
@@ -46,7 +67,7 @@ public class LeftWall extends Obstacle {
             else
                 marble.setBlockedOnLeft(false);
         }
-        else {
+        else if (!wait) {
             PlayState.isCollideWall = false;
             marble.setBlockedOnTop(false);
             marble.setBlockedOnLeft(false);

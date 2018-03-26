@@ -1,6 +1,7 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
+import be.ucl.lfsab1509.gravityrun.states.PlayState;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,7 +13,7 @@ public class Marble {
 
     public static final float GRAVITY_COMPENSATION = 1.4f;
     public static final float GYRO_COMPENSATION = 2;
-    static final int JUMP_HEIGHT = 700;
+    static final int JUMP_HEIGHT = 600;
     public static final int MOVEMENT = GravityRun.HEIGHT / 5;
     public static final float SQRT_2 = (float) Math.sqrt(2);
 
@@ -36,18 +37,19 @@ public class Marble {
 
     public void update(float dt, boolean gameOver) {
         marbleAnimation.update(dt, gameOver);
-        if (position.y < 1000)
+
+        if (PlayState.score < 1000)
             speed = 1f;
-        else if (position.y < 2000)
-            speed = 1.1f;
-        else if (position.y < 3000)
+        else if (PlayState.score < 2000)
             speed = 1.2f;
-        else if (position.y < 4000)
-            speed = 1.3f;
-        else if (position.y < 5000)
+        else if (PlayState.score < 3000)
             speed = 1.4f;
+        else if (PlayState.score < 4000)
+            speed = 1.6f;
+        else if (PlayState.score < 5000)
+            speed = 1.8f;
         else
-            speed = 1.5f;
+            speed = 2f;
 
         if (Gdx.input.getGyroscopeX() > 2)
             position.z = JUMP_HEIGHT;
@@ -57,9 +59,13 @@ public class Marble {
         else
             position.z = 0;
 
-        if (!colliding && !gameOver) {
-            if ((isBlockedOnRight && Gdx.input.getGyroscopeY() >= 0) || (isBlockedOnLeft && Gdx.input.getGyroscopeY() >= 0))
+        if (!gameOver) {
+            if ((isBlockedOnRight && Gdx.input.getGyroscopeY() > 0) || (isBlockedOnLeft && Gdx.input.getGyroscopeY() < 0))
                 position.add(0, lvl * (MOVEMENT * speed + SlowDown.SLOW_DOWN) * dt, 0);
+            else if ((isBlockedOnLeft && Gdx.input.getGyroscopeY() < 0) && isBlockedOnTop)
+                position.add(0, 0, 0);
+            else if ((isBlockedOnRight && Gdx.input.getGyroscopeY() > 0) && isBlockedOnTop)
+                position.add(0, 0, 0);
             else if (isBlockedOnTop)
                 position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, 0, 0);
             else

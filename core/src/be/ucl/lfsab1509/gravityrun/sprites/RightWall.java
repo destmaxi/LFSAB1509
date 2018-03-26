@@ -4,6 +4,7 @@ import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.states.PlayState;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -20,40 +21,38 @@ public class RightWall extends Obstacle {
     }
 
     @Override
-    public boolean collides(Marble marble) {
+    public void collides(Marble marble) {
+
         float marbleX0 = marble.getPosition().x;
         float marbleY0 = marble.getPosition().y;
-        float marbleX1 = marble.getPosition().x + marble.getDiameter();
-        float marbleY1 = marble.getPosition().y + marble.getDiameter() / MarbleAnimation.FRAME_COUNT;
+        float marbleCx = marbleX0 + marble.getDiameter() / 2;
+        float marbleCy = marbleY0 + (marble.getDiameter() / MarbleAnimation.FRAME_COUNT)/2;
 
         float rectX0 = position.x;
         float rectY0 = position.y;
-        float rectX1 = position.x + obstacleTexture.getWidth();
-        float rectY1 = position.y + obstacleTexture.getHeight();
 
-        //marble blocked on left side by wall
-        if (marbleX0 <= rectX1 && marbleY1 > rectY0 && marbleY0 <= rectY1)
-            marble.setBlockedOnLeft(true);
-        else
-            marble.setBlockedOnLeft(false);
+        if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
+            if (marbleCy < rectY0) {
+                marble.setBlockedOnTop(true);
+                PlayState.isCollideWall = true;
+            }
+            else {
+                marble.setBlockedOnTop(false);
+            }
 
-        //marble blocked on right side by wall
-        if (marbleX1 >= rectX0 && marbleY1 > rectY0 && marbleY0 <= rectY1)
-            marble.setBlockedOnRight(true);
-        else
-            marble.setBlockedOnRight(false);
-
-        //marble blocked on top with wall
-        if (marbleY1 >= rectY0 && marbleX0 <= rectX1 && marbleX0 >= rectX0) {
-            marble.setBlockedOnTop(true);
-            PlayState.isCollideWall = true;
-            return true;
+            if (marbleCx < rectX0) {
+                marble.setBlockedOnRight(true);
+                PlayState.isCollideWall = true;
+            }
+            else {
+                marble.setBlockedOnRight(false);
+            }
         }
-
-        marble.setBlockedOnRight(false);
-        PlayState.isCollideWall = false;
-        marble.colliding = false;
-        return false;
+        else {
+            PlayState.isCollideWall = false;
+            marble.setBlockedOnTop(false);
+            marble.setBlockedOnRight(false);
+        }
     }
 
 }

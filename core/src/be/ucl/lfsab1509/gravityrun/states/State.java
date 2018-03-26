@@ -1,6 +1,7 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
+import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -14,10 +15,12 @@ public abstract class State {
     GameStateManager gsm;
     I18NBundle string;
     OrthographicCamera cam;
+    SoundManager soundManager;
 
-    State(GameStateManager gsm) {
+    State (GameStateManager gsm, SoundManager soundManager) {
         this.gsm = gsm;
         cam = new OrthographicCamera();
+        this.soundManager = soundManager;
         FileHandle baseFileHandle = Gdx.files.internal("strings/string");
         string = I18NBundle.createBundle(baseFileHandle);
     }

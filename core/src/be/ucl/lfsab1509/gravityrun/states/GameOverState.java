@@ -3,6 +3,7 @@ package be.ucl.lfsab1509.gravityrun.states;
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
+import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -25,8 +26,8 @@ public class GameOverState extends State {
     private Stage stage;
     private Skin buttonSkin, scoreSkin, titleSkin;
 
-    GameOverState(GameStateManager gsm) {
-        super(gsm);
+    GameOverState(GameStateManager gsm, SoundManager soundManager) {
+        super(gsm, soundManager);
 
         float ch = h * 0.9f;
         float cw = w * 0.9f;
@@ -90,8 +91,9 @@ public class GameOverState extends State {
     protected void handleInput() {
         if (isClickedReplayButton) {
             PlayState.gameOver = false;
-            //Marble.colliding = false;
-            gsm.set(new PlayState(gsm));
+            PlayState.isCollideWall = false;
+            soundManager.replayGame();
+            gsm.set(new PlayState(gsm, soundManager));
         }
 
         if (isClickedMenuButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {

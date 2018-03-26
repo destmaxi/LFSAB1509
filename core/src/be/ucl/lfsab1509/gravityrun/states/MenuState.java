@@ -2,6 +2,7 @@ package be.ucl.lfsab1509.gravityrun.states;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
+import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -22,8 +23,8 @@ public class MenuState extends State {
     private Skin menuSkin, tableSkin;
     private Stage stage;
 
-    public MenuState(GameStateManager gsm) {
-        super(gsm);
+    public MenuState(GameStateManager gsm, SoundManager soundManager) {
+        super(gsm, soundManager);
 
         float ch = h * 0.9f;
         float cw = w * 0.9f;
@@ -78,12 +79,13 @@ public class MenuState extends State {
     public void handleInput() {
         if (isClickedOptionButton) {
             isClickedOptionButton = false;
-            gsm.push(new OptionState(gsm));
+            gsm.push(new OptionState(gsm, soundManager));
         }
 
         if (isClickedStartGameButton) {
             isClickedStartGameButton = false;
-            gsm.push(new PlayState(gsm));
+            soundManager.replayGame();
+            gsm.push(new PlayState(gsm, soundManager));
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {

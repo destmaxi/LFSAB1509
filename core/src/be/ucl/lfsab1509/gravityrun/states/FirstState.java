@@ -2,6 +2,7 @@ package be.ucl.lfsab1509.gravityrun.states;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
+import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -29,8 +30,8 @@ public class FirstState extends State {
     private Stage stage;
     private String username = string.format("username");
 
-    public FirstState(GameStateManager gsm) {
-        super(gsm);
+    public FirstState(GameStateManager gsm, SoundManager soundManager) {
+        super(gsm, soundManager);
 
         float cw = w * 0.9f;
         float ch = h * 0.9f;
@@ -103,7 +104,7 @@ public class FirstState extends State {
                 errorLabel.setVisible(true);
             } else {
                 initUser();
-                gsm.set(new MenuState(gsm));
+                gsm.set(new MenuState(gsm, soundManager));
             }
         }
 

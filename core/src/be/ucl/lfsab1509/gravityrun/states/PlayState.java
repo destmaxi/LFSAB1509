@@ -101,8 +101,9 @@ public class PlayState extends State {
         skin = new Skin();
         skin.createSkin((int) (0.75f * w / d / 10));
 
-        scoreLabel = new Label(string.format("score"), skin, "optional");
+        scoreLabel = new Label(string.format("score"), skin, "score");
         scoreLabel.setText(string.format("score", score));
+        scoreLabel.setPosition((w - scoreLabel.getWidth()) / 2, h - scoreLabel.getHeight());
 
         scoreStage = new Stage(new ScreenViewport());
         scoreStage.addActor(scoreLabel);

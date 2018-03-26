@@ -8,9 +8,12 @@ import android.hardware.SensorManager;
 import android.util.Log;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 
-public class AndroidSensorHelper extends SensorHelper {
+import java.util.Arrays;
+
+public class AndroidSensorHelper implements SensorHelper {
 
     private static final float NS2S = 1.0f / 1000000000.0f;
     private static final long DELAY_JUMP = 800;
@@ -27,14 +30,18 @@ public class AndroidSensorHelper extends SensorHelper {
     private LinearAccelerationSensorEventListener linearAccelerationSensorEventListener;
     private RotationSensorEventListener rotationSensorEventListener;
     private GyroscopeSensorEventListener gyroscopeSensorEventListener;
-    private float[] gravityVector;
+    // Raw values, immediately from the sensor
+    private float[] rawGravityVector;
     private long lastGravityTimeStamp;
-    private float[] gyroscopeVector;
+    private float[] rawGyroscopeVector;
     private long lastGyroscopeTimeStamp;
+    private float[] rawLinearAcceleration;
+    // Computed values, from other sensor data
+    private float[] normalizedGravityVector;
     private float[] lastDeltaRotationVector;
     private float[] gyroscopeBasedRotationVector;
-    private float[] lastLinearAcceleration;
-    private long lastJumpTimestamp;
+    private float[] normalizedGravityVelocityVector;
+    //private long lastJumpTimestamp;
 
     private class GravitySensorEventListener implements SensorEventListener {
         @Override
@@ -51,8 +58,18 @@ public class AndroidSensorHelper extends SensorHelper {
              * If the device is at rest, the gravity is in the positive direction, upwards (instead of downwards).
              */
             if (event.values.length == 3) {
-                System.arraycopy(event.values, 0, gravityVector, 0, event.values.length);
+                float[] newGravityVector = new float[3];
+                System.arraycopy(event.values, 0, newGravityVector, 0, event.values.length);
+                float[] newNormalizedGravityVector = new float[2];
+                normalizeVector(newGravityVector, newNormalizedGravityVector);
+                float dt = event.timestamp - lastGravityTimeStamp; // in nanoseconds
+                for (int i = 0; i < newNormalizedGravityVector.length; i++) {
+                    normalizedGravityVelocityVector[i] = (newNormalizedGravityVector[i] - normalizedGravityVector[i]) / (dt * NS2S);
+                }
                 lastGravityTimeStamp = event.timestamp;
+                System.arraycopy(newGravityVector, 0, rawGravityVector, 0, rawGravityVector.length);
+                System.out.println("GravitySensorEventListener.onSensorChanged + " + dt + " " + Arrays.toString(normalizedGravityVelocityVector) + " " + Arrays.toString(newNormalizedGravityVector) + " " + Arrays.toString(normalizedGravityVector));
+                System.arraycopy(newNormalizedGravityVector, 0, normalizedGravityVector, 0, newNormalizedGravityVector.length);
             } else {
                 Log.d("GravityEventListener", "Wrong length of event.values");
             }
@@ -73,7 +90,7 @@ public class AndroidSensorHelper extends SensorHelper {
              * event.values : values. 0: x, 1: y, 2: z in m/s^2
              */
             if (event.values.length == 3) {
-                System.arraycopy(event.values, 0, lastLinearAcceleration, 0, event.values.length);
+                System.arraycopy(event.values, 0, rawLinearAcceleration, 0, event.values.length);
             } else {
                 Log.d("LineaccEventListener", "Wrong length of event.values");
             }
@@ -106,7 +123,7 @@ public class AndroidSensorHelper extends SensorHelper {
              * event.values: 0 is x, 1 is y, 2 is z  In rad/s
              */
             if (event.values.length == 3) {
-                System.arraycopy(event.values, 0, gyroscopeVector, 0, event.values.length);
+                System.arraycopy(event.values, 0, rawGyroscopeVector, 0, event.values.length);
                 float dt = (event.timestamp - lastGyroscopeTimeStamp) / NS2S;
                 float omegaX = event.values[0], omegaY = event.values[1], omegaZ = event.values[2];
                 float omegaMagnitude = (float) (Math.sqrt(omegaX*omegaX + omegaY * omegaY + omegaZ * omegaZ));
@@ -149,19 +166,21 @@ public class AndroidSensorHelper extends SensorHelper {
         rotationSensorEventListener = new RotationSensorEventListener();
         gyroscopeSensorEventListener = new GyroscopeSensorEventListener();
 
-        gravityVector = new float[3];
+        rawGravityVector = new float[3];
         lastGravityTimeStamp = System.nanoTime();
 
-        gyroscopeVector = new float[] {0.0f, 0.0f, 0.0f};
+        rawGyroscopeVector = new float[] {0.0f, 0.0f, 0.0f};
         lastDeltaRotationVector = new float[] {0.0f, 0.0f, 0.0f, 0.0f};
         gyroscopeBasedRotationVector = new float[] {0.0f, 0.0f, 0.0f};
         lastGyroscopeTimeStamp = System.nanoTime();
-        lastLinearAcceleration = new float[] {0.0f, 0.0f, 0.0f};
+        rawLinearAcceleration = new float[] {0.0f, 0.0f, 0.0f};
+        normalizedGravityVelocityVector = new float[] {0.0f, 0.0f};
+        normalizedGravityVector = new float[] {0.0f, 0.0f};
 
         resumeSensors();
     }
 
-    public static float[] matrixVectorMultiplication(float[] R, float[] v) {
+    private static float[] matrixVectorMultiplication(float[] R, float[] v) {
         if (R.length == 9 && v.length == 3) {
             return new float[] {
                     R[0] * v[0] + R[1] * v[1] + R[2] * v[2],
@@ -172,6 +191,15 @@ public class AndroidSensorHelper extends SensorHelper {
             // TODO généraliser
             return new float[] {0.0f, 0.0f, 0.0f};
         }
+    }
+
+    private static void normalizeVector(float[] rawVector, float[] normalizedVector) {
+        float magnitude = 0.0f;
+        for (int i = 0; i < rawVector.length; i++)
+            magnitude += rawVector[i]*rawVector[i];
+        magnitude = (float) Math.sqrt(magnitude);
+        for (int i = 0; i < normalizedVector.length; i++)
+            normalizedVector[i] = rawVector[i] / magnitude;
     }
 
     @Override
@@ -190,27 +218,34 @@ public class AndroidSensorHelper extends SensorHelper {
         sensorManager.unregisterListener(gyroscopeSensorEventListener);
     }
 
-    public float getYGyroscope() {
-        return Gdx.input.getGyroscopeY();
-    }
-
     @Override
     public float[] getGravityDirectionVector() {
         float[] ret = new float[2];
-        float[] current = gravityVector;
-        float gravityMagnitude = (float)Math.sqrt(current[0] * current[0] + current[1] * current[1] + current[2] * current[2]);
-        ret[0] = -current[0] / gravityMagnitude;
-        ret[1] = -current[1] / gravityMagnitude;
+        ret[0] = -normalizedGravityVector[0];
+        ret[1] = -normalizedGravityVector[1];
         return ret;
     }
 
     @Override
+    public float[] getVelocityVector() {
+        float[] ret = new float[2];
+        ret[0] = -normalizedGravityVelocityVector[0];
+        ret[1] = -normalizedGravityVelocityVector[1];
+        return ret;
+    }
+
+    @Override
+    public float getGyroscopeY() {
+        return rawGyroscopeVector[1];
+    }
+
+    @Override
     public boolean hasJumped() {
-        return (gyroscopeVector[0] > 2); // default implementation
+        return (Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE));// || rawGyroscopeVector[0] > 2);
         /*
         TODO vérifier si ça marche
         long currentTimestamp = System.currentTimeMillis();
-        if ((currentTimestamp - lastJumpTimestamp) > DELAY_JUMP && Math.abs(gyroscopeVector[0]) > JUMP_MIN_GYROSCOPE) {
+        if ((currentTimestamp - lastJumpTimestamp) > DELAY_JUMP && Math.abs(rawGyroscopeVector[0]) > JUMP_MIN_GYROSCOPE) {
             lastJumpTimestamp = currentTimestamp;
             return true;
         } else {

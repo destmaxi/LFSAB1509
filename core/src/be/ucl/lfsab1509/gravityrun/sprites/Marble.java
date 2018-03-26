@@ -3,6 +3,7 @@ package be.ucl.lfsab1509.gravityrun.sprites;
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import be.ucl.lfsab1509.gravityrun.tools.SensorHelper;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -10,6 +11,8 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
+
+import static javax.swing.text.html.HTML.Tag.HEAD;
 
 public class Marble {
 
@@ -21,13 +24,15 @@ public class Marble {
     private ArrayList<Bonus> caughtBonuses;
     private boolean blockedOnLeft = false, blockedOnRight = false, blockedOnTop = false, dead = false, inHole = false, invincible = false, inWall = false, isCollidingWall = false, lifeLost = false, myMarble;
     private Circle bounds;
-    private float repositioning = 1f, slowDown = 1f, speed = 1f, gyroY;
+    private float repositioning = 1f, slowDown = 1f, speed = 1f, gyroY, positionY;
     private int activeInvincibles, activeSlowdowns, collidedWall, difficulty, height, lives = 5, score, scoreBonus, width;
     private MarbleAnimation marbleAnimation, marbleAnimationInvincible;
+    private SensorHelper sensorHelper;
     private Vector3 position;
 
-    public Marble(boolean multiplayer, boolean myMarble, int level, int standardWidth, int x, int y, Texture marble, Texture marbleInvincible) {
+    public Marble(boolean multiplayer, boolean myMarble, int level, int standardWidth, int x, int y, Texture marble, Texture marbleInvincible, SensorHelper sensorHelper) {
         this.myMarble = myMarble;
+        this.sensorHelper = sensorHelper;
         caughtBonuses = new ArrayList<>();
         marbleAnimation = new MarbleAnimation(marble, standardWidth);
         marbleAnimationInvincible = new MarbleAnimation(marbleInvincible, standardWidth);
@@ -54,6 +59,7 @@ public class Marble {
 
     public void addPosition(float gyroY, float positionZ) {
         this.gyroY = gyroY;
+        this.positionY = gyroY * width; // la valeur envoyée était une valeur scaled de l'écran, donc commune aux deux.
         this.position.z = positionZ;
     }
 
@@ -274,7 +280,7 @@ public class Marble {
     }
 
     private void updateJump() {
-        if (myMarble && position.z == 0 && (Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)))
+        if (myMarble && sensorHelper.hasJumped() && position.z <= 0)
             position.z = JUMP_HEIGHT;
 
         if (position.z > 0 && !dead || (position.z <= 0 && dead && inHole))
@@ -287,8 +293,14 @@ public class Marble {
         if (dead)
             return;
 
-        if (myMarble)
-            gyroY = Gdx.input.getGyroscopeY();
+        //float positionX;
+        if (myMarble) {
+            //float[] gravity = sensorHelper.getGravityDirectionVector();
+            float[] speed1 = sensorHelper.getVelocityVector();
+            gyroY = speed1[0];
+            //positionX = (GravityRun.WIDTH / 2) * (gravity[0] * GRAVITY_COMPENSATION + 1);
+            //System.out.println("updatePosition " + gravity[0] + " " + gravity[1] + " " + positionX + " " + speed1[0]);
+        }
 
         float x = 0f, y = 0f;
         if (!(blockedOnRight && gyroY > 0 || blockedOnLeft && gyroY < 0))
@@ -296,6 +308,11 @@ public class Marble {
         if (!blockedOnTop)
             y = difficulty * MOVEMENT * speed * slowDown * dt;
         position.add(x, y, 0);
+        // cas presque défaut : !((blockedOnRight && gyroY>0)||(blockedOnLeft && gyroY<0)) && !(blockedOnLeft && gyroY<0 && blockedOnTop) && !(blockedOnRight && gyroY>0 && blockedOnTop)
+        //position.x = positionX; // should add 0 for the x position
+        // cas défaut : !((blockedOnRight && gyroY>0)||(blockedOnLeft && gyroY<0)) && !(blockedOnLeft && gyroY<0 && blockedOnTop) && !(blockedOnRight && gyroY>0 && blockedOnTop) && !blockedOnTop
+        //position.add(0, difficulty * MOVEMENT * speed * slowDown * dt, 0);
+        //position.x = positionX; // should add 0 for the x position
     }
 
     private void updateScore() {

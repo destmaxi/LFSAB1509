@@ -117,12 +117,12 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
         int level = game.user.getMulti_IndexSelected() + 1;
 
         playerMarble = isHost()
-                ? new Marble(true, true, level, STANDARD_WIDTH, width / 3, height / 10, marblesImage, marblesInvincibleImage)
-                : new Marble(true, true, level, STANDARD_WIDTH, width * 2 / 3, height / 10, marblesImage, marblesInvincibleImage);
+                ? new Marble(true, true, level, STANDARD_WIDTH, width / 3, height / 10, marblesImage, marblesInvincibleImage, game.sensorHelper)
+                : new Marble(true, true, level, STANDARD_WIDTH, width * 2 / 3, height / 10, marblesImage, marblesInvincibleImage, game.sensorHelper);
 
         opponentMarble = isHost()
-                ? new Marble(true, false, level, STANDARD_WIDTH, width * 2 / 3, height / 10, opponentMarblesImage, opponentMarblesInvincibleImage)
-                : new Marble(true, false, level, STANDARD_WIDTH, width / 3, height / 10, opponentMarblesImage, opponentMarblesInvincibleImage);
+                ? new Marble(true, false, level, STANDARD_WIDTH, width * 2 / 3, height / 10, opponentMarblesImage, opponentMarblesInvincibleImage, game.sensorHelper)
+                : new Marble(true, false, level, STANDARD_WIDTH, width / 3, height / 10, opponentMarblesImage, opponentMarblesInvincibleImage, game.sensorHelper);
 
 
         playerMarble.setLives(game.user.getMultiLives());
@@ -185,6 +185,7 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
         super.updateMarbles(dt);
 
         if (!playerMarble.isDead()) {
+            // TODO remplacer Gdx.input.getGyroscopeY() par playerMarble.getPosition().x/width pour savoir comment envoyer
             String marbleUpdate = "[" + POSITION_OPPONENT_MARBLE + ":" + Gdx.input.getGyroscopeY() + ":" + playerMarble.getSlowDown() + ":" + playerMarble.isBlockedOnLeft() + ":" + playerMarble.isBlockedOnRight() + ":" + playerMarble.isBlockedOnTop() + ":" + playerMarble.getCenterPosition().z + ":" + playerMarble.getSpeed() + ":" + playerMarble.getScore() + ":" + playerMarble.isInvincible() + ":" + playerMarble.getCenterPosition().x + ":" + playerMarble.getCenterPosition().y + "]#";
             write(marbleUpdate);
         }

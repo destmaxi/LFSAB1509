@@ -83,7 +83,7 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
 
     @Override
     public void initMarbles() {
-        playerMarble = new Marble(true, true, game.user.getMulti_IndexSelected() + 1, STANDARD_WIDTH, width / 2, height / 10, marblesImage, marblesInvincibleImage);
+        playerMarble = new Marble(true, true, game.user.getMulti_IndexSelected() + 1, STANDARD_WIDTH, width / 2, height / 10, marblesImage, marblesInvincibleImage, game.sensorHelper);
         playerMarble.setLives(game.user.getMultiLives());
         marbles.add(playerMarble);
     }

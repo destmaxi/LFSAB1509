@@ -1,8 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.tools;
 
-public abstract class SensorHelper {
-    public static SensorHelper MAIN = null;
-
+public interface SensorHelper {
     /**
      * Choix du capteur pour déterminer l'orientation de l'appareil.
      *
@@ -11,7 +9,7 @@ public abstract class SensorHelper {
      *   Avantages : logiquement, il est plus stable que les autres.
      *   Inconvénients : si l'accélération subie par l'appareil est significative et dure suffisament longtemps, l'axe de la gravité sera temporairement fortement déréglé.
      */
-    public enum OrientationSensorType {
+    enum OrientationSensorType {
         ORIENTATION,
         GRAVITY;
     }
@@ -22,22 +20,12 @@ public abstract class SensorHelper {
      * - GYROSCOPE : utiliser directement les données du gyroscope. Le gyroscope peut être absent sur certaines plateformes, et sa précision/calibration peut varier.
      * - ORIENTATION_DERIVED : utiliser les données du capteur pour l'orientation, en dérivant les données.
      */
-    public enum GyroscopeSensorType {
+    enum GyroscopeSensorType {
         GYROSCOPE,
         ORIENTATION_DERIVED;
     }
 
-    /**
-     * Met les différents capteurs utilisés par l'activité en pause, afin d'économiser les ressources.
-     */
-    public abstract void pauseSensors();
-
-    /**
-     * Rétablit les différents capteurs utilisés par l'activité.
-     */
-    public abstract void resumeSensors();
-
-    public abstract float getYGyroscope();
+    float getGyroscopeY();
 
     /**
      * Retourne un vecteur de taille 2 représentant la direction de la gravité par rapport à l'appareil.
@@ -49,7 +37,14 @@ public abstract class SensorHelper {
      *
      * @return le vecteur décrit ci-dessus.
      */
-    public abstract float[] getGravityDirectionVector();
+    float[] getGravityDirectionVector();
+
+    /**
+     * Retourne un vecteur de taille 2 représentant la vitesse du changement du vecteur retourné par {@link SensorHelper#getGravityDirectionVector()}.
+     *
+     * @return Voir la description...
+     */
+    float[] getVelocityVector();
 
     /**
      * Retourne true si l'utilisateur a fait sauté la bille dans les quelques millisecondes précédentes, false sinon.
@@ -58,9 +53,19 @@ public abstract class SensorHelper {
      *
      * @return true si un saut a été détecté et n'a pas encore été rapporté, false sinon.
      */
-    public abstract boolean hasJumped();
+    boolean hasJumped();
 
-    public abstract void setOrientationSensorType(OrientationSensorType type);
+    /**
+     * Met les différents capteurs utilisés par l'activité en pause, afin d'économiser les ressources.
+     */
+    void pauseSensors();
 
-    public abstract void setGyroscopeSensorType(GyroscopeSensorType type);
+    /**
+     * Rétablit les différents capteurs utilisés par l'activité.
+     */
+    void resumeSensors();
+
+    void setOrientationSensorType(OrientationSensorType type);
+
+    void setGyroscopeSensorType(GyroscopeSensorType type);
 }

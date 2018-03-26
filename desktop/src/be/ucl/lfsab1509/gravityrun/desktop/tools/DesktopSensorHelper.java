@@ -1,6 +1,7 @@
 package be.ucl.lfsab1509.gravityrun.desktop.tools;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.SensorHelper;
@@ -8,9 +9,12 @@ import be.ucl.lfsab1509.gravityrun.tools.SensorHelper;
 public class DesktopSensorHelper extends SensorHelper {
     private float lastTimestamp;
     private float[] lastGravityVector;
+    private long lastJumpTimestamp;
+    private static final long JUMP_DELAY = 800;
 
     public DesktopSensorHelper() {
         lastGravityVector = new float[] {0.0f, 0.0f};
+        lastJumpTimestamp = System.currentTimeMillis();
     }
 
     @Override
@@ -52,6 +56,17 @@ public class DesktopSensorHelper extends SensorHelper {
         lastTimestamp = timestamp;
         // TODO use deltaGravity and dt to measure "angular" velocity of the pointer.
         return ret;
+    }
+
+    @Override
+    public boolean hasJumped() {
+        long currentTimestamp = System.currentTimeMillis();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && currentTimestamp - lastJumpTimestamp > JUMP_DELAY) {
+            lastJumpTimestamp = currentTimestamp;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override

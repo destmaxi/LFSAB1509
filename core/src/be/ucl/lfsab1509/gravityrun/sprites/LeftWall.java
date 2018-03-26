@@ -30,7 +30,7 @@ public class LeftWall extends Obstacle {
         float rectY0 = position.y;
         float rectX1 = position.x + obstacleTexture.getWidth();
 
-        if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
+        if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds) && !Invincible.isInvicible) {
 
             if (marbleCy < rectY0) {
                 marble.setBlockedOnTop(true);

@@ -31,7 +31,7 @@ public class RightWall extends Obstacle {
         float rectX0 = position.x;
         float rectY0 = position.y;
 
-        if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
+        if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds) && !Invincible.isInvicible) {
             if (marbleCy < rectY0) {
                 marble.setBlockedOnTop(true);
                 PlayState.isCollideWall = true;

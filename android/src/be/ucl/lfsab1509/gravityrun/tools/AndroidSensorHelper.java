@@ -13,14 +13,18 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 public class AndroidSensorHelper extends SensorHelper {
 
     private static final float NS2S = 1.0f / 1000000000.0f;
+    private static final long DELAY_JUMP = 800;
+    private static final double JUMP_MIN_GYROSCOPE = 5.0 * Math.PI / 180.0;
 
     private OrientationSensorType orientationSensorType;
     private GyroscopeSensorType gyroscopeSensorType;
     private SensorManager sensorManager;
     private Sensor gravitySensor;
+    private Sensor linearAccelerationSensor;
     private Sensor rotationSensor;
     private Sensor gyroscopeSensor;
     private GravitySensorEventListener gravitySensorEventListener;
+    private LinearAccelerationSensorEventListener linearAccelerationSensorEventListener;
     private RotationSensorEventListener rotationSensorEventListener;
     private GyroscopeSensorEventListener gyroscopeSensorEventListener;
     private float[] gravityVector;
@@ -29,6 +33,8 @@ public class AndroidSensorHelper extends SensorHelper {
     private long lastGyroscopeTimeStamp;
     private float[] lastDeltaRotationVector;
     private float[] gyroscopeBasedRotationVector;
+    private float[] lastLinearAcceleration;
+    private long lastJumpTimestamp;
 
     private class GravitySensorEventListener implements SensorEventListener {
         @Override
@@ -41,7 +47,7 @@ public class AndroidSensorHelper extends SensorHelper {
             /*
              * event.accuracy, event.sensor
              * event.timestamp : in nanoseconds
-             * event.values : values. 0: x, 1: y, 2: z
+             * event.values : values. 0: x, 1: y, 2: z in m/s^2
              * If the device is at rest, the gravity is in the positive direction, upwards (instead of downwards).
              */
             if (event.values.length == 3) {
@@ -49,6 +55,27 @@ public class AndroidSensorHelper extends SensorHelper {
                 lastGravityTimeStamp = event.timestamp;
             } else {
                 Log.d("GravityEventListener", "Wrong length of event.values");
+            }
+        }
+    }
+
+    private class LinearAccelerationSensorEventListener implements SensorEventListener {
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+            // Nothing to do in our case
+        }
+
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            /*
+             * event.accuracy, event.sensor
+             * event.timestamp : in nanoseconds
+             * event.values : values. 0: x, 1: y, 2: z in m/s^2
+             */
+            if (event.values.length == 3) {
+                System.arraycopy(event.values, 0, lastLinearAcceleration, 0, event.values.length);
+            } else {
+                Log.d("LineaccEventListener", "Wrong length of event.values");
             }
         }
     }
@@ -76,7 +103,7 @@ public class AndroidSensorHelper extends SensorHelper {
             /*
              * event.accuracy, event.sensor
              * event.timestamp: in nanoseconds
-             * event.values: 0 is x, 1 is y, 2 is z
+             * event.values: 0 is x, 1 is y, 2 is z  In rad/s
              */
             if (event.values.length == 3) {
                 System.arraycopy(event.values, 0, gyroscopeVector, 0, event.values.length);
@@ -113,10 +140,12 @@ public class AndroidSensorHelper extends SensorHelper {
         assert sensorManager != null;
 
         this.gravitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+        this.linearAccelerationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         this.rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
         this.gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 
         gravitySensorEventListener = new GravitySensorEventListener();
+        linearAccelerationSensorEventListener = new LinearAccelerationSensorEventListener();
         rotationSensorEventListener = new RotationSensorEventListener();
         gyroscopeSensorEventListener = new GyroscopeSensorEventListener();
 
@@ -127,6 +156,7 @@ public class AndroidSensorHelper extends SensorHelper {
         lastDeltaRotationVector = new float[] {0.0f, 0.0f, 0.0f, 0.0f};
         gyroscopeBasedRotationVector = new float[] {0.0f, 0.0f, 0.0f};
         lastGyroscopeTimeStamp = System.nanoTime();
+        lastLinearAcceleration = new float[] {0.0f, 0.0f, 0.0f};
 
         resumeSensors();
     }
@@ -147,6 +177,7 @@ public class AndroidSensorHelper extends SensorHelper {
     @Override
     public void resumeSensors() {
         sensorManager.registerListener(gravitySensorEventListener, gravitySensor, SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(linearAccelerationSensorEventListener, linearAccelerationSensor, SensorManager.SENSOR_DELAY_GAME);
         sensorManager.registerListener(rotationSensorEventListener, rotationSensor, SensorManager.SENSOR_DELAY_GAME);
         sensorManager.registerListener(gyroscopeSensorEventListener, gyroscopeSensor, SensorManager.SENSOR_DELAY_GAME);
     }
@@ -154,6 +185,7 @@ public class AndroidSensorHelper extends SensorHelper {
     @Override
     public void pauseSensors() {
         sensorManager.unregisterListener(gravitySensorEventListener);
+        sensorManager.unregisterListener(linearAccelerationSensorEventListener);
         sensorManager.unregisterListener(rotationSensorEventListener);
         sensorManager.unregisterListener(gyroscopeSensorEventListener);
     }
@@ -170,6 +202,21 @@ public class AndroidSensorHelper extends SensorHelper {
         ret[0] = -current[0] / gravityMagnitude;
         ret[1] = -current[1] / gravityMagnitude;
         return ret;
+    }
+
+    @Override
+    public boolean hasJumped() {
+        return (gyroscopeVector[0] > 2); // default implementation
+        /*
+        TODO vérifier si ça marche
+        long currentTimestamp = System.currentTimeMillis();
+        if ((currentTimestamp - lastJumpTimestamp) > DELAY_JUMP && Math.abs(gyroscopeVector[0]) > JUMP_MIN_GYROSCOPE) {
+            lastJumpTimestamp = currentTimestamp;
+            return true;
+        } else {
+            return false;
+        }
+        */
     }
 
     @Override

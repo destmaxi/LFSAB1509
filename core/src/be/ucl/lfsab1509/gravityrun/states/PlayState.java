@@ -252,7 +252,7 @@ public class PlayState extends State {
 
     private Obstacle newObstacle(boolean first, int marbleWidth, float position) {
         Obstacle obstacle;
-        switch (2) {
+        switch (random.nextInt(4)) {
             case 0:
                 obstacle = new Hole(position, first, marbleWidth, WIDTH);
                 break;

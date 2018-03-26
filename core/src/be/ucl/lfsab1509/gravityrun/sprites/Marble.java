@@ -12,17 +12,12 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Marble {
 
-    public static final float SQRT2 = (float) Math.sqrt(2);
-
+    private static final float GRAVITY_COMPENSATION = 0.002f;
+    private static final float ACCELERATION_COMPENSATION = 2.0f;
     static final int FRAME_COUNT = 5;
-
-    public static final int MOVEMENT = (int) (GravityRun.HEIGHT / 5);
-    public static final float GYRO_COMPENSATION = 2;
-    public static final float GRAVITY_COMPENSATION = 1.4f;
-    public static final float GYRO_COMPENSATION = 2;
     static final int JUMP_HEIGHT = 600;
     public static final int MOVEMENT = GravityRun.HEIGHT / 5;
-    public static final float SQRT_2 = (float) Math.sqrt(2);
+    public static final float SQRT2 = (float) Math.sqrt(2);
 
     public static int lvl = GravityRun.user.getIndexSelected() + 1;
 
@@ -58,38 +53,61 @@ public class Marble {
         else
             speed = 2f;
 
-        if (Gdx.input.getGyroscopeX() > 2)
-            position.z = JUMP_HEIGHT;
-
-        if (position.z > 0 && !gameOver)
-            position.add(0, 0, -10 * SlowDown.slowDown);
-        else
-            position.z = 0;
-
         if (!gameOver) {
 	    float gyroscopeY = Gdx.input.getGyroscopeY();
             if ((isBlockedOnRight && gyroscopeY > 0) || (isBlockedOnLeft && gyroscopeY < 0))
-                position.add(0, lvl * (MOVEMENT + speed + SlowDown.SLOW_DOWN) * dt, 0);
+                position.add(0, lvl * (MOVEMENT + speed + SlowDown.slowDown) * dt, 0);
             else if ((isBlockedOnLeft && gyroscopeY < 0) && isBlockedOnTop)
                 position.add(0, 0, 0);
             else if ((isBlockedOnRight && gyroscopeY > 0) && isBlockedOnTop)
                 position.add(0, 0, 0);
             else if (isBlockedOnTop)
                 position.add(gyroscopeY * GravityRun.WIDTH / 75, 0, 0);
-            else
-                position.add(gyroscopeY * GravityRun.WIDTH / 75, LVL * (MOVEMENT + speed + SlowDown.SLOW_DOWN) * dt,0);
-	}
 
-	// TODO inclure ce bout de code au sein du bloc précédent
-        if (!gameOver) {
-            // old version : there was a bug with dt not appearing in gyroscope
-            // position.add(GYRO_COMPENSATION * SensorHelper.MAIN.getYGyroscope(),LVL * (MOVEMENT + speed) * dt,0);
-            // FIXME 4 parce que camera etc
-            float positionX = (GravityRun.WIDTH / 4) * (SensorHelper.MAIN.getGravityDirectionVector()[0] * GRAVITY_COMPENSATION + 1);
-            position.add(0, LVL * (MOVEMENT + speed) * dt, 0);
-            position.x = positionX;
+            if (SensorHelper.MAIN.hasJumped())
+                position.z = JUMP_HEIGHT;
+
+            if (position.z > 0)
+                position.add(0, 0, -10 * SlowDown.slowDown);
+            else
+                position.z = 0;
+
+            // TODO corriger ce code pour qu'il utilise de bonnes valeurs
+            float[] acceleration = SensorHelper.MAIN.getGravityDirectionVector();
+
+            System.out.println(position.x + " " + position.y + " " + velocity.x + " " + velocity.y + " " + acceleration[0] + " " + acceleration[1]);
+
+            velocity.add(acceleration[0] * GravityRun.WIDTH * ACCELERATION_COMPENSATION * dt,/*acceleration[1] * GravityRun.WIDTH * ACCELERATION_COMPENSATION * dt*/ 0, 0);
+            //float gyroscopeY = Gdx.input.getGyroscopeY();
+            //float positionX = (GravityRun.WIDTH / 2) * ((SensorHelper.MAIN.getGravityDirectionVector()[0] * GravityRun.WIDTH * GRAVITY_COMPENSATION) + 1);
+
+            // TODO faire en sorte que ce code fasse ce qu'il faut, mais change la vitesse.
+            if ((isBlockedOnRight && velocity.x > 0) || (isBlockedOnLeft && velocity.x < 0)) {
+                velocity.x = 0;
+                //position.add(0, lvl * (MOVEMENT + speed + SlowDown.SLOW_DOWN) * dt, 0);
+            } else if ((isBlockedOnLeft && velocity.x < 0) && isBlockedOnTop) {
+                velocity.x = 0;
+                velocity.y = 0;
+                //position.add(0, 0, 0);
+            } else if ((isBlockedOnRight && velocity.x > 0) && isBlockedOnTop) {
+                velocity.x = 0;
+                velocity.y = 0;
+                //position.add(0, 0, 0);
+            } else if (isBlockedOnTop) {
+                velocity.y = 0;
+                //position.add(0, 0, 0);
+                //position.x = positionX;
+            } else {
+                //position.add(0, lvl * (MOVEMENT + speed + SlowDown.SLOW_DOWN) * dt, 0);
+                //position.x = positionX;
+            }
+
+            // ajout de la vitesse
+            position.add(velocity.x * dt, velocity.y * dt, 0);
+            System.out.println(position.x + " " + position.y + " " + velocity.x + " " + velocity.y);
         }
 
+        // Replacer la bille dans les bords de l'écran, lorsqu'elle est sortie.
         if (position.x < marbleAnimation.getDiameter(position.z) / 2)
             position.x = marbleAnimation.getDiameter(position.z) / 2;
 

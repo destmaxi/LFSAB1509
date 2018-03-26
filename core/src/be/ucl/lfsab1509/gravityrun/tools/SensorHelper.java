@@ -37,8 +37,6 @@ public abstract class SensorHelper {
      */
     public abstract void resumeSensors();
 
-    public abstract float getYGyroscope();
-
     /**
      * Retourne un vecteur de taille 2 représentant la direction de la gravité par rapport à l'appareil.
      * La valeur en 0 est l'accélération normalisée dans l'axe x (horizontal vers la droite pour la majorité des devices),

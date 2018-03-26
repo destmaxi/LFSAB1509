@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -41,8 +42,8 @@ public class PlayState extends State {
     public static boolean isCollideWall = false, gameOver = false;
     public static int collidedWall = 0, score = 0;
 
-    private Array<Obstacle> obstacles;
     private Array<Bonus> bonuses;
+    private Array<Obstacle> obstacles;
     private boolean isClickedPauseButton = false;
     private int scoreBonus = 0;
     private Label scoreLabel;
@@ -50,8 +51,8 @@ public class PlayState extends State {
     private Random random;
     private Skin skin;
     private Stage scoreStage;
-    private Texture gameOverImage, pauseImage;
-    // private Vector2 bg1, bg2;
+    private Texture bg, gameOverImage, pauseImage;
+    private Vector2 bg1, bg2, bg3;
 
     PlayState(GameStateManager gsm, SoundManager soundManager) {
         super(gsm, soundManager);
@@ -77,8 +78,10 @@ public class PlayState extends State {
             WIDTH = 1600;
         Obstacle.OBSTACLE_HEIGHT = WIDTH / 5;
 
-        // bg1 = new Vector2(0, cam.position.y - cam.viewportHeight / 2);
-        // bg2 = new Vector2(0, (cam.position.y - cam.viewportHeight / 2) + bg.getDiameter());
+        bg = new Texture("drawable-" + WIDTH + "/background.png");
+        bg1 = new Vector2((w - bg.getWidth()) / 2, -h / 2);
+        bg2 = new Vector2((w - bg.getWidth()) / 2, -h / 2 + bg.getHeight());
+        bg3 = new Vector2((w - bg.getWidth()) / 2, -h / 2 + 2 * bg.getHeight());
 
         gameOverImage = new Texture("drawable-" + WIDTH + "/gameover.png");
         pauseImage = new Texture("drawable-" + WIDTH + "/pause.png");
@@ -91,6 +94,7 @@ public class PlayState extends State {
             }
         });
 
+        bonuses = new Array<Bonus>();
         obstacles = new Array<Obstacle>();
         marble = new Marble((int) w / 2, 0, WIDTH);
 
@@ -107,12 +111,9 @@ public class PlayState extends State {
         OBSTACLE_SPACING = (int) (1.5f * Obstacle.OBSTACLE_HEIGHT);
         OBSTACLE_COUNT = (int) (1.5f * h / (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT));
 
-
         random = new Random();
         for (int i = 1; i <= OBSTACLE_COUNT; i++)
             obstacles.add(newObstacle(i <= Marble.lvl, marble.getDiameter(), (i + 1) * (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT)));
-
-        bonuses = new Array<Bonus>();
 
         for (int i = 1; i <= OBSTACLE_COUNT; i++) {
             int offset = random.nextInt(OBSTACLE_SPACING - pauseImage.getHeight());
@@ -140,7 +141,7 @@ public class PlayState extends State {
     public void update(float dt) {
         Gdx.input.setInputProcessor(scoreStage);
         handleInput();
-        // updateGround(); //will be usefull when we get a background picture
+        updateGround();
         marble.update(dt, gameOver);
 
         score = (int) (marble.getPosition().y / h * 100) + scoreBonus;
@@ -207,6 +208,10 @@ public class PlayState extends State {
 
         sb.setProjectionMatrix(cam.combined);
 
+        sb.draw(bg, bg1.x, bg1.y);
+        sb.draw(bg, bg2.x, bg2.y);
+        sb.draw(bg, bg3.x, bg3.y);
+
         for (Obstacle obs : obstacles)
             sb.draw(obs.getObstacleTexture(), obs.getPosition().x, obs.getPosition().y);
 
@@ -227,19 +232,9 @@ public class PlayState extends State {
         scoreStage.draw();
     }
 
-    //will be usefull when we get a background picture
-   /* private void updateGround(){
-        if(cam.position.y - (cam.viewportHeight/2) > bg1.y + bg.getHeight())
-            bg1.add(0, bg.getHeight() * 2);
-
-        if(cam.position.y - (cam.viewportHeight/2) > bg2.y + bg.getHeight())
-            bg2.add(0, bg.getHeight() * 2);
-
-    }*/
-
-
     @Override
     public void dispose() {
+        bg.dispose();
         gameOverImage.dispose();
         marble.dispose();
         pauseImage.dispose();
@@ -286,8 +281,18 @@ public class PlayState extends State {
             default:
                 bonus = null;
         }
-
         return bonus;
+    }
+
+    private void updateGround() {
+        if (cam.position.y - h / 2 > bg1.y + bg.getHeight())
+            bg1.add(0, bg.getHeight() * 3);
+
+        if (cam.position.y - h / 2 > bg2.y + bg.getHeight())
+            bg2.add(0, bg.getHeight() * 3);
+
+        if (cam.position.y - h / 2 > bg3.y + bg.getHeight())
+            bg3.add(0, bg.getHeight() * 3);
     }
 
 }

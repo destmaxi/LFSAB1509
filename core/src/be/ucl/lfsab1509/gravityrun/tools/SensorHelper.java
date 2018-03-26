@@ -51,6 +51,15 @@ public abstract class SensorHelper {
      */
     public abstract float[] getGravityDirectionVector();
 
+    /**
+     * Retourne true si l'utilisateur a fait sauté la bille dans les quelques millisecondes précédentes, false sinon.
+     * Lors d'un saut, seul le premier appel à cette fonction retournera true, les suivants retourneront nécessairement false, jusqu'au prochain saut.
+     * Il est possible qu'un délai soit présent entre le saut détecté et le prochain saut qui pourra être détecté et qui sera reporté.
+     *
+     * @return true si un saut a été détecté et n'a pas encore été rapporté, false sinon.
+     */
+    public abstract boolean hasJumped();
+
     public abstract void setOrientationSensorType(OrientationSensorType type);
 
     public abstract void setGyroscopeSensorType(GyroscopeSensorType type);

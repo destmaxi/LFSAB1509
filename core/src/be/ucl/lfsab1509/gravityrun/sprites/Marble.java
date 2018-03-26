@@ -55,13 +55,13 @@ public class Marble {
             position.z = JUMP_HEIGHT;
 
         if (position.z > 0 && !gameOver)
-            position.add(0, 0, -10);
+            position.add(0, 0, -10 * SlowDown.slowDown);
         else
             position.z = 0;
 
         if (!gameOver) {
             if ((isBlockedOnRight && Gdx.input.getGyroscopeY() > 0) || (isBlockedOnLeft && Gdx.input.getGyroscopeY() < 0))
-                position.add(0, lvl * (MOVEMENT * speed + SlowDown.SLOW_DOWN) * dt, 0);
+                position.add(0, lvl * (MOVEMENT * speed * SlowDown.slowDown) * dt, 0);
             else if ((isBlockedOnLeft && Gdx.input.getGyroscopeY() < 0) && isBlockedOnTop)
                 position.add(0, 0, 0);
             else if ((isBlockedOnRight && Gdx.input.getGyroscopeY() > 0) && isBlockedOnTop)
@@ -69,7 +69,7 @@ public class Marble {
             else if (isBlockedOnTop)
                 position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, 0, 0);
             else
-                position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, lvl * (MOVEMENT * speed + SlowDown.SLOW_DOWN) * dt, 0);
+                position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, lvl * (MOVEMENT * speed * SlowDown.slowDown) * dt, 0);
         }
 
         if (position.x < marbleAnimation.getDiameter(position.z) / 2)

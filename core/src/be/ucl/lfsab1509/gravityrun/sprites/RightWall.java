@@ -10,9 +10,12 @@ import com.badlogic.gdx.math.Vector2;
 
 public class RightWall extends Obstacle {
 
+    private boolean wait;
+
     public RightWall(float y, boolean first, int marbleWidth, int sw) {
         super();
 
+        wait = false;
         obstacleTexture = new Texture("drawable-" + sw + "/wall.png");
         position = first
                 ? new Vector2(GravityRun.WIDTH - obstacleTexture.getWidth(), y)
@@ -31,7 +34,15 @@ public class RightWall extends Obstacle {
         float rectX0 = position.x;
         float rectY0 = position.y;
 
-        if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds) && !Invincible.isInvicible) {
+        if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds) && Invincible.inWall) {
+            wait = true;
+        }
+        else if (wait) {
+            wait = false;
+            Invincible.inWall = false;
+        }
+
+        if (!wait && !Invincible.isInvicible && !Invincible.inWall && Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
             if (marbleCy < rectY0) {
                 marble.setBlockedOnTop(true);
                 PlayState.isCollideWall = true;

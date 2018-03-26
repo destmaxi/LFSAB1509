@@ -13,6 +13,8 @@ import com.badlogic.gdx.math.Vector3;
 public class Marble {
 
     private static final float GRAVITY_COMPENSATION = 0.002f;
+    private static final float FRICTION_ACCELERATION = 1;
+    private static final float VELOCITY_FACTOR = 100.0f;
     private static final float ACCELERATION_COMPENSATION = 2.0f;
     static final int FRAME_COUNT = 5;
     static final int JUMP_HEIGHT = 600;
@@ -73,13 +75,26 @@ public class Marble {
                 position.z = 0;
 
             // TODO corriger ce code pour qu'il utilise de bonnes valeurs
-            float[] acceleration = SensorHelper.MAIN.getGravityDirectionVector();
+            float[] gravityAcceleration = SensorHelper.MAIN.getGravityDirectionVector();
 
-            System.out.println(position.x + " " + position.y + " " + velocity.x + " " + velocity.y + " " + acceleration[0] + " " + acceleration[1]);
+            // Première possiblilité (en commentaire) : on ajoute un facteur de correction à l'accélération, qui dépend de la vitesse actuelle
+            gravityAcceleration[0] *= GravityRun.WIDTH * ACCELERATION_COMPENSATION; // * (1 - velocity.x / VELOCITY_FACTOR);
+            gravityAcceleration[1] *= 0; //GravityRun.WIDTH * ACCELERATION_COMPENSATION;
 
-            velocity.add(acceleration[0] * GravityRun.WIDTH * ACCELERATION_COMPENSATION * dt,/*acceleration[1] * GravityRun.WIDTH * ACCELERATION_COMPENSATION * dt*/ 0, 0);
-            //float gyroscopeY = Gdx.input.getGyroscopeY();
-            //float positionX = (GravityRun.WIDTH / 2) * ((SensorHelper.MAIN.getGravityDirectionVector()[0] * GravityRun.WIDTH * GRAVITY_COMPENSATION) + 1);
+            // Deuxième possibilité : on double (ou autre facteur) l'accélération lorsqu'elle est dans l'autre sens que la vitesse, pour revenir plus vite à une vitesse de 0.
+            /*
+            if (velocity.x >= 0 && gravityAcceleration[0] <= 0)
+                gravityAcceleration[0] *= 2;
+            if (velocity.x <= 0 && gravityAcceleration[0] >= 0)
+                gravityAcceleration[0] *= 2;
+            */
+
+            System.out.println(position.x + " " + position.y + " " + velocity.x + " " + velocity.y + " " + gravityAcceleration[0] + " " + gravityAcceleration[1]);
+
+            // Troisième possibilité : on ralentit la boule en appliquant de la friction, avec la possibilité qu'elle soit dépendante de la vitesse ou pas.
+            // Pour le moment, il me semble qu'il s'agit de la meilleure des possibilités
+            velocity.add((gravityAcceleration[0] /*- velocity.x * FRICTION_ACCELERATION*/) * dt, gravityAcceleration[1] * dt, 0);
+            velocity.y = lvl * (MOVEMENT * speed + SlowDown.slowDown); // TODO adapter au mouvement de la caméra.
 
             // TODO faire en sorte que ce code fasse ce qu'il faut, mais change la vitesse.
             if ((isBlockedOnRight && velocity.x > 0) || (isBlockedOnLeft && velocity.x < 0)) {

@@ -9,9 +9,14 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Invincible extends Bonus {
 
-    public Invincible(float y, int sw) {
+    static boolean isInvicible = false;
+    private float collideTime;
+    private int offset;
+
+    public Invincible(float y, int sw, int offset) {
         super();
 
+        this.offset = offset;
         bonusTexture = new Texture("drawable-" + sw + "/invincible.png");
         position = new Vector2(rand.nextInt(GravityRun.WIDTH - bonusTexture.getWidth()), y);
         bounds = new Rectangle(position.x, position.y, bonusTexture.getWidth(), bonusTexture.getHeight());
@@ -25,12 +30,31 @@ public class Invincible extends Bonus {
 
     @Override
     public boolean collides(Marble marble) {
-        return Intersector.overlaps(marble.getBounds(), (Rectangle) bounds);
+        if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
+            isInvicible = true;
+            collideTime = 0;
+            return true;
+        }
+
+        return false;
     }
 
     @Override
     public int getOffset() {
-        return 0;
+        return offset;
     }
 
+    @Override
+    public void update(float dt) {
+        if (isInvicible) {
+            collideTime += dt;
+            System.out.println("dt = " + dt);
+            System.out.println("collideTime = " + collideTime);
+        }
+
+        if (collideTime >= 3) {
+            isInvicible = false;
+            collideTime = 0;
+        }
+    }
 }

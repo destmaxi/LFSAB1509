@@ -27,6 +27,8 @@ public abstract class Bonus {
 
     public abstract void reposition(float y);
 
+    public abstract void update(float dt);
+
     public abstract boolean collides(Marble marble);
 
     public void dispose() {

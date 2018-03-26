@@ -36,4 +36,8 @@ public class ScoreBonus extends Bonus {
         return offset;
     }
 
+    @Override
+    public void update(float dt) {
+
+    }
 }

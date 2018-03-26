@@ -9,12 +9,16 @@ import com.badlogic.gdx.math.Vector2;
 
 public class SlowDown extends Bonus {
 
-    static final int SLOW_DOWN = 0;
+    public static float slowDown = 1f;
 
-    public SlowDown(float y, int sw) {
+    private float collideTime;
+    private int offset;
+
+    public SlowDown(float y, int sw, int offset) {
         super();
 
-        bonusTexture = new Texture("drawable-" + sw + "/invincible.png");
+        this.offset = offset;
+        bonusTexture = new Texture("drawable-" + sw + "/slowdown.png");
         position = new Vector2(rand.nextInt(GravityRun.WIDTH - bonusTexture.getWidth()), y);
         bounds = new Rectangle(position.x, position.y, bonusTexture.getWidth(), bonusTexture.getHeight());
     }
@@ -27,12 +31,29 @@ public class SlowDown extends Bonus {
 
     @Override
     public boolean collides(Marble marble) {
-        return Intersector.overlaps(marble.getBounds(), (Rectangle) bounds);
+        if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
+            slowDown = .5f;
+            collideTime = 0;
+            return true;
+        }
+
+        return false;
     }
 
     @Override
     public int getOffset() {
-        return 0;
+        return offset;
     }
 
+    @Override
+    public void update(float dt) {
+        if (slowDown == .5f)
+            collideTime += dt;
+
+        if (collideTime >= 3) {
+            collideTime = 0;
+            slowDown = 1f;
+        }
+
+    }
 }

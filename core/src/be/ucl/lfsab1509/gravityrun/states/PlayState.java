@@ -3,12 +3,14 @@ package be.ucl.lfsab1509.gravityrun.states;
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.sprites.Bonus;
 import be.ucl.lfsab1509.gravityrun.sprites.Hole;
+import be.ucl.lfsab1509.gravityrun.sprites.Invincible;
 import be.ucl.lfsab1509.gravityrun.sprites.LargeHole;
 import be.ucl.lfsab1509.gravityrun.sprites.LeftWall;
 import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import be.ucl.lfsab1509.gravityrun.sprites.Obstacle;
 import be.ucl.lfsab1509.gravityrun.sprites.RightWall;
 import be.ucl.lfsab1509.gravityrun.sprites.ScoreBonus;
+import be.ucl.lfsab1509.gravityrun.sprites.SlowDown;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
@@ -114,7 +116,7 @@ public class PlayState extends State {
 
         for (int i = 1; i <= OBSTACLE_COUNT; i++) {
             int offset = random.nextInt(OBSTACLE_SPACING - pauseImage.getHeight());
-            bonuses.add(new ScoreBonus((i + 1) * (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT) + Obstacle.OBSTACLE_HEIGHT + offset, WIDTH, offset));
+            bonuses.add(newBonus((i + 1) * (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT) + Obstacle.OBSTACLE_HEIGHT + offset, offset));
         }
 
         cam.position.y = marble.getPosition().y + 80;
@@ -145,15 +147,17 @@ public class PlayState extends State {
         scoreLabel.setText(string.format("score", score));
 
         if (!gameOver)
-            cam.position.add(0, Marble.lvl * Marble.MOVEMENT * marble.speed * dt, 0);
+            cam.position.add(0, Marble.lvl * Marble.MOVEMENT * marble.speed * SlowDown.slowDown * dt, 0);
 
         for (int i = 0; i < bonuses.size; i++) {
             Bonus bonus = bonuses.get(i);
+            bonus.update(dt);
+
             int offset = random.nextInt(OBSTACLE_SPACING - pauseImage.getHeight());
 
             if ((cam.position.y - cam.viewportHeight / 2) >= bonus.getPosition().y + bonus.getObstacleTexture().getHeight()) {
                 bonuses.get(i).dispose();
-                bonuses.set(i, new ScoreBonus(bonus.getPosition().y - bonus.getOffset() + offset + (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT) * OBSTACLE_COUNT, WIDTH, offset));
+                bonuses.set(i, newBonus(bonus.getPosition().y - bonus.getOffset() + offset + (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT) * OBSTACLE_COUNT, offset));
             }
 
             if (bonuses.get(i).collides(marble)) {
@@ -248,12 +252,12 @@ public class PlayState extends State {
 
     private Obstacle newObstacle(boolean first, int marbleWidth, float position) {
         Obstacle obstacle;
-        switch (random.nextInt(4)) {
+        switch (2) {
             case 0:
                 obstacle = new Hole(position, first, marbleWidth, WIDTH);
                 break;
             case 1:
-                obstacle = new LargeHole(position, first, marbleWidth, WIDTH);
+                obstacle = new LargeHole(position, WIDTH);
                 break;
             case 2:
                 obstacle = new LeftWall(position, first, marbleWidth, WIDTH);
@@ -265,6 +269,25 @@ public class PlayState extends State {
                 obstacle = null;
         }
         return obstacle;
+    }
+
+    private Bonus newBonus(float position, int offset) {
+        Bonus bonus;
+        switch (random.nextInt(3)) {
+            case 0:
+                bonus = new ScoreBonus(position, WIDTH, offset);
+                break;
+            case 1:
+                bonus = new SlowDown(position, WIDTH, offset);
+                break;
+            case 2:
+                bonus = new Invincible(position, WIDTH, offset);
+                break;
+            default:
+                bonus = null;
+        }
+
+        return bonus;
     }
 
 }

@@ -9,7 +9,9 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Invincible extends Bonus {
 
-    public static boolean isInvicible = false, inWall = false;
+    public static boolean isInvincible = false, inWall = false;
+    public static int n = 0;
+
     private float collideTime;
     private int offset;
 
@@ -25,8 +27,9 @@ public class Invincible extends Bonus {
     @Override
     public boolean collides(Marble marble) {
         if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
-            isInvicible = true;
+            isInvincible = true;
             collideTime = 0;
+            n++;
             return true;
         }
         return false;
@@ -47,10 +50,12 @@ public class Invincible extends Bonus {
         collideTime += dt;
 
         if (collideTime >= 3) {
-            System.out.println("invincible timed over");
-            isInvicible = false;
-            inWall = true;
-            //collideTime = 0;
+            if (n <= 1) {
+                isInvincible = false;
+                inWall = true;
+                n = 0;
+            } else
+                n--;
         }
     }
 }

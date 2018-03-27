@@ -58,8 +58,9 @@ public class PlayState extends State {
         if (GravityRun.scoreList == null)
             GravityRun.scoreList = new ArrayList<Integer>();
         SlowDown.slowDown = 1f;
-        Invincible.isInvicible = false;
+        Invincible.isInvincible = false;
         Invincible.inWall = false;
+        Invincible.n = 0;
         gameOver = false;
         isCollideWall = false;
         scoreBonus = 0;
@@ -204,7 +205,7 @@ public class PlayState extends State {
                 soundManager.marbleBreak();
         }
 
-        if (!Invincible.isInvicible && (marble.getPosition().x <= 0 || marble.getPosition().x >= (cam.viewportWidth - marble.getDiameter()) || marble.getPosition().y <= cam.position.y - h / 2)) {
+        if (!Invincible.isInvincible && (marble.getPosition().x <= 0 || marble.getPosition().x >= (cam.viewportWidth - marble.getDiameter()) || marble.getPosition().y <= cam.position.y - h / 2)) {
             if (!gameOver)
                 soundManager.marbleBreak();
             gameOver = true;
@@ -260,7 +261,7 @@ public class PlayState extends State {
 
     private Obstacle newObstacle(boolean first, int marbleWidth, float position) {
         Obstacle obstacle;
-        switch (random.nextInt(6)) {
+        switch (2) {
             case 0:
                 obstacle = new Hole(position, first, marbleWidth, WIDTH);
                 break;
@@ -278,7 +279,7 @@ public class PlayState extends State {
 
     private Bonus newBonus(float position, int offset) {
         Bonus bonus;
-        switch (random.nextInt(6)) {
+        switch (0) {
             case 0:
                 bonus = new Invincible(position, WIDTH, offset);
                 break;

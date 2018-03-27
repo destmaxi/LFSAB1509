@@ -44,7 +44,7 @@ public class Wall extends Obstacle {
             Invincible.inWall = false;
         }
 
-        if (!wait && !Invincible.isInvicible && Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
+        if (!wait && !Invincible.isInvincible && Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
 
             if (marbleCy < rectY0) {
                 marble.setBlockedOnTop(true);

@@ -100,8 +100,10 @@ public class FirstState extends State {
             }
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            disposeSkins();
             Gdx.app.exit();
+        }
     }
 
     @Override
@@ -119,10 +121,13 @@ public class FirstState extends State {
     @Override
     public void dispose() {
         // TODO dispose of skins
-        aaronScoreSkin.dispose();
-        titleSkin.dispose();
         stage.dispose();
+    }
+
+    private void disposeSkins() {
+        aaronScoreSkin.dispose();
         tableSkin.dispose();
+        titleSkin.dispose();
     }
 
     private void initUser() {

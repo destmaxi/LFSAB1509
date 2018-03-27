@@ -1,7 +1,9 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
+import be.ucl.lfsab1509.gravityrun.sprites.Invincible;
 import be.ucl.lfsab1509.gravityrun.sprites.Marble;
+import be.ucl.lfsab1509.gravityrun.sprites.SlowDown;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
@@ -90,8 +92,6 @@ public class GameOverState extends State {
     @Override
     protected void handleInput() {
         if (isClickedReplayButton) {
-            PlayState.gameOver = false;
-            PlayState.isCollideWall = false;
             soundManager.replayGame();
             gsm.set(new PlayState(gsm, soundManager));
         }
@@ -111,11 +111,6 @@ public class GameOverState extends State {
 
             GravityRun.pref.put(GravityRun.user.toMap());
             GravityRun.pref.flush();
-
-            GravityRun.scoreList = null;
-
-            PlayState.gameOver = false;
-            PlayState.isCollideWall = false;
             
             gsm.pop();
         }

@@ -50,7 +50,7 @@ public class SlowDown extends Bonus {
         if (slowDown == .5f)
             collideTime += dt;
 
-        if (collideTime >= 3) {
+        if (collideTime >= 5) {
             collideTime = 0;
             slowDown = 1f;
         }

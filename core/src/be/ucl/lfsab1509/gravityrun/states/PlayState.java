@@ -57,8 +57,12 @@ public class PlayState extends State {
     PlayState(GameStateManager gsm, SoundManager soundManager) {
         super(gsm, soundManager);
 
-        if (GravityRun.scoreList == null)
-            GravityRun.scoreList = new ArrayList<Integer>();
+        GravityRun.scoreList = new ArrayList<Integer>();
+        SlowDown.slowDown = 1f;
+        Invincible.isInvicible = false;
+        Invincible.inWall = false;
+        gameOver = false;
+        isCollideWall = false;
 
         cam.setToOrtho(false, w, h);
 

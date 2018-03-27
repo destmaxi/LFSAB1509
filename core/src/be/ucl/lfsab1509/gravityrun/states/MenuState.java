@@ -49,7 +49,7 @@ public class MenuState extends State {
                 isClickedStartGameButton = true;
             }
         });
-        Label hyLabel = new Label(string.format("hello") + GravityRun.pref.getString("username"), tableSkin);
+        Label hyLabel = new Label(string.format("hello", GravityRun.pref.getString("username")), tableSkin);
         hyLabel.setWrap(true);
         hyLabel.setWidth(cw);
         hyLabel.setAlignment(Align.center);

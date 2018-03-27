@@ -247,17 +247,17 @@ public class PlayState extends State {
 
     private Obstacle newObstacle(boolean first, int marbleWidth, float position) {
         Obstacle obstacle;
-        switch (random.nextInt(4)) {
+        switch (random.nextInt(6)) {
             case 0:
                 obstacle = new Hole(position, first, marbleWidth, WIDTH);
                 break;
             case 1:
                 obstacle = new LargeHole(position, WIDTH);
                 break;
-            case 2:
+            case 2: case 3:
                 obstacle = new LeftWall(position, first, marbleWidth, WIDTH);
                 break;
-            case 3:
+            case 4: case 5:
                 obstacle = new RightWall(position, first, marbleWidth, WIDTH);
                 break;
             default:
@@ -268,15 +268,15 @@ public class PlayState extends State {
 
     private Bonus newBonus(float position, int offset) {
         Bonus bonus;
-        switch (random.nextInt(3)) {
+        switch (random.nextInt(6)) {
             case 0:
+                bonus = new Invincible(position, WIDTH, offset);
+                break;
+            case 1: case 2: case 3: case 4:
                 bonus = new ScoreBonus(position, WIDTH, offset);
                 break;
-            case 1:
+            case 5:
                 bonus = new SlowDown(position, WIDTH, offset);
-                break;
-            case 2:
-                bonus = new Invincible(position, WIDTH, offset);
                 break;
             default:
                 bonus = null;

@@ -25,8 +25,6 @@ public abstract class Bonus {
         return position;
     }
 
-    public abstract void reposition(float y);
-
     public abstract void update(float dt);
 
     public abstract boolean collides(Marble marble);
@@ -34,6 +32,8 @@ public abstract class Bonus {
     public void dispose() {
         bonusTexture.dispose();
     }
+
+    public abstract boolean isFinished();
 
     public abstract int getOffset();
 

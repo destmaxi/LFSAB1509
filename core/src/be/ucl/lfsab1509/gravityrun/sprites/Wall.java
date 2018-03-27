@@ -18,20 +18,20 @@ public class Wall extends Obstacle {
         wait = false;
         obstacleTexture = new Texture("drawable-" + sw + "/wall.png");
 
-        position = rand.nextBoolean() // right wall ?
-                ? first
-                ? new Vector2(0, y)
-                : new Vector2(rand.nextInt(GravityRun.WIDTH - 3 * marbleWidth) - obstacleTexture.getWidth(), y)
+        position = rand.nextBoolean()   // right wall ?
+                ? first                 // first element ? (easier)
+                   ? new Vector2(0, y)
+                    : new Vector2(-rand.nextInt(2 * marbleWidth), y)
                 : first
-                ? new Vector2(GravityRun.WIDTH - obstacleTexture.getWidth(), y)
-                : new Vector2(rand.nextInt(GravityRun.WIDTH - 3 * marbleWidth) + 3 * marbleWidth, y);
+                    ? new Vector2(GravityRun.WIDTH - obstacleTexture.getWidth(), y)
+                    : new Vector2(-rand.nextInt(2 * marbleWidth) + GravityRun.WIDTH / 2, y);
         bounds = new Rectangle(position.x, position.y, obstacleTexture.getWidth(), obstacleTexture.getHeight());
     }
 
     @Override
     public void collides(Marble marble) {
         float marbleCx = marble.getPosition().x + marble.getDiameter() / 2;
-        float marbleCy = marble.getPosition().y + (marble.getDiameter() / MarbleAnimation.FRAME_COUNT) / 2;
+        float marbleCy = marble.getPosition().y + marble.getDiameter() / MarbleAnimation.FRAME_COUNT / 2;
 
         float rectY0 = position.y;
         float rectX0 = position.x;
@@ -39,12 +39,12 @@ public class Wall extends Obstacle {
 
         if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds) && Invincible.inWall) {
             wait = true;
-        } else if (wait) {
+        } else {
             wait = false;
             Invincible.inWall = false;
         }
 
-        if (!wait && !Invincible.isInvicible && !Invincible.inWall && Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
+        if (!wait && !Invincible.isInvicible && Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
 
             if (marbleCy < rectY0) {
                 marble.setBlockedOnTop(true);

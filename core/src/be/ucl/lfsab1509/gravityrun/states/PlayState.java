@@ -39,13 +39,12 @@ public class PlayState extends State {
     private static int WIDTH;
 
     public static boolean isCollideWall = false, gameOver = false;
-    public static int collidedWall = 0, score = 0;
+    public static int collidedWall = 0, score = 0, scoreBonus = 0;
 
-    private Array<Bonus> bonuses;
+    private Array<Bonus> bonuses, catchedBonuses;
     private Array<Obstacle> obstacles;
     private Array<Vector2> bgs;
     private boolean isClickedPauseButton = false;
-    private int scoreBonus = 0;
     private Label scoreLabel;
     private Marble marble;
     private Random random;
@@ -62,6 +61,7 @@ public class PlayState extends State {
         Invincible.inWall = false;
         gameOver = false;
         isCollideWall = false;
+        scoreBonus = 0;
 
         cam.setToOrtho(false, w, h);
 
@@ -98,6 +98,7 @@ public class PlayState extends State {
         });
 
         bonuses = new Array<Bonus>();
+        catchedBonuses = new Array<Bonus>();
         obstacles = new Array<Obstacle>();
         marble = new Marble((int) w / 2, 0, WIDTH);
 
@@ -154,9 +155,17 @@ public class PlayState extends State {
         if (!gameOver)
             cam.position.add(0, Marble.lvl * Marble.MOVEMENT * marble.speed * SlowDown.slowDown * dt, 0);
 
+        for (int i = 0; i < catchedBonuses.size; i++) {
+            Bonus bonus = catchedBonuses.get(i);
+            bonus.update(dt);
+            if (bonus.isFinished()) {
+                bonus.dispose();
+                catchedBonuses.removeIndex(i--);
+            }
+        }
+
         for (int i = 0; i < bonuses.size; i++) {
             Bonus bonus = bonuses.get(i);
-            bonus.update(dt);
 
             int offset = random.nextInt(OBSTACLE_SPACING - pauseImage.getHeight());
 
@@ -165,11 +174,11 @@ public class PlayState extends State {
                 bonuses.set(i, newBonus(bonus.getPosition().y - bonus.getOffset() + offset + (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT) * OBSTACLE_COUNT, offset));
             }
 
-            if (bonuses.get(i).collides(marble)) {
-                bonuses.add(new ScoreBonus(bonus.getPosition().y - bonus.getOffset() + offset + (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT) * OBSTACLE_COUNT, WIDTH, offset));
-                bonuses.get(i).dispose();
-                bonuses.removeIndex(i);
-                scoreBonus += 100;
+            if (bonus.collides(marble)) {
+                catchedBonuses.add(bonus);
+                bonuses.set(i, new ScoreBonus(bonus.getPosition().y - bonus.getOffset() + offset + (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT) * OBSTACLE_COUNT, WIDTH, offset));
+                //bonuses.removeIndex(i);
+                //scoreBonus += 100;
                 soundManager.gotBonus();
             }
         }

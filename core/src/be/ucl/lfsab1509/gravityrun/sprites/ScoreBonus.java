@@ -2,6 +2,7 @@ package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 
+import be.ucl.lfsab1509.gravityrun.states.PlayState;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
@@ -21,14 +22,14 @@ public class ScoreBonus extends Bonus {
     }
 
     @Override
-    public void reposition(float y) {
-        position = new Vector2(rand.nextInt(GravityRun.WIDTH - bonusTexture.getWidth()), y);
-        bounds = new Rectangle(position.x, position.y, bonusTexture.getWidth(), bonusTexture.getHeight());
+    public boolean collides(Marble marble) {
+        return Intersector.overlaps(marble.getBounds(), (Rectangle) bounds);
     }
 
     @Override
-    public boolean collides(Marble marble) {
-        return Intersector.overlaps(marble.getBounds(), (Rectangle) bounds);
+    public boolean isFinished() {
+        PlayState.scoreBonus += 100;
+        return true;
     }
 
     @Override

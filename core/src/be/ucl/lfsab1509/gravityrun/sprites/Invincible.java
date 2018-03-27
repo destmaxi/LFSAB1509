@@ -23,20 +23,18 @@ public class Invincible extends Bonus {
     }
 
     @Override
-    public void reposition(float y) {
-        position = new Vector2(rand.nextInt(GravityRun.WIDTH - bonusTexture.getWidth()), y);
-        bounds = new Rectangle(position.x, position.y, bonusTexture.getWidth(), bonusTexture.getHeight());
-    }
-
-    @Override
     public boolean collides(Marble marble) {
         if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
             isInvicible = true;
             collideTime = 0;
             return true;
         }
-
         return false;
+    }
+
+    @Override
+    public boolean isFinished() {
+        return collideTime >= 3;
     }
 
     @Override
@@ -46,15 +44,13 @@ public class Invincible extends Bonus {
 
     @Override
     public void update(float dt) {
-        if (isInvicible) {
-            collideTime += dt;
-        }
+        collideTime += dt;
 
         if (collideTime >= 3) {
             System.out.println("invincible timed over");
             isInvicible = false;
             inWall = true;
-            collideTime = 0;
+            //collideTime = 0;
         }
     }
 }

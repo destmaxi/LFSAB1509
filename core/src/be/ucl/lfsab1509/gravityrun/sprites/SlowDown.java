@@ -24,20 +24,18 @@ public class SlowDown extends Bonus {
     }
 
     @Override
-    public void reposition(float y) {
-        position = new Vector2(rand.nextInt(GravityRun.WIDTH - bonusTexture.getWidth()), y);
-        bounds = new Rectangle(position.x, position.y, bonusTexture.getWidth(), bonusTexture.getHeight());
-    }
-
-    @Override
     public boolean collides(Marble marble) {
         if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
             slowDown = .5f;
             collideTime = 0;
             return true;
         }
-
         return false;
+    }
+
+    @Override
+    public boolean isFinished() {
+        return collideTime >= 5;
     }
 
     @Override
@@ -54,6 +52,5 @@ public class SlowDown extends Bonus {
             collideTime = 0;
             slowDown = 1f;
         }
-
     }
 }

@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Invincible extends Bonus {
 
-    static boolean isInvicible = true, inWall = false;
+    public static boolean isInvicible = false, inWall = false;
     private float collideTime;
     private int offset;
 
@@ -50,7 +50,7 @@ public class Invincible extends Bonus {
             collideTime += dt;
         }
 
-        if (collideTime >= 3.4) {
+        if (collideTime >= 3) {
             System.out.println("invincible timed over");
             isInvicible = false;
             inWall = true;

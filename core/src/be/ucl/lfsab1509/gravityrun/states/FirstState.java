@@ -142,7 +142,7 @@ public class FirstState extends State {
         GravityRun.user.setBeginner(new ArrayList<Integer>());
         GravityRun.user.setInter(new ArrayList<Integer>());
         GravityRun.user.setExpert(new ArrayList<Integer>());
-        GravityRun.user.setIndexSelected(0);
+        GravityRun.user.setIndexSelected(1);
         GravityRun.user.setHighScore(arrayList);
 
         GravityRun.pref.put(GravityRun.user.toMap());

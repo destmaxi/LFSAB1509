@@ -104,16 +104,12 @@ public class OptionState extends State {
         listBox.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (listBox.getSelected().equals(string.format("beginner"))) {
-                    Marble.lvl = 1;
+                if (listBox.getSelected().equals(string.format("beginner")))
                     GravityRun.user.setIndexSelected(0);
-                } else if (listBox.getSelected().equals(string.format("inter"))) {
-                    Marble.lvl = 2;
+                else if (listBox.getSelected().equals(string.format("inter")))
                     GravityRun.user.setIndexSelected(1);
-                } else if (listBox.getSelected().equals(string.format("expert"))) {
-                    Marble.lvl = 3;
+                else if (listBox.getSelected().equals(string.format("expert")))
                     GravityRun.user.setIndexSelected(2);
-                }
                 listBox.setVisible(false);
             }
         });

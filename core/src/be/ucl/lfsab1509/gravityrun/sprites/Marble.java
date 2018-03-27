@@ -18,7 +18,7 @@ public class Marble {
     public static final int MOVEMENT = GravityRun.HEIGHT / 5;
     public static final float SQRT_2 = (float) Math.sqrt(2);
 
-    public static int lvl = GravityRun.user.getIndexSelected() + 1;
+    public static int lvl;
 
     public boolean colliding = false;
     private boolean isBlockedOnLeft = false, isBlockedOnRight = false, isBlockedOnTop = false;
@@ -34,6 +34,7 @@ public class Marble {
         marble = new Texture("drawable-" + sw + "/marbles.png");
         marbleAnimation = new MarbleAnimation(marble, sw);
         bounds = new Circle(x, y, marbleAnimation.getDiameter(position.z) / 2);
+        lvl = GravityRun.user.getIndexSelected() + 1;
     }
 
     public void update(float dt, boolean gameOver) {

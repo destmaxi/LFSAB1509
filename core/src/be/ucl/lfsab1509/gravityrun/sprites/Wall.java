@@ -8,16 +8,21 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class RightWall extends Obstacle {
+public class Wall extends Obstacle {
 
     private boolean wait;
 
-    public RightWall(float y, boolean first, int marbleWidth, int sw) {
+    public Wall(float y, boolean first, int marbleWidth, int sw) {
         super();
 
         wait = false;
         obstacleTexture = new Texture("drawable-" + sw + "/wall.png");
-        position = first
+
+        position = rand.nextBoolean() // right wall ?
+                ? first
+                ? new Vector2(0, y)
+                : new Vector2(rand.nextInt(GravityRun.WIDTH - 3 * marbleWidth) - obstacleTexture.getWidth(), y)
+                : first
                 ? new Vector2(GravityRun.WIDTH - obstacleTexture.getWidth(), y)
                 : new Vector2(rand.nextInt(GravityRun.WIDTH - 3 * marbleWidth) + 3 * marbleWidth, y);
         bounds = new Rectangle(position.x, position.y, obstacleTexture.getWidth(), obstacleTexture.getHeight());
@@ -25,45 +30,47 @@ public class RightWall extends Obstacle {
 
     @Override
     public void collides(Marble marble) {
+        float marbleCx = marble.getPosition().x + marble.getDiameter() / 2;
+        float marbleCy = marble.getPosition().y + (marble.getDiameter() / MarbleAnimation.FRAME_COUNT) / 2;
 
-        float marbleX0 = marble.getPosition().x;
-        float marbleY0 = marble.getPosition().y;
-        float marbleCx = marbleX0 + marble.getDiameter() / 2;
-        float marbleCy = marbleY0 + (marble.getDiameter() / MarbleAnimation.FRAME_COUNT)/2;
-
-        float rectX0 = position.x;
         float rectY0 = position.y;
+        float rectX0 = position.x;
+        float rectX1 = position.x + obstacleTexture.getWidth();
 
         if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds) && Invincible.inWall) {
             wait = true;
-        }
-        else if (wait) {
+        } else if (wait) {
             wait = false;
             Invincible.inWall = false;
         }
 
         if (!wait && !Invincible.isInvicible && !Invincible.inWall && Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
+
             if (marbleCy < rectY0) {
                 marble.setBlockedOnTop(true);
                 PlayState.isCollideWall = true;
-            }
-            else {
+            } else
                 marble.setBlockedOnTop(false);
-            }
+
+            if (marbleCx > rectX1) {
+                marble.setBlockedOnLeft(true);
+                PlayState.isCollideWall = true;
+            } else
+                marble.setBlockedOnLeft(false);
 
             if (marbleCx < rectX0) {
                 marble.setBlockedOnRight(true);
                 PlayState.isCollideWall = true;
-            }
-            else {
+            } else
                 marble.setBlockedOnRight(false);
-            }
-        }
-        else {
+
+        } else if (!wait) {
             PlayState.isCollideWall = false;
             marble.setBlockedOnTop(false);
+            marble.setBlockedOnLeft(false);
             marble.setBlockedOnRight(false);
         }
+
     }
 
 }

@@ -5,10 +5,9 @@ import be.ucl.lfsab1509.gravityrun.sprites.Bonus;
 import be.ucl.lfsab1509.gravityrun.sprites.Hole;
 import be.ucl.lfsab1509.gravityrun.sprites.Invincible;
 import be.ucl.lfsab1509.gravityrun.sprites.LargeHole;
-import be.ucl.lfsab1509.gravityrun.sprites.LeftWall;
+import be.ucl.lfsab1509.gravityrun.sprites.Wall;
 import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import be.ucl.lfsab1509.gravityrun.sprites.Obstacle;
-import be.ucl.lfsab1509.gravityrun.sprites.RightWall;
 import be.ucl.lfsab1509.gravityrun.sprites.ScoreBonus;
 import be.ucl.lfsab1509.gravityrun.sprites.SlowDown;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
@@ -195,7 +194,7 @@ public class PlayState extends State {
                 soundManager.marbleBreak();
         }
 
-        if (marble.getPosition().x <= 0 || marble.getPosition().x >= (cam.viewportWidth - marble.getDiameter()) || marble.getPosition().y <= cam.position.y - h / 2) {
+        if (!Invincible.isInvicible && (marble.getPosition().x <= 0 || marble.getPosition().x >= (cam.viewportWidth - marble.getDiameter()) || marble.getPosition().y <= cam.position.y - h / 2)) {
             if (!gameOver)
                 soundManager.marbleBreak();
             gameOver = true;
@@ -258,11 +257,8 @@ public class PlayState extends State {
             case 1:
                 obstacle = new LargeHole(position, WIDTH);
                 break;
-            case 2: case 3:
-                obstacle = new LeftWall(position, first, marbleWidth, WIDTH);
-                break;
-            case 4: case 5:
-                obstacle = new RightWall(position, first, marbleWidth, WIDTH);
+            case 2: case 3: case 4: case 5:
+                obstacle = new Wall(position, first, marbleWidth, WIDTH);
                 break;
             default:
                 obstacle = null;

@@ -36,6 +36,8 @@ public class GravityRun extends ApplicationAdapter {
         HEIGHT = Gdx.graphics.getHeight();
         WIDTH = Gdx.graphics.getWidth();
 
+        State.initializeSkins();
+
         batch = new SpriteBatch();
         gsm = new GameStateManager();
         sound = new SoundManager();

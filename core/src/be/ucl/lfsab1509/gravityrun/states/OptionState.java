@@ -25,7 +25,6 @@ public class OptionState extends State {
 
     private boolean isClickedSaveButton = false, isClickedScoreButton = false;
     private List<String> listBox;
-    private Skin menuSkin, tableSkin;
     private Stage stage;
     private String username;
     private TextButton saveButton;
@@ -37,14 +36,9 @@ public class OptionState extends State {
         float ch = h * 0.9f;
         float cw = w * 0.9f;
 
-        menuSkin = new Skin();
-        menuSkin.createSkin((int) (1.5f * w / d / 10));
-        Label title = new Label(string.get("option"), menuSkin, "title");
+        Label title = new Label(i18n.get("option"), titleSkin, "title");
 
-        tableSkin = new Skin();
-        tableSkin.createSkin((int) (w / d / 10));
-
-        TextButton lvlButton = new TextButton(string.format("chose_lvl"), tableSkin, "round");
+        TextButton lvlButton = new TextButton(i18n.format("chose_lvl"), tableSkin, "round");
         lvlButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -52,7 +46,7 @@ public class OptionState extends State {
             }
         });
 
-        saveButton = new TextButton(string.format("save"), tableSkin, "round");
+        saveButton = new TextButton(i18n.format("save"), tableSkin, "round");
         saveButton.setVisible(false);
         saveButton.addListener(new ClickListener() {
             @Override
@@ -62,7 +56,7 @@ public class OptionState extends State {
             }
         });
 
-        TextButton scoreButton = new TextButton(string.format("my_score"), tableSkin, "round");
+        TextButton scoreButton = new TextButton(i18n.format("my_score"), tableSkin, "round");
         scoreButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -70,7 +64,7 @@ public class OptionState extends State {
             }
         });
 
-        TextButton usernameButton = new TextButton(string.format("mod_username"), tableSkin, "round");
+        TextButton usernameButton = new TextButton(i18n.format("mod_username"), tableSkin, "round");
         usernameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -98,17 +92,17 @@ public class OptionState extends State {
         });
 
         listBox = new List<String>(tableSkin);
-        listBox.setItems(string.format("beginner"), string.format("inter"), string.format("expert"));
+        listBox.setItems(i18n.format("beginner"), i18n.format("inter"), i18n.format("expert"));
         listBox.setVisible(false);
         listBox.setSelectedIndex(GravityRun.user.getIndexSelected());
         listBox.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (listBox.getSelected().equals(string.format("beginner")))
+                if (listBox.getSelected().equals(i18n.format("beginner")))
                     GravityRun.user.setIndexSelected(0);
-                else if (listBox.getSelected().equals(string.format("inter")))
+                else if (listBox.getSelected().equals(i18n.format("inter")))
                     GravityRun.user.setIndexSelected(1);
-                else if (listBox.getSelected().equals(string.format("expert")))
+                else if (listBox.getSelected().equals(i18n.format("expert")))
                     GravityRun.user.setIndexSelected(2);
                 listBox.setVisible(false);
             }
@@ -182,8 +176,6 @@ public class OptionState extends State {
 
     @Override
     public void dispose() {
-        menuSkin.dispose();
-        tableSkin.dispose();
         stage.dispose();
     }
 

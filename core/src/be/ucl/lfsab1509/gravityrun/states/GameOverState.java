@@ -3,8 +3,6 @@ package be.ucl.lfsab1509.gravityrun.states;
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.sprites.Invincible;
 import be.ucl.lfsab1509.gravityrun.sprites.Marble;
-import be.ucl.lfsab1509.gravityrun.sprites.SlowDown;
-import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 import com.badlogic.gdx.Gdx;
@@ -26,7 +24,6 @@ public class GameOverState extends State {
 
     private boolean isClickedMenuButton = false, isClickedReplayButton = false;
     private Stage stage;
-    private Skin buttonSkin, scoreSkin, titleSkin;
 
     GameOverState(GameStateManager gsm, SoundManager soundManager) {
         super(gsm, soundManager);
@@ -39,16 +36,14 @@ public class GameOverState extends State {
             if (GravityRun.scoreList.get(i) > userList.get(Marble.lvl - 1))
                 GravityRun.user.getHighScore().set(Marble.lvl - 1, GravityRun.scoreList.get(i));
 
-        buttonSkin = new Skin();
-        buttonSkin.createSkin((int) (w / d / 10));
-        TextButton menuButton = new TextButton(string.format("menu"), buttonSkin, "round");
+        TextButton menuButton = new TextButton(i18n.format("menu"), tableSkin, "round");
         menuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 isClickedMenuButton = true;
             }
         });
-        TextButton replayButton = new TextButton(string.format("replay"), buttonSkin, "round");
+        TextButton replayButton = new TextButton(i18n.format("replay"), tableSkin, "round");
         replayButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -56,14 +51,10 @@ public class GameOverState extends State {
             }
         });
 
-        scoreSkin = new Skin();
-        scoreSkin.createSkin((int) (0.75f * w / d / 10));
-        Label score = new Label(string.format("final_score", PlayState.score), scoreSkin);
-        Label highScore = new Label(string.format("high_score", GravityRun.user.getHighScore().get(Marble.lvl - 1)), scoreSkin);
+        Label score = new Label(i18n.format("final_score", PlayState.score), aaronScoreSkin);
+        Label highScore = new Label(i18n.format("high_score", GravityRun.user.getHighScore().get(Marble.lvl - 1)), aaronScoreSkin);
 
-        titleSkin = new Skin();
-        titleSkin.createSkin((int) (1.5f * w / d / 10));
-        Label title = new Label(string.format("game_over"), titleSkin, "title");
+        Label title = new Label(i18n.format("game_over"), titleSkin, "title");
 
         Container<Table> tableContainer = new Container<Table>();
         Table table = new Table();
@@ -130,10 +121,7 @@ public class GameOverState extends State {
 
     @Override
     public void dispose() {
-        buttonSkin.dispose();
-        scoreSkin.dispose();
         stage.dispose();
-        titleSkin.dispose();
     }
 
     public ArrayList<Integer> add(ArrayList<Integer> userList) {

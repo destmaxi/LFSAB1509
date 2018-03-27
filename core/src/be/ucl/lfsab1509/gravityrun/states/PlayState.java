@@ -10,7 +10,6 @@ import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import be.ucl.lfsab1509.gravityrun.sprites.Obstacle;
 import be.ucl.lfsab1509.gravityrun.sprites.ScoreBonus;
 import be.ucl.lfsab1509.gravityrun.sprites.SlowDown;
-import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 import com.badlogic.gdx.Gdx;
@@ -48,7 +47,6 @@ public class PlayState extends State {
     private Label scoreLabel;
     private Marble marble;
     private Random random;
-    private Skin skin;
     private Stage scoreStage;
     private Texture bg, gameOverImage, pauseImage;
 
@@ -104,11 +102,10 @@ public class PlayState extends State {
         obstacles = new Array<Obstacle>();
         marble = new Marble((int) w / 2, 0, WIDTH);
 
-        skin = new Skin();
-        skin.createSkin((int) (0.75f * w / d / 10));
+        // TODO ça prend 100-200 msec
 
-        scoreLabel = new Label(string.format("score"), skin, "score");
-        scoreLabel.setText(string.format("score", score));
+        scoreLabel = new Label(i18n.format("score"), aaronScoreSkin, "score");
+        scoreLabel.setText(i18n.format("score", score));
         scoreLabel.setPosition((w - scoreLabel.getWidth()) / 2, h - scoreLabel.getHeight());
 
         scoreStage = new Stage(new ScreenViewport());
@@ -147,12 +144,11 @@ public class PlayState extends State {
     @Override
     public void update(float dt) {
         Gdx.input.setInputProcessor(scoreStage);
-        handleInput();
         updateGround();
         marble.update(dt, gameOver);
 
         score = (int) (marble.getPosition().y / h * 100) + scoreBonus;
-        scoreLabel.setText(string.format("score", score));
+        scoreLabel.setText(i18n.format("score", score));
 
         if (!gameOver)
             cam.position.add(0, Marble.lvl * Marble.MOVEMENT * marble.speed * SlowDown.slowDown * dt, 0);
@@ -212,6 +208,7 @@ public class PlayState extends State {
         }
 
         cam.update();
+        handleInput(); // change state
     }
 
     @Override
@@ -253,7 +250,6 @@ public class PlayState extends State {
         marble.dispose();
         pauseImage.dispose();
         scoreStage.dispose();
-        skin.dispose();
 
         for (Obstacle obstacle : obstacles)
             obstacle.dispose();

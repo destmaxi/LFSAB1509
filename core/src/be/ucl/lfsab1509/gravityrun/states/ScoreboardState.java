@@ -1,7 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 import com.badlogic.gdx.Gdx;
@@ -19,7 +18,6 @@ import java.util.Collections;
 
 public class ScoreboardState extends State {
 
-    private Skin labelSkin, menuSkin, tableSkin;
     private Stage stage;
 
     @SuppressWarnings("unchecked")
@@ -29,21 +27,15 @@ public class ScoreboardState extends State {
         float ch = h * 0.9f;
         float cw = w * 0.9f;
 
-        labelSkin = new Skin();
-        labelSkin.createSkin((int) (0.9f * w / d / 10));
-        Label beginnerLabel = new Label(string.format("beginner") + " :", labelSkin, "round");
-        Label intermediateLabel = new Label(string.format("inter") + " :", labelSkin, "round");
-        Label expertLabel = new Label(string.format("expert") + " :", labelSkin, "round");
+        Label beginnerLabel = new Label(i18n.format("beginner") + " :", labelScoreBoardSkin, "round");
+        Label intermediateLabel = new Label(i18n.format("inter") + " :", labelScoreBoardSkin, "round");
+        Label expertLabel = new Label(i18n.format("expert") + " :", labelScoreBoardSkin, "round");
 
-        menuSkin = new Skin();
-        menuSkin.createSkin((int) (1.5f * w / d / 10));
-        Label title = new Label(string.format("my_score"), menuSkin, "title");
+        Label title = new Label(i18n.format("my_score"), titleSkin, "title");
 
-        tableSkin = new Skin();
-        tableSkin.createSkin((int) (0.5f * w / d / 10));
-        List beginnerScoreList = new List(tableSkin);
-        List intermediateScoreList = new List(tableSkin);
-        List expertScoreList = new List(tableSkin);
+        List beginnerScoreList = new List(tableScoreBoardSkin);
+        List intermediateScoreList = new List(tableScoreBoardSkin);
+        List expertScoreList = new List(tableScoreBoardSkin);
 
         java.util.List[] lists = {GravityRun.user.getBeginner(), GravityRun.user.getInter(), GravityRun.user.getExpert()};
         List[] list = {beginnerScoreList, intermediateScoreList, expertScoreList};
@@ -123,10 +115,7 @@ public class ScoreboardState extends State {
 
     @Override
     public void dispose() {
-        labelSkin.dispose();
-        menuSkin.dispose();
         stage.dispose();
-        tableSkin.dispose();
     }
 
 }

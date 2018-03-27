@@ -1,6 +1,5 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
-import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 import com.badlogic.gdx.Gdx;
@@ -19,7 +18,6 @@ public class PauseState extends State {
 
     private boolean isClickedContinue = false, isClickedQuit = false;
     private Stage stage;
-    private Skin buttonSkin, scoreSkin, titleSkin;
 
     PauseState(GameStateManager gsm, SoundManager soundManager) {
         super(gsm, soundManager);
@@ -27,16 +25,14 @@ public class PauseState extends State {
         float ch = h * 0.9f;
         float cw = w * 0.9f;
 
-        buttonSkin = new Skin();
-        buttonSkin.createSkin((int) (w / d / 10));
-        TextButton continueButton = new TextButton(string.format("continue"), buttonSkin, "round");
+        TextButton continueButton = new TextButton(i18n.format("continue"), tableSkin, "round");
         continueButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 isClickedContinue = true;
             }
         });
-        TextButton quitButton = new TextButton(string.format("quit"), buttonSkin, "round");
+        TextButton quitButton = new TextButton(i18n.format("quit"), tableSkin, "round");
         quitButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -44,13 +40,9 @@ public class PauseState extends State {
             }
         });
 
-        scoreSkin = new Skin();
-        scoreSkin.createSkin((int) (0.75f * w / d / 10));
-        Label score = new Label(string.format("score", PlayState.score), scoreSkin);
+        Label score = new Label(i18n.format("score", PlayState.score), aaronScoreSkin);
 
-        titleSkin = new Skin();
-        titleSkin.createSkin((int) (1.5f * w / d / 10));
-        Label title = new Label(string.format("pause"), titleSkin, "title");
+        Label title = new Label(i18n.format("pause"), titleSkin, "title");
 
         Container<Table> tableContainer = new Container<Table>();
         Table table = new Table();
@@ -97,10 +89,7 @@ public class PauseState extends State {
 
     @Override
     public void dispose() {
-        buttonSkin.dispose();
-        scoreSkin.dispose();
         stage.dispose();
-        titleSkin.dispose();
     }
 
 }

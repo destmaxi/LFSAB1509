@@ -1,7 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 import com.badlogic.gdx.Gdx;
@@ -26,9 +25,8 @@ public class FirstState extends State {
 
     private boolean isClickedStartButton = false;
     private Label errorLabel;
-    private Skin errorSkin, menuSkin, tableSkin;
     private Stage stage;
-    private String username = string.format("username");
+    private String username = i18n.format("username");
 
     public FirstState(GameStateManager gsm, SoundManager soundManager) {
         super(gsm, soundManager);
@@ -36,21 +34,15 @@ public class FirstState extends State {
         float cw = w * 0.9f;
         float ch = h * 0.9f;
 
-        errorSkin = new Skin();
-        errorSkin.createSkin((int) (0.75f * w / d / 10));
-        errorLabel = new Label(string.format("error"), errorSkin, "error");
+        errorLabel = new Label(i18n.format("error"), aaronScoreSkin, "error");
         errorLabel.setWrap(true);
         errorLabel.setWidth(cw);
         errorLabel.setAlignment(Align.center);
         errorLabel.setVisible(false);
 
-        menuSkin = new Skin();
-        menuSkin.createSkin((int) (1.5f * w / d / 10));
-        Label title = new Label(string.format("welcome"), menuSkin, "title");
+        Label title = new Label(i18n.format("welcome"), titleSkin, "title");
 
-        tableSkin = new Skin();
-        tableSkin.createSkin((int) (w / d / 10));
-        TextButton startButton = new TextButton(string.format("start"), tableSkin, "round");
+        TextButton startButton = new TextButton(i18n.format("start"), tableSkin, "round");
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -99,7 +91,7 @@ public class FirstState extends State {
     protected void handleInput() {
         if (isClickedStartButton) {
             Gdx.input.setOnscreenKeyboardVisible(false);
-            if (username.equals(string.format("username"))) {
+            if (username.equals(i18n.format("username"))) {
                 isClickedStartButton = false;
                 errorLabel.setVisible(true);
             } else {
@@ -126,8 +118,9 @@ public class FirstState extends State {
 
     @Override
     public void dispose() {
-        errorSkin.dispose();
-        menuSkin.dispose();
+        // TODO dispose of skins
+        aaronScoreSkin.dispose();
+        titleSkin.dispose();
         stage.dispose();
         tableSkin.dispose();
     }

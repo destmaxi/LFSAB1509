@@ -20,7 +20,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 public class MenuState extends State {
 
     private boolean isClickedOptionButton = false, isClickedStartGameButton = false;
-    private Skin menuSkin, tableSkin;
     private Stage stage;
 
     public MenuState(GameStateManager gsm, SoundManager soundManager) {
@@ -29,27 +28,25 @@ public class MenuState extends State {
         float ch = h * 0.9f;
         float cw = w * 0.9f;
 
-        menuSkin = new Skin();
-        menuSkin.createSkin((int) (1.5f * w / d / 10));
-        Label title = new Label(string.format("menu"), menuSkin, "title");
+        Label title = new Label(i18n.format("menu"), titleSkin, "title");
 
-        tableSkin = new Skin();
-        tableSkin.createSkin((int) (w / d / 10));
-        TextButton optionButton = new TextButton(string.format("option"), tableSkin, "round");
+        TextButton optionButton = new TextButton(i18n.format("option"), tableSkin, "round");
         optionButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 isClickedOptionButton = true;
             }
         });
-        TextButton startGameButton = new TextButton(string.format("new_game"), tableSkin, "round");
+        // TODO ici, ça prend environ 10ms
+        TextButton startGameButton = new TextButton(i18n.format("new_game"), tableSkin, "round");
         startGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 isClickedStartGameButton = true;
             }
         });
-        Label hyLabel = new Label(string.format("hello", GravityRun.pref.getString("username")), tableSkin);
+
+        Label hyLabel = new Label(i18n.format("hello", GravityRun.pref.getString("username")), tableSkin);
         hyLabel.setWrap(true);
         hyLabel.setWidth(cw);
         hyLabel.setAlignment(Align.center);
@@ -110,7 +107,8 @@ public class MenuState extends State {
 
     @Override
     public void dispose() {
-        menuSkin.dispose();
+        // TODO dispose of skins
+        titleSkin.dispose();
         stage.dispose();
         tableSkin.dispose();
     }

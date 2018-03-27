@@ -96,6 +96,7 @@ C'EST PAS OUF MAIS CA FONCTIONNE +_
                 position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, difficulty * MOVEMENT * speed * slowDown * dt, 0);
         }
 
+        // TODO voir ce qu'on fait lorsque la bille touche le bord : est-ce qu'il y a une marge ?
         if (position.x < marbleAnimation.getDiameter(position.z) / 2)
             position.x = marbleAnimation.getDiameter(position.z) / 2;
 

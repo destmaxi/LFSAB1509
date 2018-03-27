@@ -266,10 +266,10 @@ public class PlayState extends State {
         Obstacle obstacle;
         switch (random.nextInt(5)) {
             case 0:
-                obstacle = new Hole(position, STANDARD_WIDTH);
+                obstacle = new Hole(position, STANDARD_WIDTH, marble.getNormalDiameter());
                 break;
             case 3:
-                obstacle = new LargeHole(position, STANDARD_WIDTH);
+                obstacle = new LargeHole(position, STANDARD_WIDTH, marble.getNormalDiameter());
                 break;
             default:
                 obstacle = new Wall(position, STANDARD_WIDTH, marble.getNormalDiameter());

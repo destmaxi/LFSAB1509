@@ -4,6 +4,7 @@ import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.states.PlayState;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
@@ -13,7 +14,7 @@ public class Marble {
 
     public static final float GRAVITY_COMPENSATION = 1.4f;
     public static final float GYRO_COMPENSATION = 2;
-    static final int JUMP_HEIGHT = 600;
+    static final int JUMP_HEIGHT = 666;
     public static final int MOVEMENT = GravityRun.HEIGHT / 5;
     public static final float SQRT_2 = (float) Math.sqrt(2);
 
@@ -51,17 +52,17 @@ public class Marble {
         else
             speed = 2f;
 
-        if (Gdx.input.getGyroscopeX() > 2)
+        if ((Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) && position.z <= 0)
             position.z = JUMP_HEIGHT;
 
         if (position.z > 0 && !gameOver)
-            position.add(0, 0, -10 * SlowDown.slowDown);
+            position.add(0, 0, -10 * lvl * speed * SlowDown.slowDown);
         else
             position.z = 0;
 
         if (!gameOver) {
             if ((isBlockedOnRight && Gdx.input.getGyroscopeY() > 0) || (isBlockedOnLeft && Gdx.input.getGyroscopeY() < 0))
-                position.add(0, lvl * (MOVEMENT * speed * SlowDown.slowDown) * dt, 0);
+                position.add(0, lvl * MOVEMENT * speed * SlowDown.slowDown * dt, 0);
             else if ((isBlockedOnLeft && Gdx.input.getGyroscopeY() < 0) && isBlockedOnTop)
                 position.add(0, 0, 0);
             else if ((isBlockedOnRight && Gdx.input.getGyroscopeY() > 0) && isBlockedOnTop)
@@ -69,7 +70,7 @@ public class Marble {
             else if (isBlockedOnTop)
                 position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, 0, 0);
             else
-                position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, lvl * (MOVEMENT * speed * SlowDown.slowDown) * dt, 0);
+                position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, lvl * MOVEMENT * speed * SlowDown.slowDown * dt, 0);
         }
 
         if (position.x < marbleAnimation.getDiameter(position.z) / 2)

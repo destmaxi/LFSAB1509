@@ -108,10 +108,7 @@ public class MenuState extends State {
 
     @Override
     public void dispose() {
-        // TODO dispose of skins
-        titleSkin.dispose();
         stage.dispose();
-        tableSkin.dispose();
+        State.disposeSkins();
     }
-
 }

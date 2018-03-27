@@ -14,6 +14,7 @@ public abstract class State {
 
     static float height, width;
     static Skin aaronScoreSkin, labelScoreBoardSkin, tableSkin, tableScoreBoardSkin, titleSkin;
+    private static boolean skinInitialized = false;
 
     GameStateManager gameStateManager;
     I18NBundle i18n;
@@ -33,6 +34,11 @@ public abstract class State {
         height = GravityRun.HEIGHT;
         width = GravityRun.WIDTH;
 
+        if (skinInitialized)
+            disposeSkins();
+
+        skinInitialized = true;
+
         tableScoreBoardSkin = new Skin();
         tableScoreBoardSkin.createSkin((int) (0.5f * width / d / 10));
 
@@ -47,6 +53,17 @@ public abstract class State {
 
         titleSkin = new Skin();
         titleSkin.createSkin((int) (1.5f * width / d / 10));
+        // En espérant qu'il ne soit pas interrompu entre-temps.
+    }
+
+    public static void disposeSkins() {
+        if (skinInitialized) {
+            aaronScoreSkin.dispose();
+            labelScoreBoardSkin.dispose();
+            tableSkin.dispose();
+            tableScoreBoardSkin.dispose();
+            titleSkin.dispose();
+        }
     }
 
     protected abstract void handleInput();

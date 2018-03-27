@@ -24,6 +24,7 @@ import java.util.ArrayList;
 public class FirstState extends State {
 
     private boolean isClickedStartButton = false;
+    private boolean goingToMenuState = false;
     private Label errorLabel;
     private Stage stage;
     private String username = i18n.format("username");
@@ -96,12 +97,12 @@ public class FirstState extends State {
                 errorLabel.setVisible(true);
             } else {
                 initUser();
+                goingToMenuState = true;
                 gameStateManager.set(new MenuState(gameStateManager, soundManager));
             }
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            disposeSkins();
             Gdx.app.exit();
         }
     }
@@ -120,14 +121,9 @@ public class FirstState extends State {
 
     @Override
     public void dispose() {
-        // TODO dispose of skins
+        if (! goingToMenuState)
+            State.disposeSkins();
         stage.dispose();
-    }
-
-    private void disposeSkins() {
-        aaronScoreSkin.dispose();
-        tableSkin.dispose();
-        titleSkin.dispose();
     }
 
     private void initUser() {

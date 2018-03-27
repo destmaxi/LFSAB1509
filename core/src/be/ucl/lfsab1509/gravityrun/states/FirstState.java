@@ -35,7 +35,7 @@ public class FirstState extends State {
         float cw = width * 0.9f;
         float ch = height * 0.9f;
 
-        errorLabel = new Label(i18n.format("error"), aaronScoreSkin, "error");
+        errorLabel = new Label(i18n.format("error_username_default"), aaronScoreSkin, "error");
         errorLabel.setWrap(true);
         errorLabel.setWidth(cw);
         errorLabel.setAlignment(Align.center);
@@ -92,8 +92,14 @@ public class FirstState extends State {
     protected void handleInput() {
         if (isClickedStartButton) {
             Gdx.input.setOnscreenKeyboardVisible(false);
+            // TODO utiliser la méthode checkUsername de la classe User
             if (username.equals(i18n.format("username"))) {
                 isClickedStartButton = false;
+                errorLabel.setText(i18n.format("error_username_default"));
+                errorLabel.setVisible(true);
+            } else if (username.length() > 42){
+                isClickedStartButton = false;
+                errorLabel.setText(i18n.format("error_username_length"));
                 errorLabel.setVisible(true);
             } else {
                 initUser();

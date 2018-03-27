@@ -73,6 +73,11 @@ public class User {
         return map;
     }
 
+    public static boolean checkUsername(String username) {
+        // TODO ajouter la condition comme quoi ça ne peut pas être "Nom d'utilisateur"
+        return (username.length() <= 42);
+    }
+
     public String getUsername() {
         return username;
     }

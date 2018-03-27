@@ -2,6 +2,7 @@ package be.ucl.lfsab1509.gravityrun.states;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
+import be.ucl.lfsab1509.gravityrun.tools.User;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -139,9 +140,13 @@ public class OptionState extends State {
     @Override
     protected void handleInput() {
         if (isClickedSaveButton) {
-            GravityRun.user.setUsername(username);
-            GravityRun.pref.put(GravityRun.user.toMap());
-            GravityRun.pref.flush();
+            // TODO gérer le cas où on met "Nom d'utilisateur", je n'estime pas ça comme faux pour le moment.
+            if (User.checkUsername(username)) {
+                GravityRun.user.setUsername(username);
+                GravityRun.pref.put(GravityRun.user.toMap());
+                GravityRun.pref.flush();
+                // TODO indiquer un message d'erreur (errorLabel.setText(i18n.format("error_username_length")))
+            }
             saveButton.setVisible(false);
             usernameField.setVisible(false);
             isClickedSaveButton = false;

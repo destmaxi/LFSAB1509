@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 public class MenuState extends State {
 
     private boolean isClickedOptionButton = false, isClickedStartGameButton = false;
+    private Label hyLabel;
     private Stage stage;
 
     public MenuState(GameStateManager gsm, SoundManager soundManager) {
@@ -46,7 +47,7 @@ public class MenuState extends State {
             }
         });
 
-        Label hyLabel = new Label(i18n.format("hello", GravityRun.pref.getString("username")), tableSkin);
+        hyLabel = new Label(i18n.format("hello", GravityRun.pref.getString("username")), tableSkin);
         hyLabel.setWrap(true);
         hyLabel.setWidth(cw);
         hyLabel.setAlignment(Align.center);
@@ -95,6 +96,7 @@ public class MenuState extends State {
     @Override
     public void update(float dt) {
         Gdx.input.setInputProcessor(stage);
+        hyLabel.setText(i18n.format("hello", GravityRun.user.getUsername()));
         handleInput();
     }
 

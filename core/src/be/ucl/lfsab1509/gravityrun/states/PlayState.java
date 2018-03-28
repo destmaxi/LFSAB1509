@@ -38,7 +38,8 @@ public class PlayState extends State {
     private static int WIDTH;
 
     public static boolean isCollideWall = false, gameOver = false;
-    public static int collidedWall = 0, score = 0, scoreBonus = 0;
+    private static int collidedWall = 0;
+    public static int score = 0, scoreBonus = 0;
 
     private Array<Bonus> bonuses, catchedBonuses;
     private Array<Obstacle> obstacles;
@@ -55,10 +56,11 @@ public class PlayState extends State {
 
         if (GravityRun.scoreList == null)
             GravityRun.scoreList = new ArrayList<Integer>();
-        SlowDown.slowDown = 1f;
-        Invincible.isInvincible = false;
+        Invincible.activeInvincibles = 0;
         Invincible.inWall = false;
-        Invincible.n = 0;
+        Invincible.isInvincible = false;
+        SlowDown.activeSlowDowns = 0;
+        SlowDown.slowDown = 1f;
         gameOver = false;
         isCollideWall = false;
         scoreBonus = 0;
@@ -164,6 +166,8 @@ public class PlayState extends State {
 
         for (int i = 0; i < bonuses.size; i++) {
             Bonus bonus = bonuses.get(i);
+            if (bonus == null)
+                continue;
 
             int offset = random.nextInt(OBSTACLE_SPACING - pauseImage.getHeight());
 
@@ -174,9 +178,7 @@ public class PlayState extends State {
 
             if (bonus.collides(marble)) {
                 catchedBonuses.add(bonus);
-                bonuses.set(i, new ScoreBonus(bonus.getPosition().y - bonus.getOffset() + offset + (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT) * OBSTACLE_COUNT, WIDTH, offset));
-                //bonuses.removeIndex(i);
-                //scoreBonus += 100;
+                bonuses.set(i, new ScoreBonus(bonus.getPosition().y - bonus.getOffset() + offset + (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT) * OBSTACLE_COUNT, offset, WIDTH));
                 soundManager.gotBonus();
             }
         }
@@ -223,11 +225,12 @@ public class PlayState extends State {
         for (Vector2 v : bgs)
             sb.draw(bg, v.x, v.y);
 
-        for (Obstacle obs : obstacles)
-            sb.draw(obs.getObstacleTexture(), obs.getPosition().x, obs.getPosition().y);
+        for (Obstacle obstacle : obstacles)
+            sb.draw(obstacle.getObstacleTexture(), obstacle.getPosition().x, obstacle.getPosition().y);
 
         for (Bonus bonus : bonuses)
-            sb.draw(bonus.getObstacleTexture(), bonus.getPosition().x, bonus.getPosition().y);
+            if (bonus != null)
+                sb.draw(bonus.getObstacleTexture(), bonus.getPosition().x, bonus.getPosition().y);
 
         sb.draw(marble.getMarble(), marble.getPosition().x, marble.getPosition().y);
 
@@ -257,33 +260,32 @@ public class PlayState extends State {
 
     private Obstacle newObstacle(boolean first, int marbleWidth, float position) {
         Obstacle obstacle;
-        switch (random.nextInt(6)) {
+        switch (random.nextInt(5)) {
             case 0:
                 obstacle = new Hole(position, first, marbleWidth, WIDTH);
                 break;
-            case 1:
+            case 3:
                 obstacle = new LargeHole(position, WIDTH);
                 break;
-            case 2: case 3: case 4: case 5:
-                obstacle = new Wall(position, first, marbleWidth, WIDTH);
-                break;
             default:
-                obstacle = null;
+                obstacle = new Wall(position, first, marbleWidth, WIDTH);
         }
         return obstacle;
     }
 
     private Bonus newBonus(float position, int offset) {
         Bonus bonus;
-        switch (random.nextInt(6)) {
+        switch (random.nextInt(9)) {
             case 0:
-                bonus = new Invincible(position, WIDTH, offset);
+            case 4:
+            case 8:
+                bonus = new ScoreBonus(position, offset, WIDTH);
                 break;
-            case 1: case 2: case 3: case 4:
-                bonus = new ScoreBonus(position, WIDTH, offset);
+            case 2:
+                bonus = new Invincible(position, offset, WIDTH);
                 break;
-            case 5:
-                bonus = new SlowDown(position, WIDTH, offset);
+            case 6:
+                bonus = new SlowDown(position, offset, WIDTH);
                 break;
             default:
                 bonus = null;

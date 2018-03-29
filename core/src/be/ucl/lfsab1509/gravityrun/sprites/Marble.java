@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector3;
 
+import java.security.Key;
+
 public class Marble {
 
     public static final float GRAVITY_COMPENSATION = 1.4f;
@@ -61,6 +63,13 @@ public class Marble {
         else
             position.z = 0;
 
+        int arrow = 0;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT))
+            arrow = -10;
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT))
+            arrow = 10;
+
         if (!gameOver) {
             if ((isBlockedOnRight && Gdx.input.getGyroscopeY() > 0) || (isBlockedOnLeft && Gdx.input.getGyroscopeY() < 0))
                 position.add(0, lvl * MOVEMENT * speed * SlowDown.slowDown * dt, 0);
@@ -69,9 +78,9 @@ public class Marble {
             else if ((isBlockedOnRight && Gdx.input.getGyroscopeY() > 0) && isBlockedOnTop)
                 position.add(0, 0, 0);
             else if (isBlockedOnTop)
-                position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, 0, 0);
+                position.add(arrow * GravityRun.WIDTH / 75, 0, 0);
             else
-                position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, lvl * MOVEMENT * speed * SlowDown.slowDown * dt, 0);
+                position.add(arrow* GravityRun.WIDTH / 75, lvl * MOVEMENT * speed * SlowDown.slowDown * dt, 0);
         }
 
         if (position.x < marbleAnimation.getDiameter(position.z) / 2)

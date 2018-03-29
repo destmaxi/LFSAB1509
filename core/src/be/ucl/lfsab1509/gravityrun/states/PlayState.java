@@ -100,6 +100,7 @@ public class PlayState extends State {
         catchedBonuses = new Array<Bonus>();
         obstacles = new Array<Obstacle>();
         marble = new Marble((int) w / 2, 0, WIDTH);
+        Bonus.marble = marble;
 
         // TODO ça prend 100-200 msec
 
@@ -119,11 +120,11 @@ public class PlayState extends State {
             obstacles.add(newObstacle((i + 1) * (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT)));
 
         for (int i = 1; i <= OBSTACLE_COUNT; i++) {
-            int offset = random.nextInt(OBSTACLE_SPACING - pauseImage.getHeight());
+            int offset = random.nextInt(OBSTACLE_SPACING - WIDTH / 5);
             bonuses.add(newBonus((i + 1) * (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT) + Obstacle.OBSTACLE_HEIGHT + offset, offset));
         }
 
-        cam.position.y = marble.getPosition().y + 80;
+        cam.position.y = marble.getCenterPosition().y;
     }
 
     @Override
@@ -146,11 +147,11 @@ public class PlayState extends State {
         updateGround();
         marble.update(dt, gameOver);
 
-        score = (int) (marble.getPosition().y / h * 100) + scoreBonus;
+        score = (int) (marble.getCenterPosition().y / h * 100) + scoreBonus;
         scoreLabel.setText(i18n.format("score", score));
 
         if (!gameOver)
-            cam.position.add(0, Marble.lvl * Marble.MOVEMENT * marble.speed * SlowDown.slowDown * dt, 0);
+            cam.position.add(0, Marble.lvl * Marble.MOVEMENT * marble.speed * marble.getSlowDown() * dt, 0);
 
         for (int i = 0; i < catchedBonuses.size; i++) {
             Bonus bonus = catchedBonuses.get(i);
@@ -166,14 +167,14 @@ public class PlayState extends State {
             if (bonus == null)
                 continue;
 
-            int offset = random.nextInt(OBSTACLE_SPACING - pauseImage.getHeight());
+            int offset = random.nextInt(OBSTACLE_SPACING - WIDTH / 10);
 
             if ((cam.position.y - cam.viewportHeight / 2) >= bonus.getPosition().y + bonus.getObstacleTexture().getHeight()) {
                 bonuses.get(i).dispose();
                 bonuses.set(i, newBonus(bonus.getPosition().y - bonus.getOffset() + offset + (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT) * OBSTACLE_COUNT, offset));
             }
 
-            if (bonus.collides(marble)) {
+            if (bonus.collidesMarble()) {
                 catchedBonuses.add(bonus);
                 bonuses.set(i, new ScoreBonus(bonus.getPosition().y - bonus.getOffset() + offset + (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT) * OBSTACLE_COUNT, offset, WIDTH));
                 soundManager.gotBonus();
@@ -200,7 +201,7 @@ public class PlayState extends State {
                 soundManager.marbleBreak();
         }
 
-        if (!Invincible.isInvincible && (marble.getPosition().x <= 0 || marble.getPosition().x >= (cam.viewportWidth - marble.getDiameter()) || marble.getPosition().y <= cam.position.y - h / 2)) {
+        if (!marble.isInvincible() && (marble.getCenterPosition().x <= marble.getDiameter() / 2 || marble.getCenterPosition().x >= (w - marble.getDiameter() / 2) || marble.getCenterPosition().y <= cam.position.y - h / 2 + marble.getDiameter() / 2)) {
             if (!gameOver)
                 soundManager.marbleBreak();
             gameOver = true;
@@ -229,7 +230,9 @@ public class PlayState extends State {
             if (bonus != null)
                 sb.draw(bonus.getObstacleTexture(), bonus.getPosition().x, bonus.getPosition().y);
 
-        sb.draw(marble.getMarble(), marble.getPosition().x, marble.getPosition().y);
+        float marbleX = marble.getCenterPosition().x - marble.getDiameter() / 2;
+        float marbleY = marble.getCenterPosition().y - marble.getDiameter() / 2;
+        sb.draw(marble.getMarble(), marbleX, marbleY);
 
         if (gameOver) {
             sb.draw(gameOverImage,

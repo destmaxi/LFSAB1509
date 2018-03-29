@@ -6,6 +6,7 @@ import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -40,11 +41,13 @@ public class PlayState extends State {
     private Marble marble;
     private Random random;
     private Stage scoreStage;
+    private OrthographicCamera camera;
     private Texture background, gameOverImage, pauseImage;
 
     PlayState(GameStateManager gameStateManager, SoundManager soundManager) {
         super(gameStateManager, soundManager);
 
+        camera = new OrthographicCamera();
         camera.setToOrtho(false, width, height);
 
         if (GravityRun.scoreList == null)

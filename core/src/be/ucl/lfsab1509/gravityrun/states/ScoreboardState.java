@@ -105,8 +105,6 @@ public class ScoreboardState extends State {
 
     @Override
     public void render(SpriteBatch spriteBatch) {
-        spriteBatch.setProjectionMatrix(camera.combined);
-        stage.act();
         stage.draw();
     }
 

@@ -2,6 +2,7 @@ package be.ucl.lfsab1509.gravityrun.states;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
+import be.ucl.lfsab1509.gravityrun.tools.User;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -92,14 +93,9 @@ public class FirstState extends State {
     protected void handleInput() {
         if (isClickedStartButton) {
             Gdx.input.setOnscreenKeyboardVisible(false);
-            // TODO utiliser la méthode checkUsername de la classe User
-            if (username.equals(GravityRun.i18n.format("username"))) {
+            if (!User.checkUsername(username)) {
                 isClickedStartButton = false;
-                errorLabel.setText(GravityRun.i18n.format("error_username_default"));
-                errorLabel.setVisible(true);
-            } else if (username.length() > 42){
-                isClickedStartButton = false;
-                errorLabel.setText(GravityRun.i18n.format("error_username_length"));
+                errorLabel.setText(User.getUsernameError(username));
                 errorLabel.setVisible(true);
             } else {
                 initUser();

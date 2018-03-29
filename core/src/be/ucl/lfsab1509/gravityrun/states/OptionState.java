@@ -26,6 +26,7 @@ public class OptionState extends State {
     private List<String> listBox;
     private Stage stage;
     private String username;
+    private String newUsername;
     private TextButton saveButton;
     private TextField usernameField;
 
@@ -73,9 +74,10 @@ public class OptionState extends State {
             }
         });
 
+        newUsername = GravityRun.user.getUsername();
         username = GravityRun.user.getUsername();
-        usernameField = new TextField(username, tableSkin);
-        usernameField.setText(username);
+        usernameField = new TextField(newUsername, tableSkin);
+        usernameField.setText(newUsername);
         usernameField.setVisible(false);
         usernameField.addListener(new ClickListener() {
             @Override
@@ -86,7 +88,7 @@ public class OptionState extends State {
         usernameField.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                username = usernameField.getText();
+                newUsername = usernameField.getText();
             }
         });
 
@@ -141,11 +143,14 @@ public class OptionState extends State {
     protected void handleInput() {
         if (isClickedSaveButton) {
             // TODO gérer le cas où on met "Nom d'utilisateur", je n'estime pas ça comme faux pour le moment.
-            if (User.checkUsername(username)) {
-                GravityRun.user.setUsername(username);
+            if (User.checkUsername(newUsername)) {
+                GravityRun.user.setUsername(newUsername);
                 GravityRun.pref.put(GravityRun.user.toMap());
                 GravityRun.pref.flush();
-                // TODO indiquer un message d'erreur (errorLabel.setText(i18n.format("error_username_length")))
+                // TODO indiquer un message d'erreur (errorLabel.setText(User.getUsernameError(newUsername)))
+            } else {
+                // Sinon, le textField retient la valeur qu'on a rentré, qui est donc incorrecte.
+                usernameField.setText(username);
             }
             saveButton.setVisible(false);
             usernameField.setVisible(false);

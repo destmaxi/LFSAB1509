@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import be.ucl.lfsab1509.gravityrun.GravityRun;
+
 public class User {
 
     private static final String DEB = "beginner";
@@ -74,8 +76,19 @@ public class User {
     }
 
     public static boolean checkUsername(String username) {
-        // TODO ajouter la condition comme quoi ça ne peut pas être "Nom d'utilisateur"
-        return (username.length() <= 42);
+        return (username.length() > 0) && (username.length() <= 42) && (!username.equals(GravityRun.i18n.format("username")));
+    }
+
+    public static String getUsernameError(String username) {
+        if (username.length() > 42)
+            return GravityRun.i18n.format("error_username_length");
+        else if (username.length() <= 0)
+            return GravityRun.i18n.format("error_username_empty");
+        else if (username.equals(GravityRun.i18n.format("username")))
+            return GravityRun.i18n.format("error_username_default");
+        else
+            return GravityRun.i18n.format("error_username_default");
+        // TODO trouver un message d'errur si ce n'est ni l'un ni l'autre (s'il n'y a pas d'autre erreur, alors juste virer le else if)
     }
 
     public String getUsername() {

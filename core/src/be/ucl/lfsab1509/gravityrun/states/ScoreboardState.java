@@ -61,10 +61,7 @@ public class ScoreboardState extends State {
                 case 2:
                     list[i].setItems("1.  " + myArrayList.get(0), "2.  " + myArrayList.get(1), "3.  " + 0);
                     break;
-                case 3:
-                    list[i].setItems("1.  " + myArrayList.get(0), "2.  " + myArrayList.get(1), "3.  " + myArrayList.get(2));
-                    break;
-                default:
+                default:    // case 3:
                     list[i].setItems("1.  " + myArrayList.get(0), "2.  " + myArrayList.get(1), "3.  " + myArrayList.get(2));
                     break;
             }

@@ -1,6 +1,7 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
 
@@ -15,8 +16,15 @@ public abstract class Obstacle {
     Texture obstacleTexture;
     Vector2 position;
 
-    Obstacle() {
+    Obstacle(float y, String path) {
         rand = new Random();
+        obstacleTexture = new Texture(path);
+        position = new Vector2(0, y);
+        bounds = new Rectangle(position.x, position.y, obstacleTexture.getWidth(), obstacleTexture.getHeight());
+    }
+
+    public void dispose() {
+        obstacleTexture.dispose();
     }
 
     public Texture getObstacleTexture() {
@@ -27,9 +35,10 @@ public abstract class Obstacle {
         return position;
     }
 
-    public abstract void collides(Marble marble);
-
-    public void dispose() {
-        obstacleTexture.dispose();
+    void setX(int x) {
+        ((Rectangle) bounds).x = x;
+        position.x = x;
     }
+
+    public abstract void collides(Marble marble);
 }

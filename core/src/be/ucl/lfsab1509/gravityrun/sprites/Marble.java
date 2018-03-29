@@ -83,8 +83,17 @@ public class Marble {
         bounds.setPosition(position.x, position.y);
     }
 
-    public Vector3 getPosition() {
-        return new Vector3(position.x - marbleAnimation.getDiameter(position.z) / 2, position.y - marbleAnimation.getDiameter(position.z) / 2, position.z);
+    public void dispose() {
+        marble.dispose();
+        marbleAnimation.dispose();
+    }
+
+    Circle getBounds() {
+        return bounds;
+    }
+
+    Vector3 getCenterPosition() {
+        return position;
     }
 
     public int getDiameter() {
@@ -95,33 +104,28 @@ public class Marble {
         return marbleAnimation.getFrame(position.z);
     }
 
-    Circle getBounds() {
-        return bounds;
-    }
-
-    public void dispose() {
-        marble.dispose();
-        marbleAnimation.dispose();
-    }
-
-    public boolean isBlockedOnRight() {
-        return isBlockedOnRight;
-    }
-
-    public void setBlockedOnRight(boolean blockedOnRight) {
-        isBlockedOnRight = blockedOnRight;
+    public Vector3 getPosition() {
+        return new Vector3(position.x - marbleAnimation.getDiameter(position.z) / 2, position.y - marbleAnimation.getDiameter(position.z) / 2, position.z);
     }
 
     public boolean isBlockedOnLeft() {
         return isBlockedOnLeft;
     }
 
-    public void setBlockedOnLeft(boolean blockedOnLeft) {
-        isBlockedOnLeft = blockedOnLeft;
+    public boolean isBlockedOnRight() {
+        return isBlockedOnRight;
     }
 
     public boolean isBlockedOnTop() {
         return isBlockedOnTop;
+    }
+
+    public void setBlockedOnLeft(boolean blockedOnLeft) {
+        isBlockedOnLeft = blockedOnLeft;
+    }
+
+    public void setBlockedOnRight(boolean blockedOnRight) {
+        isBlockedOnRight = blockedOnRight;
     }
 
     public void setBlockedOnTop(boolean blockedOnTop) {

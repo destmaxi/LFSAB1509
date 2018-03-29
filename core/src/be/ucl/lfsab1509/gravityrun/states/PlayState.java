@@ -119,7 +119,7 @@ public class PlayState extends State {
 
         random = new Random();
         for (int i = 1; i <= OBSTACLE_COUNT; i++)
-            obstacles.add(newObstacle(i <= Marble.lvl, marble.getDiameter(), (i + 1) * (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT)));
+            obstacles.add(newObstacle((i + 1) * (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT), marble.getDiameter()));
 
         for (int i = 1; i <= OBSTACLE_COUNT; i++) {
             int offset = random.nextInt(OBSTACLE_SPACING - pauseImage.getHeight());
@@ -188,7 +188,7 @@ public class PlayState extends State {
 
             if ((cam.position.y - cam.viewportHeight / 2) >= obs.getPosition().y + obs.getObstacleTexture().getHeight()) {
                 obstacles.get(i).dispose();
-                obstacles.set(i, newObstacle(false, marble.getDiameter(), obs.getPosition().y + (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT) * OBSTACLE_COUNT));
+                obstacles.set(i, newObstacle(obs.getPosition().y + (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT) * OBSTACLE_COUNT, marble.getDiameter()));
             }
 
             boolean temp = gameOver; //TODO: éviter les sides-effects
@@ -258,17 +258,17 @@ public class PlayState extends State {
             obstacle.dispose();
     }
 
-    private Obstacle newObstacle(boolean first, int marbleWidth, float position) {
+    private Obstacle newObstacle(float position, int marbleWidth) {
         Obstacle obstacle;
         switch (random.nextInt(5)) {
             case 0:
-                obstacle = new Hole(position, first, marbleWidth, WIDTH);
+                obstacle = new Hole(position, WIDTH);
                 break;
             case 3:
                 obstacle = new LargeHole(position, WIDTH);
                 break;
             default:
-                obstacle = new Wall(position, first, marbleWidth, WIDTH);
+                obstacle = new Wall(position, WIDTH, marbleWidth);
         }
         return obstacle;
     }

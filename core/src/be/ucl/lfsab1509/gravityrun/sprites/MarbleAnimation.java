@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.Array;
 public class MarbleAnimation {
 
     private static final float CYCLE_TIME = 1;
-    public static final int FRAME_COUNT = 5;
+    private static final int FRAME_COUNT = 5;
     private static final int MARBLE_COUNT = 5;
     private static final float MAX_FRAME_TIME = CYCLE_TIME / FRAME_COUNT;
 
@@ -55,16 +55,18 @@ public class MarbleAnimation {
     }
 
     private int getMarble(float z) {
+        int marble;
         if (z == 0)
-            return 0;
+            marble =  0;
         else if (z <= Marble.JUMP_HEIGHT * .25f)
-            return 1;
+            marble = 1;
         else if (z <= Marble.JUMP_HEIGHT * .5f)
-            return 2;
+            marble = 2;
         else if (z <= Marble.JUMP_HEIGHT * .75f)
-            return 3;
+            marble = 3;
         else
-            return 4;
+            marble = 4;
+        return marble;
     }
 
 }

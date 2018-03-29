@@ -2,30 +2,19 @@ package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.states.PlayState;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 
 public class LargeHole extends Obstacle {
 
     public LargeHole(float y, int sw) {
-        super();
-
-        obstacleTexture = new Texture("drawable-" + sw + "/largehole.png");
-        position = new Vector2(0, y);
-        bounds = new Rectangle(position.x, position.y, obstacleTexture.getWidth(), obstacleTexture.getHeight());
+        super(y, "drawable-" + sw + "/largehole.png");
     }
 
     @Override
     public void collides(Marble marble) {
-        if(Intersector.overlaps(marble.getBounds(), (Rectangle) bounds) && marble.getPosition().z == 0)
+        if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds) && marble.getPosition().z == 0)
             PlayState.gameOver = true;
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
     }
 
 }

@@ -5,6 +5,7 @@ import be.ucl.lfsab1509.gravityrun.sprites.Bonus;
 import be.ucl.lfsab1509.gravityrun.sprites.Hole;
 import be.ucl.lfsab1509.gravityrun.sprites.Invincible;
 import be.ucl.lfsab1509.gravityrun.sprites.LargeHole;
+import be.ucl.lfsab1509.gravityrun.sprites.CamReposition;
 import be.ucl.lfsab1509.gravityrun.sprites.Wall;
 import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import be.ucl.lfsab1509.gravityrun.sprites.Obstacle;
@@ -150,8 +151,12 @@ public class PlayState extends State {
         score = (int) (marble.getPosition().y / h * 100) + scoreBonus;
         scoreLabel.setText(i18n.format("score", score));
 
-        if (!gameOver)
+        if (!gameOver && !CamReposition.isInReposition){
             cam.position.add(0, Marble.lvl * Marble.MOVEMENT * marble.speed * SlowDown.slowDown * dt, 0);
+        }
+        else {
+            checkCamReposition();
+        }
 
         for (int i = 0; i < catchedBonuses.size; i++) {
             Bonus bonus = catchedBonuses.get(i);
@@ -174,7 +179,7 @@ public class PlayState extends State {
 
             if (bonus.collides(marble)) {
                 catchedBonuses.add(bonus);
-                bonuses.set(i, new ScoreBonus(bonus.getPosition().y - bonus.getOffset() + offset + (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT) * OBSTACLE_COUNT, WIDTH, offset));
+                bonuses.set(i, newBonus(bonus.getPosition().y - bonus.getOffset() + offset + (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT) * OBSTACLE_COUNT, offset));
                 //bonuses.removeIndex(i);
                 //scoreBonus += 100;
                 soundManager.gotBonus();
@@ -275,15 +280,18 @@ public class PlayState extends State {
 
     private Bonus newBonus(float position, int offset) {
         Bonus bonus;
-        switch (random.nextInt(6)) {
+        switch (random.nextInt(7)) {
             case 0:
-                bonus = new Invincible(position, WIDTH, offset);
+                bonus = new CamReposition(position, WIDTH, offset);
                 break;
             case 1: case 2: case 3: case 4:
                 bonus = new ScoreBonus(position, WIDTH, offset);
                 break;
             case 5:
                 bonus = new SlowDown(position, WIDTH, offset);
+                break;
+            case 6:
+                bonus = new Invincible(position, WIDTH, offset);
                 break;
             default:
                 bonus = null;
@@ -295,6 +303,11 @@ public class PlayState extends State {
         for (Vector2 v : bgs)
             if (cam.position.y - h / 2 > v.y + bg.getHeight())
                 v.add(0, 3 * bg.getHeight());
+    }
+
+    private void checkCamReposition () {
+        if(cam.position.y + 80 <= marble.getPosition().y)
+            CamReposition.isInReposition = false;
     }
 
 }

@@ -62,7 +62,9 @@ public class Marble {
             position.add(0, 0, -10 * lvl * speed * SlowDown.slowDown);
         else
             position.z = 0;
-
+/*
+POUR JOUER AVEC LES FLECHES QUAND T'ES SUR UN PUTAIN D'EMULATEUR !!!
+C'EST PAS OUF MAIS CA FONCTIONNE +_
         int arrow = 0;
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT))
             arrow = -10;
@@ -80,7 +82,20 @@ public class Marble {
             else if (isBlockedOnTop)
                 position.add(arrow * GravityRun.WIDTH / 75, 0, 0);
             else
-                position.add(arrow* GravityRun.WIDTH / 75, lvl * MOVEMENT * speed * SlowDown.slowDown * dt, 0);
+                position.add(arrow * GravityRun.WIDTH / 75, lvl * MOVEMENT * speed * SlowDown.slowDown * dt, 0);
+        }
+*/
+        if (!gameOver) {
+            if ((isBlockedOnRight && Gdx.input.getGyroscopeY() > 0) || (isBlockedOnLeft && Gdx.input.getGyroscopeY() < 0))
+                position.add(0, lvl * MOVEMENT * speed * SlowDown.slowDown * dt, 0);
+            else if ((isBlockedOnLeft && Gdx.input.getGyroscopeY() < 0) && isBlockedOnTop)
+                position.add(0, 0, 0);
+            else if ((isBlockedOnRight && Gdx.input.getGyroscopeY() > 0) && isBlockedOnTop)
+                position.add(0, 0, 0);
+            else if (isBlockedOnTop)
+                position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, 0, 0);
+            else
+                position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, lvl * MOVEMENT * speed * SlowDown.slowDown * dt, 0);
         }
 
         if (position.x < marbleAnimation.getDiameter(position.z) / 2)

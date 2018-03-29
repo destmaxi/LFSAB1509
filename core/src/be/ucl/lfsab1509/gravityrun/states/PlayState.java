@@ -85,8 +85,11 @@ public class PlayState extends State {
             }
         });
 
-        scoreLabel = new Label(i18n.format("score"), aaronScoreSkin, "score");
-        scoreLabel.setText(i18n.format("score", score));
+        scoreLabel = new Label(GravityRun.i18n.format("score"), aaronScoreSkin, "score");
+        scoreLabel.setText(GravityRun.i18n.format("score", score));
+
+        // TODO ça prend 100-200 msec
+
         scoreLabel.setPosition((width - scoreLabel.getWidth()) / 2, height - scoreLabel.getHeight());
 
         // TODO: mettre des coeurs pour montrer le nombre de vie restante
@@ -133,7 +136,7 @@ public class PlayState extends State {
         updateObstacles();
 
         score = (int) (marble.getCenterPosition().y / height * 100) + scoreBonus;
-        scoreLabel.setText(i18n.format("score", score));
+        scoreLabel.setText(GravityRun.i18n.format("score", score));
 
         if (!marble.isInvincible() && marble.isOutOfScreen(camera.position.y)) {
             soundManager.marbleBreak(gameOver);

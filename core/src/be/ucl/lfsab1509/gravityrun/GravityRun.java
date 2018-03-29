@@ -7,8 +7,10 @@ import be.ucl.lfsab1509.gravityrun.tools.User;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.I18NBundle;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -19,6 +21,7 @@ public class GravityRun extends ApplicationAdapter {
     public static int HEIGHT;
     public static final String TITLE = "Gravity Run";
     public static int WIDTH;
+    public static I18NBundle i18n;
 
     public static ArrayList<Integer> scoreList;
     public static Preferences pref;
@@ -41,6 +44,9 @@ public class GravityRun extends ApplicationAdapter {
         batch = new SpriteBatch();
         gsm = new GameStateManager();
         sound = new SoundManager();
+
+        FileHandle baseFileHandle = Gdx.files.internal("strings/string");
+        i18n = I18NBundle.createBundle(baseFileHandle);
 
         pref = Gdx.app.getPreferences("Player");
         pref.flush();

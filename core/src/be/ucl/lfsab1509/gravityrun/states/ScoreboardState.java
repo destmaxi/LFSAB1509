@@ -27,11 +27,11 @@ public class ScoreboardState extends State {
         float ch = height * 0.9f;
         float cw = width * 0.9f;
 
-        Label beginnerLabel = new Label(i18n.format("beginner") + " :", labelScoreBoardSkin, "round");
-        Label intermediateLabel = new Label(i18n.format("inter") + " :", labelScoreBoardSkin, "round");
-        Label expertLabel = new Label(i18n.format("expert") + " :", labelScoreBoardSkin, "round");
+        Label beginnerLabel = new Label(GravityRun.i18n.format("beginner") + " :", labelScoreBoardSkin, "round");
+        Label intermediateLabel = new Label(GravityRun.i18n.format("inter") + " :", labelScoreBoardSkin, "round");
+        Label expertLabel = new Label(GravityRun.i18n.format("expert") + " :", labelScoreBoardSkin, "round");
 
-        Label title = new Label(i18n.format("my_score"), titleSkin, "title");
+        Label title = new Label(GravityRun.i18n.format("my_score"), titleSkin, "title");
 
         List beginnerScoreList = new List(tableScoreBoardSkin);
         List intermediateScoreList = new List(tableScoreBoardSkin);

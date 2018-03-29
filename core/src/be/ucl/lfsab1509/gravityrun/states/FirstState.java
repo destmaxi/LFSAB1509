@@ -27,7 +27,7 @@ public class FirstState extends State {
     private boolean goingToMenuState = false;
     private Label errorLabel;
     private Stage stage;
-    private String username = i18n.format("username");
+    private String username = GravityRun.i18n.format("username");
 
     public FirstState(GameStateManager gameStateManager, SoundManager soundManager) {
         super(gameStateManager, soundManager);
@@ -35,15 +35,15 @@ public class FirstState extends State {
         float cw = width * 0.9f;
         float ch = height * 0.9f;
 
-        errorLabel = new Label(i18n.format("error_username_default"), aaronScoreSkin, "error");
+        errorLabel = new Label(GravityRun.i18n.format("error_username_default"), aaronScoreSkin, "error");
         errorLabel.setWrap(true);
         errorLabel.setWidth(cw);
         errorLabel.setAlignment(Align.center);
         errorLabel.setVisible(false);
 
-        Label title = new Label(i18n.format("welcome"), titleSkin, "title");
+        Label title = new Label(GravityRun.i18n.format("welcome"), titleSkin, "title");
 
-        TextButton startButton = new TextButton(i18n.format("start"), tableSkin, "round");
+        TextButton startButton = new TextButton(GravityRun.i18n.format("start"), tableSkin, "round");
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -93,13 +93,13 @@ public class FirstState extends State {
         if (isClickedStartButton) {
             Gdx.input.setOnscreenKeyboardVisible(false);
             // TODO utiliser la méthode checkUsername de la classe User
-            if (username.equals(i18n.format("username"))) {
+            if (username.equals(GravityRun.i18n.format("username"))) {
                 isClickedStartButton = false;
-                errorLabel.setText(i18n.format("error_username_default"));
+                errorLabel.setText(GravityRun.i18n.format("error_username_default"));
                 errorLabel.setVisible(true);
             } else if (username.length() > 42){
                 isClickedStartButton = false;
-                errorLabel.setText(i18n.format("error_username_length"));
+                errorLabel.setText(GravityRun.i18n.format("error_username_length"));
                 errorLabel.setVisible(true);
             } else {
                 initUser();

@@ -28,9 +28,9 @@ public class MenuState extends State {
         float ch = height * 0.9f;
         float cw = width * 0.9f;
 
-        Label title = new Label(i18n.format("menu"), titleSkin, "title");
+        Label title = new Label(GravityRun.i18n.format("menu"), titleSkin, "title");
 
-        TextButton optionButton = new TextButton(i18n.format("option"), tableSkin, "round");
+        TextButton optionButton = new TextButton(GravityRun.i18n.format("option"), tableSkin, "round");
         optionButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -38,7 +38,7 @@ public class MenuState extends State {
             }
         });
         // TODO ici, ça prend environ 10ms
-        TextButton startGameButton = new TextButton(i18n.format("new_game"), tableSkin, "round");
+        TextButton startGameButton = new TextButton(GravityRun.i18n.format("new_game"), tableSkin, "round");
         startGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -46,7 +46,7 @@ public class MenuState extends State {
             }
         });
 
-        hyLabel = new Label(i18n.format("hello", GravityRun.pref.getString("username")), tableSkin);
+        hyLabel = new Label(GravityRun.i18n.format("hello", GravityRun.pref.getString("username")), tableSkin);
         hyLabel.setWrap(true);
         hyLabel.setWidth(cw);
         hyLabel.setAlignment(Align.center);
@@ -95,7 +95,7 @@ public class MenuState extends State {
     @Override
     public void update(float dt) {
         Gdx.input.setInputProcessor(stage);
-        hyLabel.setText(i18n.format("hello", GravityRun.user.getUsername()));
+        hyLabel.setText(GravityRun.i18n.format("hello", GravityRun.user.getUsername()));
         handleInput();
     }
 

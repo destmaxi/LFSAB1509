@@ -35,9 +35,9 @@ public class OptionState extends State {
         float ch = height * 0.9f;
         float cw = width * 0.9f;
 
-        Label title = new Label(i18n.get("option"), titleSkin, "title");
+        Label title = new Label(GravityRun.i18n.get("option"), titleSkin, "title");
 
-        TextButton lvlButton = new TextButton(i18n.format("chose_lvl"), tableSkin, "round");
+        TextButton lvlButton = new TextButton(GravityRun.i18n.format("chose_lvl"), tableSkin, "round");
         lvlButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -45,7 +45,7 @@ public class OptionState extends State {
             }
         });
 
-        saveButton = new TextButton(i18n.format("save"), tableSkin, "round");
+        saveButton = new TextButton(GravityRun.i18n.format("save"), tableSkin, "round");
         saveButton.setVisible(false);
         saveButton.addListener(new ClickListener() {
             @Override
@@ -55,7 +55,7 @@ public class OptionState extends State {
             }
         });
 
-        TextButton scoreButton = new TextButton(i18n.format("my_score"), tableSkin, "round");
+        TextButton scoreButton = new TextButton(GravityRun.i18n.format("my_score"), tableSkin, "round");
         scoreButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -63,7 +63,7 @@ public class OptionState extends State {
             }
         });
 
-        TextButton usernameButton = new TextButton(i18n.format("mod_username"), tableSkin, "round");
+        TextButton usernameButton = new TextButton(GravityRun.i18n.format("mod_username"), tableSkin, "round");
         usernameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -91,17 +91,17 @@ public class OptionState extends State {
         });
 
         listBox = new List<String>(tableSkin);
-        listBox.setItems(i18n.format("beginner"), i18n.format("inter"), i18n.format("expert"));
+        listBox.setItems(GravityRun.i18n.format("beginner"), GravityRun.i18n.format("inter"), GravityRun.i18n.format("expert"));
         listBox.setVisible(false);
         listBox.setSelectedIndex(GravityRun.user.getIndexSelected());
         listBox.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (listBox.getSelected().equals(i18n.format("beginner")))
+                if (listBox.getSelected().equals(GravityRun.i18n.format("beginner")))
                     GravityRun.user.setIndexSelected(0);
-                else if (listBox.getSelected().equals(i18n.format("inter")))
+                else if (listBox.getSelected().equals(GravityRun.i18n.format("inter")))
                     GravityRun.user.setIndexSelected(1);
-                else if (listBox.getSelected().equals(i18n.format("expert")))
+                else if (listBox.getSelected().equals(GravityRun.i18n.format("expert")))
                     GravityRun.user.setIndexSelected(2);
                 listBox.setVisible(false);
             }

@@ -34,14 +34,14 @@ public class GameOverState extends State {
             if (GravityRun.scoreList.get(i) > userList.get(GravityRun.user.getIndexSelected()))
                 GravityRun.user.getHighScore().set(GravityRun.user.getIndexSelected(), GravityRun.scoreList.get(i));
 
-        TextButton menuButton = new TextButton(i18n.format("menu"), tableSkin, "round");
+        TextButton menuButton = new TextButton(GravityRun.i18n.format("menu"), tableSkin, "round");
         menuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 isClickedMenuButton = true;
             }
         });
-        TextButton replayButton = new TextButton(i18n.format("replay"), tableSkin, "round");
+        TextButton replayButton = new TextButton(GravityRun.i18n.format("replay"), tableSkin, "round");
         replayButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -49,10 +49,9 @@ public class GameOverState extends State {
             }
         });
 
-        Label score = new Label(i18n.format("final_score", PlayState.score), aaronScoreSkin);
-        Label highScore = new Label(i18n.format("high_score", GravityRun.user.getHighScore().get(GravityRun.user.getIndexSelected())), aaronScoreSkin);
-
-        Label title = new Label(i18n.format("game_over"), titleSkin, "title");
+        Label title = new Label(GravityRun.i18n.format("game_over"), titleSkin, "title");
+        Label score = new Label(GravityRun.i18n.format("final_score", PlayState.score), aaronScoreSkin);
+        Label highScore = new Label(GravityRun.i18n.format("high_score", GravityRun.user.getHighScore().get(GravityRun.user.getIndexSelected())), aaronScoreSkin);
 
         Container<Table> tableContainer = new Container<Table>();
         Table table = new Table();

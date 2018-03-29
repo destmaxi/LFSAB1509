@@ -1,5 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
+import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 import com.badlogic.gdx.Gdx;
@@ -25,14 +26,14 @@ public class PauseState extends State {
         float ch = height * 0.9f;
         float cw = width * 0.9f;
 
-        TextButton continueButton = new TextButton(i18n.format("continue"), tableSkin, "round");
+        TextButton continueButton = new TextButton(GravityRun.i18n.format("continue"), tableSkin, "round");
         continueButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 isClickedContinue = true;
             }
         });
-        TextButton quitButton = new TextButton(i18n.format("quit"), tableSkin, "round");
+        TextButton quitButton = new TextButton(GravityRun.i18n.format("quit"), tableSkin, "round");
         quitButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -40,9 +41,9 @@ public class PauseState extends State {
             }
         });
 
-        Label score = new Label(i18n.format("score", PlayState.score), aaronScoreSkin);
+        Label score = new Label(GravityRun.i18n.format("score", PlayState.score), aaronScoreSkin);
 
-        Label title = new Label(i18n.format("pause"), titleSkin, "title");
+        Label title = new Label(GravityRun.i18n.format("pause"), titleSkin, "title");
 
         Container<Table> tableContainer = new Container<Table>();
         Table table = new Table();

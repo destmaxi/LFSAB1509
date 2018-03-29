@@ -11,6 +11,8 @@ import java.util.Random;
 
 public abstract class Bonus {
 
+    public static Marble marble;
+
     float collideTime;
     private int offset;
     Shape2D bounds;
@@ -41,7 +43,7 @@ public abstract class Bonus {
         return position;
     }
 
-    public abstract boolean collides(Marble marble);
+    public abstract boolean collidesMarble();
 
     public abstract boolean isFinished();
 

@@ -21,9 +21,10 @@ public class Marble {
     public static int lvl;
 
     public boolean colliding = false;
-    private boolean isBlockedOnLeft = false, isBlockedOnRight = false, isBlockedOnTop = false;
+    private boolean blockedOnLeft = false, blockedOnRight = false, blockedOnTop = false, invincible = false, inWall = false;
     private Circle bounds;
-    public float speed;
+    public float speed = 1f;
+    private float slowDown = 1f;
     private MarbleAnimation marbleAnimation;
     private Texture marble;
     private Vector3 position, velocity;
@@ -57,21 +58,21 @@ public class Marble {
             position.z = JUMP_HEIGHT;
 
         if (position.z > 0 && !gameOver)
-            position.add(0, 0, -10 * lvl * speed * SlowDown.slowDown);
+            position.add(0, 0, -10 * lvl * speed * slowDown);
         else
             position.z = 0;
 
         if (!gameOver) {
-            if ((isBlockedOnRight && Gdx.input.getGyroscopeY() > 0) || (isBlockedOnLeft && Gdx.input.getGyroscopeY() < 0))
-                position.add(0, lvl * MOVEMENT * speed * SlowDown.slowDown * dt, 0);
-            else if ((isBlockedOnLeft && Gdx.input.getGyroscopeY() < 0) && isBlockedOnTop)
+            if ((blockedOnRight && Gdx.input.getGyroscopeY() > 0) || (blockedOnLeft && Gdx.input.getGyroscopeY() < 0))
+                position.add(0, lvl * MOVEMENT * speed * slowDown * dt, 0);
+            else if ((blockedOnLeft && Gdx.input.getGyroscopeY() < 0) && blockedOnTop)
                 position.add(0, 0, 0);
-            else if ((isBlockedOnRight && Gdx.input.getGyroscopeY() > 0) && isBlockedOnTop)
+            else if ((blockedOnRight && Gdx.input.getGyroscopeY() > 0) && blockedOnTop)
                 position.add(0, 0, 0);
-            else if (isBlockedOnTop)
+            else if (blockedOnTop)
                 position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, 0, 0);
             else
-                position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, lvl * MOVEMENT * speed * SlowDown.slowDown * dt, 0);
+                position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, lvl * MOVEMENT * speed * slowDown * dt, 0);
         }
 
         if (position.x < marbleAnimation.getDiameter(position.z) / 2)
@@ -92,7 +93,7 @@ public class Marble {
         return bounds;
     }
 
-    Vector3 getCenterPosition() {
+    public Vector3 getCenterPosition() {
         return position;
     }
 
@@ -104,32 +105,56 @@ public class Marble {
         return marbleAnimation.getFrame(position.z);
     }
 
-    public Vector3 getPosition() {
-        return new Vector3(position.x - marbleAnimation.getDiameter(position.z) / 2, position.y - marbleAnimation.getDiameter(position.z) / 2, position.z);
+    public int getNormalDiameter() {
+        return marbleAnimation.getDiameter(0);
+    }
+
+    public float getSlowDown() {
+        return slowDown;
     }
 
     public boolean isBlockedOnLeft() {
-        return isBlockedOnLeft;
+        return blockedOnLeft;
     }
 
     public boolean isBlockedOnRight() {
-        return isBlockedOnRight;
+        return blockedOnRight;
     }
 
     public boolean isBlockedOnTop() {
-        return isBlockedOnTop;
+        return blockedOnTop;
+    }
+
+    public boolean isInvincible() {
+        return invincible;
+    }
+
+    public boolean isInWall() {
+        return inWall;
     }
 
     public void setBlockedOnLeft(boolean blockedOnLeft) {
-        isBlockedOnLeft = blockedOnLeft;
+        this.blockedOnLeft = blockedOnLeft;
     }
 
     public void setBlockedOnRight(boolean blockedOnRight) {
-        isBlockedOnRight = blockedOnRight;
+        this.blockedOnRight = blockedOnRight;
     }
 
     public void setBlockedOnTop(boolean blockedOnTop) {
-        isBlockedOnTop = blockedOnTop;
+        this.blockedOnTop = blockedOnTop;
+    }
+
+    public void setInvincible(boolean invincible) {
+        this.invincible = invincible;
+    }
+
+    public void setInWall(boolean inWall) {
+        this.inWall = inWall;
+    }
+
+    public void setSlowDown(float slowDown) {
+        this.slowDown = slowDown;
     }
 
 }

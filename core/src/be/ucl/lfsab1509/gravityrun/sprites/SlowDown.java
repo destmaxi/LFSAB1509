@@ -5,19 +5,18 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class SlowDown extends Bonus {
 
-    public static float slowDown = 1f;
-    public static int activeSlowDowns = 0;
+    private static int activeSlowDowns = 0;
 
     public SlowDown(float y, int offset, int sw) {
         super(y, offset, "drawable-" + sw + "/slowdown.png");
     }
 
     @Override
-    public boolean collides(Marble marble) {
+    public boolean collidesMarble() {
         if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
             activeSlowDowns++;
             collideTime = 0;
-            slowDown = .5f;
+            marble.setSlowDown(.5f);
             return true;
         }
         return false;
@@ -32,11 +31,12 @@ public class SlowDown extends Bonus {
     public void update(float dt) {
         collideTime += dt;
 
-        if (collideTime >= 5) {
-            activeSlowDowns--;
-            if (activeSlowDowns == 0)
-                slowDown = 1f;
-        }
+        if (collideTime >= 5 && --activeSlowDowns == 0)
+            marble.setSlowDown(1f);
+    }
+
+    public static void resetBonus() {
+        activeSlowDowns = 0;
     }
 
 }

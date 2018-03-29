@@ -12,7 +12,7 @@ public class ScoreBonus extends Bonus {
     }
 
     @Override
-    public boolean collides(Marble marble) {
+    public boolean collidesMarble() {
         return Intersector.overlaps(marble.getBounds(), (Rectangle) bounds);
     }
 

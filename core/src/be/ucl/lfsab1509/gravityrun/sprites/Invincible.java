@@ -5,19 +5,18 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Invincible extends Bonus {
 
-    public static boolean inWall = false, isInvincible = false;
-    public static int activeInvincibles = 0;
+    private static int activeInvincibles = 0;
 
     public Invincible(float y, int offset, int sw) {
         super(y, offset, "drawable-" + sw + "/invincible.png");
     }
 
     @Override
-    public boolean collides(Marble marble) {
+    public boolean collidesMarble() {
         if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
             activeInvincibles++;
             collideTime = 0;
-            isInvincible = true;
+            marble.setInvincible(true);
             return true;
         }
         return false;
@@ -32,13 +31,14 @@ public class Invincible extends Bonus {
     public void update(float dt) {
         collideTime += dt;
 
-        if (collideTime >= 3) {
-            activeInvincibles--;
-            if (activeInvincibles == 0) {
-                inWall = true;
-                isInvincible = false;
-            }
+        if (collideTime >= 3 && --activeInvincibles == 0) {
+            marble.setInvincible(false);
+            marble.setInWall(true);
         }
+    }
+
+    public static void resetBonus() {
+        activeInvincibles = 0;
     }
 
 }

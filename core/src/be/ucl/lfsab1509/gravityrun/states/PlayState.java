@@ -56,11 +56,8 @@ public class PlayState extends State {
 
         if (GravityRun.scoreList == null)
             GravityRun.scoreList = new ArrayList<Integer>();
-        Invincible.activeInvincibles = 0;
-        Invincible.inWall = false;
-        Invincible.isInvincible = false;
-        SlowDown.activeSlowDowns = 0;
-        SlowDown.slowDown = 1f;
+        Invincible.resetBonus();
+        SlowDown.resetBonus();
         gameOver = false;
         isCollideWall = false;
         scoreBonus = 0;

@@ -1,16 +1,7 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.sprites.Bonus;
-import be.ucl.lfsab1509.gravityrun.sprites.Hole;
-import be.ucl.lfsab1509.gravityrun.sprites.Invincible;
-import be.ucl.lfsab1509.gravityrun.sprites.LargeHole;
-import be.ucl.lfsab1509.gravityrun.sprites.CamReposition;
-import be.ucl.lfsab1509.gravityrun.sprites.Wall;
-import be.ucl.lfsab1509.gravityrun.sprites.Marble;
-import be.ucl.lfsab1509.gravityrun.sprites.Obstacle;
-import be.ucl.lfsab1509.gravityrun.sprites.ScoreBonus;
-import be.ucl.lfsab1509.gravityrun.sprites.SlowDown;
+import be.ucl.lfsab1509.gravityrun.sprites.*;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 import com.badlogic.gdx.Gdx;
@@ -45,7 +36,6 @@ public class PlayState extends State {
     private Array<Bonus> bonuses, catchedBonuses;
     private Array<Obstacle> obstacles;
     private Array<Vector2> backgroundPositions;
-    private boolean isClickedPauseButton = false;
     private Label scoreLabel;
     private Marble marble;
     private Random random;
@@ -67,9 +57,9 @@ public class PlayState extends State {
         isCollideWall = false;
         scoreBonus = 0;
 
+        Bonus.initMarble(marble);
         Invincible.resetBonus();
         SlowDown.resetBonus();
-        Bonus.initMarble(marble);
 
         bonuses = new Array<Bonus>();
         catchedBonuses = new Array<Bonus>();
@@ -83,7 +73,6 @@ public class PlayState extends State {
         for (int i = 0; i < 3; i++)
             backgroundPositions.add(new Vector2((width - background.getWidth()) / 2, -height / 2 + i * background.getHeight()));
 
-
         ImageButton pauseButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(pauseImage)));
         pauseButton.setPosition(0, height - pauseButton.getHeight());
         pauseButton.addListener(new ChangeListener() {
@@ -92,9 +81,6 @@ public class PlayState extends State {
                 handlePause();
             }
         });
-
-
-        // TODO ça prend 100-200 msec
 
         scoreLabel = new Label(i18n.format("score"), aaronScoreSkin, "score");
         scoreLabel.setText(i18n.format("score", score));
@@ -135,10 +121,10 @@ public class PlayState extends State {
 
         marble.update(dt, gameOver);
 
-        updateCamera(dt);
-        updateGround();
-        updateCatchedBonuses(dt);
         updateBonuses();
+        updateCamera(dt);
+        updateCatchedBonuses(dt);
+        updateGround();
         updateObstacles();
 
         score = (int) (marble.getCenterPosition().y / height * 100) + scoreBonus;
@@ -172,11 +158,10 @@ public class PlayState extends State {
         float marbleY = marble.getCenterPosition().y - marble.getDiameter() / 2;
         spriteBatch.draw(marble.getMarble(), marbleX, marbleY);
 
-        if (gameOver) {
+        if (gameOver)
             spriteBatch.draw(gameOverImage,
                     camera.position.x - gameOverImage.getWidth() / 2,
                     camera.position.y);
-        }
 
         spriteBatch.end();
 
@@ -238,21 +223,6 @@ public class PlayState extends State {
         return Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE);
     }
 
-    private Obstacle newObstacle(float position) {
-        Obstacle obstacle;
-        switch (random.nextInt(5)) {
-            case 0:
-                obstacle = new Hole(position, STANDARD_WIDTH);
-                break;
-            case 3:
-                obstacle = new LargeHole(position, STANDARD_WIDTH);
-                break;
-            default:
-                obstacle = new Wall(position, STANDARD_WIDTH, marble.getNormalDiameter());
-        }
-        return obstacle;
-    }
-
     private void handleEndGame() {
         if (gameOver) {
             GravityRun.scoreList.add(score);
@@ -288,12 +258,49 @@ public class PlayState extends State {
         return bonus;
     }
 
+    private Obstacle newObstacle(float position) {
+        Obstacle obstacle;
+        switch (random.nextInt(5)) {
+            case 0:
+                obstacle = new Hole(position, STANDARD_WIDTH);
+                break;
+            case 3:
+                obstacle = new LargeHole(position, STANDARD_WIDTH);
+                break;
+            default:
+                obstacle = new Wall(position, STANDARD_WIDTH, marble.getNormalDiameter());
+        }
+        return obstacle;
+    }
+
+    private void obstacleReposition(Obstacle obstacle, int i) {
+        float position = obstacle.getPosition().y + (OBSTACLE_SPACING + OBSTACLE_HEIGHT) * OBSTACLE_COUNT;
+
+        if (obstacle.isOutOfScreen(camera.position.y)) {
+            obstacle.dispose();
+            obstacles.set(i, newObstacle(position));
+        }
+
+        if (!isCollideWall || collidedWall == i) {
+            obstacle.collides(marble, soundManager);
+            collidedWall = i;
+        }
+    }
+
     private void updateBonuses() {
         for (int i = 0; i < bonuses.size; i++) {
             Bonus bonus = bonuses.get(i);
             if (bonus != null)
                 bonusReposition(bonus, i);
         }
+    }
+
+    private void updateCamera(float dt) {
+        if (!gameOver) {
+            checkCamReposition();
+            camera.position.add(0, marble.difficulty * Marble.MOVEMENT * marble.speed * marble.getSlowDown() * marble.getRepositioning() * dt, 0);
+        }
+        camera.update();
     }
 
     private void updateCatchedBonuses(float dt) {
@@ -307,14 +314,6 @@ public class PlayState extends State {
         }
     }
 
-    private void updateCamera(float dt) {
-        if (!gameOver) {
-            checkCamReposition();
-            camera.position.add(0, Marble.difficulty * Marble.MOVEMENT * marble.speed * marble.getSlowDown() * marble.getRepositioning() * dt, 0);
-        }
-        camera.update();
-    }
-
     private void updateGround() {
         for (Vector2 v : backgroundPositions)
             if (camera.position.y - height / 2 > v.y + background.getHeight())
@@ -322,25 +321,8 @@ public class PlayState extends State {
     }
 
     private void updateObstacles() {
-        for (int i = 0; i < obstacles.size; i++) {
-            Obstacle obstacle = obstacles.get(i);
-
-            if ((camera.position.y - camera.viewportHeight / 2) >= obstacle.getPosition().y + obstacle.getObstacleTexture().getHeight()) {
-                obstacles.get(i).dispose();
-                obstacles.set(i, newObstacle(obstacle.getPosition().y + (OBSTACLE_SPACING + OBSTACLE_HEIGHT) * OBSTACLE_COUNT));
-            }
-
-            boolean temp = gameOver; //TODO: éviter les sides-effects
-            if (isCollideWall) {
-                if (obstacle.equals(obstacles.get(collidedWall)) && !gameOver)
-                    obstacle.collides((marble));
-            } else {
-                obstacle.collides(marble);
-                collidedWall = i;
-            }
-            if (gameOver != temp)
-                soundManager.marbleBreak(gameOver);
-        }
+        for (int i = 0; i < obstacles.size; i++)
+            obstacleReposition(obstacles.get(i), i);
     }
 
 }

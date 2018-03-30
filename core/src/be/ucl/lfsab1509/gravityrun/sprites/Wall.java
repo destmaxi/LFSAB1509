@@ -2,6 +2,7 @@ package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.states.PlayState;
+import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
@@ -16,7 +17,7 @@ public class Wall extends Obstacle {
     }
 
     @Override
-    public void collides(Marble marble) {
+    public void collides(Marble marble, SoundManager soundManager) {
         float marbleCenterX = marble.getCenterPosition().x;
         float marbleCenterY = marble.getCenterPosition().y;
 

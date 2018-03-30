@@ -2,6 +2,8 @@ package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.states.PlayState;
+import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Intersector;
@@ -25,9 +27,11 @@ public abstract class Obstacle {
         bounds = new Rectangle(position.x, position.y, obstacleTexture.getWidth(), obstacleTexture.getHeight());
     }
 
-    public void collides(Marble marble) {
-        if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds) && marble.getCenterPosition().z == 0)
+    public void collides(Marble marble, SoundManager soundManager) {
+        if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds) && marble.getCenterPosition().z == 0) {
+            soundManager.marbleBreak(PlayState.gameOver);
             PlayState.gameOver = true;
+        }
     }
 
     public void dispose() {
@@ -36,6 +40,13 @@ public abstract class Obstacle {
 
     public Vector2 getPosition() {
         return position;
+    }
+
+    public boolean isOutOfScreen(float screenCenterY) {
+        float screenBottom = screenCenterY - GravityRun.HEIGHT / 2;
+        float bonusTop = position.y + obstacleTexture.getHeight();
+
+        return screenBottom >= bonusTop;
     }
 
     public void render(SpriteBatch spriteBatch) {

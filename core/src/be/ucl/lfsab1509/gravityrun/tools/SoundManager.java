@@ -9,26 +9,35 @@ import com.badlogic.gdx.audio.Sound;
  */
 
 public class SoundManager {
-    private Music menuMusic;
-    private Music gameMusic;
-    private Sound marbleBreak;
-    private Sound bonus;
+
     private final float soundLevel = 0.5f;
+    private Music gameMusic, menuMusic;
+    private Sound bonus, marbleBreak;
 
     public SoundManager() {
+        this.bonus = Gdx.audio.newSound(Gdx.files.internal("sound/bonus.wav"));
         this.gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/6_symphony.mp3"));
+        this.marbleBreak = Gdx.audio.newSound(Gdx.files.internal("sound/break.wav"));
         this.menuMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/2_suite_holst.mp3"));
         gameMusic.setLooping(true);
         menuMusic.setLooping(true);
-        this.marbleBreak = Gdx.audio.newSound(Gdx.files.internal("sound/break.wav"));
-        this.bonus = Gdx.audio.newSound(Gdx.files.internal("sound/bonus.wav"));
     }
 
-    public void playMenu() {
-        if (gameMusic.isPlaying())
-            gameMusic.pause();
-        if (!menuMusic.isPlaying())
-            menuMusic.play();
+    public void dispose() {
+        gameMusic.dispose();
+        menuMusic.dispose();
+
+        bonus.dispose();
+        marbleBreak.dispose();
+    }
+
+    public void gotBonus() {
+        bonus.play(soundLevel);
+    }
+
+    public void marbleBreak(boolean gameOver) {
+        if (!gameOver)
+            marbleBreak.play(soundLevel);
     }
 
     public void playGame() {
@@ -38,13 +47,11 @@ public class SoundManager {
             gameMusic.play();
     }
 
-    public void replayMenu() {
+    public void playMenu() {
         if (gameMusic.isPlaying())
             gameMusic.pause();
-        if (!menuMusic.isPlaying()) {
-            menuMusic.stop();
+        if (!menuMusic.isPlaying())
             menuMusic.play();
-        }
     }
 
     public void replayGame() {
@@ -56,18 +63,13 @@ public class SoundManager {
         }
     }
 
-    public void marbleBreak(boolean gameOver) {
-        if (!gameOver)
-            marbleBreak.play(soundLevel);
+    public void replayMenu() {
+        if (gameMusic.isPlaying())
+            gameMusic.pause();
+        if (!menuMusic.isPlaying()) {
+            menuMusic.stop();
+            menuMusic.play();
+        }
     }
 
-    public void gotBonus() {
-        bonus.play(soundLevel);
-    }
-
-    public void dispose() {
-        menuMusic.dispose();
-        gameMusic.dispose();
-        marbleBreak.dispose();
-    }
 }

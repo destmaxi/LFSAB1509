@@ -18,21 +18,20 @@ public class Marble {
     public static final int MOVEMENT = GravityRun.HEIGHT / 5;
     public static final float SQRT_2 = (float) Math.sqrt(2);
 
-    public static int difficulty;
-
     private boolean blockedOnLeft = false, blockedOnRight = false, blockedOnTop = false, invincible = false, inWall = false;
     private Circle bounds;
     public float speed = 1f;
-    private float slowDown = 1f, repositioning = 1f;
+    private float repositioning = 1f, slowDown = 1f;
+    public int difficulty;
     private MarbleAnimation marbleAnimation;
     private Texture marble;
     private Vector3 position, velocity;
 
     public Marble(int x, int y, int standardWidth) {
-        position = new Vector3(x, y, 0);
-        velocity = new Vector3(0, MOVEMENT, 0);
         marble = new Texture("drawable-" + standardWidth + "/marbles.png");
         marbleAnimation = new MarbleAnimation(marble, standardWidth);
+        position = new Vector3(x, y, 0);
+        velocity = new Vector3(0, MOVEMENT, 0);
         bounds = new Circle(x, y, marbleAnimation.getDiameter(position.z) / 2);
         difficulty = GravityRun.user.getIndexSelected() + 1;
     }

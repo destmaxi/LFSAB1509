@@ -1,7 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 import com.badlogic.gdx.Gdx;
@@ -32,8 +31,8 @@ public class GameOverState extends State {
 
         ArrayList<Integer> userList = GravityRun.user.getHighScore();
         for (int i = 0; i < GravityRun.scoreList.size(); i++)
-            if (GravityRun.scoreList.get(i) > userList.get(Marble.difficulty - 1))
-                GravityRun.user.getHighScore().set(Marble.difficulty - 1, GravityRun.scoreList.get(i));
+            if (GravityRun.scoreList.get(i) > userList.get(GravityRun.user.getIndexSelected()))
+                GravityRun.user.getHighScore().set(GravityRun.user.getIndexSelected(), GravityRun.scoreList.get(i));
 
         TextButton menuButton = new TextButton(i18n.format("menu"), tableSkin, "round");
         menuButton.addListener(new ChangeListener() {
@@ -51,7 +50,7 @@ public class GameOverState extends State {
         });
 
         Label score = new Label(i18n.format("final_score", PlayState.score), aaronScoreSkin);
-        Label highScore = new Label(i18n.format("high_score", GravityRun.user.getHighScore().get(Marble.difficulty - 1)), aaronScoreSkin);
+        Label highScore = new Label(i18n.format("high_score", GravityRun.user.getHighScore().get(GravityRun.user.getIndexSelected())), aaronScoreSkin);
 
         Label title = new Label(i18n.format("game_over"), titleSkin, "title");
 
@@ -87,7 +86,7 @@ public class GameOverState extends State {
         }
 
         if (isClickedMenuButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            switch (Marble.difficulty) {
+            switch (GravityRun.user.getIndexSelected() + 1) {
                 case 1:
                     GravityRun.user.setBeginner(add(GravityRun.user.getBeginner()));
                     break;

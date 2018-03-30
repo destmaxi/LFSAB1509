@@ -1,7 +1,10 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
+import be.ucl.lfsab1509.gravityrun.GravityRun;
+import be.ucl.lfsab1509.gravityrun.states.PlayState;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
@@ -22,12 +25,13 @@ public abstract class Obstacle {
         bounds = new Rectangle(position.x, position.y, obstacleTexture.getWidth(), obstacleTexture.getHeight());
     }
 
-    public void dispose() {
-        obstacleTexture.dispose();
+    public void collides(Marble marble) {
+        if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds) && marble.getCenterPosition().z == 0)
+            PlayState.gameOver = true;
     }
 
-    public Texture getObstacleTexture() {
-        return obstacleTexture;
+    public void dispose() {
+        obstacleTexture.dispose();
     }
 
     public Vector2 getPosition() {
@@ -42,7 +46,5 @@ public abstract class Obstacle {
         ((Rectangle) bounds).x = x;
         position.x = x;
     }
-
-    public abstract void collides(Marble marble);
 
 }

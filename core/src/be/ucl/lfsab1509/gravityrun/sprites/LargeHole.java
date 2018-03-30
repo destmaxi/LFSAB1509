@@ -7,8 +7,8 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class LargeHole extends Obstacle {
 
-    public LargeHole(float y, int sw) {
-        super(y, "drawable-" + sw + "/largehole.png");
+    public LargeHole(float y, int standardWidth) {
+        super(y, "drawable-" + standardWidth + "/largehole.png");
     }
 
     @Override

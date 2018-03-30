@@ -7,8 +7,8 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class ScoreBonus extends Bonus {
 
-    public ScoreBonus(float y, int offset, int sw) {
-        super(y, offset, "drawable-" + sw + "/scorebonus.png");
+    public ScoreBonus(float y, int offset, int standardWidth) {
+        super(y, offset, "drawable-" + standardWidth + "/scorebonus.png");
     }
 
     @Override

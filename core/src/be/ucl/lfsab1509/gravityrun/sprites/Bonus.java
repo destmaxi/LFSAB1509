@@ -22,10 +22,10 @@ public abstract class Bonus {
 
     Bonus(float y, int offset, String path) {
         this.offset = offset;
-        Random rand = new Random();
+        Random random = new Random();
 
         bonusTexture = new Texture(path);
-        position = new Vector2(rand.nextInt(GravityRun.WIDTH - bonusTexture.getWidth()), y);
+        position = new Vector2(random.nextInt(GravityRun.WIDTH - bonusTexture.getWidth()), y);
         bounds = new Rectangle(position.x, position.y, bonusTexture.getWidth(), bonusTexture.getHeight());    }
 
     public void dispose() {

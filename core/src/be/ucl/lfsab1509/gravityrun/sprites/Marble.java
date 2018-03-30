@@ -28,11 +28,11 @@ public class Marble {
     private Texture marble;
     private Vector3 position, velocity;
 
-    public Marble(int x, int y, int sw) {
+    public Marble(int x, int y, int standardWidth) {
         position = new Vector3(x, y, 0);
         velocity = new Vector3(0, MOVEMENT, 0);
-        marble = new Texture("drawable-" + sw + "/marbles.png");
-        marbleAnimation = new MarbleAnimation(marble, sw);
+        marble = new Texture("drawable-" + standardWidth + "/marbles.png");
+        marbleAnimation = new MarbleAnimation(marble, standardWidth);
         bounds = new Circle(x, y, marbleAnimation.getDiameter(position.z) / 2);
         difficulty = GravityRun.user.getIndexSelected() + 1;
     }
@@ -136,18 +136,6 @@ C'EST PAS OUF MAIS CA FONCTIONNE +_
 
     public float getSlowDown() {
         return slowDown;
-    }
-
-    public boolean isBlockedOnLeft() {
-        return blockedOnLeft;
-    }
-
-    public boolean isBlockedOnRight() {
-        return blockedOnRight;
-    }
-
-    public boolean isBlockedOnTop() {
-        return blockedOnTop;
     }
 
     public boolean isInvincible() {

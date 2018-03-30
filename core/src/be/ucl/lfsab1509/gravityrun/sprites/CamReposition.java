@@ -5,8 +5,8 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class CamReposition extends Bonus {
 
-    public CamReposition(float y, int offset, int sw) {
-        super(y, offset, "drawable-" + sw + "/slowdown.png");
+    public CamReposition(float y, int offset, int standardWidth) {
+        super(y, offset, "drawable-" + standardWidth + "/slowdown.png");
     }
 
     @Override

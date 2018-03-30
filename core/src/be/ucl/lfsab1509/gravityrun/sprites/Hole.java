@@ -8,9 +8,9 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Hole extends Obstacle {
 
-    public Hole(float y, int sw) {
-        super(y, "drawable-" + sw + "/hole.png");
-        setX(rand.nextInt(GravityRun.WIDTH - obstacleTexture.getWidth()));
+    public Hole(float y, int standardWidth) {
+        super(y, "drawable-" + standardWidth + "/hole.png");
+        setX(random.nextInt(GravityRun.WIDTH - obstacleTexture.getWidth()));
     }
 
     @Override

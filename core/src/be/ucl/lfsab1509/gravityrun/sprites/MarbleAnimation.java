@@ -15,14 +15,14 @@ public class MarbleAnimation {
     private float currentFrameTime;
     private int frame;
 
-    MarbleAnimation(Texture marbles, float sw) {
+    MarbleAnimation(Texture marbles, float standardWidth) {
         TextureRegion region = new TextureRegion(marbles);
         frames = new Array<Array<TextureRegion>>();
         for (int i = 0; i < MARBLE_COUNT; i++) {
             frames.add(new Array<TextureRegion>());
             for (int j = 0; j < FRAME_COUNT; j++) {
-                int diameter = (int) ((8 + i) * sw / 80);
-                int x = (int) ((i * (i + 15)) * sw / 160);
+                int diameter = (int) ((8 + i) * standardWidth / 80);
+                int x = (int) ((i * (i + 15)) * standardWidth / 160);
                 int y = j * diameter;
                 frames.get(i).add(new TextureRegion(region, x, y, diameter, diameter));
             }

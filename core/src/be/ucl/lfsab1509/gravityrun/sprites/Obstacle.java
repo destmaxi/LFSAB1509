@@ -10,13 +10,13 @@ import java.util.Random;
 
 public abstract class Obstacle {
 
-    Random rand;
+    Random random;
     Shape2D bounds;
     Texture obstacleTexture;
     Vector2 position;
 
     Obstacle(float y, String path) {
-        rand = new Random();
+        random = new Random();
         obstacleTexture = new Texture(path);
         position = new Vector2(0, y);
         bounds = new Rectangle(position.x, position.y, obstacleTexture.getWidth(), obstacleTexture.getHeight());

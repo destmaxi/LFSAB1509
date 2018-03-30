@@ -7,8 +7,8 @@ public class SlowDown extends Bonus {
 
     private static int activeSlowDowns = 0;
 
-    public SlowDown(float y, int offset, int sw) {
-        super(y, offset, "drawable-" + sw + "/slowdown.png");
+    public SlowDown(float y, int offset, int standardWidth) {
+        super(y, offset, "drawable-" + standardWidth + "/slowdown.png");
     }
 
     @Override

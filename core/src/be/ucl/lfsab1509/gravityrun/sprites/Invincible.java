@@ -7,8 +7,8 @@ public class Invincible extends Bonus {
 
     private static int activeInvincibles = 0;
 
-    public Invincible(float y, int offset, int sw) {
-        super(y, offset, "drawable-" + sw + "/invincible.png");
+    public Invincible(float y, int offset, int standardWidth) {
+        super(y, offset, "drawable-" + standardWidth + "/invincible.png");
     }
 
     @Override

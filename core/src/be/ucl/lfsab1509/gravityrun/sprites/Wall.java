@@ -8,17 +8,17 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Wall extends Obstacle {
 
-    public Wall(float y, int sw, int marbleWidth) {
-        super(y, "drawable-" + sw + "/wall.png");
-        setX(rand.nextBoolean()
-                ? -rand.nextInt(2 * marbleWidth)
-                : -rand.nextInt(2 * marbleWidth) + GravityRun.WIDTH / 2);
+    public Wall(float y, int standardWidth, int marbleWidth) {
+        super(y, "drawable-" + standardWidth + "/wall.png");
+        setX(random.nextBoolean()
+                ? -random.nextInt(2 * marbleWidth)
+                : -random.nextInt(2 * marbleWidth) + GravityRun.WIDTH / 2);
     }
 
     @Override
     public void collides(Marble marble) {
-        float marbleCx = marble.getCenterPosition().x;
-        float marbleCy = marble.getCenterPosition().y;
+        float marbleCenterX = marble.getCenterPosition().x;
+        float marbleCenterY = marble.getCenterPosition().y;
 
         float bottomBound = position.y;
         float leftBound = position.x;
@@ -28,10 +28,10 @@ public class Wall extends Obstacle {
             marble.setInWall(false);
 
             if (!marble.isInvincible() && Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
-                marble.setBlockedOnLeft(marbleCx > rightBound);
-                marble.setBlockedOnRight(marbleCx < leftBound);
-                marble.setBlockedOnTop(marbleCy < bottomBound);
-                PlayState.isCollideWall = marbleCx > rightBound || marbleCx < leftBound || marbleCy < bottomBound;
+                marble.setBlockedOnLeft(marbleCenterX > rightBound);
+                marble.setBlockedOnRight(marbleCenterX < leftBound);
+                marble.setBlockedOnTop(marbleCenterY < bottomBound);
+                PlayState.isCollideWall = marbleCenterX > rightBound || marbleCenterX < leftBound || marbleCenterY < bottomBound;
             } else {
                 marble.setBlockedOnLeft(false);
                 marble.setBlockedOnRight(false);

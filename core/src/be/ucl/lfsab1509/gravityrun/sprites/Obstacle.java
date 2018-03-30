@@ -9,8 +9,6 @@ import java.util.Random;
 
 public abstract class Obstacle {
 
-    public static int OBSTACLE_HEIGHT;
-
     Random rand;
     Shape2D bounds;
     Texture obstacleTexture;
@@ -41,4 +39,5 @@ public abstract class Obstacle {
     }
 
     public abstract void collides(Marble marble);
+
 }

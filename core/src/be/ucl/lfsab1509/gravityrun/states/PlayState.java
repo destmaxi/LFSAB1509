@@ -34,6 +34,7 @@ import java.util.Random;
 public class PlayState extends State {
 
     private static int OBSTACLE_COUNT;
+    private static int OBSTACLE_HEIGHT;
     private static int OBSTACLE_SPACING;
     private static int WIDTH;
 
@@ -78,7 +79,6 @@ public class PlayState extends State {
             WIDTH = 1440;
         else
             WIDTH = 1600;
-        Obstacle.OBSTACLE_HEIGHT = WIDTH / 5;
 
         bg = new Texture("drawable-" + WIDTH + "/background.png");
         bgs = new Array<Vector2>();
@@ -112,16 +112,17 @@ public class PlayState extends State {
         scoreStage.addActor(scoreLabel);
         scoreStage.addActor(pauseButton);
 
-        OBSTACLE_SPACING = (int) (1.5f * Obstacle.OBSTACLE_HEIGHT);
-        OBSTACLE_COUNT = (int) (1.5f * h / (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT));
+        OBSTACLE_HEIGHT = WIDTH / 5;
+        OBSTACLE_SPACING = (int) (1.5f * OBSTACLE_HEIGHT);
+        OBSTACLE_COUNT = (int) (1.5f * h / (OBSTACLE_SPACING + OBSTACLE_HEIGHT));
 
         random = new Random();
         for (int i = 1; i <= OBSTACLE_COUNT; i++)
-            obstacles.add(newObstacle((i + 1) * (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT)));
+            obstacles.add(newObstacle((i + 1) * (OBSTACLE_SPACING + OBSTACLE_HEIGHT)));
 
         for (int i = 1; i <= OBSTACLE_COUNT; i++) {
             int offset = random.nextInt(OBSTACLE_SPACING - WIDTH / 5);
-            bonuses.add(newBonus((i + 1) * (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT) + Obstacle.OBSTACLE_HEIGHT + offset, offset));
+            bonuses.add(newBonus((i + 1) * (OBSTACLE_SPACING + OBSTACLE_HEIGHT) + OBSTACLE_HEIGHT + offset, offset));
         }
 
         cam.position.y = marble.getCenterPosition().y;
@@ -171,12 +172,12 @@ public class PlayState extends State {
 
             if ((cam.position.y - cam.viewportHeight / 2) >= bonus.getPosition().y + bonus.getObstacleTexture().getHeight()) {
                 bonuses.get(i).dispose();
-                bonuses.set(i, newBonus(bonus.getPosition().y - bonus.getOffset() + offset + (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT) * OBSTACLE_COUNT, offset));
+                bonuses.set(i, newBonus(bonus.getPosition().y - bonus.getOffset() + offset + (OBSTACLE_SPACING + OBSTACLE_HEIGHT) * OBSTACLE_COUNT, offset));
             }
 
             if (bonus.collidesMarble()) {
                 catchedBonuses.add(bonus);
-                bonuses.set(i, new ScoreBonus(bonus.getPosition().y - bonus.getOffset() + offset + (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT) * OBSTACLE_COUNT, offset, WIDTH));
+                bonuses.set(i, new ScoreBonus(bonus.getPosition().y - bonus.getOffset() + offset + (OBSTACLE_SPACING + OBSTACLE_HEIGHT) * OBSTACLE_COUNT, offset, WIDTH));
                 soundManager.gotBonus();
             }
         }
@@ -186,7 +187,7 @@ public class PlayState extends State {
 
             if ((cam.position.y - cam.viewportHeight / 2) >= obs.getPosition().y + obs.getObstacleTexture().getHeight()) {
                 obstacles.get(i).dispose();
-                obstacles.set(i, newObstacle(obs.getPosition().y + (OBSTACLE_SPACING + Obstacle.OBSTACLE_HEIGHT) * OBSTACLE_COUNT));
+                obstacles.set(i, newObstacle(obs.getPosition().y + (OBSTACLE_SPACING + OBSTACLE_HEIGHT) * OBSTACLE_COUNT));
             }
 
             boolean temp = gameOver; //TODO: éviter les sides-effects

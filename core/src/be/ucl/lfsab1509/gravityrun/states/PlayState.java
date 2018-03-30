@@ -15,7 +15,6 @@ import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -155,9 +154,6 @@ public class PlayState extends State {
 
     @Override
     public void render(SpriteBatch spriteBatch) {
-        Gdx.gl.glClearColor(0, 1, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         spriteBatch.begin();
 
         spriteBatch.setProjectionMatrix(camera.combined);
@@ -278,7 +274,7 @@ public class PlayState extends State {
                 bonus = new ScoreBonus(position, offset, STANDARD_WIDTH);
                 break;
             case 3:
-                bonus = new CamReposition(position, STANDARD_WIDTH, offset);
+                bonus = new CamReposition(position, offset, STANDARD_WIDTH);
                 break;
             case 4:
                 bonus = new Invincible(position, offset, STANDARD_WIDTH);

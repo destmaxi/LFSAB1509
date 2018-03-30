@@ -20,12 +20,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class OptionState extends AbstractMenuState {
 
-    private boolean isClickedSaveButton = false;
     private List<String> listBox;
-    private String username;
-    private String newUsername;
     private TextButton saveButton;
     private TextField usernameField;
+    private String username;
+    private String newUsername;
 
     OptionState(GameStateManager gameStateManager, SoundManager soundManager) {
         super(gameStateManager, soundManager);
@@ -40,17 +39,6 @@ public class OptionState extends AbstractMenuState {
             }
         });
 
-        saveButton = new TextButton(GravityRun.i18n.format("save"), tableSkin, "round");
-        saveButton.setVisible(false);
-        saveButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.input.setOnscreenKeyboardVisible(false);
-                isClickedSaveButton = true;
-            }
-        });
-
-
         TextButton usernameButton = new TextButton(GravityRun.i18n.format("mod_username"), tableSkin, "round");
         usernameButton.addListener(new ClickListener() {
             @Override
@@ -58,6 +46,33 @@ public class OptionState extends AbstractMenuState {
                 Gdx.input.setOnscreenKeyboardVisible(false);
                 saveButton.setVisible(!saveButton.isVisible());
                 usernameField.setVisible(!usernameField.isVisible());
+                // TODO mettre ce code à un meilleur endroit
+                if (!usernameField.isVisible() && !User.checkUsername(newUsername))
+                    // Le username n'est pas valide: on remet l'ancien.
+                    usernameField.setText(username);
+            }
+        });
+
+        saveButton = new TextButton(GravityRun.i18n.format("save"), tableSkin, "round");
+        saveButton.setVisible(false);
+        saveButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.input.setOnscreenKeyboardVisible(false);
+                // isClickedSaveButton = true;
+
+                if (User.checkUsername(newUsername)) {
+                    GravityRun.user.setUsername(newUsername);
+                    GravityRun.pref.put(GravityRun.user.toMap()); // TODO
+                    GravityRun.pref.flush();
+                    // TODO indiquer un message d'erreur (errorLabel.setText(User.getUsernameError(newUsername)))
+                } else {
+                    // Sinon, le textField retient la valeur qu'on a rentré, qui est donc incorrecte.
+                    usernameField.setText(username);
+                }
+
+                saveButton.setVisible(false);
+                usernameField.setVisible(false);
             }
         });
 
@@ -120,22 +135,7 @@ public class OptionState extends AbstractMenuState {
 
     @Override
     protected void handleInput() {
-        if (isClickedSaveButton) {
-            // TODO gérer le cas où on met "Nom d'utilisateur", je n'estime pas ça comme faux pour le moment.
-            if (User.checkUsername(newUsername)) {
-                GravityRun.user.setUsername(newUsername);
-                GravityRun.pref.put(GravityRun.user.toMap());
-                GravityRun.pref.flush();
-                // TODO indiquer un message d'erreur (errorLabel.setText(User.getUsernameError(newUsername)))
-            } else {
-                // Sinon, le textField retient la valeur qu'on a rentré, qui est donc incorrecte.
-                usernameField.setText(username);
-            }
-            saveButton.setVisible(false);
-            usernameField.setVisible(false);
-            isClickedSaveButton = false;
-        }
-
+        // TODO faire en sorte que les préférences soient écrites sur le stockage dès que l'OptionState ou l'activité est quittée.
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             GravityRun.pref.put(GravityRun.user.toMap());
             GravityRun.pref.flush();

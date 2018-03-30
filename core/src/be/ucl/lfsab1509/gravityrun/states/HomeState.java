@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.Align;
 public class HomeState extends AbstractMenuState {
 
     private boolean isClickedStartGameButton = false;
+    private boolean isClickedScoreBoardButton = false;
     private boolean isClickedOptionButton = false;
     private Label hyLabel;
 
@@ -25,6 +26,20 @@ public class HomeState extends AbstractMenuState {
 
         Label title = new Label(GravityRun.i18n.format("menu"), titleSkin, "title");
 
+        TextButton startGameButton = new TextButton(GravityRun.i18n.format("new_game"), tableSkin, "round");
+        startGameButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                isClickedStartGameButton = true;
+            }
+        });
+        TextButton scoreBoardButton = new TextButton(GravityRun.i18n.format("my_score"), tableSkin, "round");
+        scoreBoardButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                isClickedScoreBoardButton = true;
+            }
+        });
         TextButton optionButton = new TextButton(GravityRun.i18n.format("option"), tableSkin, "round");
         optionButton.addListener(new ClickListener() {
             @Override
@@ -33,13 +48,6 @@ public class HomeState extends AbstractMenuState {
             }
         });
         // TODO ici, ça prend environ 10ms
-        TextButton startGameButton = new TextButton(GravityRun.i18n.format("new_game"), tableSkin, "round");
-        startGameButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                isClickedStartGameButton = true;
-            }
-        });
 
         hyLabel = new Label(GravityRun.i18n.format("hello", GravityRun.pref.getString("username")), tableSkin);
         hyLabel.setWrap(true);
@@ -58,9 +66,11 @@ public class HomeState extends AbstractMenuState {
         table.row();
         table.add(hyLabel).expandX().width(containerWidth).padTop(height - containerHeight);
         table.row();
-        table.add(optionButton).expandX().fillX().padTop(height - containerHeight);
-        table.row();
         table.add(startGameButton).expandX().fillX().padTop(height - containerHeight);
+        table.row();
+        table.add(scoreBoardButton).expandX().fillX().padTop(height - containerHeight);
+        table.row();
+        table.add(optionButton).expandX().fillX().padTop(height - containerHeight);
         table.row();
 
         stage.addActor(tableContainer);
@@ -68,15 +78,20 @@ public class HomeState extends AbstractMenuState {
 
     @Override
     public void handleInput() {
-        if (isClickedOptionButton) {
-            isClickedOptionButton = false;
-            gameStateManager.push(new OptionState(gameStateManager, soundManager));
-        }
-
         if (isClickedStartGameButton) {
             isClickedStartGameButton = false;
             soundManager.replayGame();
             gameStateManager.push(new PlayState(gameStateManager, soundManager));
+        }
+
+        if (isClickedScoreBoardButton) {
+            isClickedScoreBoardButton = false;
+            gameStateManager.push(new ScoreboardState(gameStateManager, soundManager));
+        }
+
+        if (isClickedOptionButton) {
+            isClickedOptionButton = false;
+            gameStateManager.push(new OptionState(gameStateManager, soundManager));
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {

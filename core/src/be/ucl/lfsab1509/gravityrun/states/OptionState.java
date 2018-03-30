@@ -20,7 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class OptionState extends AbstractMenuState {
 
-    private boolean isClickedSaveButton = false, isClickedScoreButton = false;
+    private boolean isClickedSaveButton = false;
     private List<String> listBox;
     private String username;
     private String newUsername;
@@ -50,13 +50,6 @@ public class OptionState extends AbstractMenuState {
             }
         });
 
-        TextButton scoreButton = new TextButton(GravityRun.i18n.format("my_score"), tableSkin, "round");
-        scoreButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                isClickedScoreButton = true;
-            }
-        });
 
         TextButton usernameButton = new TextButton(GravityRun.i18n.format("mod_username"), tableSkin, "round");
         usernameButton.addListener(new ClickListener() {
@@ -105,29 +98,22 @@ public class OptionState extends AbstractMenuState {
 
         Container<Table> tableContainer = new Container<Table>();
         Table table = new Table();
-        Table titleTable = new Table();
 
         tableContainer.setSize(containerWidth, containerHeight);
         tableContainer.setPosition((width - containerWidth) / 2, (height - containerHeight) / 2);
         tableContainer.top().fillX();
-        tableContainer.setActor(titleTable);
+        tableContainer.setActor(table);
 
-        titleTable.row().expandY();
-        titleTable.add(title).colspan(7).expandX();
-        titleTable.row().colspan(7).fillX();
-        titleTable.add(table);
-
-        table.row().colspan(2);
-        table.add(scoreButton).expandX().fillX().padTop(height - containerHeight);
-        table.row().colspan(2);
-        table.add(usernameButton).expandX().fillX().padTop(height - containerHeight).maxWidth(containerWidth);
+        table.add(title).colspan(2).expandX();
+        table.row();
+        table.add(usernameButton).colspan(2).expandX().fillX().padTop(height - containerHeight).maxWidth(containerWidth);
         table.row();
         table.add(usernameField).expandX().fillX();
-        table.add(saveButton).expandX().fillX();
-        table.row().colspan(2);
-        table.add(lvlButton).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
-        table.row().colspan(2);
-        table.add(listBox).fillX().top();
+        table.add(saveButton).fillX();
+        table.row();
+        table.add(lvlButton).colspan(2).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
+        table.row();
+        table.add(listBox).colspan(2).fillX().top();
 
         stage.addActor(tableContainer);
     }
@@ -148,11 +134,6 @@ public class OptionState extends AbstractMenuState {
             saveButton.setVisible(false);
             usernameField.setVisible(false);
             isClickedSaveButton = false;
-        }
-
-        if (isClickedScoreButton) {
-            isClickedScoreButton = false;
-            gameStateManager.push(new ScoreboardState(gameStateManager, soundManager));
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {

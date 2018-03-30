@@ -69,13 +69,13 @@ public class ScoreboardState extends AbstractMenuState {
         tableContainer.setActor(table);
 
         table.add(title).colspan(5).expandX();
-        table.row().expandX().expandY();
+        table.row();//.expandX().expandY();
         table.add(beginnerLabel).expandY().colspan(3).fillX().left();
         table.add(beginnerScoreList).expandY().colspan(2).center();
-        table.row().colspan(5);
+        table.row();//.colspan(5);
         table.add(intermediateLabel).expandY().colspan(3).fillX().left();
         table.add(intermediateScoreList).expandY().colspan(2).center();
-        table.row().colspan(5);
+        table.row();//.colspan(5);
         table.add(expertLabel).expandY().colspan(3).fillX().left();
         table.add(expertScoreList).expandY().colspan(2).center();
 

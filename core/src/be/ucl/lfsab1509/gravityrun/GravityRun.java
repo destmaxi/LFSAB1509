@@ -58,7 +58,7 @@ public class GravityRun extends ApplicationAdapter {
             gsm.push(new FirstState(gsm, sound));
         } else {
             user = new User(map);
-            gsm.push(new MenuState(gsm, sound));
+            gsm.push(new HomeState(gsm, sound));
         }
     }
 

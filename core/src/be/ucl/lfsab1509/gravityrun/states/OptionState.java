@@ -9,7 +9,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
@@ -18,13 +17,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class OptionState extends State {
+public class OptionState extends AbstractMenuState {
 
     private boolean isClickedSaveButton = false, isClickedScoreButton = false;
     private List<String> listBox;
-    private Stage stage;
     private String username;
     private String newUsername;
     private TextButton saveButton;
@@ -32,9 +29,6 @@ public class OptionState extends State {
 
     OptionState(GameStateManager gameStateManager, SoundManager soundManager) {
         super(gameStateManager, soundManager);
-
-        float ch = height * 0.9f;
-        float cw = width * 0.9f;
 
         Label title = new Label(GravityRun.i18n.get("option"), titleSkin, "title");
 
@@ -113,8 +107,8 @@ public class OptionState extends State {
         Table table = new Table();
         Table titleTable = new Table();
 
-        tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((width - cw) / 2, (height - ch) / 2);
+        tableContainer.setSize(containerWidth, containerHeight);
+        tableContainer.setPosition((width - containerWidth) / 2, (height - containerHeight) / 2);
         tableContainer.top().fillX();
         tableContainer.setActor(titleTable);
 
@@ -124,18 +118,17 @@ public class OptionState extends State {
         titleTable.add(table);
 
         table.row().colspan(2);
-        table.add(scoreButton).expandX().fillX().padTop(height - ch);
+        table.add(scoreButton).expandX().fillX().padTop(height - containerHeight);
         table.row().colspan(2);
-        table.add(usernameButton).expandX().fillX().padTop(height - ch).maxWidth(cw);
+        table.add(usernameButton).expandX().fillX().padTop(height - containerHeight).maxWidth(containerWidth);
         table.row();
         table.add(usernameField).expandX().fillX();
         table.add(saveButton).expandX().fillX();
         table.row().colspan(2);
-        table.add(lvlButton).expandX().fillX().padTop((height - ch) / 2).maxWidth(cw);
+        table.add(lvlButton).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
         table.row().colspan(2);
         table.add(listBox).fillX().top();
 
-        stage = new Stage(new ScreenViewport());
         stage.addActor(tableContainer);
     }
 

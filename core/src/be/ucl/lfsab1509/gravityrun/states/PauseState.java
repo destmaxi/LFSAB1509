@@ -9,22 +9,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class PauseState extends State {
+public class PauseState extends AbstractMenuState {
 
     private boolean isClickedContinue = false, isClickedQuit = false;
-    private Stage stage;
 
     PauseState(GameStateManager gameStateManager, SoundManager soundManager) {
         super(gameStateManager, soundManager);
-
-        float ch = height * 0.9f;
-        float cw = width * 0.9f;
 
         TextButton continueButton = new TextButton(GravityRun.i18n.format("continue"), tableSkin, "round");
         continueButton.addListener(new ChangeListener() {
@@ -48,20 +42,19 @@ public class PauseState extends State {
         Container<Table> tableContainer = new Container<Table>();
         Table table = new Table();
 
-        tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((width - cw) / 2, (height - ch) / 2);
+        tableContainer.setSize(containerWidth, containerHeight);
+        tableContainer.setPosition((width - containerWidth) / 2, (height - containerHeight) / 2);
         tableContainer.top().fillX();
         tableContainer.setActor(table);
 
         table.add(title).top();
         table.row();
-        table.add(score).padTop(height - ch);
+        table.add(score).padTop(height - containerHeight);
         table.row();
-        table.add(continueButton).expandX().fillX().padTop((height - ch) * 2);
+        table.add(continueButton).expandX().fillX().padTop((height - containerHeight) * 2);
         table.row();
-        table.add(quitButton).expandX().fillX().padTop(height - ch);
+        table.add(quitButton).expandX().fillX().padTop(height - containerHeight);
 
-        stage = new Stage(new ScreenViewport());
         stage.addActor(tableContainer);
 
         Gdx.input.setInputProcessor(stage);

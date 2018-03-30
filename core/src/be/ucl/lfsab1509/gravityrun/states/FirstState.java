@@ -9,7 +9,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -18,27 +17,22 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
 
-public class FirstState extends State {
+public class FirstState extends AbstractMenuState {
 
     private boolean isClickedStartButton = false;
     private boolean goingToMenuState = false;
     private Label errorLabel;
-    private Stage stage;
     private String username = GravityRun.i18n.format("username");
 
     public FirstState(GameStateManager gameStateManager, SoundManager soundManager) {
         super(gameStateManager, soundManager);
 
-        float cw = width * 0.9f;
-        float ch = height * 0.9f;
-
         errorLabel = new Label(GravityRun.i18n.format("error_username_default"), aaronScoreSkin, "error");
         errorLabel.setWrap(true);
-        errorLabel.setWidth(cw);
+        errorLabel.setWidth(containerWidth);
         errorLabel.setAlignment(Align.center);
         errorLabel.setVisible(false);
 
@@ -69,21 +63,20 @@ public class FirstState extends State {
         Container<Table> tableContainer = new Container<Table>();
         Table table = new Table();
 
-        tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((width - cw) / 2, (height - ch) / 2);
+        tableContainer.setSize(containerWidth, containerHeight);
+        tableContainer.setPosition((width - containerWidth) / 2, (height - containerHeight) / 2);
         tableContainer.top().fillX();
         tableContainer.setActor(table);
 
         table.add(title).top();
         table.row();
-        table.add(usernameField).expandX().fillX().padTop(height - ch);
+        table.add(usernameField).expandX().fillX().padTop(height - containerHeight);
         table.row();
-        table.add(startButton).expandX().fillX().padTop(height - ch);
+        table.add(startButton).expandX().fillX().padTop(height - containerHeight);
         table.row();
-        table.add(errorLabel).expandX().fillX().padTop(height - ch).width(cw);
+        table.add(errorLabel).expandX().fillX().padTop(height - containerHeight).width(containerWidth);
         table.row();
 
-        stage = new Stage(new ScreenViewport());
         stage.addActor(tableContainer);
 
         Gdx.input.setInputProcessor(stage);
@@ -100,7 +93,7 @@ public class FirstState extends State {
             } else {
                 initUser();
                 goingToMenuState = true;
-                gameStateManager.set(new MenuState(gameStateManager, soundManager));
+                gameStateManager.set(new HomeState(gameStateManager, soundManager));
             }
         }
 

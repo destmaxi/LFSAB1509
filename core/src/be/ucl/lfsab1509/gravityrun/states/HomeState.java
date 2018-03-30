@@ -7,26 +7,21 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class MenuState extends State {
+public class HomeState extends AbstractMenuState {
 
-    private boolean isClickedOptionButton = false, isClickedStartGameButton = false;
+    private boolean isClickedStartGameButton = false;
+    private boolean isClickedOptionButton = false;
     private Label hyLabel;
-    private Stage stage;
 
-    public MenuState(GameStateManager gameStateManager, SoundManager soundManager) {
+    public HomeState(GameStateManager gameStateManager, SoundManager soundManager) {
         super(gameStateManager, soundManager);
-
-        float ch = height * 0.9f;
-        float cw = width * 0.9f;
 
         Label title = new Label(GravityRun.i18n.format("menu"), titleSkin, "title");
 
@@ -48,27 +43,26 @@ public class MenuState extends State {
 
         hyLabel = new Label(GravityRun.i18n.format("hello", GravityRun.pref.getString("username")), tableSkin);
         hyLabel.setWrap(true);
-        hyLabel.setWidth(cw);
+        hyLabel.setWidth(containerWidth);
         hyLabel.setAlignment(Align.center);
 
         Container<Table> tableContainer = new Container<Table>();
         Table table = new Table();
 
-        tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((width - cw) / 2, (height - ch) / 2);
+        tableContainer.setSize(containerWidth, containerHeight);
+        tableContainer.setPosition((width - containerWidth) / 2, (height - containerHeight) / 2);
         tableContainer.top().fillX();
         tableContainer.setActor(table);
 
         table.add(title).top();
         table.row();
-        table.add(hyLabel).expandX().width(cw).padTop(height - ch);
+        table.add(hyLabel).expandX().width(containerWidth).padTop(height - containerHeight);
         table.row();
-        table.add(optionButton).expandX().fillX().padTop(height - ch);
+        table.add(optionButton).expandX().fillX().padTop(height - containerHeight);
         table.row();
-        table.add(startGameButton).expandX().fillX().padTop(height - ch);
+        table.add(startGameButton).expandX().fillX().padTop(height - containerHeight);
         table.row();
 
-        stage = new Stage(new ScreenViewport());
         stage.addActor(tableContainer);
     }
 

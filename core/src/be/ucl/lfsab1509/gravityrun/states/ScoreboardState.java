@@ -6,26 +6,19 @@ import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class ScoreboardState extends State {
-
-    private Stage stage;
+public class ScoreboardState extends AbstractMenuState {
 
     @SuppressWarnings("unchecked")
     ScoreboardState(GameStateManager gameStateManager, SoundManager soundManager) {
         super(gameStateManager, soundManager);
-
-        float ch = height * 0.9f;
-        float cw = width * 0.9f;
 
         Label beginnerLabel = new Label(GravityRun.i18n.format("beginner") + " :", labelScoreBoardSkin, "round");
         Label intermediateLabel = new Label(GravityRun.i18n.format("inter") + " :", labelScoreBoardSkin, "round");
@@ -70,8 +63,8 @@ public class ScoreboardState extends State {
         Container<Table> tableContainer = new Container<Table>();
         Table table = new Table();
 
-        tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((width - cw) / 2, (height - ch) / 2);
+        tableContainer.setSize(containerWidth, containerHeight);
+        tableContainer.setPosition((width - containerWidth) / 2, (height - containerHeight) / 2);
         tableContainer.top().fillX().fillY();
         tableContainer.setActor(table);
 
@@ -86,7 +79,6 @@ public class ScoreboardState extends State {
         table.add(expertLabel).expandY().colspan(3).fillX().left();
         table.add(expertScoreList).expandY().colspan(2).center();
 
-        stage = new Stage(new ScreenViewport());
         stage.addActor(tableContainer);
 
         Gdx.input.setInputProcessor(stage);

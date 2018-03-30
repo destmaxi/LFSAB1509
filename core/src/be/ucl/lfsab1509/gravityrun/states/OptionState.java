@@ -1,8 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.sprites.Marble;
-import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 import com.badlogic.gdx.Gdx;
@@ -30,11 +28,11 @@ public class OptionState extends State {
     private TextButton saveButton;
     private TextField usernameField;
 
-    OptionState(GameStateManager gsm, SoundManager soundManager) {
-        super(gsm, soundManager);
+    OptionState(GameStateManager gameStateManager, SoundManager soundManager) {
+        super(gameStateManager, soundManager);
 
-        float ch = h * 0.9f;
-        float cw = w * 0.9f;
+        float ch = height * 0.9f;
+        float cw = width * 0.9f;
 
         Label title = new Label(i18n.get("option"), titleSkin, "title");
 
@@ -113,7 +111,7 @@ public class OptionState extends State {
         Table titleTable = new Table();
 
         tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((w - cw) / 2, (h - ch) / 2);
+        tableContainer.setPosition((width - cw) / 2, (height - ch) / 2);
         tableContainer.top().fillX();
         tableContainer.setActor(titleTable);
 
@@ -123,14 +121,14 @@ public class OptionState extends State {
         titleTable.add(table);
 
         table.row().colspan(2);
-        table.add(scoreButton).expandX().fillX().padTop(h - ch);
+        table.add(scoreButton).expandX().fillX().padTop(height - ch);
         table.row().colspan(2);
-        table.add(usernameButton).expandX().fillX().padTop(h - ch).maxWidth(cw);
+        table.add(usernameButton).expandX().fillX().padTop(height - ch).maxWidth(cw);
         table.row();
         table.add(usernameField).expandX().fillX();
         table.add(saveButton).expandX().fillX();
         table.row().colspan(2);
-        table.add(lvlButton).expandX().fillX().padTop((h - ch) / 2).maxWidth(cw);
+        table.add(lvlButton).expandX().fillX().padTop((height - ch) / 2).maxWidth(cw);
         table.row().colspan(2);
         table.add(listBox).fillX().top();
 
@@ -151,13 +149,13 @@ public class OptionState extends State {
 
         if (isClickedScoreButton) {
             isClickedScoreButton = false;
-            gsm.push(new ScoreboardState(gsm, soundManager));
+            gameStateManager.push(new ScoreboardState(gameStateManager, soundManager));
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             GravityRun.pref.put(GravityRun.user.toMap());
             GravityRun.pref.flush();
-            gsm.pop();
+            gameStateManager.pop();
         }
     }
 
@@ -168,8 +166,8 @@ public class OptionState extends State {
     }
 
     @Override
-    public void render(SpriteBatch sb) {
-        sb.setProjectionMatrix(cam.combined);
+    public void render(SpriteBatch spriteBatch) {
+        spriteBatch.setProjectionMatrix(camera.combined);
         stage.act();
         stage.draw();
     }

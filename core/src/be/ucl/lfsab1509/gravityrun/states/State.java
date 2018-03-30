@@ -12,17 +12,17 @@ import com.badlogic.gdx.utils.I18NBundle;
 
 public abstract class State {
 
-    static float h, w;
+    static float height, width;
     static Skin aaronScoreSkin, labelScoreBoardSkin, tableSkin, tableScoreBoardSkin, titleSkin;
 
-    GameStateManager gsm;
+    GameStateManager gameStateManager;
     I18NBundle i18n;
-    OrthographicCamera cam;
+    OrthographicCamera camera;
     SoundManager soundManager;
 
-    State (GameStateManager gsm, SoundManager soundManager) {
-        this.gsm = gsm;
-        cam = new OrthographicCamera();
+    State(GameStateManager gameStateManager, SoundManager soundManager) {
+        this.gameStateManager = gameStateManager;
+        camera = new OrthographicCamera();
         this.soundManager = soundManager;
         FileHandle baseFileHandle = Gdx.files.internal("strings/string");
         i18n = I18NBundle.createBundle(baseFileHandle);
@@ -30,30 +30,30 @@ public abstract class State {
 
     public static void initializeSkins() {
         float d = GravityRun.DENSITY;
-        h = GravityRun.HEIGHT;
-        w = GravityRun.WIDTH;
+        height = GravityRun.HEIGHT;
+        width = GravityRun.WIDTH;
 
         tableScoreBoardSkin = new Skin();
-        tableScoreBoardSkin.createSkin((int) (0.5f * w / d / 10));
+        tableScoreBoardSkin.createSkin((int) (0.5f * width / d / 10));
 
         aaronScoreSkin = new Skin();
-        aaronScoreSkin.createSkin((int) (0.75f * w / d / 10));
+        aaronScoreSkin.createSkin((int) (0.75f * width / d / 10));
 
         labelScoreBoardSkin = new Skin();
-        labelScoreBoardSkin.createSkin((int) (0.9f * w / d / 10));
+        labelScoreBoardSkin.createSkin((int) (0.9f * width / d / 10));
 
         tableSkin = new Skin();
-        tableSkin.createSkin((int) (w / d / 10));
+        tableSkin.createSkin((int) (width / d / 10));
 
         titleSkin = new Skin();
-        titleSkin.createSkin((int)(1.5f * w / d / 10));
+        titleSkin.createSkin((int) (1.5f * width / d / 10));
     }
 
     protected abstract void handleInput();
 
     public abstract void update(float dt);
 
-    public abstract void render(SpriteBatch sb);
+    public abstract void render(SpriteBatch spriteBatch);
 
     public abstract void dispose();
 

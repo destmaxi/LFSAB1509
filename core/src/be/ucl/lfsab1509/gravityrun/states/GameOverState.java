@@ -1,7 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.sprites.Invincible;
 import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
@@ -25,16 +24,16 @@ public class GameOverState extends State {
     private boolean isClickedMenuButton = false, isClickedReplayButton = false;
     private Stage stage;
 
-    GameOverState(GameStateManager gsm, SoundManager soundManager) {
-        super(gsm, soundManager);
+    GameOverState(GameStateManager gameStateManager, SoundManager soundManager) {
+        super(gameStateManager, soundManager);
 
-        float ch = h * 0.9f;
-        float cw = w * 0.9f;
+        float ch = height * 0.9f;
+        float cw = width * 0.9f;
 
         ArrayList<Integer> userList = GravityRun.user.getHighScore();
         for (int i = 0; i < GravityRun.scoreList.size(); i++)
-            if (GravityRun.scoreList.get(i) > userList.get(Marble.lvl - 1))
-                GravityRun.user.getHighScore().set(Marble.lvl - 1, GravityRun.scoreList.get(i));
+            if (GravityRun.scoreList.get(i) > userList.get(Marble.difficulty - 1))
+                GravityRun.user.getHighScore().set(Marble.difficulty - 1, GravityRun.scoreList.get(i));
 
         TextButton menuButton = new TextButton(i18n.format("menu"), tableSkin, "round");
         menuButton.addListener(new ChangeListener() {
@@ -52,7 +51,7 @@ public class GameOverState extends State {
         });
 
         Label score = new Label(i18n.format("final_score", PlayState.score), aaronScoreSkin);
-        Label highScore = new Label(i18n.format("high_score", GravityRun.user.getHighScore().get(Marble.lvl - 1)), aaronScoreSkin);
+        Label highScore = new Label(i18n.format("high_score", GravityRun.user.getHighScore().get(Marble.difficulty - 1)), aaronScoreSkin);
 
         Label title = new Label(i18n.format("game_over"), titleSkin, "title");
 
@@ -60,19 +59,19 @@ public class GameOverState extends State {
         Table table = new Table();
 
         tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((w - cw) / 2, (h - ch) / 2);
+        tableContainer.setPosition((width - cw) / 2, (height - ch) / 2);
         tableContainer.top().fillX();
         tableContainer.setActor(table);
 
         table.add(title).top();
         table.row();
-        table.add(score).padTop(h - ch);
+        table.add(score).padTop(height - ch);
         table.row();
-        table.add(highScore).padTop(h - ch);
+        table.add(highScore).padTop(height - ch);
         table.row();
-        table.add(replayButton).expandX().fillX().padTop((h - ch) * 2);
+        table.add(replayButton).expandX().fillX().padTop((height - ch) * 2);
         table.row();
-        table.add(menuButton).expandX().fillX().padTop(h - ch);
+        table.add(menuButton).expandX().fillX().padTop(height - ch);
 
         stage = new Stage(new ScreenViewport());
         stage.addActor(tableContainer);
@@ -84,11 +83,11 @@ public class GameOverState extends State {
     protected void handleInput() {
         if (isClickedReplayButton) {
             soundManager.replayGame();
-            gsm.set(new PlayState(gsm, soundManager));
+            gameStateManager.set(new PlayState(gameStateManager, soundManager));
         }
 
         if (isClickedMenuButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            switch (Marble.lvl) {
+            switch (Marble.difficulty) {
                 case 1:
                     GravityRun.user.setBeginner(add(GravityRun.user.getBeginner()));
                     break;
@@ -105,7 +104,7 @@ public class GameOverState extends State {
 
             GravityRun.scoreList = null;
             
-            gsm.pop();
+            gameStateManager.pop();
         }
     }
 
@@ -115,7 +114,7 @@ public class GameOverState extends State {
     }
 
     @Override
-    public void render(SpriteBatch sb) {
+    public void render(SpriteBatch spriteBatch) {
         stage.draw();
     }
 

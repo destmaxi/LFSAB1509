@@ -19,11 +19,11 @@ public class PauseState extends State {
     private boolean isClickedContinue = false, isClickedQuit = false;
     private Stage stage;
 
-    PauseState(GameStateManager gsm, SoundManager soundManager) {
-        super(gsm, soundManager);
+    PauseState(GameStateManager gameStateManager, SoundManager soundManager) {
+        super(gameStateManager, soundManager);
 
-        float ch = h * 0.9f;
-        float cw = w * 0.9f;
+        float ch = height * 0.9f;
+        float cw = width * 0.9f;
 
         TextButton continueButton = new TextButton(i18n.format("continue"), tableSkin, "round");
         continueButton.addListener(new ChangeListener() {
@@ -48,17 +48,17 @@ public class PauseState extends State {
         Table table = new Table();
 
         tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((w - cw) / 2, (h - ch) / 2);
+        tableContainer.setPosition((width - cw) / 2, (height - ch) / 2);
         tableContainer.top().fillX();
         tableContainer.setActor(table);
 
         table.add(title).top();
         table.row();
-        table.add(score).padTop(h - ch);
+        table.add(score).padTop(height - ch);
         table.row();
-        table.add(continueButton).expandX().fillX().padTop((h - ch) * 2);
+        table.add(continueButton).expandX().fillX().padTop((height - ch) * 2);
         table.row();
-        table.add(quitButton).expandX().fillX().padTop(h - ch);
+        table.add(quitButton).expandX().fillX().padTop(height - ch);
 
         stage = new Stage(new ScreenViewport());
         stage.addActor(tableContainer);
@@ -69,11 +69,11 @@ public class PauseState extends State {
     @Override
     protected void handleInput() {
         if (isClickedContinue || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
-            gsm.pop();
+            gameStateManager.pop();
         if (isClickedQuit) {
             soundManager.replayMenu();
-            gsm.pop();
-            gsm.pop();
+            gameStateManager.pop();
+            gameStateManager.pop();
         }
     }
 
@@ -83,7 +83,7 @@ public class PauseState extends State {
     }
 
     @Override
-    public void render(SpriteBatch sb) {
+    public void render(SpriteBatch spriteBatch) {
         stage.draw();
     }
 

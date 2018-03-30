@@ -28,11 +28,11 @@ public class FirstState extends State {
     private Stage stage;
     private String username = i18n.format("username");
 
-    public FirstState(GameStateManager gsm, SoundManager soundManager) {
-        super(gsm, soundManager);
+    public FirstState(GameStateManager gameStateManager, SoundManager soundManager) {
+        super(gameStateManager, soundManager);
 
-        float cw = w * 0.9f;
-        float ch = h * 0.9f;
+        float cw = width * 0.9f;
+        float ch = height * 0.9f;
 
         errorLabel = new Label(i18n.format("error"), aaronScoreSkin, "error");
         errorLabel.setWrap(true);
@@ -68,17 +68,17 @@ public class FirstState extends State {
         Table table = new Table();
 
         tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((w - cw) / 2, (h - ch) / 2);
+        tableContainer.setPosition((width - cw) / 2, (height - ch) / 2);
         tableContainer.top().fillX();
         tableContainer.setActor(table);
 
         table.add(title).top();
         table.row();
-        table.add(usernameField).expandX().fillX().padTop(h - ch);
+        table.add(usernameField).expandX().fillX().padTop(height - ch);
         table.row();
-        table.add(startButton).expandX().fillX().padTop(h - ch);
+        table.add(startButton).expandX().fillX().padTop(height - ch);
         table.row();
-        table.add(errorLabel).expandX().fillX().padTop(h - ch).width(cw);
+        table.add(errorLabel).expandX().fillX().padTop(height - ch).width(cw);
         table.row();
 
         stage = new Stage(new ScreenViewport());
@@ -96,7 +96,7 @@ public class FirstState extends State {
                 errorLabel.setVisible(true);
             } else {
                 initUser();
-                gsm.set(new MenuState(gsm, soundManager));
+                gameStateManager.set(new MenuState(gameStateManager, soundManager));
             }
         }
 
@@ -112,8 +112,8 @@ public class FirstState extends State {
     }
 
     @Override
-    public void render(SpriteBatch sb) {
-        sb.setProjectionMatrix(cam.combined);
+    public void render(SpriteBatch spriteBatch) {
+        spriteBatch.setProjectionMatrix(camera.combined);
         stage.act();
         stage.draw();
     }

@@ -1,6 +1,7 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.math.Vector2;
@@ -31,6 +32,10 @@ public abstract class Obstacle {
 
     public Vector2 getPosition() {
         return position;
+    }
+
+    public void render(SpriteBatch spriteBatch) {
+        spriteBatch.draw(obstacleTexture, position.x, position.y);
     }
 
     void setX(int x) {

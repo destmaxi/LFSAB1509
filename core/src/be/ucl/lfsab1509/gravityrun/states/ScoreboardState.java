@@ -21,11 +21,11 @@ public class ScoreboardState extends State {
     private Stage stage;
 
     @SuppressWarnings("unchecked")
-    ScoreboardState(GameStateManager gsm, SoundManager soundManager) {
-        super(gsm, soundManager);
+    ScoreboardState(GameStateManager gameStateManager, SoundManager soundManager) {
+        super(gameStateManager, soundManager);
 
-        float ch = h * 0.9f;
-        float cw = w * 0.9f;
+        float ch = height * 0.9f;
+        float cw = width * 0.9f;
 
         Label beginnerLabel = new Label(i18n.format("beginner") + " :", labelScoreBoardSkin, "round");
         Label intermediateLabel = new Label(i18n.format("inter") + " :", labelScoreBoardSkin, "round");
@@ -71,7 +71,7 @@ public class ScoreboardState extends State {
         Table table = new Table();
 
         tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((w - cw) / 2, (h - ch) / 2);
+        tableContainer.setPosition((width - cw) / 2, (height - ch) / 2);
         tableContainer.top().fillX().fillY();
         tableContainer.setActor(table);
 
@@ -95,7 +95,7 @@ public class ScoreboardState extends State {
     @Override
     protected void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
-            gsm.pop();
+            gameStateManager.pop();
     }
 
     @Override
@@ -104,8 +104,8 @@ public class ScoreboardState extends State {
     }
 
     @Override
-    public void render(SpriteBatch sb) {
-        sb.setProjectionMatrix(cam.combined);
+    public void render(SpriteBatch spriteBatch) {
+        spriteBatch.setProjectionMatrix(camera.combined);
         stage.act();
         stage.draw();
     }

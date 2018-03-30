@@ -18,13 +18,12 @@ public class Marble {
     public static final int MOVEMENT = GravityRun.HEIGHT / 5;
     public static final float SQRT_2 = (float) Math.sqrt(2);
 
-    public static int lvl;
+    public static int difficulty;
 
-    public boolean colliding = false;
     private boolean blockedOnLeft = false, blockedOnRight = false, blockedOnTop = false, invincible = false, inWall = false;
     private Circle bounds;
     public float speed = 1f;
-    private float slowDown = 1f;
+    private float slowDown = 1f, repositioning = 1f;
     private MarbleAnimation marbleAnimation;
     private Texture marble;
     private Vector3 position, velocity;
@@ -35,7 +34,7 @@ public class Marble {
         marble = new Texture("drawable-" + sw + "/marbles.png");
         marbleAnimation = new MarbleAnimation(marble, sw);
         bounds = new Circle(x, y, marbleAnimation.getDiameter(position.z) / 2);
-        lvl = GravityRun.user.getIndexSelected() + 1;
+        difficulty = GravityRun.user.getIndexSelected() + 1;
     }
 
     public void update(float dt, boolean gameOver) {
@@ -58,7 +57,7 @@ public class Marble {
             position.z = JUMP_HEIGHT;
 
         if (position.z > 0 && !gameOver)
-            position.add(0, 0, -10 * lvl * speed * slowDown);
+            position.add(0, 0, -10 * difficulty * speed * slowDown);
         else
             position.z = 0;
 /*
@@ -73,7 +72,7 @@ C'EST PAS OUF MAIS CA FONCTIONNE +_
 
         if (!gameOver) {
             if ((blockedOnRight && Gdx.input.getGyroscopeY() > 0) || (blockedOnLeft && Gdx.input.getGyroscopeY() < 0))
-                position.add(0, lvl * MOVEMENT * speed * slowDown * dt, 0);
+                position.add(0, difficulty * MOVEMENT * speed * slowDown * dt, 0);
             else if ((blockedOnLeft && Gdx.input.getGyroscopeY() < 0) && blockedOnTop)
                 position.add(0, 0, 0);
             else if ((blockedOnRight && Gdx.input.getGyroscopeY() > 0) && blockedOnTop)
@@ -81,12 +80,12 @@ C'EST PAS OUF MAIS CA FONCTIONNE +_
             else if (blockedOnTop)
                 position.add(arrow * GravityRun.WIDTH / 75, 0, 0);
             else
-                position.add(arrow * GravityRun.WIDTH / 75, lvl * MOVEMENT * speed * slowDown * dt, 0);
+                position.add(arrow * GravityRun.WIDTH / 75, difficulty * MOVEMENT * speed * slowDown * dt, 0);
         }
 */
         if (!gameOver) {
             if ((blockedOnRight && Gdx.input.getGyroscopeY() > 0) || (blockedOnLeft && Gdx.input.getGyroscopeY() < 0))
-                position.add(0, lvl * MOVEMENT * speed * slowDown * dt, 0);
+                position.add(0, difficulty * MOVEMENT * speed * slowDown * dt, 0);
             else if ((blockedOnLeft && Gdx.input.getGyroscopeY() < 0) && blockedOnTop)
                 position.add(0, 0, 0);
             else if ((blockedOnRight && Gdx.input.getGyroscopeY() > 0) && blockedOnTop)
@@ -94,7 +93,7 @@ C'EST PAS OUF MAIS CA FONCTIONNE +_
             else if (blockedOnTop)
                 position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, 0, 0);
             else
-                position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, lvl * MOVEMENT * speed * slowDown * dt, 0);
+                position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, difficulty * MOVEMENT * speed * slowDown * dt, 0);
         }
 
         if (position.x < marbleAnimation.getDiameter(position.z) / 2)
@@ -131,6 +130,10 @@ C'EST PAS OUF MAIS CA FONCTIONNE +_
         return marbleAnimation.getDiameter(0);
     }
 
+    public float getRepositioning() {
+        return repositioning;
+    }
+
     public float getSlowDown() {
         return slowDown;
     }
@@ -151,31 +154,39 @@ C'EST PAS OUF MAIS CA FONCTIONNE +_
         return invincible;
     }
 
-    public boolean isInWall() {
+    boolean isInWall() {
         return inWall;
     }
 
-    public void setBlockedOnLeft(boolean blockedOnLeft) {
+    public boolean isOutOfScreen(float cameraCenterY) {
+        return (position.x <= getDiameter() / 2 || position.x >= (GravityRun.WIDTH - getDiameter() / 2) || position.y <= cameraCenterY - GravityRun.HEIGHT / 2 + getDiameter() / 2);
+    }
+
+    void setBlockedOnLeft(boolean blockedOnLeft) {
         this.blockedOnLeft = blockedOnLeft;
     }
 
-    public void setBlockedOnRight(boolean blockedOnRight) {
+    void setBlockedOnRight(boolean blockedOnRight) {
         this.blockedOnRight = blockedOnRight;
     }
 
-    public void setBlockedOnTop(boolean blockedOnTop) {
+    void setBlockedOnTop(boolean blockedOnTop) {
         this.blockedOnTop = blockedOnTop;
     }
 
-    public void setInvincible(boolean invincible) {
+    void setInvincible(boolean invincible) {
         this.invincible = invincible;
     }
 
-    public void setInWall(boolean inWall) {
+    void setInWall(boolean inWall) {
         this.inWall = inWall;
     }
 
-    public void setSlowDown(float slowDown) {
+    public void setRepositioning(float repositioning) {
+        this.repositioning = repositioning;
+    }
+
+    void setSlowDown(float slowDown) {
         this.slowDown = slowDown;
     }
 

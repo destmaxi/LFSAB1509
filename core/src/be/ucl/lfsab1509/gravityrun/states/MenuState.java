@@ -1,7 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 import com.badlogic.gdx.Gdx;
@@ -23,11 +22,11 @@ public class MenuState extends State {
     private Label hyLabel;
     private Stage stage;
 
-    public MenuState(GameStateManager gsm, SoundManager soundManager) {
-        super(gsm, soundManager);
+    public MenuState(GameStateManager gameStateManager, SoundManager soundManager) {
+        super(gameStateManager, soundManager);
 
-        float ch = h * 0.9f;
-        float cw = w * 0.9f;
+        float ch = height * 0.9f;
+        float cw = width * 0.9f;
 
         Label title = new Label(i18n.format("menu"), titleSkin, "title");
 
@@ -56,17 +55,17 @@ public class MenuState extends State {
         Table table = new Table();
 
         tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((w - cw) / 2, (h - ch) / 2);
+        tableContainer.setPosition((width - cw) / 2, (height - ch) / 2);
         tableContainer.top().fillX();
         tableContainer.setActor(table);
 
         table.add(title).top();
         table.row();
-        table.add(hyLabel).expandX().width(cw).padTop(h - ch);
+        table.add(hyLabel).expandX().width(cw).padTop(height - ch);
         table.row();
-        table.add(optionButton).expandX().fillX().padTop(h - ch);
+        table.add(optionButton).expandX().fillX().padTop(height - ch);
         table.row();
-        table.add(startGameButton).expandX().fillX().padTop(h - ch);
+        table.add(startGameButton).expandX().fillX().padTop(height - ch);
         table.row();
 
         stage = new Stage(new ScreenViewport());
@@ -77,13 +76,13 @@ public class MenuState extends State {
     public void handleInput() {
         if (isClickedOptionButton) {
             isClickedOptionButton = false;
-            gsm.push(new OptionState(gsm, soundManager));
+            gameStateManager.push(new OptionState(gameStateManager, soundManager));
         }
 
         if (isClickedStartGameButton) {
             isClickedStartGameButton = false;
             soundManager.replayGame();
-            gsm.push(new PlayState(gsm, soundManager));
+            gameStateManager.push(new PlayState(gameStateManager, soundManager));
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
@@ -101,8 +100,8 @@ public class MenuState extends State {
     }
 
     @Override
-    public void render(SpriteBatch sb) {
-        sb.setProjectionMatrix(cam.combined);
+    public void render(SpriteBatch spriteBatch) {
+        spriteBatch.setProjectionMatrix(camera.combined);
         stage.act();
         stage.draw();
     }

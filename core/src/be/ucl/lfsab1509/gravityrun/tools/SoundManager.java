@@ -15,7 +15,7 @@ public class SoundManager {
     private Sound bonus;
     private final float soundLevel = 0.5f;
 
-    public SoundManager(){
+    public SoundManager() {
         this.gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/6_symphony.mp3"));
         this.menuMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/2_suite_holst.mp3"));
         gameMusic.setLooping(true);
@@ -24,21 +24,21 @@ public class SoundManager {
         this.bonus = Gdx.audio.newSound(Gdx.files.internal("sound/bonus.wav"));
     }
 
-    public void playMenu(){
+    public void playMenu() {
         if (gameMusic.isPlaying())
             gameMusic.pause();
         if (!menuMusic.isPlaying())
             menuMusic.play();
     }
 
-    public void playGame(){
+    public void playGame() {
         if (menuMusic.isPlaying())
             menuMusic.pause();
         if (!gameMusic.isPlaying())
             gameMusic.play();
     }
 
-    public void replayMenu(){
+    public void replayMenu() {
         if (gameMusic.isPlaying())
             gameMusic.pause();
         if (!menuMusic.isPlaying()) {
@@ -47,7 +47,7 @@ public class SoundManager {
         }
     }
 
-    public void replayGame(){
+    public void replayGame() {
         if (menuMusic.isPlaying())
             menuMusic.pause();
         if (!gameMusic.isPlaying()) {
@@ -56,15 +56,16 @@ public class SoundManager {
         }
     }
 
-    public void marbleBreak(){
-        marbleBreak.play(soundLevel);
+    public void marbleBreak(boolean gameOver) {
+        if (!gameOver)
+            marbleBreak.play(soundLevel);
     }
 
-    public void gotBonus(){
+    public void gotBonus() {
         bonus.play(soundLevel);
     }
 
-    public void dispose(){
+    public void dispose() {
         menuMusic.dispose();
         gameMusic.dispose();
         marbleBreak.dispose();

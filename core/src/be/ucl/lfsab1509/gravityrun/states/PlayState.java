@@ -93,7 +93,7 @@ public class PlayState extends State {
         pauseButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                isClickedPauseButton = true;
+                handlePause();
             }
         });
 
@@ -131,16 +131,11 @@ public class PlayState extends State {
 
     @Override
     protected void handleInput() {
-        if (gameOver && (Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))) {
-            GravityRun.scoreList.add(score);
-            soundManager.replayMenu();
-            gsm.set(new GameOverState(gsm, soundManager));
-        }
+        if (Gdx.input.justTouched() || clickedBack())
+            handleEndGame();
 
-        if (!gameOver && (isClickedPauseButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))) {
-            isClickedPauseButton = false;
-            gsm.push(new PauseState(gsm, soundManager));
-        }
+        if (clickedBack())
+            handlePause();
     }
 
     @Override
@@ -152,10 +147,9 @@ public class PlayState extends State {
         score = (int) (marble.getCenterPosition().y / h * 100) + scoreBonus;
         scoreLabel.setText(i18n.format("score", score));
 
-        if (!gameOver && !CamReposition.isInReposition){
+        if (!gameOver && !CamReposition.isInReposition) {
             cam.position.add(0, Marble.lvl * Marble.MOVEMENT * marble.speed * marble.getSlowDown() * dt, 0);
-        }
-        else {
+        } else {
             checkCamReposition();
         }
 
@@ -264,6 +258,10 @@ public class PlayState extends State {
             obstacle.dispose();
     }
 
+    private boolean clickedBack() {
+        return Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE);
+    }
+
     private Obstacle newObstacle(float position) {
         Obstacle obstacle;
         switch (random.nextInt(5)) {
@@ -277,6 +275,19 @@ public class PlayState extends State {
                 obstacle = new Wall(position, WIDTH, marble.getNormalDiameter());
         }
         return obstacle;
+    }
+
+    private void handleEndGame() {
+        if (gameOver) {
+            GravityRun.scoreList.add(score);
+            soundManager.replayMenu();
+            gsm.set(new GameOverState(gsm, soundManager));
+        }
+    }
+
+    private void handlePause() {
+        if (!gameOver)
+            gsm.push(new PauseState(gsm, soundManager));
     }
 
     private Bonus newBonus(float position, int offset) {
@@ -307,8 +318,8 @@ public class PlayState extends State {
                 v.add(0, 3 * bg.getHeight());
     }
 
-    private void checkCamReposition () {
-        if(cam.position.y + 80 <= marble.getCenterPosition().y)
+    private void checkCamReposition() {
+        if (cam.position.y + 80 <= marble.getCenterPosition().y)
             CamReposition.isInReposition = false;
     }
 

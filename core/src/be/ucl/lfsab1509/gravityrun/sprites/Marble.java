@@ -61,7 +61,29 @@ public class Marble {
             position.add(0, 0, -10 * lvl * speed * slowDown);
         else
             position.z = 0;
+/*
+POUR JOUER AVEC LES FLECHES QUAND T'ES SUR UN PUTAIN D'EMULATEUR !!!
+C'EST PAS OUF MAIS CA FONCTIONNE +_
+        int arrow = 0;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT))
+            arrow = -10;
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT))
+            arrow = 10;
+
+        if (!gameOver) {
+            if ((blockedOnRight && Gdx.input.getGyroscopeY() > 0) || (blockedOnLeft && Gdx.input.getGyroscopeY() < 0))
+                position.add(0, lvl * MOVEMENT * speed * slowDown * dt, 0);
+            else if ((blockedOnLeft && Gdx.input.getGyroscopeY() < 0) && blockedOnTop)
+                position.add(0, 0, 0);
+            else if ((blockedOnRight && Gdx.input.getGyroscopeY() > 0) && blockedOnTop)
+                position.add(0, 0, 0);
+            else if (blockedOnTop)
+                position.add(arrow * GravityRun.WIDTH / 75, 0, 0);
+            else
+                position.add(arrow * GravityRun.WIDTH / 75, lvl * MOVEMENT * speed * slowDown * dt, 0);
+        }
+*/
         if (!gameOver) {
             if ((blockedOnRight && Gdx.input.getGyroscopeY() > 0) || (blockedOnLeft && Gdx.input.getGyroscopeY() < 0))
                 position.add(0, lvl * MOVEMENT * speed * slowDown * dt, 0);

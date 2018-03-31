@@ -32,12 +32,17 @@ public class Wall extends Obstacle {
                 marble.setBlockedOnLeft(marbleCenterX > rightBound);
                 marble.setBlockedOnRight(marbleCenterX < leftBound);
                 marble.setBlockedOnTop(marbleCenterY < bottomBound);
-                PlayState.isCollideWall = marbleCenterX > rightBound || marbleCenterX < leftBound || marbleCenterY < bottomBound;
+                PlayState.isCollideWall = true;
+                if (!marble.isLifeLost()) {
+                    marble.setMarbleLife(marble.getMarbleLife() - 1);
+                    marble.setLifeLost(true);
+                }
             } else {
                 marble.setBlockedOnLeft(false);
                 marble.setBlockedOnRight(false);
                 marble.setBlockedOnTop(false);
                 PlayState.isCollideWall = false;
+                marble.setLifeLost(false);
             }
         }
     }

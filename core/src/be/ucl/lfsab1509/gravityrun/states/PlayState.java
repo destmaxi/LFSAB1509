@@ -86,6 +86,8 @@ public class PlayState extends State {
         scoreLabel.setText(i18n.format("score", score));
         scoreLabel.setPosition((width - scoreLabel.getWidth()) / 2, height - scoreLabel.getHeight());
 
+        // TODO: mettre des coeurs pour montrer le nombre de vie restante
+
         scoreStage = new Stage(new ScreenViewport());
         scoreStage.addActor(scoreLabel);
         scoreStage.addActor(pauseButton);
@@ -238,10 +240,12 @@ public class PlayState extends State {
 
     private Bonus newBonus(float position, int offset) {
         Bonus bonus;
-        switch (random.nextInt(9)) {
+        switch (random.nextInt(10)) {
             case 1:
-            case 7:
-                bonus = new ScoreBonus(position, offset, STANDARD_WIDTH);
+                bonus = new NewLife(position,offset, STANDARD_WIDTH);
+                break;
+            case 2:
+                bonus = null;
                 break;
             case 3:
                 bonus = new CamReposition(position, offset, STANDARD_WIDTH);
@@ -253,7 +257,7 @@ public class PlayState extends State {
                 bonus = new SlowDown(position, offset, STANDARD_WIDTH);
                 break;
             default:
-                bonus = null;
+                bonus = new ScoreBonus(position, offset, STANDARD_WIDTH);
         }
         return bonus;
     }
@@ -321,8 +325,12 @@ public class PlayState extends State {
     }
 
     private void updateObstacles() {
-        for (int i = 0; i < obstacles.size; i++)
+        for (int i = 0; i < obstacles.size; i++) {
             obstacleReposition(obstacles.get(i), i);
+
+            if (marble.getMarbleLife() == 0)
+                gameOver = true;
+        }
     }
 
 }

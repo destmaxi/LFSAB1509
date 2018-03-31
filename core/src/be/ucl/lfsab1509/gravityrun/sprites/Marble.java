@@ -18,10 +18,11 @@ public class Marble {
     public static final int MOVEMENT = GravityRun.HEIGHT / 5;
     public static final float SQRT_2 = (float) Math.sqrt(2);
 
-    private boolean blockedOnLeft = false, blockedOnRight = false, blockedOnTop = false, invincible = false, inWall = false;
+    private boolean blockedOnLeft = false, blockedOnRight = false, blockedOnTop = false, invincible = false, inWall = false, lifeLost = false;
     private Circle bounds;
     public float speed = 1f;
     private float repositioning = 1f, slowDown = 1f;
+    private int marbleLife = 5;
     public int difficulty;
     private MarbleAnimation marbleAnimation;
     private Texture marble;
@@ -129,12 +130,20 @@ C'EST PAS OUF MAIS CA FONCTIONNE +_
         return marbleAnimation.getDiameter(0);
     }
 
+    public int getMarbleLife() {
+        return marbleLife;
+    }
+
     public float getRepositioning() {
         return repositioning;
     }
 
     public float getSlowDown() {
         return slowDown;
+    }
+
+    public boolean isLifeLost() {
+        return lifeLost;
     }
 
     public boolean isInvincible() {
@@ -161,12 +170,20 @@ C'EST PAS OUF MAIS CA FONCTIONNE +_
         this.blockedOnTop = blockedOnTop;
     }
 
+    public void setLifeLost(boolean lifeLost) {
+        this.lifeLost = lifeLost;
+    }
+
     void setInvincible(boolean invincible) {
         this.invincible = invincible;
     }
 
     void setInWall(boolean inWall) {
         this.inWall = inWall;
+    }
+
+    public void setMarbleLife(int marbleLife) {
+        this.marbleLife = marbleLife;
     }
 
     public void setRepositioning(float repositioning) {

@@ -44,9 +44,9 @@ public abstract class Obstacle {
 
     public boolean isOutOfScreen(float screenCenterY) {
         float screenBottom = screenCenterY - GravityRun.HEIGHT / 2;
-        float bonusTop = position.y + obstacleTexture.getHeight();
+        float obstacleTop = position.y + obstacleTexture.getHeight();
 
-        return screenBottom >= bonusTop;
+        return screenBottom >= obstacleTop;
     }
 
     public void render(SpriteBatch spriteBatch) {

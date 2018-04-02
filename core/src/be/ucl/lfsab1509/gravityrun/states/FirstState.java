@@ -16,37 +16,30 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Align;
 
 import java.util.ArrayList;
 
 public class FirstState extends AbstractMenuState {
 
-    private boolean isClickedStartButton = false;
     private boolean goingToMenuState = false;
-    private Label errorLabel;
     private String username = GravityRun.i18n.format("username");
 
-    public FirstState(GameStateManager gameStateManager, SoundManager soundManager) {
-        super(gameStateManager, soundManager);
+    public FirstState(GameStateManager pGameStateManager, SoundManager pSoundManager) {
+        super(pGameStateManager, pSoundManager);
 
-        errorLabel = new Label(GravityRun.i18n.format("error_username_default"), aaronScoreSkin, "error");
-        errorLabel.setWrap(true);
-        errorLabel.setWidth(containerWidth);
-        errorLabel.setAlignment(Align.center);
-        errorLabel.setVisible(false);
 
         Label title = new Label(GravityRun.i18n.format("welcome"), titleSkin, "title");
 
-        TextButton startButton = new TextButton(GravityRun.i18n.format("start"), tableSkin, "round");
+        final TextButton startButton = new TextButton(GravityRun.i18n.format("start"), tableSkin, "round");
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                isClickedStartButton = true;
+                validateUsername();
             }
         });
         final TextField usernameField = new TextField(username, tableSkin);
         usernameField.setText(username);
+        usernameField.setMessageText(GravityRun.i18n.format("username"));
         usernameField.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -59,8 +52,16 @@ public class FirstState extends AbstractMenuState {
                 username = usernameField.getText();
             }
         });
+        usernameField.setTextFieldListener(new TextField.TextFieldListener() {
+            @Override
+            public void keyTyped(TextField textField, char c) {
+                if (c == '\n') {
+                    validateUsername();
+                }
+            }
+        });
 
-        Container<Table> tableContainer = new Container<Table>();
+        Container<Table> tableContainer = new Container<>();
         Table table = new Table();
 
         tableContainer.setSize(containerWidth, containerHeight);
@@ -73,9 +74,6 @@ public class FirstState extends AbstractMenuState {
         table.add(usernameField).expandX().fillX().padTop(height - containerHeight);
         table.row();
         table.add(startButton).expandX().fillX().padTop(height - containerHeight);
-        table.row();
-        table.add(errorLabel).expandX().fillX().padTop(height - containerHeight).width(containerWidth);
-        table.row();
 
         stage.addActor(tableContainer);
 
@@ -84,19 +82,6 @@ public class FirstState extends AbstractMenuState {
 
     @Override
     protected void handleInput() {
-        if (isClickedStartButton) {
-            Gdx.input.setOnscreenKeyboardVisible(false);
-            if (!User.checkUsername(username)) {
-                isClickedStartButton = false;
-                errorLabel.setText(User.getUsernameError(username));
-                errorLabel.setVisible(true);
-            } else {
-                initUser();
-                goingToMenuState = true;
-                gameStateManager.set(new HomeState(gameStateManager, soundManager));
-            }
-        }
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
         }
@@ -109,6 +94,7 @@ public class FirstState extends AbstractMenuState {
 
     @Override
     public void render(SpriteBatch spriteBatch) {
+        stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
     }
 
@@ -136,4 +122,14 @@ public class FirstState extends AbstractMenuState {
         GravityRun.pref.flush();
     }
 
+    private void validateUsername() {
+        Gdx.input.setOnscreenKeyboardVisible(false);
+        if (!User.checkUsername(username)) {
+            spawnErrorDialog(stage, GravityRun.i18n.format("error_username_default"), User.getUsernameError(username));
+        } else {
+            initUser();
+            goingToMenuState = true;
+            gameStateManager.set(new HomeState(gameStateManager, soundManager)); // lolilol
+        }
+    }
 }

@@ -115,8 +115,13 @@ public class User {
         return indexSelected;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public boolean setUsername(String username) {
+        if (checkUsername(username)) {
+            this.username = username;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void setBeginner(ArrayList<Integer> beginner) {

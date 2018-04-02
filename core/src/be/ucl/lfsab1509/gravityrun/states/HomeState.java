@@ -80,7 +80,7 @@ public class HomeState extends AbstractMenuState {
     public void handleInput() {
         if (isClickedStartGameButton) {
             isClickedStartGameButton = false;
-            soundManager.replayGame();
+            soundManager.replayGame(); // FIXME le placement de cette instruction laisse à désirer. 20 msec de délai
             gameStateManager.push(new PlayState(gameStateManager, soundManager));
         }
 
@@ -110,6 +110,7 @@ public class HomeState extends AbstractMenuState {
 
     @Override
     public void render(SpriteBatch spriteBatch) {
+        stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
     }
 

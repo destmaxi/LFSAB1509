@@ -29,6 +29,9 @@ public class OptionState extends AbstractMenuState {
     OptionState(GameStateManager gameStateManager, SoundManager soundManager) {
         super(gameStateManager, soundManager);
 
+        newUsername = GravityRun.user.getUsername();
+        username = GravityRun.user.getUsername();
+
         Label title = new Label(GravityRun.i18n.get("option"), titleSkin, "title");
 
         TextButton lvlButton = new TextButton(GravityRun.i18n.format("chose_lvl"), tableSkin, "round");
@@ -43,13 +46,7 @@ public class OptionState extends AbstractMenuState {
         usernameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.input.setOnscreenKeyboardVisible(false);
-                saveButton.setVisible(!saveButton.isVisible());
-                usernameField.setVisible(!usernameField.isVisible());
-                // TODO mettre ce code à un meilleur endroit
-                if (!usernameField.isVisible() && !User.checkUsername(newUsername))
-                    // Le username n'est pas valide: on remet l'ancien.
-                    usernameField.setText(username);
+                toggleUsernameFields();
             }
         });
 
@@ -58,26 +55,10 @@ public class OptionState extends AbstractMenuState {
         saveButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.input.setOnscreenKeyboardVisible(false);
-                // isClickedSaveButton = true;
-
-                if (User.checkUsername(newUsername)) {
-                    GravityRun.user.setUsername(newUsername);
-                    GravityRun.pref.put(GravityRun.user.toMap()); // TODO
-                    GravityRun.pref.flush();
-                    // TODO indiquer un message d'erreur (errorLabel.setText(User.getUsernameError(newUsername)))
-                } else {
-                    // Sinon, le textField retient la valeur qu'on a rentré, qui est donc incorrecte.
-                    usernameField.setText(username);
-                }
-
-                saveButton.setVisible(false);
-                usernameField.setVisible(false);
+                validateUserName();
             }
         });
 
-        newUsername = GravityRun.user.getUsername();
-        username = GravityRun.user.getUsername();
         usernameField = new TextField(newUsername, tableSkin);
         usernameField.setText(newUsername);
         usernameField.setVisible(false);
@@ -93,21 +74,23 @@ public class OptionState extends AbstractMenuState {
                 newUsername = usernameField.getText();
             }
         });
+        usernameField.setTextFieldListener(new TextField.TextFieldListener() {
+            @Override
+            public void keyTyped(TextField textField, char c) {
+                if (c == '\n') {
+                    validateUserName();
+                }
+            }
+        });
 
-        listBox = new List<String>(tableSkin);
+        listBox = new List<>(tableSkin);
         listBox.setItems(GravityRun.i18n.format("beginner"), GravityRun.i18n.format("inter"), GravityRun.i18n.format("expert"));
         listBox.setVisible(false);
         listBox.setSelectedIndex(GravityRun.user.getIndexSelected());
         listBox.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (listBox.getSelected().equals(GravityRun.i18n.format("beginner")))
-                    GravityRun.user.setIndexSelected(0);
-                else if (listBox.getSelected().equals(GravityRun.i18n.format("inter")))
-                    GravityRun.user.setIndexSelected(1);
-                else if (listBox.getSelected().equals(GravityRun.i18n.format("expert")))
-                    GravityRun.user.setIndexSelected(2);
-                listBox.setVisible(false);
+                validateLevelSelection();
             }
         });
 
@@ -151,6 +134,7 @@ public class OptionState extends AbstractMenuState {
 
     @Override
     public void render(SpriteBatch spriteBatch) {
+        stage.act();
         stage.draw();
     }
 
@@ -159,4 +143,39 @@ public class OptionState extends AbstractMenuState {
         stage.dispose();
     }
 
+    private void toggleUsernameFields() {
+        Gdx.input.setOnscreenKeyboardVisible(false);
+        saveButton.setVisible(!saveButton.isVisible());
+        usernameField.setVisible(!usernameField.isVisible());
+        // TODO mettre ce code à un meilleur endroit
+        if (!usernameField.isVisible() && !User.checkUsername(newUsername))
+            // Le username n'est pas valide: on remet l'ancien.
+            usernameField.setText(username);
+    }
+
+    private void validateUserName() {
+        Gdx.input.setOnscreenKeyboardVisible(false);
+
+        if (GravityRun.user.setUsername(newUsername)) {
+            GravityRun.pref.put(GravityRun.user.toMap()); // TODO
+            GravityRun.pref.flush();
+        } else {
+            usernameField.setText(username); // Sinon, le textField retient la valeur qu'on a rentré, qui est donc incorrecte.
+            newUsername = username; // Don't forget me
+            spawnErrorDialog(stage, GravityRun.i18n.format("error_username_default"), User.getUsernameError(newUsername));
+        }
+
+        saveButton.setVisible(false);
+        usernameField.setVisible(false);
+    }
+
+    private void validateLevelSelection() {
+        if (listBox.getSelected().equals(GravityRun.i18n.format("beginner")))
+            GravityRun.user.setIndexSelected(0);
+        else if (listBox.getSelected().equals(GravityRun.i18n.format("inter")))
+            GravityRun.user.setIndexSelected(1);
+        else if (listBox.getSelected().equals(GravityRun.i18n.format("expert")))
+            GravityRun.user.setIndexSelected(2);
+        listBox.setVisible(false);
+    }
 }

@@ -242,6 +242,7 @@ public class PlayState extends State {
     private void handlePause() {
         if (!gameOver)
             gameStateManager.push(new PauseState(gameStateManager, soundManager));
+        // FIXME le SoundManager n'arrête pas la musique.
     }
 
     private Bonus newBonus(float position, int offset) {

@@ -5,6 +5,7 @@ import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 import be.ucl.lfsab1509.gravityrun.tools.User;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.GL20;
@@ -13,7 +14,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class GravityRun extends ApplicationAdapter {
+public class GravityRun extends Game {
 
     public static float DENSITY;
     public static int HEIGHT;
@@ -24,8 +25,8 @@ public class GravityRun extends ApplicationAdapter {
     public static Preferences pref;
     public static User user;
 
-    private GameStateManager gsm;
-	private SpriteBatch batch;
+//    private GameStateManager gsm;
+	public SpriteBatch batch;
 	private SoundManager sound;
 
     @Override
@@ -39,7 +40,7 @@ public class GravityRun extends ApplicationAdapter {
         State.initializeSkins();
 
         batch = new SpriteBatch();
-        gsm = new GameStateManager();
+//        gsm = new GameStateManager();
         sound = new SoundManager();
 
         pref = Gdx.app.getPreferences("Player");
@@ -49,25 +50,27 @@ public class GravityRun extends ApplicationAdapter {
 
         if (!pref.getBoolean(User.FIRSTTIME)) {
             user = new User();
-            gsm.push(new FirstState(gsm, sound));
+//            gsm.push(new FirstState(gsm, sound));
+            setScreen(new FirstState(this, sound));
         } else {
             user = new User(map);
-            gsm.push(new MenuState(gsm, sound));
+//            gsm.push(new MenuState(gsm, sound));
+            setScreen(new MenuState(this, sound));
         }
     }
 
     @Override
-    public void render() {
-        Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        gsm.update(Gdx.graphics.getDeltaTime());
-        gsm.render(batch);
+    public void dispose() {
+        batch.dispose();
+        sound.dispose();
     }
 
-	@Override
-	public void dispose() {
-		batch.dispose();
-		sound.dispose();
-	}
+    @Override
+    public void render() {
+        Gdx.gl.glClearColor(.2f, .2f, .2f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        super.render();
+    }
 
 }

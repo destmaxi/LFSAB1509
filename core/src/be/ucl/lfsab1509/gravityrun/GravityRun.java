@@ -4,7 +4,6 @@ import be.ucl.lfsab1509.gravityrun.states.*;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 import be.ucl.lfsab1509.gravityrun.tools.User;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -25,9 +24,9 @@ public class GravityRun extends Game {
     public static Preferences pref;
     public static User user;
 
-//    private GameStateManager gsm;
-	public SpriteBatch batch;
-	private SoundManager sound;
+    public ScreenManager screenManager;
+	public SoundManager soundManager;
+    public SpriteBatch batch;
 
     @Override
     public void create() {
@@ -40,8 +39,8 @@ public class GravityRun extends Game {
         State.initializeSkins();
 
         batch = new SpriteBatch();
-//        gsm = new GameStateManager();
-        sound = new SoundManager();
+        screenManager = new ScreenManager(this);
+        soundManager = new SoundManager();
 
         pref = Gdx.app.getPreferences("Player");
         pref.flush();
@@ -50,19 +49,18 @@ public class GravityRun extends Game {
 
         if (!pref.getBoolean(User.FIRSTTIME)) {
             user = new User();
-//            gsm.push(new FirstState(gsm, sound));
-            setScreen(new FirstState(this, sound));
+            screenManager.push(new FirstState(this));
         } else {
             user = new User(map);
-//            gsm.push(new MenuState(gsm, sound));
-            setScreen(new MenuState(this, sound));
+            screenManager.push(new MenuState(this));
         }
     }
 
     @Override
     public void dispose() {
         batch.dispose();
-        sound.dispose();
+        screenManager.disposeAll();
+        soundManager.dispose();
     }
 
     @Override
@@ -71,6 +69,11 @@ public class GravityRun extends Game {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         super.render();
+    }
+
+    public void exit() {
+        dispose();
+        Gdx.app.exit();
     }
 
 }

@@ -4,11 +4,9 @@ import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.I18NBundle;
@@ -18,19 +16,62 @@ public abstract class State implements Screen {
     static float height, width;
     static Skin aaronScoreSkin, labelScoreBoardSkin, tableSkin, tableScoreBoardSkin, titleSkin;
 
-    final GravityRun game;
-//    GameStateManager gameStateManager;
+    GravityRun game;
     I18NBundle i18n;
     OrthographicCamera camera;
+    ScreenManager screenManager;
     SoundManager soundManager;
 
-    State(final GravityRun game, SoundManager soundManager) {
-//        this.gameStateManager = gameStateManager;
-        this.game = game;
+    State(GravityRun game) {
         camera = new OrthographicCamera();
-        this.soundManager = soundManager;
-        FileHandle baseFileHandle = Gdx.files.internal("strings/string");
-        i18n = I18NBundle.createBundle(baseFileHandle);
+        this.game = game;
+        i18n = I18NBundle.createBundle(Gdx.files.internal("strings/string"));
+        screenManager = game.screenManager;
+        soundManager = game.soundManager;
+    }
+
+    @Override
+    public void dispose() {
+
+    }
+
+    @Override
+    public void hide() {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void render(float dt) {
+        update(dt);
+        render(game.batch);
+    }
+
+    @Override
+    public void resize(int width, int height) {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void show() {
+
+    }
+
+    public abstract void render(SpriteBatch spriteBatch);
+
+    public abstract void update(float dt);
+
+    boolean clickedBack() {
+        return Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE);
     }
 
     public static void initializeSkins() {
@@ -53,18 +94,5 @@ public abstract class State implements Screen {
         titleSkin = new Skin();
         titleSkin.createSkin((int) (1.5f * width / d / 10));
     }
-
-    public void render(float dt) {
-        update(dt);
-        render(game.batch);
-    }
-
-    protected abstract void handleInput();
-
-    public abstract void update(float dt);
-
-    public abstract void render(SpriteBatch spriteBatch);
-
-    public abstract void dispose();
 
 }

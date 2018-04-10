@@ -1,6 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
-import be.ucl.lfsab1509.gravityrun.states.PlayState;
+import be.ucl.lfsab1509.gravityrun.screens.PlayScreen;
 
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
@@ -18,7 +18,7 @@ public class ScoreBonus extends Bonus {
 
     @Override
     public boolean isFinished() {
-        PlayState.scoreBonus += 100;
+        PlayScreen.scoreBonus += 100;
         return true;
     }
 

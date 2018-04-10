@@ -1,6 +1,6 @@
 package be.ucl.lfsab1509.gravityrun;
 
-import be.ucl.lfsab1509.gravityrun.states.*;
+import be.ucl.lfsab1509.gravityrun.screens.*;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 import be.ucl.lfsab1509.gravityrun.tools.User;
 
@@ -24,7 +24,7 @@ public class GravityRun extends Game {
     public Preferences pref;
     public ScreenManager screenManager;
 	public SoundManager soundManager;
-    public SpriteBatch batch;
+    public SpriteBatch spriteBatch;
     public User user;
 
     @Override
@@ -35,11 +35,11 @@ public class GravityRun extends Game {
         HEIGHT = Gdx.graphics.getHeight();
         WIDTH = Gdx.graphics.getWidth();
 
-        State.initializeSkins();
+        Screen.initializeSkins();
 
-        batch = new SpriteBatch();
         screenManager = new ScreenManager(this);
         soundManager = new SoundManager();
+        spriteBatch = new SpriteBatch();
 
         pref = Gdx.app.getPreferences("Player");
         pref.flush();
@@ -48,18 +48,18 @@ public class GravityRun extends Game {
 
         if (!pref.getBoolean(User.FIRSTTIME)) {
             user = new User();
-            screenManager.push(new FirstState(this));
+            screenManager.push(new FirstScreen(this));
         } else {
             user = new User(map);
-            screenManager.push(new MenuState(this));
+            screenManager.push(new MenuScreen(this));
         }
     }
 
     @Override
     public void dispose() {
-        batch.dispose();
         screenManager.disposeAll();
         soundManager.dispose();
+//        spriteBatch.dispose();    // FIXME : already disposed ?
     }
 
     @Override

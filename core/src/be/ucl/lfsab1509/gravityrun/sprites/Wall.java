@@ -1,7 +1,7 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.states.PlayState;
+import be.ucl.lfsab1509.gravityrun.screens.PlayScreen;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 import com.badlogic.gdx.math.Intersector;
@@ -32,7 +32,7 @@ public class Wall extends Obstacle {
                 marble.setBlockedOnLeft(marbleCenterX > rightBound);
                 marble.setBlockedOnRight(marbleCenterX < leftBound);
                 marble.setBlockedOnTop(marbleCenterY < bottomBound);
-                PlayState.isCollideWall = true;
+                PlayScreen.isCollideWall = true;
                 if (!marble.isLifeLost()) {
                     marble.setMarbleLife(marble.getMarbleLife() - 1);
                     marble.setLifeLost(true);
@@ -41,7 +41,7 @@ public class Wall extends Obstacle {
                 marble.setBlockedOnLeft(false);
                 marble.setBlockedOnRight(false);
                 marble.setBlockedOnTop(false);
-                PlayState.isCollideWall = false;
+                PlayScreen.isCollideWall = false;
                 marble.setLifeLost(false);
             }
         }

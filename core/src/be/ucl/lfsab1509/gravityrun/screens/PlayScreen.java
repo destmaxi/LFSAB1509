@@ -1,11 +1,10 @@
-package be.ucl.lfsab1509.gravityrun.states;
+package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.sprites.*;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -20,7 +19,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class PlayState extends State {
+public class PlayScreen extends Screen {
 
     private static int OBSTACLE_COUNT;
     private static int OBSTACLE_HEIGHT;
@@ -40,17 +39,17 @@ public class PlayState extends State {
     private Stage scoreStage;
     private Texture background, gameOverImage, pauseImage;
 
-    PlayState(GravityRun game) {
-        super(game);
+    PlayScreen(GravityRun gravityRun) {
+        super(gravityRun);
 
         camera.setToOrtho(false, width, height);
 
-        if (scoreList == null)
-            scoreList = new ArrayList<Integer>();
+        if (game.scoreList == null)
+            game.scoreList = new ArrayList<Integer>();
 
         calculateStandardWidth();
 
-        marble = new Marble((int) width / 2, 0, STANDARD_WIDTH);
+        marble = new Marble((int) width / 2, 0, STANDARD_WIDTH, game.user);
         gameOver = false;
         isCollideWall = false;
         scoreBonus = 0;
@@ -106,12 +105,52 @@ public class PlayState extends State {
         camera.position.y = marble.getCenterPosition().y;
     }
 
-    private void handleInput() {
-        if (Gdx.input.justTouched() || clickedBack())
-            handleEndGame();
+    @Override
+    public void dispose() {
+        background.dispose();
+        gameOverImage.dispose();
+        marble.dispose();
+        pauseImage.dispose();
+        scoreStage.dispose();
 
-        if (clickedBack())
-            handlePause();
+        for (Obstacle obstacle : obstacles)
+            obstacle.dispose();
+    }
+
+    @Override
+    public void show() {
+        soundManager.replayGame();
+    }
+
+    @Override
+    public void render() {
+        game.spriteBatch.begin();
+
+        game.spriteBatch.setProjectionMatrix(camera.combined);
+
+        for (Vector2 backgroundPosition : backgroundPositions)
+            game.spriteBatch.draw(background, backgroundPosition.x, backgroundPosition.y);
+
+        for (Obstacle obstacle : obstacles)
+            obstacle.render(game.spriteBatch);
+
+        for (Bonus bonus : bonuses)
+            if (bonus != null)
+                bonus.render(game.spriteBatch);
+
+        float marbleX = marble.getCenterPosition().x - marble.getDiameter() / 2;
+        float marbleY = marble.getCenterPosition().y - marble.getDiameter() / 2;
+        game.spriteBatch.draw(marble.getMarble(), marbleX, marbleY);
+
+        if (gameOver)
+            game.spriteBatch.draw(gameOverImage,
+                    camera.position.x - gameOverImage.getWidth() / 2,
+                    camera.position.y);
+
+        game.spriteBatch.end();
+
+        scoreStage.act();
+        scoreStage.draw();
     }
 
     @Override
@@ -135,49 +174,6 @@ public class PlayState extends State {
         }
 
         handleInput();
-    }
-
-    @Override
-    public void render(SpriteBatch spriteBatch) {
-        spriteBatch.begin();
-
-        spriteBatch.setProjectionMatrix(camera.combined);
-
-        for (Vector2 backgroundPosition : backgroundPositions)
-            spriteBatch.draw(background, backgroundPosition.x, backgroundPosition.y);
-
-        for (Obstacle obstacle : obstacles)
-            obstacle.render(spriteBatch);
-
-        for (Bonus bonus : bonuses)
-            if (bonus != null)
-                bonus.render(spriteBatch);
-
-        float marbleX = marble.getCenterPosition().x - marble.getDiameter() / 2;
-        float marbleY = marble.getCenterPosition().y - marble.getDiameter() / 2;
-        spriteBatch.draw(marble.getMarble(), marbleX, marbleY);
-
-        if (gameOver)
-            spriteBatch.draw(gameOverImage,
-                    camera.position.x - gameOverImage.getWidth() / 2,
-                    camera.position.y);
-
-        spriteBatch.end();
-
-        scoreStage.act();
-        scoreStage.draw();
-    }
-
-    @Override
-    public void dispose() {
-        background.dispose();
-        gameOverImage.dispose();
-        marble.dispose();
-        pauseImage.dispose();
-        scoreStage.dispose();
-
-        for (Obstacle obstacle : obstacles)
-            obstacle.dispose();
     }
 
     private void bonusReposition(Bonus bonus, int i) {
@@ -220,15 +216,23 @@ public class PlayState extends State {
 
     private void handleEndGame() {
         if (gameOver) {
-            scoreList.add(score);
+            game.scoreList.add(score);
             soundManager.replayMenu();
-            screenManager.set(new GameOverState(game));
+            screenManager.set(new GameOverScreen(game));
         }
+    }
+
+    private void handleInput() {
+        if (Gdx.input.justTouched() || clickedBack())
+            handleEndGame();
+
+        if (clickedBack())
+            handlePause();
     }
 
     private void handlePause() {
         if (!gameOver)
-            screenManager.push(new PauseState(game));
+            screenManager.push(new PauseScreen(game));
     }
 
     private Bonus newBonus(float position, int offset) {

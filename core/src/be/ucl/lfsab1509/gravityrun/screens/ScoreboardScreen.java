@@ -1,9 +1,8 @@
-package be.ucl.lfsab1509.gravityrun.states;
+package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -14,13 +13,13 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class ScoreboardState extends State {
+public class ScoreboardScreen extends Screen {
 
     private Stage stage;
 
     @SuppressWarnings("unchecked")
-    ScoreboardState(GravityRun game) {
-        super(game);
+    ScoreboardScreen(GravityRun gravityRun) {
+        super(gravityRun);
 
         float ch = height * 0.9f;
         float cw = width * 0.9f;
@@ -35,7 +34,7 @@ public class ScoreboardState extends State {
         List intermediateScoreList = new List(tableScoreBoardSkin);
         List expertScoreList = new List(tableScoreBoardSkin);
 
-        java.util.List[] lists = {user.getBeginner(), user.getInter(), user.getExpert()};
+        java.util.List[] lists = {game.user.getBeginner(), game.user.getInter(), game.user.getExpert()};
         List[] list = {beginnerScoreList, intermediateScoreList, expertScoreList};
         ArrayList<Integer> myArrayList;
 
@@ -94,18 +93,13 @@ public class ScoreboardState extends State {
     }
 
     @Override
-    public void resume() {
-        Gdx.input.setInputProcessor(stage);
-    }
-
-    @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
     }
 
     @Override
-    public void render(SpriteBatch spriteBatch) {
-        spriteBatch.setProjectionMatrix(camera.combined);
+    public void render() {
+        game.spriteBatch.setProjectionMatrix(camera.combined);
         stage.act();
         stage.draw();
     }

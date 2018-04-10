@@ -1,9 +1,8 @@
-package be.ucl.lfsab1509.gravityrun.states;
+package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -19,13 +18,13 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
 
-public class FirstState extends State {
+public class FirstScreen extends Screen {
 
     private Label errorLabel;
     private Stage stage;
     private String username = i18n.format("username");
 
-    public FirstState(GravityRun gravityRun) {
+    public FirstScreen(GravityRun gravityRun) {
         super(gravityRun);
 
         float cw = width * 0.9f;
@@ -48,7 +47,7 @@ public class FirstState extends State {
                     errorLabel.setVisible(true);
                 } else {
                     initUser();
-                    screenManager.set(new MenuState(game));
+                    screenManager.set(new MenuScreen(game));
                 }
             }
         });
@@ -100,8 +99,8 @@ public class FirstState extends State {
     }
 
     @Override
-    public void render(SpriteBatch spriteBatch) {
-        spriteBatch.setProjectionMatrix(camera.combined);
+    public void render() {
+        game.spriteBatch.setProjectionMatrix(camera.combined);
         stage.act();
         stage.draw();
     }
@@ -125,16 +124,16 @@ public class FirstState extends State {
         for (int i = 0; i < 3; i++)
             arrayList.add(0);
 
-        user.setUsername(username);
-        user.setFirstTimeTrue();
-        user.setBeginner(new ArrayList<Integer>());
-        user.setInter(new ArrayList<Integer>());
-        user.setExpert(new ArrayList<Integer>());
-        user.setIndexSelected(1);
-        user.setHighScore(arrayList);
+        game.user.setUsername(username);
+        game.user.setFirstTimeTrue();
+        game.user.setBeginner(new ArrayList<Integer>());
+        game.user.setInter(new ArrayList<Integer>());
+        game.user.setExpert(new ArrayList<Integer>());
+        game.user.setIndexSelected(1);
+        game.user.setHighScore(arrayList);
 
-        pref.put(user.toMap());
-        pref.flush();
+        game.pref.put(game.user.toMap());
+        game.pref.flush();
     }
 
 }

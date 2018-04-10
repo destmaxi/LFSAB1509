@@ -1,9 +1,8 @@
-package be.ucl.lfsab1509.gravityrun.states;
+package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -17,7 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class OptionState extends State {
+public class OptionScreen extends Screen {
 
     private List<String> listBox;
     private Stage stage;
@@ -25,7 +24,7 @@ public class OptionState extends State {
     private TextButton saveButton;
     private TextField usernameField;
 
-    OptionState(GravityRun gravityRun) {
+    OptionScreen(GravityRun gravityRun) {
         super(gravityRun);
 
         float ch = height * 0.9f;
@@ -48,9 +47,9 @@ public class OptionState extends State {
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.input.setOnscreenKeyboardVisible(false);
 
-                user.setUsername(username);
-                pref.put(user.toMap());
-                pref.flush();
+                game.user.setUsername(username);
+                game.pref.put(game.user.toMap());
+                game.pref.flush();
 
                 saveButton.setVisible(false);
                 usernameField.setVisible(false);
@@ -61,7 +60,7 @@ public class OptionState extends State {
         scoreButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                screenManager.push(new ScoreboardState(game));
+                screenManager.push(new ScoreboardScreen(game));
             }
         });
 
@@ -75,7 +74,7 @@ public class OptionState extends State {
             }
         });
 
-        username = user.getUsername();
+        username = game.user.getUsername();
         usernameField = new TextField(username, tableSkin);
         usernameField.setText(username);
         usernameField.setVisible(false);
@@ -95,16 +94,16 @@ public class OptionState extends State {
         listBox = new List<String>(tableSkin);
         listBox.setItems(i18n.format("beginner"), i18n.format("inter"), i18n.format("expert"));
         listBox.setVisible(false);
-        listBox.setSelectedIndex(user.getIndexSelected());
+        listBox.setSelectedIndex(game.user.getIndexSelected());
         listBox.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (listBox.getSelected().equals(i18n.format("beginner")))
-                    user.setIndexSelected(0);
+                    game.user.setIndexSelected(0);
                 else if (listBox.getSelected().equals(i18n.format("inter")))
-                    user.setIndexSelected(1);
+                    game.user.setIndexSelected(1);
                 else if (listBox.getSelected().equals(i18n.format("expert")))
-                    user.setIndexSelected(2);
+                    game.user.setIndexSelected(2);
                 listBox.setVisible(false);
             }
         });
@@ -145,18 +144,13 @@ public class OptionState extends State {
     }
 
     @Override
-    public void resume() {
-        Gdx.input.setInputProcessor(stage);
-    }
-
-    @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
     }
 
     @Override
-    public void render(SpriteBatch spriteBatch) {
-        spriteBatch.setProjectionMatrix(camera.combined);
+    public void render() {
+        game.spriteBatch.setProjectionMatrix(camera.combined);
         stage.act();
         stage.draw();
     }
@@ -164,8 +158,8 @@ public class OptionState extends State {
     @Override
     public void update(float dt) {
         if (clickedBack()) {
-            pref.put(user.toMap());
-            pref.flush();
+            game.pref.put(game.user.toMap());
+            game.pref.flush();
 
             screenManager.pop();
         }

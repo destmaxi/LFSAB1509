@@ -1,7 +1,7 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.states.PlayState;
+import be.ucl.lfsab1509.gravityrun.screens.PlayScreen;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -29,8 +29,8 @@ public abstract class Obstacle {
 
     public void collides(Marble marble, SoundManager soundManager) {
         if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds) && marble.getCenterPosition().z == 0) {
-            soundManager.marbleBreak(PlayState.gameOver);
-            PlayState.gameOver = true;
+            soundManager.marbleBreak(PlayScreen.gameOver);
+            PlayScreen.gameOver = true;
         }
     }
 

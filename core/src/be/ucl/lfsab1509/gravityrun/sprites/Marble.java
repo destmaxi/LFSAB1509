@@ -1,8 +1,9 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.states.PlayState;
+import be.ucl.lfsab1509.gravityrun.screens.PlayScreen;
 
+import be.ucl.lfsab1509.gravityrun.tools.User;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
@@ -28,27 +29,27 @@ public class Marble {
     private Texture marble;
     private Vector3 position, velocity;
 
-    public Marble(int x, int y, int standardWidth) {
+    public Marble(int x, int y, int standardWidth, User user) {
         marble = new Texture("drawable-" + standardWidth + "/marbles.png");
         marbleAnimation = new MarbleAnimation(marble, standardWidth);
         position = new Vector3(x, y, 0);
         velocity = new Vector3(0, MOVEMENT, 0);
         bounds = new Circle(x, y, marbleAnimation.getDiameter(position.z) / 2);
-        difficulty = GravityRun.user.getIndexSelected() + 1;
+        difficulty = user.getIndexSelected() + 1;
     }
 
     public void update(float dt, boolean gameOver) {
         marbleAnimation.update(dt, gameOver);
 
-        if (PlayState.score < 1000)
+        if (PlayScreen.score < 1000)
             speed = 1f;
-        else if (PlayState.score < 2000)
+        else if (PlayScreen.score < 2000)
             speed = 1.2f;
-        else if (PlayState.score < 3000)
+        else if (PlayScreen.score < 3000)
             speed = 1.4f;
-        else if (PlayState.score < 4000)
+        else if (PlayScreen.score < 4000)
             speed = 1.6f;
-        else if (PlayState.score < 5000)
+        else if (PlayScreen.score < 5000)
             speed = 1.8f;
         else
             speed = 2f;
@@ -155,7 +156,9 @@ C'EST PAS OUF MAIS CA FONCTIONNE +_
     }
 
     public boolean isOutOfScreen(float cameraCenterY) {
-        return (position.x <= getDiameter() / 2 || position.x >= (GravityRun.WIDTH - getDiameter() / 2) || position.y <= cameraCenterY - GravityRun.HEIGHT / 2 + getDiameter() / 2);
+        return position.x <= getDiameter() / 2
+                || position.x >= (GravityRun.WIDTH - getDiameter() / 2)
+                || position.y <= cameraCenterY - GravityRun.HEIGHT / 2 + getDiameter() / 2;
     }
 
     void setBlockedOnLeft(boolean blockedOnLeft) {

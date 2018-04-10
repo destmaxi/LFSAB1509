@@ -1,9 +1,8 @@
-package be.ucl.lfsab1509.gravityrun.states;
+package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -13,12 +12,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class PauseState extends State {
+public class PauseScreen extends Screen {
 
     private Stage stage;
 
-    PauseState(GravityRun game) {
-        super(game);
+    PauseScreen(GravityRun gravityRun) {
+        super(gravityRun);
 
         float ch = height * 0.9f;
         float cw = width * 0.9f;
@@ -34,13 +33,12 @@ public class PauseState extends State {
         quitButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                soundManager.replayMenu();
                 screenManager.pop();
                 screenManager.pop();
             }
         });
 
-        Label score = new Label(i18n.format("score", PlayState.score), aaronScoreSkin);
+        Label score = new Label(i18n.format("score", PlayScreen.score), aaronScoreSkin);
 
         Label title = new Label(i18n.format("pause"), titleSkin, "title");
 
@@ -70,17 +68,12 @@ public class PauseState extends State {
     }
 
     @Override
-    public void resume() {
-        Gdx.input.setInputProcessor(stage);
-    }
-
-    @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
     }
 
     @Override
-    public void render(SpriteBatch spriteBatch) {
+    public void render() {
         stage.draw();
     }
 

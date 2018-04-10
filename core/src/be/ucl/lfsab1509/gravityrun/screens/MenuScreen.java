@@ -1,9 +1,8 @@
-package be.ucl.lfsab1509.gravityrun.states;
+package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
@@ -14,12 +13,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class MenuState extends State {
+public class MenuScreen extends Screen {
 
     private Label hyLabel;
     private Stage stage;
 
-    public MenuState(GravityRun gravityRun) {
+    public MenuScreen(GravityRun gravityRun) {
         super(gravityRun);
 
         float ch = height * 0.9f;
@@ -31,7 +30,7 @@ public class MenuState extends State {
         optionButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                screenManager.push(new OptionState(game));
+                screenManager.push(new OptionScreen(game));
             }
         });
         // TODO ici, ça prend environ 10ms
@@ -39,12 +38,11 @@ public class MenuState extends State {
         startGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                soundManager.replayGame();
-                screenManager.push(new PlayState(game));
+                screenManager.push(new PlayScreen(game));
             }
         });
 
-        hyLabel = new Label(i18n.format("hello", pref.getString("username")), tableSkin);
+        hyLabel = new Label(i18n.format("hello", game.pref.getString("username")), tableSkin);
         hyLabel.setWrap(true);
         hyLabel.setWidth(cw);
         hyLabel.setAlignment(Align.center);
@@ -68,8 +66,6 @@ public class MenuState extends State {
 
         stage = new Stage(new ScreenViewport());
         stage.addActor(tableContainer);
-
-        render(gravityRun.batch);
     }
 
     @Override
@@ -81,20 +77,15 @@ public class MenuState extends State {
     }
 
     @Override
-    public void resume() {
-        Gdx.input.setInputProcessor(stage);
-
-    }
-
-    @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-
+        hyLabel.setText(i18n.format("hello", game.user.getUsername()));
+        soundManager.replayMenu();
     }
 
     @Override
-    public void render(SpriteBatch spriteBatch) {
-        spriteBatch.setProjectionMatrix(camera.combined);
+    public void render() {
+        game.spriteBatch.setProjectionMatrix(camera.combined);
         stage.act();
         stage.draw();
     }
@@ -102,13 +93,11 @@ public class MenuState extends State {
     @Override
     public void update(float dt) {
         if (clickedBack()) {
-            pref.put(user.toMap());
-            pref.flush();
+            game.pref.put(game.user.toMap());
+            game.pref.flush();
 
             game.exit();
         }
-
-        hyLabel.setText(i18n.format("hello", user.getUsername()));
     }
 
 }

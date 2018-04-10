@@ -1,9 +1,8 @@
-package be.ucl.lfsab1509.gravityrun.states;
+package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
@@ -16,20 +15,20 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class GameOverState extends State {
+public class GameOverScreen extends Screen {
 
     private Stage stage;
 
-    GameOverState(GravityRun gravityRun) {
+    GameOverScreen(GravityRun gravityRun) {
         super(gravityRun);
 
         float ch = height * 0.9f;
         float cw = width * 0.9f;
 
-        ArrayList<Integer> userList = user.getHighScore();
-        for (int i = 0; i < scoreList.size(); i++)
-            if (scoreList.get(i) > userList.get(user.getIndexSelected()))
-                user.getHighScore().set(user.getIndexSelected(), scoreList.get(i));
+        ArrayList<Integer> userList = game.user.getHighScore();
+        for (Integer score : game.scoreList)
+            if (score > userList.get(game.user.getIndexSelected()))
+                userList.set(game.user.getIndexSelected(), score);
 
         TextButton menuButton = new TextButton(i18n.format("menu"), tableSkin, "round");
         menuButton.addListener(new ChangeListener() {
@@ -42,13 +41,12 @@ public class GameOverState extends State {
         replayButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                soundManager.replayGame();
-                screenManager.set(new PlayState(game));
+                screenManager.set(new PlayScreen(game));
             }
         });
 
-        Label score = new Label(i18n.format("final_score", PlayState.score), aaronScoreSkin);
-        Label highScore = new Label(i18n.format("high_score", user.getHighScore().get(user.getIndexSelected())), aaronScoreSkin);
+        Label score = new Label(i18n.format("final_score", PlayScreen.score), aaronScoreSkin);
+        Label highScore = new Label(i18n.format("high_score", game.user.getHighScore().get(game.user.getIndexSelected())), aaronScoreSkin);
 
         Label title = new Label(i18n.format("game_over"), titleSkin, "title");
 
@@ -72,8 +70,6 @@ public class GameOverState extends State {
 
         stage = new Stage(new ScreenViewport());
         stage.addActor(tableContainer);
-
-        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
@@ -82,7 +78,13 @@ public class GameOverState extends State {
     }
 
     @Override
-    public void render(SpriteBatch spriteBatch) {
+    public void show() {
+        Gdx.input.setInputProcessor(stage);
+        soundManager.replayMenu();
+    }
+
+    @Override
+    public void render() {
         stage.draw();
     }
 
@@ -93,17 +95,17 @@ public class GameOverState extends State {
     }
 
     public ArrayList<Integer> add(ArrayList<Integer> userList) {
-        for (int i = 0; i < scoreList.size(); i++) {
+        for (Integer score : game.scoreList) {
             if (userList != null)
                 Collections.sort(userList);
             else
                 userList = new ArrayList<Integer>();
 
-            if (!userList.contains(scoreList.get(i)) && userList.size() < 3)
-                userList.add(scoreList.get(i));
-            else if (!userList.contains(scoreList.get(i)) && userList.get(0) < scoreList.get(i)) {
+            if (!userList.contains(score) && userList.size() < 3)
+                userList.add(score);
+            else if (!userList.contains(score) && userList.get(0) < score) {
                 userList.remove(0);
-                userList.add(scoreList.get(i));
+                userList.add(score);
             }
         }
 
@@ -111,22 +113,22 @@ public class GameOverState extends State {
     }
 
     private void handleReturn() {
-        switch (user.getIndexSelected() + 1) {
+        switch (game.user.getIndexSelected() + 1) {
             case 1:
-                user.setBeginner(add(user.getBeginner()));
+                game.user.setBeginner(add(game.user.getBeginner()));
                 break;
             case 2:
-                user.setInter(add(user.getInter()));
+                game.user.setInter(add(game.user.getInter()));
                 break;
             case 3:
-                user.setExpert(add(user.getExpert()));
+                game.user.setExpert(add(game.user.getExpert()));
                 break;
         }
 
-        pref.put(user.toMap());
-        pref.flush();
+        game.pref.put(game.user.toMap());
+        game.pref.flush();
 
-        scoreList = null;
+        game.scoreList = null;
 
         screenManager.pop();
     }

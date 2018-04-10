@@ -20,13 +20,12 @@ public class GravityRun extends Game {
     public static final String TITLE = "Gravity Run";
     public static int WIDTH;
 
-    public static ArrayList<Integer> scoreList;
-    public static Preferences pref;
-    public static User user;
-
+    public ArrayList<Integer> scoreList;
+    public Preferences pref;
     public ScreenManager screenManager;
 	public SoundManager soundManager;
     public SpriteBatch batch;
+    public User user;
 
     @Override
     public void create() {

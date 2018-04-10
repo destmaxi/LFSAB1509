@@ -48,9 +48,9 @@ public class OptionState extends State {
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.input.setOnscreenKeyboardVisible(false);
 
-                GravityRun.user.setUsername(username);
-                GravityRun.pref.put(GravityRun.user.toMap());
-                GravityRun.pref.flush();
+                user.setUsername(username);
+                pref.put(user.toMap());
+                pref.flush();
 
                 saveButton.setVisible(false);
                 usernameField.setVisible(false);
@@ -75,7 +75,7 @@ public class OptionState extends State {
             }
         });
 
-        username = GravityRun.user.getUsername();
+        username = user.getUsername();
         usernameField = new TextField(username, tableSkin);
         usernameField.setText(username);
         usernameField.setVisible(false);
@@ -95,16 +95,16 @@ public class OptionState extends State {
         listBox = new List<String>(tableSkin);
         listBox.setItems(i18n.format("beginner"), i18n.format("inter"), i18n.format("expert"));
         listBox.setVisible(false);
-        listBox.setSelectedIndex(GravityRun.user.getIndexSelected());
+        listBox.setSelectedIndex(user.getIndexSelected());
         listBox.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (listBox.getSelected().equals(i18n.format("beginner")))
-                    GravityRun.user.setIndexSelected(0);
+                    user.setIndexSelected(0);
                 else if (listBox.getSelected().equals(i18n.format("inter")))
-                    GravityRun.user.setIndexSelected(1);
+                    user.setIndexSelected(1);
                 else if (listBox.getSelected().equals(i18n.format("expert")))
-                    GravityRun.user.setIndexSelected(2);
+                    user.setIndexSelected(2);
                 listBox.setVisible(false);
             }
         });
@@ -164,8 +164,8 @@ public class OptionState extends State {
     @Override
     public void update(float dt) {
         if (clickedBack()) {
-            GravityRun.pref.put(GravityRun.user.toMap());
-            GravityRun.pref.flush();
+            pref.put(user.toMap());
+            pref.flush();
 
             screenManager.pop();
         }

@@ -125,16 +125,16 @@ public class FirstState extends State {
         for (int i = 0; i < 3; i++)
             arrayList.add(0);
 
-        GravityRun.user.setUsername(username);
-        GravityRun.user.setFirstTimeTrue();
-        GravityRun.user.setBeginner(new ArrayList<Integer>());
-        GravityRun.user.setInter(new ArrayList<Integer>());
-        GravityRun.user.setExpert(new ArrayList<Integer>());
-        GravityRun.user.setIndexSelected(1);
-        GravityRun.user.setHighScore(arrayList);
+        user.setUsername(username);
+        user.setFirstTimeTrue();
+        user.setBeginner(new ArrayList<Integer>());
+        user.setInter(new ArrayList<Integer>());
+        user.setExpert(new ArrayList<Integer>());
+        user.setIndexSelected(1);
+        user.setHighScore(arrayList);
 
-        GravityRun.pref.put(GravityRun.user.toMap());
-        GravityRun.pref.flush();
+        pref.put(user.toMap());
+        pref.flush();
     }
 
 }

@@ -26,10 +26,10 @@ public class GameOverState extends State {
         float ch = height * 0.9f;
         float cw = width * 0.9f;
 
-        ArrayList<Integer> userList = GravityRun.user.getHighScore();
-        for (int i = 0; i < GravityRun.scoreList.size(); i++)
-            if (GravityRun.scoreList.get(i) > userList.get(GravityRun.user.getIndexSelected()))
-                GravityRun.user.getHighScore().set(GravityRun.user.getIndexSelected(), GravityRun.scoreList.get(i));
+        ArrayList<Integer> userList = user.getHighScore();
+        for (int i = 0; i < scoreList.size(); i++)
+            if (scoreList.get(i) > userList.get(user.getIndexSelected()))
+                user.getHighScore().set(user.getIndexSelected(), scoreList.get(i));
 
         TextButton menuButton = new TextButton(i18n.format("menu"), tableSkin, "round");
         menuButton.addListener(new ChangeListener() {
@@ -48,7 +48,7 @@ public class GameOverState extends State {
         });
 
         Label score = new Label(i18n.format("final_score", PlayState.score), aaronScoreSkin);
-        Label highScore = new Label(i18n.format("high_score", GravityRun.user.getHighScore().get(GravityRun.user.getIndexSelected())), aaronScoreSkin);
+        Label highScore = new Label(i18n.format("high_score", user.getHighScore().get(user.getIndexSelected())), aaronScoreSkin);
 
         Label title = new Label(i18n.format("game_over"), titleSkin, "title");
 
@@ -93,17 +93,17 @@ public class GameOverState extends State {
     }
 
     public ArrayList<Integer> add(ArrayList<Integer> userList) {
-        for (int i = 0; i < GravityRun.scoreList.size(); i++) {
+        for (int i = 0; i < scoreList.size(); i++) {
             if (userList != null)
                 Collections.sort(userList);
             else
                 userList = new ArrayList<Integer>();
 
-            if (!userList.contains(GravityRun.scoreList.get(i)) && userList.size() < 3)
-                userList.add(GravityRun.scoreList.get(i));
-            else if (!userList.contains(GravityRun.scoreList.get(i)) && userList.get(0) < GravityRun.scoreList.get(i)) {
+            if (!userList.contains(scoreList.get(i)) && userList.size() < 3)
+                userList.add(scoreList.get(i));
+            else if (!userList.contains(scoreList.get(i)) && userList.get(0) < scoreList.get(i)) {
                 userList.remove(0);
-                userList.add(GravityRun.scoreList.get(i));
+                userList.add(scoreList.get(i));
             }
         }
 
@@ -111,22 +111,22 @@ public class GameOverState extends State {
     }
 
     private void handleReturn() {
-        switch (GravityRun.user.getIndexSelected() + 1) {
+        switch (user.getIndexSelected() + 1) {
             case 1:
-                GravityRun.user.setBeginner(add(GravityRun.user.getBeginner()));
+                user.setBeginner(add(user.getBeginner()));
                 break;
             case 2:
-                GravityRun.user.setInter(add(GravityRun.user.getInter()));
+                user.setInter(add(user.getInter()));
                 break;
             case 3:
-                GravityRun.user.setExpert(add(GravityRun.user.getExpert()));
+                user.setExpert(add(user.getExpert()));
                 break;
         }
 
-        GravityRun.pref.put(GravityRun.user.toMap());
-        GravityRun.pref.flush();
+        pref.put(user.toMap());
+        pref.flush();
 
-        GravityRun.scoreList = null;
+        scoreList = null;
 
         screenManager.pop();
     }

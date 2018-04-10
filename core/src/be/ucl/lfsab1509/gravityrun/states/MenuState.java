@@ -44,7 +44,7 @@ public class MenuState extends State {
             }
         });
 
-        hyLabel = new Label(i18n.format("hello", GravityRun.pref.getString("username")), tableSkin);
+        hyLabel = new Label(i18n.format("hello", pref.getString("username")), tableSkin);
         hyLabel.setWrap(true);
         hyLabel.setWidth(cw);
         hyLabel.setAlignment(Align.center);
@@ -102,13 +102,13 @@ public class MenuState extends State {
     @Override
     public void update(float dt) {
         if (clickedBack()) {
-            GravityRun.pref.put(GravityRun.user.toMap());
-            GravityRun.pref.flush();
+            pref.put(user.toMap());
+            pref.flush();
 
             game.exit();
         }
 
-        hyLabel.setText(i18n.format("hello", GravityRun.user.getUsername()));
+        hyLabel.setText(i18n.format("hello", user.getUsername()));
     }
 
 }

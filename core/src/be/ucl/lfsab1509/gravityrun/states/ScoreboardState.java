@@ -35,7 +35,7 @@ public class ScoreboardState extends State {
         List intermediateScoreList = new List(tableScoreBoardSkin);
         List expertScoreList = new List(tableScoreBoardSkin);
 
-        java.util.List[] lists = {GravityRun.user.getBeginner(), GravityRun.user.getInter(), GravityRun.user.getExpert()};
+        java.util.List[] lists = {user.getBeginner(), user.getInter(), user.getExpert()};
         List[] list = {beginnerScoreList, intermediateScoreList, expertScoreList};
         ArrayList<Integer> myArrayList;
 

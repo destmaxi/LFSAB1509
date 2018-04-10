@@ -2,10 +2,8 @@ package be.ucl.lfsab1509.gravityrun.states;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.sprites.*;
-import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -42,13 +40,13 @@ public class PlayState extends State {
     private Stage scoreStage;
     private Texture background, gameOverImage, pauseImage;
 
-    PlayState(GravityRun game, SoundManager soundManager) {
-        super(game, soundManager);
+    PlayState(GravityRun game) {
+        super(game);
 
         camera.setToOrtho(false, width, height);
 
-        if (GravityRun.scoreList == null)
-            GravityRun.scoreList = new ArrayList<Integer>();
+        if (scoreList == null)
+            scoreList = new ArrayList<Integer>();
 
         calculateStandardWidth();
 
@@ -108,8 +106,7 @@ public class PlayState extends State {
         camera.position.y = marble.getCenterPosition().y;
     }
 
-    @Override
-    protected void handleInput() {
+    private void handleInput() {
         if (Gdx.input.justTouched() || clickedBack())
             handleEndGame();
 
@@ -172,31 +169,6 @@ public class PlayState extends State {
     }
 
     @Override
-    public void show() {
-
-    }
-
-    @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
     public void dispose() {
         background.dispose();
         gameOverImage.dispose();
@@ -246,23 +218,17 @@ public class PlayState extends State {
             marble.setRepositioning(1f);
     }
 
-    private boolean clickedBack() {
-        return Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE);
-    }
-
     private void handleEndGame() {
         if (gameOver) {
-            GravityRun.scoreList.add(score);
+            scoreList.add(score);
             soundManager.replayMenu();
-//            gameStateManager.set(new GameOverState(gameStateManager, soundManager));
-            game.setScreen(new GameOverState(game, soundManager));
+            screenManager.set(new GameOverState(game));
         }
     }
 
     private void handlePause() {
         if (!gameOver)
-//            gameStateManager.push(new PauseState(gameStateManager, soundManager));
-            game.setScreen(new PauseState(game, soundManager));
+            screenManager.push(new PauseState(game));
     }
 
     private Bonus newBonus(float position, int offset) {

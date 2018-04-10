@@ -1,10 +1,8 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
@@ -17,11 +15,10 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class PauseState extends State {
 
-    private boolean isClickedContinue = false, isClickedQuit = false;
     private Stage stage;
 
-    PauseState(GravityRun game, SoundManager soundManager) {
-        super(game, soundManager);
+    PauseState(GravityRun game) {
+        super(game);
 
         float ch = height * 0.9f;
         float cw = width * 0.9f;
@@ -30,14 +27,16 @@ public class PauseState extends State {
         continueButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                isClickedContinue = true;
+                screenManager.pop();
             }
         });
         TextButton quitButton = new TextButton(i18n.format("quit"), tableSkin, "round");
         quitButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                isClickedQuit = true;
+                soundManager.replayMenu();
+                screenManager.pop();
+                screenManager.pop();
             }
         });
 
@@ -63,26 +62,21 @@ public class PauseState extends State {
 
         stage = new Stage(new ScreenViewport());
         stage.addActor(tableContainer);
+    }
 
+    @Override
+    public void dispose() {
+        stage.dispose();
+    }
+
+    @Override
+    public void resume() {
         Gdx.input.setInputProcessor(stage);
     }
 
     @Override
-    protected void handleInput() {
-        if (isClickedContinue || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
-//            gameStateManager.pop();
-            ;
-        if (isClickedQuit) {
-            soundManager.replayMenu();
-//            gameStateManager.pop();
-//            gameStateManager.pop();
-            game.setScreen(new MenuState(game, soundManager));
-        }
-    }
-
-    @Override
-    public void update(float dt) {
-        handleInput();
+    public void show() {
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
@@ -91,33 +85,9 @@ public class PauseState extends State {
     }
 
     @Override
-    public void show() {
-
-    }
-
-    @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void dispose() {
-        stage.dispose();
+    public void update(float dt) {
+        if (clickedBack())
+            screenManager.pop();
     }
 
 }

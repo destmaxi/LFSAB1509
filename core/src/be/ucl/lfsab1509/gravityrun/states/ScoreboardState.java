@@ -1,10 +1,8 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
@@ -21,8 +19,8 @@ public class ScoreboardState extends State {
     private Stage stage;
 
     @SuppressWarnings("unchecked")
-    ScoreboardState(GravityRun game, SoundManager soundManager) {
-        super(game, soundManager);
+    ScoreboardState(GravityRun game) {
+        super(game);
 
         float ch = height * 0.9f;
         float cw = width * 0.9f;
@@ -88,20 +86,21 @@ public class ScoreboardState extends State {
 
         stage = new Stage(new ScreenViewport());
         stage.addActor(tableContainer);
+    }
 
+    @Override
+    public void dispose() {
+        stage.dispose();
+    }
+
+    @Override
+    public void resume() {
         Gdx.input.setInputProcessor(stage);
     }
 
     @Override
-    protected void handleInput() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
-//            gameStateManager.pop();
-            game.setScreen(new OptionState(game, soundManager));
-    }
-
-    @Override
-    public void update(float dt) {
-        handleInput();
+    public void show() {
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
@@ -112,33 +111,9 @@ public class ScoreboardState extends State {
     }
 
     @Override
-    public void show() {
-
-    }
-
-    @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void dispose() {
-        stage.dispose();
+    public void update(float dt) {
+        if (clickedBack())
+            screenManager.pop();
     }
 
 }

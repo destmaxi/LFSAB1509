@@ -1,10 +1,8 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -23,13 +21,12 @@ import java.util.ArrayList;
 
 public class FirstState extends State {
 
-    private boolean isClickedStartButton = false;
     private Label errorLabel;
     private Stage stage;
     private String username = i18n.format("username");
 
-    public FirstState(GravityRun game, SoundManager soundManager) {
-        super(game, soundManager);
+    public FirstState(GravityRun gravityRun) {
+        super(gravityRun);
 
         float cw = width * 0.9f;
         float ch = height * 0.9f;
@@ -46,7 +43,13 @@ public class FirstState extends State {
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                isClickedStartButton = true;
+                Gdx.input.setOnscreenKeyboardVisible(false);
+                if (username.equals(i18n.format("username"))) {
+                    errorLabel.setVisible(true);
+                } else {
+                    initUser();
+                    screenManager.set(new MenuState(game));
+                }
             }
         });
         final TextField usernameField = new TextField(username, tableSkin);
@@ -86,28 +89,14 @@ public class FirstState extends State {
     }
 
     @Override
-    protected void handleInput() {
-        if (isClickedStartButton) {
-            Gdx.input.setOnscreenKeyboardVisible(false);
-            if (username.equals(i18n.format("username"))) {
-                isClickedStartButton = false;
-                errorLabel.setVisible(true);
-            } else {
-                initUser();
-//                gameStateManager.set(new MenuState(gameStateManager, soundManager));
-                game.setScreen(new MenuState(game, soundManager));
-            }
-        }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            disposeSkins();
-            Gdx.app.exit();
-        }
+    public void dispose() {
+        // TODO dispose of skins
+        stage.dispose();
     }
 
     @Override
-    public void update(float dt) {
-        handleInput();
+    public void show() {
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
@@ -118,34 +107,11 @@ public class FirstState extends State {
     }
 
     @Override
-    public void show() {
-        Gdx.input.setInputProcessor(stage);
-    }
-
-    @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-        Gdx.input.setInputProcessor(stage);
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void dispose() {
-        // TODO dispose of skins
-        stage.dispose();
+    public void update(float dt) {
+        if (clickedBack()) {
+            disposeSkins();
+            game.exit();
+        }
     }
 
     private void disposeSkins() {

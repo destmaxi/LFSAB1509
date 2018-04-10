@@ -1,10 +1,8 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -20,11 +18,10 @@ import java.util.Collections;
 
 public class GameOverState extends State {
 
-    private boolean isClickedMenuButton = false, isClickedReplayButton = false;
     private Stage stage;
 
-    GameOverState(GravityRun game, SoundManager soundManager) {
-        super(game, soundManager);
+    GameOverState(GravityRun gravityRun) {
+        super(gravityRun);
 
         float ch = height * 0.9f;
         float cw = width * 0.9f;
@@ -38,14 +35,15 @@ public class GameOverState extends State {
         menuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                isClickedMenuButton = true;
+                handleReturn();
             }
         });
         TextButton replayButton = new TextButton(i18n.format("replay"), tableSkin, "round");
         replayButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                isClickedReplayButton = true;
+                soundManager.replayGame();
+                screenManager.set(new PlayState(game));
             }
         });
 
@@ -79,39 +77,8 @@ public class GameOverState extends State {
     }
 
     @Override
-    protected void handleInput() {
-        if (isClickedReplayButton) {
-            soundManager.replayGame();
-//            gameStateManager.set(new PlayState(gameStateManager, soundManager));
-            game.setScreen(new PlayState(game, soundManager));
-        }
-
-        if (isClickedMenuButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            switch (GravityRun.user.getIndexSelected() + 1) {
-                case 1:
-                    GravityRun.user.setBeginner(add(GravityRun.user.getBeginner()));
-                    break;
-                case 2:
-                    GravityRun.user.setInter(add(GravityRun.user.getInter()));
-                    break;
-                case 3:
-                    GravityRun.user.setExpert(add(GravityRun.user.getExpert()));
-                    break;
-            }
-
-            GravityRun.pref.put(GravityRun.user.toMap());
-            GravityRun.pref.flush();
-
-            GravityRun.scoreList = null;
-            
-//            gameStateManager.pop();
-            game.setScreen(new MenuState(game, soundManager));
-        }
-    }
-
-    @Override
-    public void update(float dt) {
-        handleInput();
+    public void dispose() {
+        stage.dispose();
     }
 
     @Override
@@ -120,33 +87,9 @@ public class GameOverState extends State {
     }
 
     @Override
-    public void show() {
-
-    }
-
-    @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void dispose() {
-        stage.dispose();
+    public void update(float dt) {
+        if (clickedBack())
+            handleReturn();
     }
 
     public ArrayList<Integer> add(ArrayList<Integer> userList) {
@@ -165,6 +108,27 @@ public class GameOverState extends State {
         }
 
         return userList;
+    }
+
+    private void handleReturn() {
+        switch (GravityRun.user.getIndexSelected() + 1) {
+            case 1:
+                GravityRun.user.setBeginner(add(GravityRun.user.getBeginner()));
+                break;
+            case 2:
+                GravityRun.user.setInter(add(GravityRun.user.getInter()));
+                break;
+            case 3:
+                GravityRun.user.setExpert(add(GravityRun.user.getExpert()));
+                break;
+        }
+
+        GravityRun.pref.put(GravityRun.user.toMap());
+        GravityRun.pref.flush();
+
+        GravityRun.scoreList = null;
+
+        screenManager.pop();
     }
 
 }

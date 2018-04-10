@@ -1,10 +1,8 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -21,15 +19,14 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class OptionState extends State {
 
-    private boolean isClickedSaveButton = false, isClickedScoreButton = false;
     private List<String> listBox;
     private Stage stage;
     private String username;
     private TextButton saveButton;
     private TextField usernameField;
 
-    public OptionState(GravityRun game, SoundManager soundManager) {
-        super(game, soundManager);
+    OptionState(GravityRun gravityRun) {
+        super(gravityRun);
 
         float ch = height * 0.9f;
         float cw = width * 0.9f;
@@ -50,7 +47,13 @@ public class OptionState extends State {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.input.setOnscreenKeyboardVisible(false);
-                isClickedSaveButton = true;
+
+                GravityRun.user.setUsername(username);
+                GravityRun.pref.put(GravityRun.user.toMap());
+                GravityRun.pref.flush();
+
+                saveButton.setVisible(false);
+                usernameField.setVisible(false);
             }
         });
 
@@ -58,7 +61,7 @@ public class OptionState extends State {
         scoreButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                isClickedScoreButton = true;
+                screenManager.push(new ScoreboardState(game));
             }
         });
 
@@ -137,34 +140,18 @@ public class OptionState extends State {
     }
 
     @Override
-    protected void handleInput() {
-        if (isClickedSaveButton) {
-            GravityRun.user.setUsername(username);
-            GravityRun.pref.put(GravityRun.user.toMap());
-            GravityRun.pref.flush();
-            saveButton.setVisible(false);
-            usernameField.setVisible(false);
-            isClickedSaveButton = false;
-        }
-
-        if (isClickedScoreButton) {
-            isClickedScoreButton = false;
-//            gameStateManager.push(new ScoreboardState(gameStateManager, soundManager));
-            game.setScreen(new ScoreboardState(game, soundManager));
-        }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            GravityRun.pref.put(GravityRun.user.toMap());
-            GravityRun.pref.flush();
-//            gameStateManager.pop();
-            game.setScreen(new MenuState(game, soundManager));
-        }
+    public void dispose() {
+        stage.dispose();
     }
 
     @Override
-    public void update(float dt) {
+    public void resume() {
         Gdx.input.setInputProcessor(stage);
-        handleInput();
+    }
+
+    @Override
+    public void show() {
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
@@ -175,33 +162,13 @@ public class OptionState extends State {
     }
 
     @Override
-    public void show() {
+    public void update(float dt) {
+        if (clickedBack()) {
+            GravityRun.pref.put(GravityRun.user.toMap());
+            GravityRun.pref.flush();
 
-    }
-
-    @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void dispose() {
-        stage.dispose();
+            screenManager.pop();
+        }
     }
 
 }

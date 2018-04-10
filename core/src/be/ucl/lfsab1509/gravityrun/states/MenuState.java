@@ -3,6 +3,7 @@ package be.ucl.lfsab1509.gravityrun.states;
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -22,8 +23,8 @@ public class MenuState extends State {
     private Label hyLabel;
     private Stage stage;
 
-    public MenuState(GameStateManager gameStateManager, SoundManager soundManager) {
-        super(gameStateManager, soundManager);
+    public MenuState(GravityRun game, SoundManager soundManager) {
+        super(game, soundManager);
 
         float ch = height * 0.9f;
         float cw = width * 0.9f;
@@ -70,19 +71,23 @@ public class MenuState extends State {
 
         stage = new Stage(new ScreenViewport());
         stage.addActor(tableContainer);
+
+        render(game.batch);
     }
 
     @Override
     public void handleInput() {
         if (isClickedOptionButton) {
             isClickedOptionButton = false;
-            gameStateManager.push(new OptionState(gameStateManager, soundManager));
+//            gameStateManager.push(new OptionState(gameStateManager, soundManager));
+            game.setScreen(new OptionState(game, soundManager));
         }
 
         if (isClickedStartGameButton) {
             isClickedStartGameButton = false;
             soundManager.replayGame();
-            gameStateManager.push(new PlayState(gameStateManager, soundManager));
+//            gameStateManager.push(new PlayState(gameStateManager, soundManager));
+            game.setScreen(new PlayState(game, soundManager));
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
@@ -104,6 +109,31 @@ public class MenuState extends State {
         spriteBatch.setProjectionMatrix(camera.combined);
         stage.act();
         stage.draw();
+    }
+
+    @Override
+    public void show() {
+
+    }
+
+    @Override
+    public void resize(int width, int height) {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
     }
 
     @Override

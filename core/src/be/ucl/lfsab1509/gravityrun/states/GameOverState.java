@@ -23,8 +23,8 @@ public class GameOverState extends State {
     private boolean isClickedMenuButton = false, isClickedReplayButton = false;
     private Stage stage;
 
-    GameOverState(GameStateManager gameStateManager, SoundManager soundManager) {
-        super(gameStateManager, soundManager);
+    GameOverState(GravityRun game, SoundManager soundManager) {
+        super(game, soundManager);
 
         float ch = height * 0.9f;
         float cw = width * 0.9f;
@@ -82,7 +82,8 @@ public class GameOverState extends State {
     protected void handleInput() {
         if (isClickedReplayButton) {
             soundManager.replayGame();
-            gameStateManager.set(new PlayState(gameStateManager, soundManager));
+//            gameStateManager.set(new PlayState(gameStateManager, soundManager));
+            game.setScreen(new PlayState(game, soundManager));
         }
 
         if (isClickedMenuButton || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
@@ -103,7 +104,8 @@ public class GameOverState extends State {
 
             GravityRun.scoreList = null;
             
-            gameStateManager.pop();
+//            gameStateManager.pop();
+            game.setScreen(new MenuState(game, soundManager));
         }
     }
 
@@ -115,6 +117,31 @@ public class GameOverState extends State {
     @Override
     public void render(SpriteBatch spriteBatch) {
         stage.draw();
+    }
+
+    @Override
+    public void show() {
+
+    }
+
+    @Override
+    public void resize(int width, int height) {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
     }
 
     @Override

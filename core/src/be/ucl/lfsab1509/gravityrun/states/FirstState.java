@@ -28,8 +28,8 @@ public class FirstState extends State {
     private Stage stage;
     private String username = i18n.format("username");
 
-    public FirstState(GameStateManager gameStateManager, SoundManager soundManager) {
-        super(gameStateManager, soundManager);
+    public FirstState(GravityRun game, SoundManager soundManager) {
+        super(game, soundManager);
 
         float cw = width * 0.9f;
         float ch = height * 0.9f;
@@ -83,8 +83,6 @@ public class FirstState extends State {
 
         stage = new Stage(new ScreenViewport());
         stage.addActor(tableContainer);
-
-        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
@@ -96,7 +94,8 @@ public class FirstState extends State {
                 errorLabel.setVisible(true);
             } else {
                 initUser();
-                gameStateManager.set(new MenuState(gameStateManager, soundManager));
+//                gameStateManager.set(new MenuState(gameStateManager, soundManager));
+                game.setScreen(new MenuState(game, soundManager));
             }
         }
 
@@ -116,6 +115,31 @@ public class FirstState extends State {
         spriteBatch.setProjectionMatrix(camera.combined);
         stage.act();
         stage.draw();
+    }
+
+    @Override
+    public void show() {
+        Gdx.input.setInputProcessor(stage);
+    }
+
+    @Override
+    public void resize(int width, int height) {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+        Gdx.input.setInputProcessor(stage);
+    }
+
+    @Override
+    public void hide() {
+
     }
 
     @Override

@@ -42,8 +42,8 @@ public class PlayState extends State {
     private Stage scoreStage;
     private Texture background, gameOverImage, pauseImage;
 
-    PlayState(GameStateManager gameStateManager, SoundManager soundManager) {
-        super(gameStateManager, soundManager);
+    PlayState(GravityRun game, SoundManager soundManager) {
+        super(game, soundManager);
 
         camera.setToOrtho(false, width, height);
 
@@ -172,6 +172,31 @@ public class PlayState extends State {
     }
 
     @Override
+    public void show() {
+
+    }
+
+    @Override
+    public void resize(int width, int height) {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
+    }
+
+    @Override
     public void dispose() {
         background.dispose();
         gameOverImage.dispose();
@@ -229,13 +254,15 @@ public class PlayState extends State {
         if (gameOver) {
             GravityRun.scoreList.add(score);
             soundManager.replayMenu();
-            gameStateManager.set(new GameOverState(gameStateManager, soundManager));
+//            gameStateManager.set(new GameOverState(gameStateManager, soundManager));
+            game.setScreen(new GameOverState(game, soundManager));
         }
     }
 
     private void handlePause() {
         if (!gameOver)
-            gameStateManager.push(new PauseState(gameStateManager, soundManager));
+//            gameStateManager.push(new PauseState(gameStateManager, soundManager));
+            game.setScreen(new PauseState(game, soundManager));
     }
 
     private Bonus newBonus(float position, int offset) {

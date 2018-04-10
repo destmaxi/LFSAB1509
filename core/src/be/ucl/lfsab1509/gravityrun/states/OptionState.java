@@ -28,8 +28,8 @@ public class OptionState extends State {
     private TextButton saveButton;
     private TextField usernameField;
 
-    OptionState(GameStateManager gameStateManager, SoundManager soundManager) {
-        super(gameStateManager, soundManager);
+    public OptionState(GravityRun game, SoundManager soundManager) {
+        super(game, soundManager);
 
         float ch = height * 0.9f;
         float cw = width * 0.9f;
@@ -149,13 +149,15 @@ public class OptionState extends State {
 
         if (isClickedScoreButton) {
             isClickedScoreButton = false;
-            gameStateManager.push(new ScoreboardState(gameStateManager, soundManager));
+//            gameStateManager.push(new ScoreboardState(gameStateManager, soundManager));
+            game.setScreen(new ScoreboardState(game, soundManager));
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             GravityRun.pref.put(GravityRun.user.toMap());
             GravityRun.pref.flush();
-            gameStateManager.pop();
+//            gameStateManager.pop();
+            game.setScreen(new MenuState(game, soundManager));
         }
     }
 
@@ -170,6 +172,31 @@ public class OptionState extends State {
         spriteBatch.setProjectionMatrix(camera.combined);
         stage.act();
         stage.draw();
+    }
+
+    @Override
+    public void show() {
+
+    }
+
+    @Override
+    public void resize(int width, int height) {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
     }
 
     @Override

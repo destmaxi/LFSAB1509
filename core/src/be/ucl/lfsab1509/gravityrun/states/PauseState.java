@@ -1,5 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.states;
 
+import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 import com.badlogic.gdx.Gdx;
@@ -19,8 +20,8 @@ public class PauseState extends State {
     private boolean isClickedContinue = false, isClickedQuit = false;
     private Stage stage;
 
-    PauseState(GameStateManager gameStateManager, SoundManager soundManager) {
-        super(gameStateManager, soundManager);
+    PauseState(GravityRun game, SoundManager soundManager) {
+        super(game, soundManager);
 
         float ch = height * 0.9f;
         float cw = width * 0.9f;
@@ -69,11 +70,13 @@ public class PauseState extends State {
     @Override
     protected void handleInput() {
         if (isClickedContinue || Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
-            gameStateManager.pop();
+//            gameStateManager.pop();
+            ;
         if (isClickedQuit) {
             soundManager.replayMenu();
-            gameStateManager.pop();
-            gameStateManager.pop();
+//            gameStateManager.pop();
+//            gameStateManager.pop();
+            game.setScreen(new MenuState(game, soundManager));
         }
     }
 
@@ -85,6 +88,31 @@ public class PauseState extends State {
     @Override
     public void render(SpriteBatch spriteBatch) {
         stage.draw();
+    }
+
+    @Override
+    public void show() {
+
+    }
+
+    @Override
+    public void resize(int width, int height) {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
     }
 
     @Override

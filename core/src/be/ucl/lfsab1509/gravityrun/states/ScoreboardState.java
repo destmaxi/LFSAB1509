@@ -21,8 +21,8 @@ public class ScoreboardState extends State {
     private Stage stage;
 
     @SuppressWarnings("unchecked")
-    ScoreboardState(GameStateManager gameStateManager, SoundManager soundManager) {
-        super(gameStateManager, soundManager);
+    ScoreboardState(GravityRun game, SoundManager soundManager) {
+        super(game, soundManager);
 
         float ch = height * 0.9f;
         float cw = width * 0.9f;
@@ -95,7 +95,8 @@ public class ScoreboardState extends State {
     @Override
     protected void handleInput() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
-            gameStateManager.pop();
+//            gameStateManager.pop();
+            game.setScreen(new OptionState(game, soundManager));
     }
 
     @Override
@@ -108,6 +109,31 @@ public class ScoreboardState extends State {
         spriteBatch.setProjectionMatrix(camera.combined);
         stage.act();
         stage.draw();
+    }
+
+    @Override
+    public void show() {
+
+    }
+
+    @Override
+    public void resize(int width, int height) {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
     }
 
     @Override

@@ -4,24 +4,29 @@ import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.I18NBundle;
 
-public abstract class State {
+public abstract class State implements Screen {
 
     static float height, width;
     static Skin aaronScoreSkin, labelScoreBoardSkin, tableSkin, tableScoreBoardSkin, titleSkin;
 
-    GameStateManager gameStateManager;
+    final GravityRun game;
+//    GameStateManager gameStateManager;
     I18NBundle i18n;
     OrthographicCamera camera;
     SoundManager soundManager;
 
-    State(GameStateManager gameStateManager, SoundManager soundManager) {
-        this.gameStateManager = gameStateManager;
+    State(final GravityRun game, SoundManager soundManager) {
+//        this.gameStateManager = gameStateManager;
+        this.game = game;
         camera = new OrthographicCamera();
         this.soundManager = soundManager;
         FileHandle baseFileHandle = Gdx.files.internal("strings/string");
@@ -47,6 +52,11 @@ public abstract class State {
 
         titleSkin = new Skin();
         titleSkin.createSkin((int) (1.5f * width / d / 10));
+    }
+
+    public void render(float dt) {
+        update(dt);
+        render(game.batch);
     }
 
     protected abstract void handleInput();

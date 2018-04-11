@@ -42,7 +42,7 @@ public class MenuScreen extends Screen {
             }
         });
 
-        hyLabel = new Label(i18n.format("hello", game.pref.getString("username")), tableSkin);
+        hyLabel = new Label("", tableSkin);
         hyLabel.setWrap(true);
         hyLabel.setWidth(cw);
         hyLabel.setAlignment(Align.center);
@@ -77,27 +77,25 @@ public class MenuScreen extends Screen {
     }
 
     @Override
-    public void show() {
-        Gdx.input.setInputProcessor(stage);
-        hyLabel.setText(i18n.format("hello", game.user.getUsername()));
-        soundManager.replayMenu();
-    }
+    public void render(float dt) {
+        if (clickedBack()) {
+            game.pref.put(game.user.toMap());
+            game.pref.flush();
 
-    @Override
-    public void render() {
+            game.exit();
+            return;
+        }
+
         game.spriteBatch.setProjectionMatrix(camera.combined);
         stage.act();
         stage.draw();
     }
 
     @Override
-    public void update(float dt) {
-        if (clickedBack()) {
-            game.pref.put(game.user.toMap());
-            game.pref.flush();
-
-            game.exit();
-        }
+    public void show() {
+        Gdx.input.setInputProcessor(stage);
+        hyLabel.setText(i18n.format("hello", game.user.getUsername()));
+        soundManager.replayMenu();
     }
 
 }

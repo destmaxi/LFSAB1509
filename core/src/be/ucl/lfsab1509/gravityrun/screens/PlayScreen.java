@@ -118,62 +118,15 @@ public class PlayScreen extends Screen {
     }
 
     @Override
+    public void render(float dt) {
+        update(dt);
+        render();
+    }
+
+    @Override
     public void show() {
-        soundManager.replayGame();
-    }
-
-    @Override
-    public void render() {
-        game.spriteBatch.begin();
-
-        game.spriteBatch.setProjectionMatrix(camera.combined);
-
-        for (Vector2 backgroundPosition : backgroundPositions)
-            game.spriteBatch.draw(background, backgroundPosition.x, backgroundPosition.y);
-
-        for (Obstacle obstacle : obstacles)
-            obstacle.render(game.spriteBatch);
-
-        for (Bonus bonus : bonuses)
-            if (bonus != null)
-                bonus.render(game.spriteBatch);
-
-        float marbleX = marble.getCenterPosition().x - marble.getDiameter() / 2;
-        float marbleY = marble.getCenterPosition().y - marble.getDiameter() / 2;
-        game.spriteBatch.draw(marble.getMarble(), marbleX, marbleY);
-
-        if (gameOver)
-            game.spriteBatch.draw(gameOverImage,
-                    camera.position.x - gameOverImage.getWidth() / 2,
-                    camera.position.y);
-
-        game.spriteBatch.end();
-
-        scoreStage.act();
-        scoreStage.draw();
-    }
-
-    @Override
-    public void update(float dt) {
         Gdx.input.setInputProcessor(scoreStage);
-
-        marble.update(dt, gameOver);
-
-        updateBonuses();
-        updateCamera(dt);
-        updateCatchedBonuses(dt);
-        updateGround();
-        updateObstacles();
-
-        score = (int) (marble.getCenterPosition().y / height * 100) + scoreBonus;
-        scoreLabel.setText(i18n.format("score", score));
-
-        if (!marble.isInvincible() && marble.isOutOfScreen(camera.position.y)) {
-            soundManager.marbleBreak(gameOver);
-            gameOver = true;
-        }
-
-        handleInput();
+        soundManager.replayGame();
     }
 
     private void bonusReposition(Bonus bonus, int i) {
@@ -286,6 +239,56 @@ public class PlayScreen extends Screen {
             obstacle.collides(marble, soundManager);
             collidedWall = i;
         }
+    }
+
+    private void render() {
+        game.spriteBatch.setProjectionMatrix(camera.combined);
+
+        game.spriteBatch.begin();
+
+        for (Vector2 backgroundPosition : backgroundPositions)
+            game.spriteBatch.draw(background, backgroundPosition.x, backgroundPosition.y);
+
+        for (Obstacle obstacle : obstacles)
+            obstacle.render(game.spriteBatch);
+
+        for (Bonus bonus : bonuses)
+            if (bonus != null)
+                bonus.render(game.spriteBatch);
+
+        float marbleX = marble.getCenterPosition().x - marble.getDiameter() / 2;
+        float marbleY = marble.getCenterPosition().y - marble.getDiameter() / 2;
+        game.spriteBatch.draw(marble.getMarble(), marbleX, marbleY);
+
+        if (gameOver)
+            game.spriteBatch.draw(gameOverImage,
+                    camera.position.x - gameOverImage.getWidth() / 2,
+                    camera.position.y);
+
+        game.spriteBatch.end();
+
+        scoreStage.act();
+        scoreStage.draw();
+    }
+
+    private void update(float dt) {
+        marble.update(dt, gameOver);
+
+        updateBonuses();
+        updateCamera(dt);
+        updateCatchedBonuses(dt);
+        updateGround();
+        updateObstacles();
+
+        score = (int) (marble.getCenterPosition().y / height * 100) + scoreBonus;
+        scoreLabel.setText(i18n.format("score", score));
+
+        if (!marble.isInvincible() && marble.isOutOfScreen(camera.position.y)) {
+            soundManager.marbleBreak(gameOver);
+            gameOver = true;
+        }
+
+        handleInput();
     }
 
     private void updateBonuses() {

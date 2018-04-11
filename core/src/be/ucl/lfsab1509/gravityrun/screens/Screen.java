@@ -45,8 +45,7 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
 
     @Override
     public void render(float dt) {
-        update(dt);
-        render();
+
     }
 
     @Override
@@ -63,10 +62,6 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
     public void show() {
 
     }
-
-    public abstract void render();
-
-    public abstract void update(float dt);
 
     boolean clickedBack() {
         return Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE);

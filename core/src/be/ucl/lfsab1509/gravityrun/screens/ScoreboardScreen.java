@@ -93,21 +93,20 @@ public class ScoreboardScreen extends Screen {
     }
 
     @Override
-    public void show() {
-        Gdx.input.setInputProcessor(stage);
-    }
+    public void render(float dt) {
+        if (clickedBack()) {
+            screenManager.pop();
+            return;
+        }
 
-    @Override
-    public void render() {
         game.spriteBatch.setProjectionMatrix(camera.combined);
         stage.act();
         stage.draw();
     }
 
     @Override
-    public void update(float dt) {
-        if (clickedBack())
-            screenManager.pop();
+    public void show() {
+        Gdx.input.setInputProcessor(stage);
     }
 
 }

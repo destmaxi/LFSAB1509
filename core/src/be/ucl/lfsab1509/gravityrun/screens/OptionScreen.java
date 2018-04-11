@@ -144,25 +144,23 @@ public class OptionScreen extends Screen {
     }
 
     @Override
-    public void show() {
-        Gdx.input.setInputProcessor(stage);
-    }
+    public void render(float dt) {
+        if (clickedBack()) {
+            game.pref.put(game.user.toMap());
+            game.pref.flush();
 
-    @Override
-    public void render() {
+            screenManager.pop();
+            return;
+        }
+
         game.spriteBatch.setProjectionMatrix(camera.combined);
         stage.act();
         stage.draw();
     }
 
     @Override
-    public void update(float dt) {
-        if (clickedBack()) {
-            game.pref.put(game.user.toMap());
-            game.pref.flush();
-
-            screenManager.pop();
-        }
+    public void show() {
+        Gdx.input.setInputProcessor(stage);
     }
 
 }

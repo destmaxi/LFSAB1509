@@ -78,20 +78,19 @@ public class GameOverScreen extends Screen {
     }
 
     @Override
-    public void show() {
-        Gdx.input.setInputProcessor(stage);
-        soundManager.replayMenu();
-    }
+    public void render(float dt) {
+        if (clickedBack()) {
+            handleReturn();
+            return;
+        }
 
-    @Override
-    public void render() {
         stage.draw();
     }
 
     @Override
-    public void update(float dt) {
-        if (clickedBack())
-            handleReturn();
+    public void show() {
+        Gdx.input.setInputProcessor(stage);
+        soundManager.replayMenu();
     }
 
     public ArrayList<Integer> add(ArrayList<Integer> userList) {

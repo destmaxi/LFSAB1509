@@ -24,7 +24,7 @@ public class GravityRun extends Game {
 
     public ArrayList<Integer> scoreList;
     public I18NBundle i18n;
-    public Preferences pref;
+    public Preferences preferences;
     public ScreenManager screenManager;
 	public SoundManager soundManager;
     public SpriteBatch spriteBatch;
@@ -47,12 +47,12 @@ public class GravityRun extends Game {
         FileHandle baseFileHandle = Gdx.files.internal("strings/string");
         i18n = I18NBundle.createBundle(baseFileHandle);
 
-        pref = Gdx.app.getPreferences("Player");
-        pref.flush();
+        preferences = Gdx.app.getPreferences("Player");
+        preferences.flush();
 
-        Map<String, ?> map = pref.get();
+        Map<String, ?> map = preferences.get();
 
-        if (!pref.getBoolean(User.FIRSTTIME)) {
+        if (!preferences.getBoolean(User.FIRSTTIME)) {
             user = new User(this);
             screenManager.push(new FirstScreen(this));
         } else {

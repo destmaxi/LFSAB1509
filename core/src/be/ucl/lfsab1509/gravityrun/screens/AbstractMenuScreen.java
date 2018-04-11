@@ -3,9 +3,7 @@ package be.ucl.lfsab1509.gravityrun.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -14,7 +12,7 @@ import be.ucl.lfsab1509.gravityrun.GravityRun;
 abstract class AbstractMenuScreen extends Screen {
 
     float containerHeight, containerWidth;
-    Stage stage;
+    private Stage stage;
 
     AbstractMenuScreen(GravityRun gravityRun) {
         super(gravityRun);
@@ -40,6 +38,16 @@ abstract class AbstractMenuScreen extends Screen {
     public void show() {
         Gdx.input.setInputProcessor(stage);
         soundManager.replayMenu();
+    }
+
+    void initStage(Table table) {
+        Container<Table> tableContainer = new Container<Table>();
+        tableContainer.setSize(containerWidth, containerHeight);
+        tableContainer.setPosition((width - containerWidth) / 2, (height - containerHeight) / 2);
+        tableContainer.top().fillX();
+        tableContainer.setActor(table);
+
+        stage.addActor(tableContainer);
     }
 
     void spawnErrorDialog(String title, String message) {

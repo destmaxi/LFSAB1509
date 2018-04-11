@@ -95,8 +95,8 @@ public class User {
     }
 
     public void write() {
-        game.pref.put(toMap());
-        game.pref.flush();
+        game.preferences.put(toMap());
+        game.preferences.flush();
     }
 
     public String getUsername() {

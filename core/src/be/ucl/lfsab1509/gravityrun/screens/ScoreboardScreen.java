@@ -2,7 +2,6 @@ package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -56,14 +55,7 @@ public class ScoreboardScreen extends AbstractMenuScreen {
             }
         }
 
-        Container<Table> tableContainer = new Container<Table>();
         Table table = new Table();
-
-        tableContainer.setSize(containerWidth, containerHeight);
-        tableContainer.setPosition((width - containerWidth) / 2, (height - containerHeight) / 2);
-        tableContainer.top().fillX().fillY();
-        tableContainer.setActor(table);
-
         table.add(title).colspan(5).expandX();
         table.row();//.expandX().expandY();
         table.add(beginnerLabel).expandY().colspan(3).fillX().left();
@@ -75,7 +67,7 @@ public class ScoreboardScreen extends AbstractMenuScreen {
         table.add(expertLabel).expandY().colspan(3).fillX().left();
         table.add(expertScoreList).expandY().colspan(2).center();
 
-        stage.addActor(tableContainer);
+        initStage(table);
     }
 
     @Override

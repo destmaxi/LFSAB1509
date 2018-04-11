@@ -5,7 +5,6 @@ import be.ucl.lfsab1509.gravityrun.GravityRun;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -89,14 +88,7 @@ public class OptionScreen extends AbstractMenuScreen {
             }
         });
 
-        Container<Table> tableContainer = new Container<Table>();
         Table table = new Table();
-
-        tableContainer.setSize(containerWidth, containerHeight);
-        tableContainer.setPosition((width - containerWidth) / 2, (height - containerHeight) / 2);
-        tableContainer.top().fillX();
-        tableContainer.setActor(table);
-
         table.add(title).colspan(2).expandX();
         table.row();
         table.add(usernameButton).colspan(2).expandX().fillX().padTop(height - containerHeight).maxWidth(containerWidth);
@@ -108,7 +100,7 @@ public class OptionScreen extends AbstractMenuScreen {
         table.row();
         table.add(listBox).colspan(2).fillX().top();
 
-        stage.addActor(tableContainer);
+        initStage(table);
     }
 
     @Override

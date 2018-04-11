@@ -3,7 +3,6 @@ package be.ucl.lfsab1509.gravityrun.screens;
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -48,14 +47,7 @@ public class HomeScreen extends AbstractMenuScreen {
         hyLabel.setWidth(containerWidth);
         hyLabel.setWrap(true);
 
-        Container<Table> tableContainer = new Container<Table>();
         Table table = new Table();
-
-        tableContainer.setSize(containerWidth, containerHeight);
-        tableContainer.setPosition((width - containerWidth) / 2, (height - containerHeight) / 2);
-        tableContainer.top().fillX();
-        tableContainer.setActor(table);
-
         table.add(title).top();
         table.row();
         table.add(hyLabel).expandX().width(containerWidth).padTop(height - containerHeight);
@@ -67,7 +59,7 @@ public class HomeScreen extends AbstractMenuScreen {
         table.add(optionButton).expandX().fillX().padTop(height - containerHeight);
         table.row();
 
-        stage.addActor(tableContainer);
+        initStage(table);
     }
 
     @Override

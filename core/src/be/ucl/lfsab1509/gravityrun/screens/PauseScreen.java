@@ -3,7 +3,6 @@ package be.ucl.lfsab1509.gravityrun.screens;
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -33,14 +32,7 @@ public class PauseScreen extends AbstractMenuScreen {
         Label score = new Label(game.i18n.format("score", PlayScreen.score), aaronScoreSkin);
         Label title = new Label(game.i18n.format("pause"), titleSkin, "title");
 
-        Container<Table> tableContainer = new Container<Table>();
         Table table = new Table();
-
-        tableContainer.setSize(containerWidth, containerHeight);
-        tableContainer.setPosition((width - containerWidth) / 2, (height - containerHeight) / 2);
-        tableContainer.top().fillX();
-        tableContainer.setActor(table);
-
         table.add(title).top();
         table.row();
         table.add(score).padTop(height - containerHeight);
@@ -49,7 +41,7 @@ public class PauseScreen extends AbstractMenuScreen {
         table.row();
         table.add(quitButton).expandX().fillX().padTop(height - containerHeight);
 
-        stage.addActor(tableContainer);
+        initStage(table);
     }
 
     @Override

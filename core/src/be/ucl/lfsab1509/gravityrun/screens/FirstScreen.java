@@ -5,7 +5,6 @@ import be.ucl.lfsab1509.gravityrun.GravityRun;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -58,21 +57,14 @@ public class FirstScreen extends AbstractMenuScreen {
             }
         });
 
-        Container<Table> tableContainer = new Container<Table>();
         Table table = new Table();
-
-        tableContainer.setSize(containerWidth, containerHeight);
-        tableContainer.setPosition((width - containerWidth) / 2, (height - containerHeight) / 2);
-        tableContainer.top().fillX();
-        tableContainer.setActor(table);
-
         table.add(title).top();
         table.row();
         table.add(usernameField).expandX().fillX().padTop(height - containerHeight);
         table.row();
         table.add(startButton).expandX().fillX().padTop(height - containerHeight);
 
-        stage.addActor(tableContainer);
+        initStage(table);
     }
 
     @Override

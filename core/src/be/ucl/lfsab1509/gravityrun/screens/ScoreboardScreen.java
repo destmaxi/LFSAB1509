@@ -2,39 +2,31 @@ package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class ScoreboardScreen extends Screen {
-
-    private Stage stage;
+public class ScoreboardScreen extends AbstractMenuScreen {
 
     @SuppressWarnings("unchecked")
     ScoreboardScreen(GravityRun gravityRun) {
         super(gravityRun);
 
-        float ch = height * 0.9f;
-        float cw = width * 0.9f;
+        Label title = new Label(game.i18n.format("my_score"), titleSkin, "title");
 
-        Label beginnerLabel = new Label(i18n.format("beginner") + " :", labelScoreBoardSkin, "round");
-        Label intermediateLabel = new Label(i18n.format("inter") + " :", labelScoreBoardSkin, "round");
-        Label expertLabel = new Label(i18n.format("expert") + " :", labelScoreBoardSkin, "round");
-
-        Label title = new Label(i18n.format("my_score"), titleSkin, "title");
+        Label beginnerLabel = new Label(game.i18n.format("beginner") + " :", labelScoreBoardSkin, "round");
+        Label intermediateLabel = new Label(game.i18n.format("inter") + " :", labelScoreBoardSkin, "round");
+        Label expertLabel = new Label(game.i18n.format("expert") + " :", labelScoreBoardSkin, "round");
 
         List beginnerScoreList = new List(tableScoreBoardSkin);
         List intermediateScoreList = new List(tableScoreBoardSkin);
         List expertScoreList = new List(tableScoreBoardSkin);
 
-        java.util.List[] lists = {game.user.getBeginner(), game.user.getInter(), game.user.getExpert()};
+        java.util.List[] lists = {user.getBeginner(), user.getInter(), user.getExpert()};
         List[] list = {beginnerScoreList, intermediateScoreList, expertScoreList};
         ArrayList<Integer> myArrayList;
 
@@ -67,29 +59,23 @@ public class ScoreboardScreen extends Screen {
         Container<Table> tableContainer = new Container<Table>();
         Table table = new Table();
 
-        tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((width - cw) / 2, (height - ch) / 2);
+        tableContainer.setSize(containerWidth, containerHeight);
+        tableContainer.setPosition((width - containerWidth) / 2, (height - containerHeight) / 2);
         tableContainer.top().fillX().fillY();
         tableContainer.setActor(table);
 
         table.add(title).colspan(5).expandX();
-        table.row().expandX().expandY();
+        table.row();//.expandX().expandY();
         table.add(beginnerLabel).expandY().colspan(3).fillX().left();
         table.add(beginnerScoreList).expandY().colspan(2).center();
-        table.row().colspan(5);
+        table.row();//.colspan(5);
         table.add(intermediateLabel).expandY().colspan(3).fillX().left();
         table.add(intermediateScoreList).expandY().colspan(2).center();
-        table.row().colspan(5);
+        table.row();//.colspan(5);
         table.add(expertLabel).expandY().colspan(3).fillX().left();
         table.add(expertScoreList).expandY().colspan(2).center();
 
-        stage = new Stage(new ScreenViewport());
         stage.addActor(tableContainer);
-    }
-
-    @Override
-    public void dispose() {
-        stage.dispose();
     }
 
     @Override
@@ -99,14 +85,7 @@ public class ScoreboardScreen extends Screen {
             return;
         }
 
-        game.spriteBatch.setProjectionMatrix(camera.combined);
-        stage.act();
-        stage.draw();
-    }
-
-    @Override
-    public void show() {
-        Gdx.input.setInputProcessor(stage);
+        super.render(dt);
     }
 
 }

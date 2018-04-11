@@ -2,34 +2,26 @@ package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class PauseScreen extends Screen {
-
-    private Stage stage;
+public class PauseScreen extends AbstractMenuScreen {
 
     PauseScreen(GravityRun gravityRun) {
         super(gravityRun);
 
-        float ch = height * 0.9f;
-        float cw = width * 0.9f;
-
-        TextButton continueButton = new TextButton(i18n.format("continue"), tableSkin, "round");
+        TextButton continueButton = new TextButton(game.i18n.format("continue"), tableSkin, "round");
         continueButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 screenManager.pop();
             }
         });
-        TextButton quitButton = new TextButton(i18n.format("quit"), tableSkin, "round");
+        TextButton quitButton = new TextButton(game.i18n.format("quit"), tableSkin, "round");
         quitButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -38,33 +30,26 @@ public class PauseScreen extends Screen {
             }
         });
 
-        Label score = new Label(i18n.format("score", PlayScreen.score), aaronScoreSkin);
-
-        Label title = new Label(i18n.format("pause"), titleSkin, "title");
+        Label score = new Label(game.i18n.format("score", PlayScreen.score), aaronScoreSkin);
+        Label title = new Label(game.i18n.format("pause"), titleSkin, "title");
 
         Container<Table> tableContainer = new Container<Table>();
         Table table = new Table();
 
-        tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((width - cw) / 2, (height - ch) / 2);
+        tableContainer.setSize(containerWidth, containerHeight);
+        tableContainer.setPosition((width - containerWidth) / 2, (height - containerHeight) / 2);
         tableContainer.top().fillX();
         tableContainer.setActor(table);
 
         table.add(title).top();
         table.row();
-        table.add(score).padTop(height - ch);
+        table.add(score).padTop(height - containerHeight);
         table.row();
-        table.add(continueButton).expandX().fillX().padTop((height - ch) * 2);
+        table.add(continueButton).expandX().fillX().padTop((height - containerHeight) * 2);
         table.row();
-        table.add(quitButton).expandX().fillX().padTop(height - ch);
+        table.add(quitButton).expandX().fillX().padTop(height - containerHeight);
 
-        stage = new Stage(new ScreenViewport());
         stage.addActor(tableContainer);
-    }
-
-    @Override
-    public void dispose() {
-        stage.dispose();
     }
 
     @Override
@@ -74,12 +59,7 @@ public class PauseScreen extends Screen {
             return;
         }
 
-        stage.draw();
-    }
-
-    @Override
-    public void show() {
-        Gdx.input.setInputProcessor(stage);
+        super.render(dt);
     }
 
 }

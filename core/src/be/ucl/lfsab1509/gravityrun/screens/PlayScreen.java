@@ -4,6 +4,7 @@ import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.sprites.*;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -37,11 +38,13 @@ public class PlayScreen extends Screen {
     private Marble marble;
     private Random random;
     private Stage scoreStage;
+    private OrthographicCamera camera;
     private Texture background, gameOverImage, pauseImage;
 
     PlayScreen(GravityRun gravityRun) {
         super(gravityRun);
 
+        camera = new OrthographicCamera();
         camera.setToOrtho(false, width, height);
 
         if (game.scoreList == null)
@@ -49,7 +52,7 @@ public class PlayScreen extends Screen {
 
         calculateStandardWidth();
 
-        marble = new Marble((int) width / 2, 0, STANDARD_WIDTH, game.user);
+        marble = new Marble((int) width / 2, 0, STANDARD_WIDTH, user.getIndexSelected() + 1);
         gameOver = false;
         isCollideWall = false;
         scoreBonus = 0;
@@ -79,8 +82,11 @@ public class PlayScreen extends Screen {
             }
         });
 
-        scoreLabel = new Label(i18n.format("score"), aaronScoreSkin, "score");
-        scoreLabel.setText(i18n.format("score", score));
+        scoreLabel = new Label(game.i18n.format("score"), aaronScoreSkin, "score");
+        scoreLabel.setText(game.i18n.format("score", score));
+
+        // TODO ça prend 100-200 msec
+
         scoreLabel.setPosition((width - scoreLabel.getWidth()) / 2, height - scoreLabel.getHeight());
 
         // TODO: mettre des coeurs pour montrer le nombre de vie restante
@@ -186,6 +192,7 @@ public class PlayScreen extends Screen {
     private void handlePause() {
         if (!gameOver)
             screenManager.push(new PauseScreen(game));
+        // FIXME le SoundManager n'arrête pas la musique.
     }
 
     private Bonus newBonus(float position, int offset) {
@@ -216,10 +223,10 @@ public class PlayScreen extends Screen {
         Obstacle obstacle;
         switch (random.nextInt(5)) {
             case 0:
-                obstacle = new Hole(position, STANDARD_WIDTH);
+                obstacle = new Hole(position, STANDARD_WIDTH, marble.getNormalDiameter());
                 break;
             case 3:
-                obstacle = new LargeHole(position, STANDARD_WIDTH);
+                obstacle = new LargeHole(position, STANDARD_WIDTH, marble.getNormalDiameter());
                 break;
             default:
                 obstacle = new Wall(position, STANDARD_WIDTH, marble.getNormalDiameter());
@@ -281,7 +288,7 @@ public class PlayScreen extends Screen {
         updateObstacles();
 
         score = (int) (marble.getCenterPosition().y / height * 100) + scoreBonus;
-        scoreLabel.setText(i18n.format("score", score));
+        scoreLabel.setText(game.i18n.format("score", score));
 
         if (!marble.isInvincible() && marble.isOutOfScreen(camera.position.y)) {
             soundManager.marbleBreak(gameOver);

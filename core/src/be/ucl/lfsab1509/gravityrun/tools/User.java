@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import be.ucl.lfsab1509.gravityrun.GravityRun;
+
 public class User {
 
     private static final String DEB = "beginner";
@@ -18,14 +20,17 @@ public class User {
 
     private ArrayList<Integer> beginner, expert, highScore, inter;
     private boolean firstTime;
+    private GravityRun game;
     private Integer indexSelected;
     private String username;
 
-    public User() {
+    public User(GravityRun gravityRun) {
+        game = gravityRun;
         firstTime = false;
     }
 
-    public User(Map<String, ?> userMap) {
+    public User(GravityRun gravityRun, Map<String, ?> userMap) {
+        game = gravityRun;
         username = userMap.get(USERNAME).toString();
 
         Object firstTime1 = userMap.get(FIRSTTIME);
@@ -73,6 +78,27 @@ public class User {
         return map;
     }
 
+    public boolean checkUsername(String username) {
+        return (username.length() > 0) && (username.length() <= 42) && (!username.equals(game.i18n.format("username")));
+    }
+
+    public String getUsernameError(String username) {
+        if (username.length() > 42)
+            return game.i18n.format("error_username_length");
+        else if (username.length() <= 0)
+            return game.i18n.format("error_username_empty");
+        else if (username.equals(game.i18n.format("username")))
+            return game.i18n.format("error_username_default");
+        else
+            return game.i18n.format("error_username_default");
+        // TODO trouver un message d'errur si ce n'est ni l'un ni l'autre (s'il n'y a pas d'autre erreur, alors juste virer le else if)
+    }
+
+    public void write() {
+        game.pref.put(toMap());
+        game.pref.flush();
+    }
+
     public String getUsername() {
         return username;
     }
@@ -97,8 +123,13 @@ public class User {
         return indexSelected;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public boolean setUsername(String username) {
+        if (checkUsername(username)) {
+            this.username = username;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void setBeginner(ArrayList<Integer> beginner) {

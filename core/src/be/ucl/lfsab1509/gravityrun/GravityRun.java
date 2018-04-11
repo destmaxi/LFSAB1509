@@ -7,8 +7,10 @@ import be.ucl.lfsab1509.gravityrun.tools.User;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.I18NBundle;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -21,6 +23,7 @@ public class GravityRun extends Game {
     public static int WIDTH;
 
     public ArrayList<Integer> scoreList;
+    public I18NBundle i18n;
     public Preferences pref;
     public ScreenManager screenManager;
 	public SoundManager soundManager;
@@ -41,17 +44,20 @@ public class GravityRun extends Game {
         soundManager = new SoundManager();
         spriteBatch = new SpriteBatch();
 
+        FileHandle baseFileHandle = Gdx.files.internal("strings/string");
+        i18n = I18NBundle.createBundle(baseFileHandle);
+
         pref = Gdx.app.getPreferences("Player");
         pref.flush();
 
         Map<String, ?> map = pref.get();
 
         if (!pref.getBoolean(User.FIRSTTIME)) {
-            user = new User();
+            user = new User(this);
             screenManager.push(new FirstScreen(this));
         } else {
-            user = new User(map);
-            screenManager.push(new MenuScreen(this));
+            user = new User(this, map);
+            screenManager.push(new HomeScreen(this));
         }
     }
 

@@ -3,7 +3,6 @@ package be.ucl.lfsab1509.gravityrun.sprites;
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.screens.PlayScreen;
 
-import be.ucl.lfsab1509.gravityrun.tools.User;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
@@ -29,13 +28,13 @@ public class Marble {
     private Texture marble;
     private Vector3 position, velocity;
 
-    public Marble(int x, int y, int standardWidth, User user) {
+    public Marble(int x, int y, int standardWidth, int level) {
         marble = new Texture("drawable-" + standardWidth + "/marbles.png");
         marbleAnimation = new MarbleAnimation(marble, standardWidth);
         position = new Vector3(x, y, 0);
         velocity = new Vector3(0, MOVEMENT, 0);
         bounds = new Circle(x, y, marbleAnimation.getDiameter(position.z) / 2);
-        difficulty = user.getIndexSelected() + 1;
+        difficulty = level;
     }
 
     public void update(float dt, boolean gameOver) {
@@ -97,6 +96,7 @@ C'EST PAS OUF MAIS CA FONCTIONNE +_
                 position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, difficulty * MOVEMENT * speed * slowDown * dt, 0);
         }
 
+        // TODO voir ce qu'on fait lorsque la bille touche le bord : est-ce qu'il y a une marge ?
         if (position.x < marbleAnimation.getDiameter(position.z) / 2)
             position.x = marbleAnimation.getDiameter(position.z) / 2;
 

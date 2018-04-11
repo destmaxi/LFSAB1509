@@ -5,7 +5,6 @@ import be.ucl.lfsab1509.gravityrun.GravityRun;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
@@ -14,25 +13,23 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class OptionScreen extends Screen {
+public class OptionScreen extends AbstractMenuScreen {
 
     private List<String> listBox;
-    private Stage stage;
-    private String username;
     private TextButton saveButton;
     private TextField usernameField;
+    private String newUsername, username;
 
     OptionScreen(GravityRun gravityRun) {
         super(gravityRun);
 
-        float ch = height * 0.9f;
-        float cw = width * 0.9f;
+        newUsername = user.getUsername();
+        username = user.getUsername();
 
-        Label title = new Label(i18n.get("option"), titleSkin, "title");
+        Label title = new Label(game.i18n.get("option"), titleSkin, "title");
 
-        TextButton lvlButton = new TextButton(i18n.format("chose_lvl"), tableSkin, "round");
+        TextButton lvlButton = new TextButton(game.i18n.format("chose_lvl"), tableSkin, "round");
         lvlButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -40,43 +37,25 @@ public class OptionScreen extends Screen {
             }
         });
 
-        saveButton = new TextButton(i18n.format("save"), tableSkin, "round");
+        TextButton usernameButton = new TextButton(game.i18n.format("mod_username"), tableSkin, "round");
+        usernameButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                toggleUsernameFields();
+            }
+        });
+
+        saveButton = new TextButton(game.i18n.format("save"), tableSkin, "round");
         saveButton.setVisible(false);
         saveButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.input.setOnscreenKeyboardVisible(false);
-
-                game.user.setUsername(username);
-                game.pref.put(game.user.toMap());
-                game.pref.flush();
-
-                saveButton.setVisible(false);
-                usernameField.setVisible(false);
+                validateUserName();
             }
         });
 
-        TextButton scoreButton = new TextButton(i18n.format("my_score"), tableSkin, "round");
-        scoreButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                screenManager.push(new ScoreboardScreen(game));
-            }
-        });
-
-        TextButton usernameButton = new TextButton(i18n.format("mod_username"), tableSkin, "round");
-        usernameButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.input.setOnscreenKeyboardVisible(false);
-                saveButton.setVisible(!saveButton.isVisible());
-                usernameField.setVisible(!usernameField.isVisible());
-            }
-        });
-
-        username = game.user.getUsername();
-        usernameField = new TextField(username, tableSkin);
-        usernameField.setText(username);
+        usernameField = new TextField(newUsername, tableSkin);
+        usernameField.setText(newUsername);
         usernameField.setVisible(false);
         usernameField.addListener(new ClickListener() {
             @Override
@@ -87,80 +66,95 @@ public class OptionScreen extends Screen {
         usernameField.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                username = usernameField.getText();
+                newUsername = usernameField.getText();
+            }
+        });
+        usernameField.setTextFieldListener(new TextField.TextFieldListener() {
+            @Override
+            public void keyTyped(TextField textField, char c) {
+                if (c == '\n') {
+                    validateUserName();
+                }
             }
         });
 
         listBox = new List<String>(tableSkin);
-        listBox.setItems(i18n.format("beginner"), i18n.format("inter"), i18n.format("expert"));
+        listBox.setItems(game.i18n.format("beginner"), game.i18n.format("inter"), game.i18n.format("expert"));
         listBox.setVisible(false);
-        listBox.setSelectedIndex(game.user.getIndexSelected());
+        listBox.setSelectedIndex(user.getIndexSelected());
         listBox.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (listBox.getSelected().equals(i18n.format("beginner")))
-                    game.user.setIndexSelected(0);
-                else if (listBox.getSelected().equals(i18n.format("inter")))
-                    game.user.setIndexSelected(1);
-                else if (listBox.getSelected().equals(i18n.format("expert")))
-                    game.user.setIndexSelected(2);
-                listBox.setVisible(false);
+                validateLevelSelection();
             }
         });
 
         Container<Table> tableContainer = new Container<Table>();
         Table table = new Table();
-        Table titleTable = new Table();
 
-        tableContainer.setSize(cw, ch);
-        tableContainer.setPosition((width - cw) / 2, (height - ch) / 2);
+        tableContainer.setSize(containerWidth, containerHeight);
+        tableContainer.setPosition((width - containerWidth) / 2, (height - containerHeight) / 2);
         tableContainer.top().fillX();
-        tableContainer.setActor(titleTable);
+        tableContainer.setActor(table);
 
-        titleTable.row().expandY();
-        titleTable.add(title).colspan(7).expandX();
-        titleTable.row().colspan(7).fillX();
-        titleTable.add(table);
-
-        table.row().colspan(2);
-        table.add(scoreButton).expandX().fillX().padTop(height - ch);
-        table.row().colspan(2);
-        table.add(usernameButton).expandX().fillX().padTop(height - ch).maxWidth(cw);
+        table.add(title).colspan(2).expandX();
+        table.row();
+        table.add(usernameButton).colspan(2).expandX().fillX().padTop(height - containerHeight).maxWidth(containerWidth);
         table.row();
         table.add(usernameField).expandX().fillX();
-        table.add(saveButton).expandX().fillX();
-        table.row().colspan(2);
-        table.add(lvlButton).expandX().fillX().padTop((height - ch) / 2).maxWidth(cw);
-        table.row().colspan(2);
-        table.add(listBox).fillX().top();
+        table.add(saveButton).fillX();
+        table.row();
+        table.add(lvlButton).colspan(2).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
+        table.row();
+        table.add(listBox).colspan(2).fillX().top();
 
-        stage = new Stage(new ScreenViewport());
         stage.addActor(tableContainer);
-    }
-
-    @Override
-    public void dispose() {
-        stage.dispose();
     }
 
     @Override
     public void render(float dt) {
         if (clickedBack()) {
-            game.pref.put(game.user.toMap());
-            game.pref.flush();
-
+            user.write();
             screenManager.pop();
             return;
         }
 
-        game.spriteBatch.setProjectionMatrix(camera.combined);
-        stage.act();
-        stage.draw();
+        super.render(dt);
     }
 
-    @Override
-    public void show() {
-        Gdx.input.setInputProcessor(stage);
+    private void toggleUsernameFields() {
+        Gdx.input.setOnscreenKeyboardVisible(false);
+        saveButton.setVisible(!saveButton.isVisible());
+        usernameField.setVisible(!usernameField.isVisible());
+        // TODO mettre ce code à un meilleur endroit
+        if (!usernameField.isVisible() && !user.checkUsername(newUsername))
+            // Le username n'est pas valide: on remet l'ancien.
+            usernameField.setText(username);
+    }
+
+    private void validateUserName() {
+        Gdx.input.setOnscreenKeyboardVisible(false);
+
+        if (user.setUsername(newUsername)) {
+            user.write();
+        } else {
+            usernameField.setText(username); // Sinon, le textField retient la valeur qu'on a rentré, qui est donc incorrecte.
+            newUsername = username; // Don't forget me
+            spawnErrorDialog(game.i18n.format("error_username_default"), user.getUsernameError(newUsername));
+        }
+
+        saveButton.setVisible(false);
+        usernameField.setVisible(false);
+    }
+
+    private void validateLevelSelection() {
+        if (listBox.getSelected().equals(game.i18n.format("beginner")))
+            user.setIndexSelected(0);
+        else if (listBox.getSelected().equals(game.i18n.format("inter")))
+            user.setIndexSelected(1);
+        else if (listBox.getSelected().equals(game.i18n.format("expert")))
+            user.setIndexSelected(2);
+        listBox.setVisible(false);
     }
 
 }

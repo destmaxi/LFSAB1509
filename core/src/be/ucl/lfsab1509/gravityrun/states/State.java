@@ -4,12 +4,16 @@ import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 public abstract class State {
 
     static float height, width;
     static Skin aaronScoreSkin, labelScoreBoardSkin, tableSkin, tableScoreBoardSkin, titleSkin;
+    static TextureAtlas skinTextureAtlas;
     private static boolean skinInitialized = false;
 
     GameStateManager gameStateManager;
@@ -30,21 +34,26 @@ public abstract class State {
 
         skinInitialized = true;
 
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("arial.ttf"));
+        skinTextureAtlas = new TextureAtlas("skin/uiskin.atlas");
+
         tableScoreBoardSkin = new Skin();
-        tableScoreBoardSkin.createSkin((int) (0.5f * width / d / 10));
+        tableScoreBoardSkin.createSkin((int) (0.5f * width / d / 10), generator, skinTextureAtlas);
 
         aaronScoreSkin = new Skin();
-        aaronScoreSkin.createSkin((int) (0.75f * width / d / 10));
+        aaronScoreSkin.createSkin((int) (0.75f * width / d / 10), generator, skinTextureAtlas);
 
         labelScoreBoardSkin = new Skin();
-        labelScoreBoardSkin.createSkin((int) (0.9f * width / d / 10));
+        labelScoreBoardSkin.createSkin((int) (0.9f * width / d / 10), generator, skinTextureAtlas);
 
         tableSkin = new Skin();
-        tableSkin.createSkin((int) (width / d / 10));
+        tableSkin.createSkin((int) (width / d / 10), generator, skinTextureAtlas);
 
         titleSkin = new Skin();
-        titleSkin.createSkin((int) (1.5f * width / d / 10));
+        titleSkin.createSkin((int) (1.5f * width / d / 10), generator, skinTextureAtlas);
         // En espérant qu'il ne soit pas interrompu entre-temps.
+
+        generator.dispose();
     }
 
     public static void disposeSkins() {
@@ -54,6 +63,7 @@ public abstract class State {
             tableSkin.dispose();
             tableScoreBoardSkin.dispose();
             titleSkin.dispose();
+            skinTextureAtlas.dispose();
         }
     }
 

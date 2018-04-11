@@ -68,14 +68,17 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
         return Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE);
     }
 
-    public static void disposeSkins() {
+    static void disposeSkins() {
         if (skinInitialized) {
             aaronScoreSkin.dispose();
             labelScoreBoardSkin.dispose();
             tableScoreBoardSkin.dispose();
             tableSkin.dispose();
             titleSkin.dispose();
+
             skinTextureAtlas.dispose();
+
+            skinInitialized = false;
         }
     }
 

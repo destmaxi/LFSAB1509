@@ -65,7 +65,7 @@ public class HomeScreen extends AbstractMenuScreen {
     @Override
     public void dispose() {
         super.dispose();
-        Screen.disposeSkins();
+        disposeSkins();
     }
 
     @Override

@@ -71,7 +71,7 @@ public class FirstScreen extends AbstractMenuScreen {
     public void dispose() {
         super.dispose();
         if (!goingToMenuState)
-            Screen.disposeSkins();
+            disposeSkins();
     }
 
     @Override

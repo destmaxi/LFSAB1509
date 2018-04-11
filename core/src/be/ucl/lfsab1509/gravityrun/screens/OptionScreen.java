@@ -1,12 +1,15 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
+import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 import be.ucl.lfsab1509.gravityrun.tools.User;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 
 public class OptionScreen extends AbstractMenuScreen {
 
@@ -46,6 +49,17 @@ public class OptionScreen extends AbstractMenuScreen {
             }
         });
 
+        //Label musicLabel = new Label("Music", game.tableSkin, "round");//TODO add internationalisation
+
+        Slider musicSlider = new Slider(0f, 1f, 0.05f, false, game.tableSkin);
+        musicSlider.setValue(1f);
+        musicSlider.addListener(new MusicListener(soundManager, musicSlider));
+
+        //Label soundLabel = new Label("Sound effects", game.tableSkin, "round");//TODO add internationalisation
+
+        Slider soundSlider = new Slider(0f, 1f, 0.05f, false, game.tableSkin);
+        soundSlider.setValue(0.5f);
+        soundSlider.addListener(new SoundListener(soundManager, soundSlider));
 
         Table table = new Table();
         table.add(title).expandX();
@@ -59,6 +73,10 @@ public class OptionScreen extends AbstractMenuScreen {
         table.add(lvlButton).expandX().fillX().maxWidth(containerWidth);
         table.row();
         table.add(multiplayerButton).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
+        table.row();
+        table.add(musicSlider).expandX().fillX().maxWidth(containerWidth);
+        table.row();
+        table.add(soundSlider).expandX().fillX().maxWidth(containerWidth);
 
         initStage(table);
     }
@@ -139,5 +157,53 @@ public class OptionScreen extends AbstractMenuScreen {
             return false;
         }
     }
+
+    private class MusicListener extends DragListener{
+        private SoundManager soundManager;
+        private Slider musicSlider;
+
+        public MusicListener(SoundManager soundManager, Slider musicSlider){
+            this.soundManager = soundManager;
+            this.musicSlider = musicSlider;
+        }
+        @Override
+        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
+            soundManager.setMusicLevel(musicSlider.getValue());
+            return true;
+        }
+        @Override
+        public void touchDragged(InputEvent event, float x, float y, int pointer){
+            soundManager.setMusicLevel(musicSlider.getValue());
+        }
+        @Override
+        public void touchUp(InputEvent event, float x, float y, int pointer, int button){
+            soundManager.setMusicLevel(musicSlider.getValue());
+        }
+
+    }
+
+    private class SoundListener extends DragListener{
+        private SoundManager soundManager;
+        private Slider soundSlider;
+
+        public SoundListener(SoundManager soundManager, Slider soundSlider){
+            this.soundManager = soundManager;
+            this.soundSlider = soundSlider;
+        }
+
+        @Override
+        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
+            //soundManager.setSoundLevel(soundSlider.getValue());
+            //soundManager.gotBonus();
+            return true;
+        }
+
+        @Override
+        public void touchUp(InputEvent event, float x, float y, int pointer, int button){
+            soundManager.setSoundLevel(soundSlider.getValue());
+            soundManager.gotBonus();
+        }
+    }
+
 
 }

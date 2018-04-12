@@ -7,15 +7,17 @@ import be.ucl.lfsab1509.gravityrun.tools.User;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.I18NBundle;
+import de.golfgl.gdxgamesvcs.IGameServiceClient;
+import de.golfgl.gdxgamesvcs.IGameServiceListener;
+import de.golfgl.gdxgamesvcs.NoGameServiceClient;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-public class GravityRun extends Game {
+public class GravityRun extends Game implements IGameServiceListener {
 
     public static float DENSITY;
     public static int HEIGHT;
@@ -24,6 +26,7 @@ public class GravityRun extends Game {
 
     public ArrayList<Integer> scoreList;
     public I18NBundle i18n;
+    public IGameServiceClient gsClient;
     public Preferences preferences;
     public ScreenManager screenManager;
 	public SoundManager soundManager;
@@ -40,12 +43,15 @@ public class GravityRun extends Game {
 
         Screen.initializeSkins();
 
+        i18n = I18NBundle.createBundle(Gdx.files.internal("strings/string"));
         screenManager = new ScreenManager(this);
         soundManager = new SoundManager();
         spriteBatch = new SpriteBatch();
 
-        FileHandle baseFileHandle = Gdx.files.internal("strings/string");
-        i18n = I18NBundle.createBundle(baseFileHandle);
+        if (gsClient == null)
+            gsClient = new NoGameServiceClient();
+        gsClient.setListener(this);
+        gsClient.resumeSession();
 
         preferences = Gdx.app.getPreferences("Player");
         preferences.flush();
@@ -69,11 +75,40 @@ public class GravityRun extends Game {
     }
 
     @Override
+    public void pause() {
+        super.pause();
+
+        gsClient.pauseSession();
+    }
+
+    @Override
     public void render() {
         Gdx.gl.glClearColor(.2f, .2f, .2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         super.render();
+    }
+
+    @Override
+    public void resume() {
+        super.resume();
+
+        gsClient.resumeSession();
+    }
+
+    @Override
+    public void gsOnSessionActive() {
+
+    }
+
+    @Override
+    public void gsOnSessionInactive() {
+
+    }
+
+    @Override
+    public void gsShowErrorToUser(GsErrorType et, String msg, Throwable t) {
+
     }
 
     public void exit() {

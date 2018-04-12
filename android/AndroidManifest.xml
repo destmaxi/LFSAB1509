@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="be.ucl.lfsab1509.gravityrun">
 
-    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="27"/>
+    <uses-sdk android:minSdkVersion="15" android:targetSdkVersion="27"/>
     <uses-feature android:name="android.hardware.sensor.gyroscope" android:required="true" />
 
     <application
@@ -21,6 +21,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.google.android.gms.games.APP_ID"
+            android:value="TODO" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="f53905b0201786617825135f426ea14296bddf26" />

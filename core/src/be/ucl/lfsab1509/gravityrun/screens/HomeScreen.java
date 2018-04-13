@@ -2,21 +2,27 @@ package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 
 public class HomeScreen extends AbstractMenuScreen {
 
+    private final ImageButton gpgsButton;
     private Label hyLabel;
+    private Texture gpgsImage;
 
     public HomeScreen(GravityRun gravityRun) {
         super(gravityRun);
 
         Label title = new Label(game.i18n.format("menu"), titleSkin, "title");
+
+        gpgsImage = new Texture("drawable-" + calculateStandardWidth() + "/gpgs.png");
 
         TextButton startGameButton = new TextButton(game.i18n.format("new_game"), tableSkin, "round");
         startGameButton.addListener(new ClickListener() {
@@ -42,6 +48,19 @@ public class HomeScreen extends AbstractMenuScreen {
         });
         // TODO ici, ça prend environ 10ms
 
+        TextureRegion gpgsRegionConnected = new TextureRegion(gpgsImage, 0, 0, gpgsImage.getWidth(), gpgsImage.getHeight() / 2);
+        TextureRegion gpgsRegionDisconnected = new TextureRegion(gpgsImage, 0, gpgsImage.getHeight() / 2, gpgsImage.getWidth(), gpgsImage.getHeight() / 2);
+        gpgsButton = new ImageButton(new TextureRegionDrawable(gpgsRegionDisconnected), new TextureRegionDrawable(gpgsRegionConnected), new TextureRegionDrawable(gpgsRegionConnected));
+        gpgsButton.setChecked(game.gsClient.isSessionActive());
+        gpgsButton.setPosition(width - gpgsImage.getWidth(), 0);
+        gpgsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                connect();
+            }
+        });
+        stage.addActor(gpgsButton);
+
         hyLabel = new Label("", tableSkin);
         hyLabel.setAlignment(Align.center);
         hyLabel.setWidth(containerWidth);
@@ -65,6 +84,7 @@ public class HomeScreen extends AbstractMenuScreen {
     @Override
     public void dispose() {
         super.dispose();
+        gpgsImage.dispose();
         disposeSkins();
     }
 
@@ -83,6 +103,16 @@ public class HomeScreen extends AbstractMenuScreen {
     public void show() {
         super.show();
         hyLabel.setText(game.i18n.format("hello", user.getUsername()));
+    }
+
+    private void connect() {
+        if (game.gsClient.isSessionActive())
+            game.gsClient.logOff();
+        else {
+            if (!game.gsClient.logIn())
+                Gdx.app.error("GPGS_ERROR", "Cannot sign in");
+        }
+        gpgsButton.setChecked(game.gsClient.isSessionActive());
     }
 
 }

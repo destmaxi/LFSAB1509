@@ -14,7 +14,7 @@ abstract class AbstractMenuScreen extends Screen {
 
     boolean dialog = false;
     float containerHeight, containerWidth;
-    private Stage stage;
+    Stage stage;
 
     AbstractMenuScreen(GravityRun gravityRun) {
         super(gravityRun);

@@ -64,6 +64,25 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
 
     }
 
+    int calculateStandardWidth() {
+        int standardWidth;
+        if (width <= 480)
+            standardWidth = 480;
+        else if (width <= 600)
+            standardWidth = 600;
+        else if (width <= 840)
+            standardWidth = 840;
+        else if (width <= 960)
+            standardWidth = 960;
+        else if (width <= 1280)
+            standardWidth = 1280;
+        else if (width <= 1440)
+            standardWidth = 1440;
+        else
+            standardWidth = 1600;
+        return standardWidth;
+    }
+
     boolean clickedBack() {
         return Gdx.input.isKeyJustPressed(Input.Keys.BACK) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE);
     }

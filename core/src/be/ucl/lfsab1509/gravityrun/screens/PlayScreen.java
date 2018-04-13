@@ -50,7 +50,7 @@ public class PlayScreen extends Screen {
         if (game.scoreList == null)
             game.scoreList = new ArrayList<Integer>();
 
-        calculateStandardWidth();
+        STANDARD_WIDTH = calculateStandardWidth();
 
         marble = new Marble((int) width / 2, 0, STANDARD_WIDTH, user.getIndexSelected() + 1);
         gameOver = false;
@@ -149,23 +149,6 @@ public class PlayScreen extends Screen {
             bonuses.set(i, newBonus(position, offset));
             soundManager.gotBonus();
         }
-    }
-
-    private void calculateStandardWidth() {
-        if (width <= 480)
-            STANDARD_WIDTH = 480;
-        else if (width <= 600)
-            STANDARD_WIDTH = 600;
-        else if (width <= 840)
-            STANDARD_WIDTH = 840;
-        else if (width <= 960)
-            STANDARD_WIDTH = 960;
-        else if (width <= 1280)
-            STANDARD_WIDTH = 1280;
-        else if (width <= 1440)
-            STANDARD_WIDTH = 1440;
-        else
-            STANDARD_WIDTH = 1600;
     }
 
     private void checkCamReposition() {

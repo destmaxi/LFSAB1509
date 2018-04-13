@@ -2,6 +2,7 @@ package be.ucl.lfsab1509.gravityrun.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
@@ -11,6 +12,7 @@ import be.ucl.lfsab1509.gravityrun.GravityRun;
 
 abstract class AbstractMenuScreen extends Screen {
 
+    boolean dialog = false;
     float containerHeight, containerWidth;
     private Stage stage;
 
@@ -51,7 +53,7 @@ abstract class AbstractMenuScreen extends Screen {
     }
 
     void spawnErrorDialog(String title, String message) {
-        Dialog errorDialog; // Override methods public void hide() and public void show() here.
+        Dialog errorDialog;
         Label errorLabel;
         TextButton okButton;
 
@@ -62,10 +64,21 @@ abstract class AbstractMenuScreen extends Screen {
         errorLabel.setWrap(true); // Longs labels
 
         errorDialog = new Dialog(title, tableSkin) {
-            // Override methods public void hide() and public void show() here.
+            @Override
+            public void hide(Action action) {
+                dialog = false;
+                super.hide(action);
+            }
+
+            @Override
+            public Dialog show(Stage stage, Action action) {
+                dialog = true;
+                return super.show(stage, action);
+            }
         };
         errorDialog.button(okButton, true).key(Input.Keys.ENTER, true);
         errorDialog.getContentTable().add(errorLabel).width(width * .7f).pad(10); // Sinon la taille est pourrie
+        errorDialog.key(Input.Keys.BACK, null);
         errorDialog.setModal(true); // Sinon on peut cliquer à travers
         errorDialog.setMovable(false); // Ou la déplacer
         errorDialog.show(stage);

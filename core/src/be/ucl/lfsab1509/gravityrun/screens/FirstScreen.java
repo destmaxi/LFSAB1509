@@ -76,7 +76,7 @@ public class FirstScreen extends AbstractMenuScreen {
 
     @Override
     public void render(float dt) {
-        if (clickedBack()) {
+        if (clickedBack() && !dialog) {
             disposeSkins();
             game.exit();
             return;

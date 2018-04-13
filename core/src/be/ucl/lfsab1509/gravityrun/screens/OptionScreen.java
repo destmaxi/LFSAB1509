@@ -105,7 +105,7 @@ public class OptionScreen extends AbstractMenuScreen {
 
     @Override
     public void render(float dt) {
-        if (clickedBack()) {
+        if (clickedBack() && !dialog) {
             user.write();
             screenManager.pop();
             return;

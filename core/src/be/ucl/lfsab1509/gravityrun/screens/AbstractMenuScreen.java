@@ -79,6 +79,7 @@ abstract class AbstractMenuScreen extends Screen {
         errorDialog.button(okButton, true).key(Input.Keys.ENTER, true);
         errorDialog.getContentTable().add(errorLabel).width(width * .7f).pad(10); // Sinon la taille est pourrie
         errorDialog.key(Input.Keys.BACK, null);
+        errorDialog.key(Input.Keys.ESCAPE, null);
         errorDialog.setModal(true); // Sinon on peut cliquer à travers
         errorDialog.setMovable(false); // Ou la déplacer
         errorDialog.show(stage);

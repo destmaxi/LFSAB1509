@@ -1,5 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.tools;
 
+import be.ucl.lfsab1509.gravityrun.GravityRun;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -10,14 +11,11 @@ public class Skin extends com.badlogic.gdx.scenes.scene2d.ui.Skin {
 
     private BitmapFont font;
 
-    public Skin() {
-        super();
-    }
-
     public void createSkin(int size, FreeTypeFontGenerator generator, TextureAtlas atlas) {
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-
-        parameter.size = (int) (size * Gdx.graphics.getDensity()); // FIXME peut-être GravityRun.DENSITY ?
+//        parameter.incremental = true;
+        parameter.size = (int) (size * GravityRun.DENSITY);
+        
         font = generator.generateFont(parameter);
 
         this.add("arial", font);

@@ -50,7 +50,7 @@ public class FirstScreen extends AbstractMenuScreen {
         usernameField.setTextFieldListener(new TextField.TextFieldListener() {
             @Override
             public void keyTyped(TextField textField, char c) {
-                if (c == '\n') {
+                if (c == '\n' || c== '\r') {
                     Gdx.input.setOnscreenKeyboardVisible(false);
                     validateUsername();
                 }

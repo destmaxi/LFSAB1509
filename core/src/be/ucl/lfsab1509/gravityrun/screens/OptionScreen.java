@@ -71,7 +71,7 @@ public class OptionScreen extends AbstractMenuScreen {
         usernameField.setTextFieldListener(new TextField.TextFieldListener() {
             @Override
             public void keyTyped(TextField textField, char c) {
-                if (c == '\n') {
+                if (c == '\n' || c == '\r') {
                     validateUserName();
                 }
             }

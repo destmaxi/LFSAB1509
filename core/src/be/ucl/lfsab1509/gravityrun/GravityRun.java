@@ -25,6 +25,7 @@ public class GravityRun extends Game implements IGameServiceListener {
     public static int WIDTH;
 
     public ArrayList<Integer> scoreList;
+    public boolean isGpgsConnected = false;
     public I18NBundle i18n;
     public IGameServiceClient gsClient;
     public Preferences preferences;
@@ -98,17 +99,26 @@ public class GravityRun extends Game implements IGameServiceListener {
 
     @Override
     public void gsOnSessionActive() {
-
+        isGpgsConnected = true;
     }
 
     @Override
     public void gsOnSessionInactive() {
-
+        isGpgsConnected = false;
     }
 
     @Override
     public void gsShowErrorToUser(GsErrorType et, String msg, Throwable t) {
 
+    }
+
+    public void connect() {
+        if (gsClient.isSessionActive())
+            gsClient.logOff();
+        else {
+            if (!gsClient.logIn())
+                Gdx.app.error("GPGS_ERROR", "Cannot sign in");
+        }
     }
 
     public void exit() {

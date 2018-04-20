@@ -2,7 +2,6 @@ package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -56,7 +55,7 @@ public class HomeScreen extends AbstractMenuScreen {
         gpgsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                connect();
+                game.connect();
             }
         });
         stage.addActor(gpgsButton);
@@ -97,22 +96,13 @@ public class HomeScreen extends AbstractMenuScreen {
         }
 
         super.render(dt);
+        gpgsButton.setChecked(game.isGpgsConnected);
     }
 
     @Override
     public void show() {
         super.show();
         hyLabel.setText(game.i18n.format("hello", user.getUsername()));
-    }
-
-    private void connect() {
-        if (game.gsClient.isSessionActive())
-            game.gsClient.logOff();
-        else {
-            if (!game.gsClient.logIn())
-                Gdx.app.error("GPGS_ERROR", "Cannot sign in");
-        }
-        gpgsButton.setChecked(game.gsClient.isSessionActive());
     }
 
 }

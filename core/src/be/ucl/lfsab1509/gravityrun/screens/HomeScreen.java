@@ -9,19 +9,75 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import de.golfgl.gdxgamesvcs.GameServiceException;
 
 public class HomeScreen extends AbstractMenuScreen {
 
-    private final ImageButton gpgsButton;
+    private final ImageButton achievementsButton, gpgsButton, leaderboardsButton;
     private Label hyLabel;
-    private Texture gpgsImage;
+    private Texture achievementsImage, gpgsImage, leaderboardsImage;
 
     public HomeScreen(GravityRun gravityRun) {
         super(gravityRun);
 
         Label title = new Label(game.i18n.format("menu"), titleSkin, "title");
 
-        gpgsImage = new Texture("drawable-" + calculateStandardWidth() + "/gpgs.png");
+        int standardWidth = calculateStandardWidth();
+        achievementsImage = new Texture("drawable-" + standardWidth + "/achievements.png");
+        gpgsImage = new Texture("drawable-" + standardWidth + "/gpgs.png");
+        leaderboardsImage = new Texture("drawable-" + standardWidth + "/leaderboards.png");
+
+        int achievementsHeight = achievementsImage.getHeight();
+        int achievementsWidth = achievementsImage.getWidth();
+        TextureRegionDrawable achievementsConnected = new TextureRegionDrawable(new TextureRegion(achievementsImage, 0, 0, achievementsWidth, achievementsHeight / 2));
+        TextureRegionDrawable achievementsDisconnected = new TextureRegionDrawable(new TextureRegion(achievementsImage, 0, achievementsHeight / 2, achievementsWidth, achievementsHeight / 2));
+        achievementsButton = new ImageButton(achievementsDisconnected, achievementsConnected, achievementsConnected);
+        achievementsButton.setPosition(0, 0);
+        achievementsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                try {
+                    game.gsClient.showAchievements();
+                } catch (GameServiceException e) {
+                    spawnErrorDialog("Erreur", "Impossible d'afficher les Réussites");
+                }
+            }
+        });
+        stage.addActor(achievementsButton);
+
+        int gpgsHeight = gpgsImage.getHeight();
+        int gpgsWidth = gpgsImage.getWidth();
+        TextureRegionDrawable gpgsConnected = new TextureRegionDrawable(new TextureRegion(gpgsImage, 0, 0, gpgsWidth, gpgsHeight / 2));
+        TextureRegionDrawable gpgsDisconnected = new TextureRegionDrawable(new TextureRegion(gpgsImage, 0, gpgsHeight / 2, gpgsWidth, gpgsHeight / 2));
+        gpgsButton = new ImageButton(gpgsDisconnected, gpgsConnected, gpgsConnected);
+        gpgsButton.setPosition(width - gpgsImage.getWidth(), 0);
+        gpgsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.connect();
+            }
+        });
+        stage.addActor(gpgsButton);
+
+        int leaderboardsHeight = leaderboardsImage.getHeight();
+        int leaderboardsWidth = leaderboardsImage.getWidth();
+        TextureRegionDrawable leaderboardsConnected = new TextureRegionDrawable(new TextureRegion(leaderboardsImage, 0, 0, leaderboardsWidth, leaderboardsHeight / 2));
+        TextureRegionDrawable leaderboardsDisconnected = new TextureRegionDrawable(new TextureRegion(leaderboardsImage, 0, leaderboardsHeight / 2, leaderboardsWidth, leaderboardsHeight / 2));
+        leaderboardsButton = new ImageButton(leaderboardsDisconnected, leaderboardsConnected, leaderboardsConnected);
+        leaderboardsButton.setPosition(achievementsButton.getWidth(), 0);
+        leaderboardsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                try {
+                    game.gsClient.showLeaderboards(null);
+                } catch (GameServiceException e) {
+                    spawnErrorDialog("Erreur", "Impossible d'afficher les Classements");
+                }
+            }
+        });
+        stage.addActor(leaderboardsButton);
+
+        refreshButtons();
 
         TextButton startGameButton = new TextButton(game.i18n.format("new_game"), tableSkin, "round");
         startGameButton.addListener(new ClickListener() {
@@ -47,19 +103,6 @@ public class HomeScreen extends AbstractMenuScreen {
         });
         // TODO ici, ça prend environ 10ms
 
-        TextureRegion gpgsRegionConnected = new TextureRegion(gpgsImage, 0, 0, gpgsImage.getWidth(), gpgsImage.getHeight() / 2);
-        TextureRegion gpgsRegionDisconnected = new TextureRegion(gpgsImage, 0, gpgsImage.getHeight() / 2, gpgsImage.getWidth(), gpgsImage.getHeight() / 2);
-        gpgsButton = new ImageButton(new TextureRegionDrawable(gpgsRegionDisconnected), new TextureRegionDrawable(gpgsRegionConnected), new TextureRegionDrawable(gpgsRegionConnected));
-        gpgsButton.setChecked(game.gsClient.isSessionActive());
-        gpgsButton.setPosition(width - gpgsImage.getWidth(), 0);
-        gpgsButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.connect();
-            }
-        });
-        stage.addActor(gpgsButton);
-
         hyLabel = new Label("", tableSkin);
         hyLabel.setAlignment(Align.center);
         hyLabel.setWidth(containerWidth);
@@ -83,7 +126,11 @@ public class HomeScreen extends AbstractMenuScreen {
     @Override
     public void dispose() {
         super.dispose();
+
+        achievementsImage.dispose();
         gpgsImage.dispose();
+        leaderboardsImage.dispose();
+
         disposeSkins();
     }
 
@@ -96,13 +143,20 @@ public class HomeScreen extends AbstractMenuScreen {
         }
 
         super.render(dt);
-        gpgsButton.setChecked(game.isGpgsConnected);
+
+        refreshButtons();
     }
 
     @Override
     public void show() {
         super.show();
         hyLabel.setText(game.i18n.format("hello", user.getUsername()));
+    }
+
+    private void refreshButtons() {
+        achievementsButton.setChecked(game.isGpgsConnected);
+        gpgsButton.setChecked(game.isGpgsConnected);
+        leaderboardsButton.setChecked(game.isGpgsConnected);
     }
 
 }

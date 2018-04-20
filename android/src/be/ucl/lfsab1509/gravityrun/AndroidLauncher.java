@@ -27,7 +27,7 @@ public class AndroidLauncher extends AndroidApplication {
 
         Fabric.with(this, new Crashlytics());
 
-//		initGpgsClient();
+		initGpgsClient();
 
         GravityRun game = new GravityRun();
         game.gsClient = gpgsClient;

@@ -158,7 +158,7 @@ public class PlayScreen extends Screen {
 
     private void handleEndGame() {
         if (gameOver) {
-            game.gsClient.submitToLeaderboard(GpgsMappers.LEADERBOARD, score, null);
+            game.gsClient.submitToLeaderboard(GpgsMappers.LEADERBOARD + marble.difficulty, score, null);
             game.scoreList.add(score);
             soundManager.replayMenu();
             screenManager.set(new GameOverScreen(game));

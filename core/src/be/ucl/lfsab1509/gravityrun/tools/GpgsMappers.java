@@ -48,8 +48,14 @@ public class GpgsMappers {
 
         // TODO
         switch (independantId) {
-            case LEADERBOARD:
+            case LEADERBOARD + 1:
+                gpgsId = "CgkI0ITMmsAMEAIQAw";
+                break;
+            case LEADERBOARD + 2:
                 gpgsId = "CgkI0ITMmsAMEAIQAg";
+                break;
+            case LEADERBOARD + 3:
+                gpgsId = "CgkI0ITMmsAMEAIQBA";
                 break;
             default:
                 gpgsId = null;

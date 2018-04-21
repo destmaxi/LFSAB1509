@@ -2,6 +2,8 @@ package be.ucl.lfsab1509.gravityrun.tools;
 
 public class GpgsMappers {
 
+    public static final String LEADERBOARD = "LEADERBOARD";
+
     public static String mapToGpgsEvent(String eventId) {
         if (eventId == null)
             return null;
@@ -46,8 +48,8 @@ public class GpgsMappers {
 
         // TODO
         switch (independantId) {
-            case "TODO":
-                gpgsId = "TODO";
+            case LEADERBOARD:
+                gpgsId = "CgkI0ITMmsAMEAIQAg";
                 break;
             default:
                 gpgsId = null;

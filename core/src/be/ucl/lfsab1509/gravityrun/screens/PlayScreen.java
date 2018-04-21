@@ -2,7 +2,7 @@ package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.sprites.*;
-
+import be.ucl.lfsab1509.gravityrun.tools.GpgsMappers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -158,6 +158,7 @@ public class PlayScreen extends Screen {
 
     private void handleEndGame() {
         if (gameOver) {
+            game.gsClient.submitToLeaderboard(GpgsMappers.LEADERBOARD, score, null);
             game.scoreList.add(score);
             soundManager.replayMenu();
             screenManager.set(new GameOverScreen(game));

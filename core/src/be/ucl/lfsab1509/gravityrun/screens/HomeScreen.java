@@ -1,11 +1,13 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -39,7 +41,7 @@ public class HomeScreen extends AbstractMenuScreen {
                 try {
                     game.gsClient.showAchievements();
                 } catch (GameServiceException e) {
-                    spawnErrorDialog("Erreur", "Impossible d'afficher les Réussites");
+                    spawnErrorDialog(game.i18n.format("error"), game.i18n.format("error_gpgs_achievements"));
                 }
             }
         });
@@ -71,7 +73,7 @@ public class HomeScreen extends AbstractMenuScreen {
                 try {
                     game.gsClient.showLeaderboards(null);
                 } catch (GameServiceException e) {
-                    spawnErrorDialog("Erreur", "Impossible d'afficher les Classements");
+                    spawnErrorDialog(game.i18n.format("error"), game.i18n.format("error_gpgs_leaderboards"));
                 }
             }
         });

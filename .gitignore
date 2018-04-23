@@ -363,3 +363,7 @@ cmake-build-debug/
 
 
 # End of https://www.gitignore.io/api/java,android,intellij,androidstudio
+
+android/themachinep4.jks
+keystore-debug.properties
+keystore-release.properties

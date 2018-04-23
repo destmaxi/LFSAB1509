@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.WindowManager;
 
+import be.ucl.lfsab1509.gravityrun.gpgs.MyGpgsClient;
 import be.ucl.lfsab1509.gravityrun.tools.GpgsMappers;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -15,31 +16,35 @@ import io.fabric.sdk.android.Fabric;
 public class AndroidLauncher extends AndroidApplication {
 
     private GpgsClient gpgsClient;
+    private MyGpgsClient myGpgsClient;
 
-	@Override
-	protected void onCreate (Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		config.useAccelerometer = true;
-		config.useCompass = false;
+        AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
+        config.useAccelerometer = true;
+        config.useCompass = false;
         config.useGyroscope = true;
 
         Fabric.with(this, new Crashlytics());
 
-		initGpgsClient();
+        myGpgsClient = new MyGpgsClient(this);
+
+        initGpgsClient();
 
         GravityRun game = new GravityRun();
-        game.gsClient = gpgsClient;
+        game.gsClient = myGpgsClient;
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-		initialize(game, config);
-	}
+        initialize(game, config);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         gpgsClient.onGpgsActivityResult(requestCode, resultCode, data);
+        myGpgsClient.onActivityResult(requestCode, resultCode, data);
     }
 
     private void initGpgsClient() {

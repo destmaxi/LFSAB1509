@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import de.golfgl.gdxgamesvcs.GameServiceException;
 
 public class HomeScreen extends AbstractMenuScreen {
 
@@ -38,11 +37,8 @@ public class HomeScreen extends AbstractMenuScreen {
         achievementsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                try {
-                    game.gsClient.showAchievements();
-                } catch (GameServiceException e) {
+                if (!game.gsClient.showAchievements())
                     spawnErrorDialog(game.i18n.format("error"), game.i18n.format("error_gpgs_achievements"));
-                }
             }
         });
         stage.addActor(achievementsButton);
@@ -70,11 +66,8 @@ public class HomeScreen extends AbstractMenuScreen {
         leaderboardsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                try {
-                    game.gsClient.showLeaderboards(null);
-                } catch (GameServiceException e) {
+                if (!game.gsClient.showLeaderboards())
                     spawnErrorDialog(game.i18n.format("error"), game.i18n.format("error_gpgs_leaderboards"));
-                }
             }
         });
         stage.addActor(leaderboardsButton);
@@ -156,9 +149,9 @@ public class HomeScreen extends AbstractMenuScreen {
     }
 
     private void refreshButtons() {
-        achievementsButton.setChecked(game.isGpgsConnected);
-        gpgsButton.setChecked(game.isGpgsConnected);
-        leaderboardsButton.setChecked(game.isGpgsConnected);
+        achievementsButton.setChecked(game.gsClient.isConnected());
+        gpgsButton.setChecked(game.gsClient.isConnected());
+        leaderboardsButton.setChecked(game.gsClient.isConnected());
     }
 
 }

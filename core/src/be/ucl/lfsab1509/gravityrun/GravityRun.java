@@ -1,18 +1,19 @@
 package be.ucl.lfsab1509.gravityrun;
 
-import be.ucl.lfsab1509.gravityrun.screens.*;
+import be.ucl.lfsab1509.gravityrun.screens.FirstScreen;
+import be.ucl.lfsab1509.gravityrun.screens.HomeScreen;
+import be.ucl.lfsab1509.gravityrun.screens.Screen;
+import be.ucl.lfsab1509.gravityrun.screens.ScreenManager;
+import be.ucl.lfsab1509.gravityrun.tools.IMyGpgsClient;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 import be.ucl.lfsab1509.gravityrun.tools.User;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.I18NBundle;
-import de.golfgl.gdxgamesvcs.IGameServiceClient;
 import de.golfgl.gdxgamesvcs.IGameServiceListener;
-import de.golfgl.gdxgamesvcs.NoGameServiceClient;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -25,12 +26,11 @@ public class GravityRun extends Game implements IGameServiceListener {
     public static int WIDTH;
 
     public ArrayList<Integer> scoreList;
-    public boolean isGpgsConnected = false;
     public I18NBundle i18n;
-    public IGameServiceClient gsClient;
+    public IMyGpgsClient gsClient;
     public Preferences preferences;
     public ScreenManager screenManager;
-	public SoundManager soundManager;
+    public SoundManager soundManager;
     public SpriteBatch spriteBatch;
     public User user;
 
@@ -49,10 +49,10 @@ public class GravityRun extends Game implements IGameServiceListener {
         soundManager = new SoundManager();
         spriteBatch = new SpriteBatch();
 
-        if (gsClient == null)
+        /*if (gsClient == null)
             gsClient = new NoGameServiceClient();
-        gsClient.setListener(this);
-        gsClient.resumeSession();
+        gsClient.setListener(this);*/
+        gsClient.onResume();
 
         preferences = Gdx.app.getPreferences("Player");
         preferences.flush();
@@ -79,7 +79,7 @@ public class GravityRun extends Game implements IGameServiceListener {
     public void pause() {
         super.pause();
 
-        gsClient.pauseSession();
+        gsClient.onPause();
     }
 
     @Override
@@ -94,30 +94,28 @@ public class GravityRun extends Game implements IGameServiceListener {
     public void resume() {
         super.resume();
 
-        gsClient.resumeSession();
+        gsClient.onResume();
     }
 
     @Override
     public void gsOnSessionActive() {
-        isGpgsConnected = true;
     }
 
     @Override
     public void gsOnSessionInactive() {
-        isGpgsConnected = false;
     }
 
     @Override
     public void gsShowErrorToUser(GsErrorType et, String msg, Throwable t) {
-
     }
 
     public void connect() {
         if (gsClient.isSessionActive())
-            gsClient.logOff();
+            gsClient.signOut();
         else {
-            if (!gsClient.logIn())
-                Gdx.app.error("GPGS_ERROR", "Cannot sign in");
+            gsClient.startSignInIntent();
+            /*if (!gsClient.logIn())
+                Gdx.app.error("GPGS_ERROR", "Cannot sign in");*/
         }
     }
 

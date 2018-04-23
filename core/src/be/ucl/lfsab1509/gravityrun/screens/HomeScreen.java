@@ -37,7 +37,7 @@ public class HomeScreen extends AbstractMenuScreen {
         achievementsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (!game.gsClient.showAchievements())
+                if (!game.gpgs.showAchievements())
                     spawnErrorDialog(game.i18n.format("error"), game.i18n.format("error_gpgs_achievements"));
             }
         });
@@ -66,7 +66,7 @@ public class HomeScreen extends AbstractMenuScreen {
         leaderboardsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (!game.gsClient.showLeaderboards())
+                if (!game.gpgs.showLeaderboards())
                     spawnErrorDialog(game.i18n.format("error"), game.i18n.format("error_gpgs_leaderboards"));
             }
         });
@@ -149,9 +149,9 @@ public class HomeScreen extends AbstractMenuScreen {
     }
 
     private void refreshButtons() {
-        achievementsButton.setChecked(game.gsClient.isConnected());
-        gpgsButton.setChecked(game.gsClient.isConnected());
-        leaderboardsButton.setChecked(game.gsClient.isConnected());
+        achievementsButton.setChecked(game.gpgs.isConnected());
+        gpgsButton.setChecked(game.gpgs.isConnected());
+        leaderboardsButton.setChecked(game.gpgs.isConnected());
     }
 
 }

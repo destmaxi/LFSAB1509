@@ -1,10 +1,8 @@
 package be.ucl.lfsab1509.gravityrun.tools;
 
-public interface IMyGpgsClient {
+public interface IGpgs {
 
     boolean isConnected();
-
-    boolean isSessionActive();
 
     void onPause();
 

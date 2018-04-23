@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import be.ucl.lfsab1509.gravityrun.tools.GpgsMappers;
-import be.ucl.lfsab1509.gravityrun.tools.IMyGpgsClient;
+import be.ucl.lfsab1509.gravityrun.tools.IGpgs;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.*;
 import com.google.android.gms.games.Games;
@@ -17,12 +17,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
-public class MyGpgsClient implements IMyGpgsClient {
+public class Gpgs implements IGpgs {
 
     private static final int RC_SIGN_IN = 9001;
     private static final int RC_ACHIEVEMENT_UI = 9003;
     private static final int RC_LEADERBOARD_UI = 9004;
-    private static final String TAG = "MyGpgsClient";
+    private static final String TAG = "Gpgs";
 
     private Activity context;
     private boolean connected = false;
@@ -31,8 +31,8 @@ public class MyGpgsClient implements IMyGpgsClient {
     private RealTimeMultiplayerClient mRealTimeMultiplayerClient = null;
     private String mDisplayName = null, mPlayerId = null;
 
-    public MyGpgsClient(Activity context) {
-        Log.d(TAG, "MyGpgsClient()");
+    public Gpgs(Activity context) {
+        Log.d(TAG, "Gpgs()");
         this.context = context;
         mGoogleSignInClient = GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
         signInSilently();
@@ -42,12 +42,7 @@ public class MyGpgsClient implements IMyGpgsClient {
         return connected;
     }
 
-    public boolean isSessionActive() {
-        Log.d(TAG, "isSignedIn()");
-        return GoogleSignIn.getLastSignedInAccount(context) != null;
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {    // TODO ???
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "onActivityResult()");
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
@@ -90,16 +85,16 @@ public class MyGpgsClient implements IMyGpgsClient {
         mRealTimeMultiplayerClient = null;
     }
 
-    public void onStop() {
-
-    }
-
     public void onPause() {
 
     }
 
     public void onResume() {
         signInSilently();
+    }
+
+    public void onStop() {
+
     }
 
     public void signInSilently() {

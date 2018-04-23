@@ -158,8 +158,7 @@ public class PlayScreen extends Screen {
 
     private void handleEndGame() {
         if (gameOver) {
-//            game.gsClient.submitToLeaderboard(GpgsMappers.LEADERBOARD + marble.difficulty, score, null);
-            game.gsClient.submitScore(GpgsMappers.LEADERBOARD + marble.difficulty, score);
+            game.gpgs.submitScore(GpgsMappers.LEADERBOARD + marble.difficulty, score);
             game.scoreList.add(score);
             soundManager.replayMenu();
             screenManager.set(new GameOverScreen(game));
@@ -184,7 +183,7 @@ public class PlayScreen extends Screen {
         Bonus bonus;
         switch (random.nextInt(10)) {
             case 1:
-                bonus = new NewLife(position,offset, STANDARD_WIDTH);
+                bonus = new NewLife(position, offset, STANDARD_WIDTH);
                 break;
             case 2:
                 bonus = null;

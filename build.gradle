@@ -66,8 +66,6 @@ project(":android") {
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile "com.google.android.gms:play-services-auth:15.0.0"
         compile "com.google.android.gms:play-services-games:15.0.0"
-//        compile "com.google.android.gms:play-services-identity:15.0.0"
-        compile "de.golfgl.gdxgamesvcs:gdx-gamesvcs-android-gpgs:$gamesvcsVersion"
 
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
@@ -112,7 +110,6 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        compile "de.golfgl.gdxgamesvcs:gdx-gamesvcs-core:$gamesvcsVersion"
     }
 }
 
@@ -128,6 +125,5 @@ project(":desktop") {
         compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
         compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        compile "de.golfgl.gdxgamesvcs:gdx-gamesvcs-desktop-gpgs:$gamesvcsVersion"
     }
 }

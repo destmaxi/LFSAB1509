@@ -4,7 +4,7 @@ import be.ucl.lfsab1509.gravityrun.screens.FirstScreen;
 import be.ucl.lfsab1509.gravityrun.screens.HomeScreen;
 import be.ucl.lfsab1509.gravityrun.screens.Screen;
 import be.ucl.lfsab1509.gravityrun.screens.ScreenManager;
-import be.ucl.lfsab1509.gravityrun.tools.IMyGpgsClient;
+import be.ucl.lfsab1509.gravityrun.tools.IGpgs;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 import be.ucl.lfsab1509.gravityrun.tools.User;
 import com.badlogic.gdx.Game;
@@ -13,12 +13,11 @@ import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.I18NBundle;
-import de.golfgl.gdxgamesvcs.IGameServiceListener;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-public class GravityRun extends Game implements IGameServiceListener {
+public class GravityRun extends Game {
 
     public static float DENSITY;
     public static int HEIGHT;
@@ -27,7 +26,7 @@ public class GravityRun extends Game implements IGameServiceListener {
 
     public ArrayList<Integer> scoreList;
     public I18NBundle i18n;
-    public IMyGpgsClient gsClient;
+    public IGpgs gpgs;
     public Preferences preferences;
     public ScreenManager screenManager;
     public SoundManager soundManager;
@@ -49,10 +48,7 @@ public class GravityRun extends Game implements IGameServiceListener {
         soundManager = new SoundManager();
         spriteBatch = new SpriteBatch();
 
-        /*if (gsClient == null)
-            gsClient = new NoGameServiceClient();
-        gsClient.setListener(this);*/
-        gsClient.onResume();
+        gpgs.onResume();
 
         preferences = Gdx.app.getPreferences("Player");
         preferences.flush();
@@ -79,7 +75,7 @@ public class GravityRun extends Game implements IGameServiceListener {
     public void pause() {
         super.pause();
 
-        gsClient.onPause();
+        gpgs.onPause();
     }
 
     @Override
@@ -93,30 +89,14 @@ public class GravityRun extends Game implements IGameServiceListener {
     @Override
     public void resume() {
         super.resume();
-
-        gsClient.onResume();
-    }
-
-    @Override
-    public void gsOnSessionActive() {
-    }
-
-    @Override
-    public void gsOnSessionInactive() {
-    }
-
-    @Override
-    public void gsShowErrorToUser(GsErrorType et, String msg, Throwable t) {
+        gpgs.onResume();
     }
 
     public void connect() {
-        if (gsClient.isSessionActive())
-            gsClient.signOut();
-        else {
-            gsClient.startSignInIntent();
-            /*if (!gsClient.logIn())
-                Gdx.app.error("GPGS_ERROR", "Cannot sign in");*/
-        }
+        if (gpgs.isConnected())
+            gpgs.signOut();
+        else
+            gpgs.startSignInIntent();
     }
 
     public void exit() {

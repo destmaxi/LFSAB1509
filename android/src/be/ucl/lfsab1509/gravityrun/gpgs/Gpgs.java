@@ -38,7 +38,15 @@ public class Gpgs implements IGpgs {
         signInSilently();
     }
 
+    public void incrementAchievement(String achievementId, int increment) {
+        Log.d(TAG, "incrementAchievement()");
+        if (isConnected())
+            Games.getAchievementsClient(context, mSignedInAccount)
+                    .increment(GpgsMappers.mapToGpgsAchievement(achievementId), increment);
+    }
+
     public boolean isConnected() {
+        Log.d(TAG, "isConnected()");
         return connected;
     }
 
@@ -54,8 +62,9 @@ public class Gpgs implements IGpgs {
                 if (message == null || message.isEmpty()) {
                     message = "Erreur de connexion";
                 }
-                new AlertDialog.Builder(context).setMessage(message)
-                        .setNeutralButton(android.R.string.ok, null).show();
+                new AlertDialog.Builder(context)
+                        .setMessage(message)
+                        .setNeutralButton(android.R.string.ok, null).show();    // TODO replace this message
             }
         }
     }
@@ -67,13 +76,14 @@ public class Gpgs implements IGpgs {
         mSignedInAccount = googleSignInAccount;
 
         PlayersClient playersClient = Games.getPlayersClient(context, googleSignInAccount);
-        playersClient.getCurrentPlayer().addOnSuccessListener(new OnSuccessListener<Player>() {
-            @Override
-            public void onSuccess(Player player) {
-                mDisplayName = player.getDisplayName();
-                mPlayerId = player.getPlayerId();
-            }
-        }); // TODO add onFailureListener
+        playersClient.getCurrentPlayer()
+                .addOnSuccessListener(new OnSuccessListener<Player>() {
+                    @Override
+                    public void onSuccess(Player player) {
+                        mDisplayName = player.getDisplayName();
+                        mPlayerId = player.getPlayerId();
+                    }
+                }); // TODO add onFailureListener
     }
 
     public void onDisconnected() {
@@ -86,49 +96,53 @@ public class Gpgs implements IGpgs {
     }
 
     public void onPause() {
-
+        Log.d(TAG, "onPause()");
     }
 
     public void onResume() {
+        Log.d(TAG, "onResume()");
         signInSilently();
     }
 
     public void onStop() {
-
+        Log.d(TAG, "onStop()");
     }
 
     public void signInSilently() {
         Log.d(TAG, "signInSilently()");
-        mGoogleSignInClient.silentSignIn().addOnCompleteListener(context, new OnCompleteListener<GoogleSignInAccount>() {
-            @Override
-            public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
-                if (task.isSuccessful()) {
-                    Log.d(TAG, "signInSilently(): success");
-                    mSignedInAccount = task.getResult();
-                    onConnected(mSignedInAccount);
-                } else {
-                    Log.d(TAG, "signInSilently(): failure", task.getException());
-                    onDisconnected();
-                }
-            }
-        });
+        mGoogleSignInClient.silentSignIn()
+                .addOnCompleteListener(context, new OnCompleteListener<GoogleSignInAccount>() {
+                    @Override
+                    public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "signInSilently(): success");
+                            mSignedInAccount = task.getResult();
+                            onConnected(mSignedInAccount);
+                        } else {
+                            Log.d(TAG, "signInSilently(): failure", task.getException());
+                            onDisconnected();
+                        }
+                    }
+                });
     }
 
     public void signOut() {
         Log.d(TAG, "signOut()");
-        mGoogleSignInClient.signOut().addOnCompleteListener(context, new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful())
-                    Log.d(TAG, "signOut(): success");
-                else
-                    Log.d(TAG, "signOut(): failure");
-                onDisconnected();
-            }
-        });
+        mGoogleSignInClient.signOut()
+                .addOnCompleteListener(context, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful())
+                            Log.d(TAG, "signOut(): success");
+                        else
+                            Log.d(TAG, "signOut(): failure");
+                        onDisconnected();
+                    }
+                });
     }
 
     public boolean showAchievements() {
+        Log.d(TAG, "showAchievements()");
         if (!isConnected())
             return false;
 
@@ -144,6 +158,7 @@ public class Gpgs implements IGpgs {
     }
 
     public boolean showLeaderboards() {
+        Log.d(TAG, "showLeaderboards()");
         if (!isConnected())
             return false;
 
@@ -165,9 +180,17 @@ public class Gpgs implements IGpgs {
     }
 
     public void submitScore(String leaderboardId, int score) {
+        Log.d(TAG, "submitScore()");
         if (isConnected())
             Games.getLeaderboardsClient(context, mSignedInAccount)
                     .submitScore(GpgsMappers.mapToGpgsLeaderBoard(leaderboardId), score);
+    }
+
+    public void unlockAchievement(String achievementId) {
+        Log.d(TAG, "unlockAchiement()");
+        if (isConnected())
+            Games.getAchievementsClient(context, mSignedInAccount)
+                    .unlock(GpgsMappers.mapToGpgsAchievement(achievementId));
     }
 
 }

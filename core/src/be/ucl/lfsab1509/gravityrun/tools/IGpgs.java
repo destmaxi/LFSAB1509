@@ -2,6 +2,8 @@ package be.ucl.lfsab1509.gravityrun.tools;
 
 public interface IGpgs {
 
+    void incrementAchievement(String achievementId, int increment);
+
     boolean isConnected();
 
     void onPause();
@@ -19,5 +21,7 @@ public interface IGpgs {
     void startSignInIntent();
 
     void submitScore(String leaderboardId, int score);
+
+    void unlockAchievement(String achievementId);
 
 }

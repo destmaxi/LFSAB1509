@@ -18,7 +18,7 @@ public interface IGpgs {
 
     boolean showLeaderboards();
 
-    void signIn();
+    void startSignInIntent();
 
     void submitScore(String leaderboardId, int score);
 

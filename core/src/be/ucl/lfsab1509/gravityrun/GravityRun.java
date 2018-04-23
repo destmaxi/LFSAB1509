@@ -93,7 +93,7 @@ public class GravityRun extends Game {
         if (gpgs.isSignedIn())
             gpgs.signOut();
         else
-            gpgs.signIn();
+            gpgs.startSignInIntent();
     }
 
     public void exit() {

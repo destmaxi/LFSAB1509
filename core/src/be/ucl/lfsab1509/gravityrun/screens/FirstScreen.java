@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class FirstScreen extends AbstractMenuScreen {
 
-    private boolean goingToMenuState = false;
+    private boolean goingToMenuScreen = false;
     private String username = game.i18n.format("username");
 
     public FirstScreen(GravityRun gravityRun) {
@@ -70,13 +70,13 @@ public class FirstScreen extends AbstractMenuScreen {
     @Override
     public void dispose() {
         super.dispose();
-        if (!goingToMenuState)
+        if (!goingToMenuScreen)
             disposeSkins();
     }
 
     @Override
     public void render(float dt) {
-        if (clickedBack() && !dialog) {
+        if (clickedBack() && openDialogs == 0) {
             disposeSkins();
             game.exit();
             return;
@@ -106,7 +106,7 @@ public class FirstScreen extends AbstractMenuScreen {
             spawnErrorDialog(game.i18n.format("error_username_default"), user.getUsernameError(username));
         } else {
             initUser();
-            goingToMenuState = true;
+            goingToMenuScreen = true;
             screenManager.set(new HomeScreen(game));
         }
     }

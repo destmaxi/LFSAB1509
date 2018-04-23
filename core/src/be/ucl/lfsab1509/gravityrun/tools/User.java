@@ -60,12 +60,12 @@ public class User {
     private ArrayList<Integer> convertStoA(String text) {
         Json json = new Json();
         if (text == null)
-            return new ArrayList<Integer>();
+            return new ArrayList<>();
         return json.fromJson(ArrayList.class, text);
     }
 
-    public Map<String, Object> toMap() {
-        HashMap<String, Object> map = new HashMap<String, Object>();
+    private Map<String, Object> toMap() {
+        HashMap<String, Object> map = new HashMap<>();
 
         map.put(USERNAME, username);
         map.put(DEB, convertAtoS(beginner));

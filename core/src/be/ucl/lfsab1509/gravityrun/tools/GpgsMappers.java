@@ -46,7 +46,6 @@ public class GpgsMappers {
 
         String gpgsId;
 
-        // TODO
         switch (independantId) {
             case LEADERBOARD + 1:
                 gpgsId = "CgkI0ITMmsAMEAIQAw";

@@ -33,25 +33,29 @@ public class Gpgs implements IGpgs {
 
     public Gpgs(Activity context) {
         Log.d(TAG, "Gpgs()");
+
         this.context = context;
         mGoogleSignInClient = GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
         signInSilently();
     }
 
     public void incrementAchievement(String achievementId, int increment) {
-        Log.d(TAG, "incrementAchievement()");
-        if (isConnected())
+        Log.d(TAG, "incrementAchievement() " + achievementId + " from " + increment);
+
+        if (isSignedIn())
             Games.getAchievementsClient(context, mSignedInAccount)
                     .increment(GpgsMappers.mapToGpgsAchievement(achievementId), increment);
     }
 
-    public boolean isConnected() {
-        Log.d(TAG, "isConnected()");
+    public boolean isSignedIn() {
+        Log.d(TAG, "isSignedIn()");
+
         return connected;
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "onActivityResult()");
+
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
@@ -69,8 +73,9 @@ public class Gpgs implements IGpgs {
         }
     }
 
-    public void onConnected(GoogleSignInAccount googleSignInAccount) {
+    private void onConnected(GoogleSignInAccount googleSignInAccount) {
         Log.d(TAG, "onConnected()");
+
         connected = true;
         mRealTimeMultiplayerClient = Games.getRealTimeMultiplayerClient(context, googleSignInAccount);
         mSignedInAccount = googleSignInAccount;
@@ -86,8 +91,9 @@ public class Gpgs implements IGpgs {
                 }); // TODO add onFailureListener
     }
 
-    public void onDisconnected() {
+    private void onDisconnected() {
         Log.d(TAG, "onDisconnected()");
+
         connected = false;
         mDisplayName = null;
         mPlayerId = null;
@@ -101,15 +107,20 @@ public class Gpgs implements IGpgs {
 
     public void onResume() {
         Log.d(TAG, "onResume()");
+
         signInSilently();
     }
 
-    public void onStop() {
-        Log.d(TAG, "onStop()");
+    public void signIn() {
+        Log.d(TAG, "signIn()");
+
+        Intent intent = mGoogleSignInClient.getSignInIntent();
+        context.startActivityForResult(intent, RC_SIGN_IN);
     }
 
     public void signInSilently() {
         Log.d(TAG, "signInSilently()");
+
         mGoogleSignInClient.silentSignIn()
                 .addOnCompleteListener(context, new OnCompleteListener<GoogleSignInAccount>() {
                     @Override
@@ -128,6 +139,7 @@ public class Gpgs implements IGpgs {
 
     public void signOut() {
         Log.d(TAG, "signOut()");
+
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(context, new OnCompleteListener<Void>() {
                     @Override
@@ -143,7 +155,8 @@ public class Gpgs implements IGpgs {
 
     public boolean showAchievements() {
         Log.d(TAG, "showAchievements()");
-        if (!isConnected())
+
+        if (!isSignedIn())
             return false;
 
         Games.getAchievementsClient(context, mSignedInAccount)
@@ -159,7 +172,8 @@ public class Gpgs implements IGpgs {
 
     public boolean showLeaderboards() {
         Log.d(TAG, "showLeaderboards()");
-        if (!isConnected())
+
+        if (!isSignedIn())
             return false;
 
         Games.getLeaderboardsClient(context, mSignedInAccount)
@@ -173,22 +187,18 @@ public class Gpgs implements IGpgs {
         return true;
     }
 
-    public void startSignInIntent() {
-        Log.d(TAG, "startSignInIntent()");
-        Intent intent = mGoogleSignInClient.getSignInIntent();
-        context.startActivityForResult(intent, RC_SIGN_IN);
-    }
-
     public void submitScore(String leaderboardId, int score) {
-        Log.d(TAG, "submitScore()");
-        if (isConnected())
+        Log.d(TAG, "submitScore() " + score + " on " + leaderboardId);
+
+        if (isSignedIn())
             Games.getLeaderboardsClient(context, mSignedInAccount)
                     .submitScore(GpgsMappers.mapToGpgsLeaderBoard(leaderboardId), score);
     }
 
     public void unlockAchievement(String achievementId) {
-        Log.d(TAG, "unlockAchiement()");
-        if (isConnected())
+        Log.d(TAG, "unlockAchiement() " + achievementId);
+
+        if (isSignedIn())
             Games.getAchievementsClient(context, mSignedInAccount)
                     .unlock(GpgsMappers.mapToGpgsAchievement(achievementId));
     }

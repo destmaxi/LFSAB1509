@@ -48,8 +48,6 @@ public class GravityRun extends Game {
         soundManager = new SoundManager();
         spriteBatch = new SpriteBatch();
 
-        gpgs.onResume();
-
         preferences = Gdx.app.getPreferences("Player");
         preferences.flush();
 
@@ -74,7 +72,6 @@ public class GravityRun extends Game {
     @Override
     public void pause() {
         super.pause();
-
         gpgs.onPause();
     }
 
@@ -93,10 +90,10 @@ public class GravityRun extends Game {
     }
 
     public void connect() {
-        if (gpgs.isConnected())
+        if (gpgs.isSignedIn())
             gpgs.signOut();
         else
-            gpgs.startSignInIntent();
+            gpgs.signIn();
     }
 
     public void exit() {

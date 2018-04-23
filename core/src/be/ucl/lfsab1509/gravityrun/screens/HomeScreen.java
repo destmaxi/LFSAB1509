@@ -149,9 +149,9 @@ public class HomeScreen extends AbstractMenuScreen {
     }
 
     private void refreshButtons() {
-        achievementsButton.setChecked(game.gpgs.isConnected());
-        gpgsButton.setChecked(game.gpgs.isConnected());
-        leaderboardsButton.setChecked(game.gpgs.isConnected());
+        achievementsButton.setChecked(game.gpgs.isSignedIn());
+        gpgsButton.setChecked(game.gpgs.isSignedIn());
+        leaderboardsButton.setChecked(game.gpgs.isSignedIn());
     }
 
 }

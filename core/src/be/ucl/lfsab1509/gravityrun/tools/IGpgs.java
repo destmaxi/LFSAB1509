@@ -4,7 +4,7 @@ public interface IGpgs {
 
     void incrementAchievement(String achievementId, int increment);
 
-    boolean isConnected();
+    boolean isSignedIn();
 
     void onPause();
 
@@ -18,7 +18,7 @@ public interface IGpgs {
 
     boolean showLeaderboards();
 
-    void startSignInIntent();
+    void signIn();
 
     void submitScore(String leaderboardId, int score);
 

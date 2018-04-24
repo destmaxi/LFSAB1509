@@ -35,4 +35,8 @@ public class ScreenManager {
         game.setScreen(screens.peek());
     }
 
+    void errorMessage(String message) {
+
+    }
+
 }

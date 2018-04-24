@@ -1,9 +1,6 @@
 package be.ucl.lfsab1509.gravityrun;
 
-import be.ucl.lfsab1509.gravityrun.screens.FirstScreen;
-import be.ucl.lfsab1509.gravityrun.screens.HomeScreen;
-import be.ucl.lfsab1509.gravityrun.screens.Screen;
-import be.ucl.lfsab1509.gravityrun.screens.ScreenManager;
+import be.ucl.lfsab1509.gravityrun.screens.*;
 import be.ucl.lfsab1509.gravityrun.tools.IGpgs;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 import be.ucl.lfsab1509.gravityrun.tools.User;
@@ -99,6 +96,10 @@ public class GravityRun extends Game {
     public void exit() {
         dispose();
         Gdx.app.exit();
+    }
+
+    void errorMessage(String message) {
+        ((AbstractMenuScreen) getScreen()).spawnErrorDialog("Erreur", message);
     }
 
 }

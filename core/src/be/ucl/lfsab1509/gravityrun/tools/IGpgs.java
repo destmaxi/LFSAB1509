@@ -16,11 +16,11 @@ public interface IGpgs {
 
     void signOut();
 
-    boolean showAchievements();
+    void showAchievements();
 
     void showInvitationInbox();
 
-    boolean showLeaderboards();
+    void showLeaderboards();
 
     void startQuickGame(long role);
 

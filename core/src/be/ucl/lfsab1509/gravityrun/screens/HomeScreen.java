@@ -37,8 +37,7 @@ public class HomeScreen extends AbstractMenuScreen {
         achievementsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (!game.gpgs.showAchievements())
-                    spawnErrorDialog(game.i18n.format("error"), game.i18n.format("error_gpgs_achievements"));
+                game.gpgs.showAchievements();
             }
         });
         stage.addActor(achievementsButton);
@@ -66,8 +65,7 @@ public class HomeScreen extends AbstractMenuScreen {
         leaderboardsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (!game.gpgs.showLeaderboards())
-                    spawnErrorDialog(game.i18n.format("error"), game.i18n.format("error_gpgs_leaderboards"));
+                game.gpgs.showLeaderboards();
             }
         });
         stage.addActor(leaderboardsButton);

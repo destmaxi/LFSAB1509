@@ -1,7 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.gpgs;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -19,6 +18,7 @@ import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.Multiplayer;
 import com.google.android.gms.games.multiplayer.realtime.RoomConfig;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
@@ -26,12 +26,14 @@ import java.util.ArrayList;
 
 public class Gpgs2 extends Gpgs implements IGpgs {
 
-    public Gpgs2(Activity context) {
+    public Gpgs2(Activity context, ErrorCallback errorCallback) {
         super();
         Log.d(TAG, "Gpgs2()");
 
         this.context = context;
-        mGoogleSignInClient = GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
+        this.mGoogleSignInClient = GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
+        this.errorCallback = errorCallback;
+
         signInSilently();
     }
 
@@ -48,9 +50,7 @@ public class Gpgs2 extends Gpgs implements IGpgs {
                 if (message == null || message.isEmpty()) {
                     message = "Erreur de connexion";
                 }
-                new AlertDialog.Builder(context)
-                        .setMessage(message)
-                        .setNeutralButton(android.R.string.ok, null).show();    // TODO replace this message
+                errorCallback.error(message);
             }
         } else if (requestCode == RC_SELECT_PLAYERS) {
             if (resultCode != Activity.RESULT_OK)
@@ -125,7 +125,12 @@ public class Gpgs2 extends Gpgs implements IGpgs {
                         mDisplayName = player.getDisplayName();
                         mPlayerId = player.getPlayerId();
                     }
-                });
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                errorCallback.error("Erreur lors de la récupération des données de l'utilisateur.");
+            }
+        });
     }
 
     private void onDisconnected() {
@@ -182,7 +187,12 @@ public class Gpgs2 extends Gpgs implements IGpgs {
                             onDisconnected();
                         }
                     }
-                });
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                errorCallback.error("Erreur lors de la tentative de connexion.");
+            }
+        });
     }
 
     public void signOut() {
@@ -198,7 +208,12 @@ public class Gpgs2 extends Gpgs implements IGpgs {
                             Log.d(TAG, "signOut(): failure");
                         onDisconnected();
                     }
-                });
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                errorCallback.error("Erreur lors de la tentative de déconnexion.");
+            }
+        });
     }
 
     public void startSignInIntent() {
@@ -218,11 +233,13 @@ public class Gpgs2 extends Gpgs implements IGpgs {
             mAchievementsClient.increment(GpgsMappers.mapToGpgsAchievement(achievementId), increment);
     }
 
-    public boolean showAchievements() {
+    public void showAchievements() {
         Log.d(TAG, "showAchievements()");
 
-        if (!isSignedIn())
-            return false;
+        if (!isSignedIn()) {
+            errorCallback.error("Vous n'êtes pas connecté.");
+            return;
+        }
 
         mAchievementsClient.getAchievementsIntent()
                 .addOnSuccessListener(new OnSuccessListener<Intent>() {
@@ -230,15 +247,21 @@ public class Gpgs2 extends Gpgs implements IGpgs {
                     public void onSuccess(Intent intent) {
                         context.startActivityForResult(intent, RC_ACHIEVEMENT_UI);
                     }
-                });
-        return true;
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                errorCallback.error("Erreur lors de l'affichage des Réussites.");
+            }
+        });
     }
 
-    public boolean showLeaderboards() {
+    public void showLeaderboards() {
         Log.d(TAG, "showLeaderboards()");
 
-        if (!isSignedIn())
-            return false;
+        if (!isSignedIn()) {
+            errorCallback.error("Vous n'êtes pas connecté.");
+            return;
+        }
 
         mLeaderboardsClient.getAllLeaderboardsIntent()
                 .addOnSuccessListener(new OnSuccessListener<Intent>() {
@@ -246,8 +269,12 @@ public class Gpgs2 extends Gpgs implements IGpgs {
                     public void onSuccess(Intent intent) {
                         context.startActivityForResult(intent, RC_LEADERBOARD_UI);
                     }
-                });
-        return true;
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                errorCallback.error("Erreur lors de l'affichage des Classements.");
+            }
+        });
     }
 
     public void submitScore(String leaderboardId, int score) {

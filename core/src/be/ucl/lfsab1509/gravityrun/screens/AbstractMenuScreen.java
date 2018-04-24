@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 
-abstract class AbstractMenuScreen extends Screen {
+public abstract class AbstractMenuScreen extends Screen {
 
     boolean dialog = false;
     float containerHeight, containerWidth;
@@ -52,7 +52,7 @@ abstract class AbstractMenuScreen extends Screen {
         stage.addActor(tableContainer);
     }
 
-    void spawnErrorDialog(String title, String message) {
+    public void spawnErrorDialog(String title, String message) {
         Dialog errorDialog;
         Label errorLabel;
         TextButton okButton;

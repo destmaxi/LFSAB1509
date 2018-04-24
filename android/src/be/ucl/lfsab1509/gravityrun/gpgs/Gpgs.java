@@ -6,10 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.games.*;
 import com.google.android.gms.games.multiplayer.Invitation;
 import com.google.android.gms.games.multiplayer.InvitationCallback;
@@ -17,6 +15,7 @@ import com.google.android.gms.games.multiplayer.Multiplayer;
 import com.google.android.gms.games.multiplayer.Participant;
 import com.google.android.gms.games.multiplayer.realtime.*;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
@@ -38,6 +37,7 @@ public class Gpgs {
     AchievementsClient mAchievementsClient = null;
     Activity context;
     boolean connected = false, mPlaying = false, mWaitingRoomFinishedFromCode = false;
+    ErrorCallback errorCallback;
     GamesClient mGamesClient = null;
     GoogleSignInClient mGoogleSignInClient;
     GoogleSignInAccount mSignedInAccount = null;
@@ -49,6 +49,7 @@ public class Gpgs {
     Room mRoom;
     RoomConfig mJoinedRoomConfig;
     Set<String> mFinishedRacers;
+    StartGameCallback startGameCallback;
     String mDisplayName = null, mMyParticipantId = null, mPlayerId = null;
 
     /*
@@ -69,7 +70,12 @@ public class Gpgs {
                                               }
                                           }
                                       }
-                );
+                ).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                errorCallback.error("Erreur lors de la vérification des Invitations");
+            }
+        });
     }
 
     boolean haveAllRacersFinished(Room room) {
@@ -91,7 +97,12 @@ public class Gpgs {
                     public void onSuccess(Intent intent) {
                         context.startActivityForResult(intent, RC_SELECT_PLAYERS);
                     }
-                });
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                errorCallback.error("Erreur lors de l'invitation des autres joueurs.");
+            }
+        });
     }
 
     private void onStartGameMessageReceived() {
@@ -108,6 +119,11 @@ public class Gpgs {
                             public void onComplete(@NonNull Task<Integer> task) {
                                 // Keep track of which messages are sent, if desired.
                                 recordMessageToken(task.getResult());
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                errorCallback.error("Erreur lors de l'envoi des données");
                             }
                         });
             }
@@ -141,7 +157,12 @@ public class Gpgs {
                     public void onSuccess(Intent intent) {
                         context.startActivityForResult(intent, RC_INVITATION_INBOX);
                     }
-                });
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                errorCallback.error("Impossible de charger les Invitations.");
+            }
+        });
     }
 
     private void showWaitingRoom(Room room, int maxPlayersToStartGame) {
@@ -151,7 +172,12 @@ public class Gpgs {
                     public void onSuccess(Intent intent) {
                         context.startActivityForResult(intent, RC_WAITING_ROOM);
                     }
-                });
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                errorCallback.error("Erreur lors de l'affichage de la salle d'attente");
+            }
+        });
     }
 
     public void startQuickGame(long role) {
@@ -259,7 +285,12 @@ public class Gpgs {
                         public void onSuccess(String playerId) {
                             mMyParticipantId = mRoom.getParticipantId(playerId);
                         }
-                    });
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    errorCallback.error("Erreur lors de la connexion à la salle.");
+                }
+            });
         }
 
         @Override
@@ -339,7 +370,11 @@ public class Gpgs {
         }
     };
 
-    interface StartGameCallback {
+    public interface ErrorCallback {
+        void error(String message);
+    }
+
+    public interface StartGameCallback {
         void startGame();
     }
 

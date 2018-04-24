@@ -25,9 +25,14 @@ public class AndroidLauncher extends AndroidApplication {
 
         Fabric.with(this, new Crashlytics());
 
-        gpgs = new Gpgs2(this);
+        final GravityRun game = new GravityRun();
+        gpgs = new Gpgs2(this, new Gpgs.ErrorCallback() {
+            @Override
+            public void error(String message) {
+                game.errorMessage(message);
+            }
+        });
 
-        GravityRun game = new GravityRun();
         game.gpgs = gpgs;
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);

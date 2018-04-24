@@ -86,7 +86,8 @@ public class HomeScreen extends AbstractMenuScreen {
         scoreBoardButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                screenManager.push(new ScoreboardScreen(game));
+//                screenManager.push(new ScoreboardScreen(game));
+                game.gpgs.invitePlayers();
             }
         });
         TextButton optionButton = new TextButton(game.i18n.format("option"), tableSkin, "round");

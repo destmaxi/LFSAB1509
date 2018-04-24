@@ -16,11 +16,12 @@ public class SoundManager {
 
     public SoundManager() {
         this.bonus = Gdx.audio.newSound(Gdx.files.internal("sounds/bonus.wav"));
-        this.gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/6_symphony.mp3"));
+        this.gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/Game.mp3"));
         this.marbleBreak = Gdx.audio.newSound(Gdx.files.internal("sounds/break.wav"));
-        this.menuMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/2_suite_holst.mp3"));
+        this.menuMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/Menu.mp3"));
         gameMusic.setLooping(true);
         menuMusic.setLooping(true);
+        gameMusic.setVolume(0.8f);
     }
 
     public void dispose() {

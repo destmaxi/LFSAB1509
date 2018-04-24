@@ -1,0 +1,22 @@
+Music:
+	Menu:
+	"Hiding Your Reality" Kevin MacLeod (incompetech.com)
+	Licensed under Creative Commons: By Attribution 3.0 License
+	http://creativecommons.org/licenses/by/3.0/
+
+	Game:
+	"Movement Proposition" Kevin MacLeod (incompetech.com)
+	Licensed under Creative Commons: By Attribution 3.0 License
+	http://creativecommons.org/licenses/by/3.0/
+	Slightly edited (pitch lowered).
+
+Sounds:
+	Bonus:
+	"Glass Ping" by Go445 at soundbible.com/2084-Glagg-Ping.html
+	Licensed under Creative Commons: Attribution Non commercial 3.0 License
+	https://creativecommons.org/licenses/by-nc/3.0/
+
+	Death:
+	"Glass Ping" by Mike Koenig at soundbible.com/1658-Mirror-Breaking.html
+	Licensed under Creative Commons: Attribution 3.0 License
+	https://creativecommons.org/licenses/by/3.0/

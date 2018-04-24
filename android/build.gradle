@@ -41,6 +41,11 @@ android {
         exclude 'META-INF/robovm/ios/robovm.xml'
     }
 
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+
     defaultConfig {
         applicationId "be.ucl.lfsab1509.gravityrun"
         minSdkVersion 15

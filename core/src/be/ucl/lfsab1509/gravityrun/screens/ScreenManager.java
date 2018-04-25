@@ -11,7 +11,7 @@ public class ScreenManager {
 
     public ScreenManager(GravityRun game) {
         this.game = game;
-        screens = new Stack<Screen>();
+        screens = new Stack<>();
     }
 
     public void disposeAll() {
@@ -20,8 +20,9 @@ public class ScreenManager {
     }
 
     void pop() {
-        screens.pop().dispose();
+        Screen oldScreen = screens.pop();
         game.setScreen(screens.peek());
+        oldScreen.dispose();
     }
 
     public void push(Screen screen) {
@@ -30,9 +31,9 @@ public class ScreenManager {
     }
 
     void set(Screen screen) {
-        screens.pop().dispose();
+        Screen oldScreen = screens.pop();
         screens.push(screen);
         game.setScreen(screens.peek());
+        oldScreen.dispose();
     }
-
 }

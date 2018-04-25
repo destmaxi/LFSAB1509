@@ -22,7 +22,7 @@ abstract class AbstractMenuScreen extends Screen {
         containerHeight = height * .9f;
         containerWidth = width * .9f;
 
-        stage = new Stage(new ScreenViewport());
+        stage = new Stage(new ScreenViewport(), game.spriteBatch);
     }
 
     @Override
@@ -53,8 +53,6 @@ abstract class AbstractMenuScreen extends Screen {
     }
 
     public interface DialogResultMethod {
-        Dialog dialog = null;
-
         /**
          * Action à effectuer lors de la sortie de la boîte de dialogue (appui sur un bouton ou sur une touche).
          *

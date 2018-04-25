@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="be.ucl.lfsab1509.gravityrun">
 
-    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="27"/>
     <uses-feature android:name="android.hardware.sensor.gyroscope" android:required="true" />
 
     <application

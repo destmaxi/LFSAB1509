@@ -48,7 +48,7 @@ public class PlayScreen extends Screen {
         camera.setToOrtho(false, width, height);
 
         if (game.scoreList == null)
-            game.scoreList = new ArrayList<Integer>();
+            game.scoreList = new ArrayList<>();
 
         calculateStandardWidth();
 
@@ -61,15 +61,15 @@ public class PlayScreen extends Screen {
         Invincible.resetBonus();
         SlowDown.resetBonus();
 
-        bonuses = new Array<Bonus>();
-        catchedBonuses = new Array<Bonus>();
-        obstacles = new Array<Obstacle>();
+        bonuses = new Array<>();
+        catchedBonuses = new Array<>();
+        obstacles = new Array<>();
 
         background = new Texture("drawable-" + STANDARD_WIDTH + "/background.png");
         gameOverImage = new Texture("drawable-" + STANDARD_WIDTH + "/gameover.png");
         pauseImage = new Texture("drawable-" + STANDARD_WIDTH + "/pause.png");
 
-        backgroundPositions = new Array<Vector2>();
+        backgroundPositions = new Array<>();
         for (int i = 0; i < 3; i++)
             backgroundPositions.add(new Vector2((width - background.getWidth()) / 2, -height / 2 + i * background.getHeight()));
 
@@ -91,7 +91,7 @@ public class PlayScreen extends Screen {
 
         // TODO: mettre des coeurs pour montrer le nombre de vie restante
 
-        scoreStage = new Stage(new ScreenViewport());
+        scoreStage = new Stage(new ScreenViewport(), game.spriteBatch);
         scoreStage.addActor(scoreLabel);
         scoreStage.addActor(pauseButton);
 

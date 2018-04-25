@@ -45,12 +45,13 @@ public class OptionScreen extends AbstractMenuScreen {
         table.add(lvlButton).colspan(2).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
 
         initStage(table);
+        user.write();
+        super.hide();
     }
 
     @Override
     public void render(float dt) {
         if (clickedBack() && openDialogs == 0) {
-            user.write(); // TODO le retirer du coup
             screenManager.pop();
             return;
         }

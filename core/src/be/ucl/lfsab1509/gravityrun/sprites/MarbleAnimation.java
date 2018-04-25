@@ -17,7 +17,7 @@ public class MarbleAnimation {
 
     MarbleAnimation(Texture marbles, float standardWidth) {
         TextureRegion region = new TextureRegion(marbles);
-        frames = new Array<Array<TextureRegion>>();
+        frames = new Array<>();
         for (int i = 0; i < MARBLE_COUNT; i++) {
             frames.add(new Array<TextureRegion>());
             for (int j = 0; j < FRAME_COUNT; j++) {

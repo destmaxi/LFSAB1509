@@ -69,7 +69,7 @@ public class GameOverScreen extends AbstractMenuScreen {
             if (userList != null)
                 Collections.sort(userList);
             else
-                userList = new ArrayList<Integer>();
+                userList = new ArrayList<>();
 
             if (!userList.contains(score) && userList.size() < 3)
                 userList.add(score);

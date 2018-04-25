@@ -34,7 +34,7 @@ public class ScoreboardScreen extends AbstractMenuScreen {
             int length;
 
             if (myArrayList != null) {
-                Collections.sort(myArrayList, Collections.<Integer>reverseOrder());
+                Collections.sort(myArrayList, Collections.reverseOrder());
                 length = myArrayList.size();
             } else
                 length = 0;

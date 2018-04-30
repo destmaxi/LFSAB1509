@@ -17,9 +17,9 @@ public class OptionScreen extends AbstractMenuScreen {
 
         username = user.getUsername();
 
-        Label title = new Label(game.i18n.get("option"), titleSkin, "title");
+        Label title = new Label(game.i18n.get("option"), game.titleSkin, "title");
 
-        TextButton usernameButton = new TextButton(game.i18n.format("edit_username"), tableSkin, "round");
+        TextButton usernameButton = new TextButton(game.i18n.format("edit_username"), game.tableSkin, "round");
         usernameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -28,7 +28,7 @@ public class OptionScreen extends AbstractMenuScreen {
         });
 
 
-        TextButton lvlButton = new TextButton(game.i18n.format("choose_lvl"), tableSkin, "round");
+        TextButton lvlButton = new TextButton(game.i18n.format("choose_lvl"), game.tableSkin, "round");
         lvlButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -45,23 +45,22 @@ public class OptionScreen extends AbstractMenuScreen {
         table.add(lvlButton).colspan(2).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
 
         initStage(table);
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+    }
+
+    @Override
+    public void hide() {
         user.write();
         super.hide();
     }
 
-    @Override
-    public void render(float dt) {
-        if (clickedBack() && openDialogs == 0) {
-            screenManager.pop();
-            return;
-        }
-
-        super.render(dt);
-    }
-
     private void popUsernameDialog() {
         Gdx.input.setOnscreenKeyboardVisible(false);
-        TextField usernameField = new TextField(username, tableSkin);
+        TextField usernameField = new TextField(username, game.tableSkin);
         usernameField.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -85,7 +84,7 @@ public class OptionScreen extends AbstractMenuScreen {
     }
 
     private void popLevelSelectionDialog() {
-        List<String> levelSelectionList = new List<>(aaronScoreSkin);
+        List<String> levelSelectionList = new List<>(game.aaronScoreSkin);
         levelSelectionList.setItems(game.i18n.format("beginner"), game.i18n.format("inter"), game.i18n.format("expert"));
         levelSelectionList.setSelectedIndex(user.getIndexSelected());
         levelSelectionList.setAlignment(Align.center);

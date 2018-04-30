@@ -13,14 +13,14 @@ public class PauseScreen extends AbstractMenuScreen {
     PauseScreen(GravityRun gravityRun) {
         super(gravityRun);
 
-        TextButton continueButton = new TextButton(game.i18n.format("continue"), tableSkin, "round");
+        TextButton continueButton = new TextButton(game.i18n.format("continue"), game.tableSkin, "round");
         continueButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 screenManager.pop();
             }
         });
-        TextButton quitButton = new TextButton(game.i18n.format("quit"), tableSkin, "round");
+        TextButton quitButton = new TextButton(game.i18n.format("quit"), game.tableSkin, "round");
         quitButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -29,8 +29,8 @@ public class PauseScreen extends AbstractMenuScreen {
             }
         });
 
-        Label score = new Label(game.i18n.format("score", PlayScreen.score), aaronScoreSkin);
-        Label title = new Label(game.i18n.format("pause"), titleSkin, "title");
+        Label score = new Label(game.i18n.format("score", PlayScreen.score), game.aaronScoreSkin);
+        Label title = new Label(game.i18n.format("pause"), game.titleSkin, "title");
 
         Table table = new Table();
         table.add(title).top();
@@ -43,15 +43,4 @@ public class PauseScreen extends AbstractMenuScreen {
 
         initStage(table);
     }
-
-    @Override
-    public void render(float dt) {
-        if (clickedBack()) {
-            screenManager.pop();
-            return;
-        }
-
-        super.render(dt);
-    }
-
 }

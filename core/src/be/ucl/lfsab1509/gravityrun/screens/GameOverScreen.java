@@ -21,14 +21,14 @@ public class GameOverScreen extends AbstractMenuScreen {
             if (score > userList.get(user.getIndexSelected()))
                 userList.set(user.getIndexSelected(), score);
 
-        TextButton menuButton = new TextButton(game.i18n.format("menu"), tableSkin, "round");
+        TextButton menuButton = new TextButton(game.i18n.format("menu"), game.tableSkin, "round");
         menuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 handleReturn();
             }
         });
-        TextButton replayButton = new TextButton(game.i18n.format("replay"), tableSkin, "round");
+        TextButton replayButton = new TextButton(game.i18n.format("replay"), game.tableSkin, "round");
         replayButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -36,9 +36,9 @@ public class GameOverScreen extends AbstractMenuScreen {
             }
         });
 
-        Label highScore = new Label(game.i18n.format("high_score", user.getHighScore().get(user.getIndexSelected())), aaronScoreSkin);
-        Label score = new Label(game.i18n.format("final_score", PlayScreen.score), aaronScoreSkin);
-        Label title = new Label(game.i18n.format("game_over"), titleSkin, "title");
+        Label highScore = new Label(game.i18n.format("high_score", user.getHighScore().get(user.getIndexSelected())), game.aaronScoreSkin);
+        Label score = new Label(game.i18n.format("final_score", PlayScreen.score), game.aaronScoreSkin);
+        Label title = new Label(game.i18n.format("game_over"), game.titleSkin, "title");
 
         Table table = new Table();
         table.add(title).top();

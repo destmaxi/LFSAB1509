@@ -16,15 +16,14 @@ import java.util.ArrayList;
 
 public class FirstScreen extends AbstractMenuScreen {
 
-    private boolean goingToMenuScreen = false;
     private String username = game.i18n.format("username");
 
     public FirstScreen(GravityRun gravityRun) {
         super(gravityRun);
 
-        Label title = new Label(game.i18n.format("welcome"), titleSkin, "title");
+        Label title = new Label(game.i18n.format("welcome"), game.titleSkin, "title");
 
-        final TextButton startButton = new TextButton(game.i18n.format("start"), tableSkin, "round");
+        final TextButton startButton = new TextButton(game.i18n.format("start"), game.tableSkin, "round");
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -32,7 +31,7 @@ public class FirstScreen extends AbstractMenuScreen {
                 validateUsername();
             }
         });
-        final TextField usernameField = new TextField(username, tableSkin);
+        final TextField usernameField = new TextField(username, game.tableSkin);
         usernameField.setText(username);
         usernameField.setMessageText(game.i18n.format("username"));
         usernameField.addListener(new ClickListener() {
@@ -67,34 +66,16 @@ public class FirstScreen extends AbstractMenuScreen {
         initStage(table);
     }
 
-    @Override
-    public void dispose() {
-        super.dispose();
-        if (!goingToMenuScreen)
-            disposeSkins();
-    }
-
-    @Override
-    public void render(float dt) {
-        if (clickedBack() && openDialogs == 0) {
-            disposeSkins();
-            game.exit();
-            return;
-        }
-
-        super.render(dt);
-    }
-
     private void initUser() {
-        ArrayList<Integer> arrayList = new ArrayList<Integer>();
+        ArrayList<Integer> arrayList = new ArrayList<>();
         for (int i = 0; i < 3; i++)
             arrayList.add(0);
 
         user.setUsername(username);
         user.setFirstTimeTrue();
-        user.setBeginner(new ArrayList<Integer>());
-        user.setInter(new ArrayList<Integer>());
-        user.setExpert(new ArrayList<Integer>());
+        user.setBeginner(new ArrayList<>());
+        user.setInter(new ArrayList<>());
+        user.setExpert(new ArrayList<>());
         user.setIndexSelected(1);
         user.setHighScore(arrayList);
 
@@ -106,7 +87,6 @@ public class FirstScreen extends AbstractMenuScreen {
             spawnErrorDialog(game.i18n.format("error_username_default"), user.getUsernameError(username));
         } else {
             initUser();
-            goingToMenuScreen = true;
             screenManager.set(new HomeScreen(game));
         }
     }

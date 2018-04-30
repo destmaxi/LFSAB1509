@@ -21,4 +21,11 @@ public class AndroidLauncher extends AndroidApplication {
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		initialize(new GravityRun(), config);
 	}
+
+	@Override
+	protected void onDestroy() {
+		System.out.println("Activity going to dispose");
+		super.onDestroy();
+		System.out.println("Activity disposed");
+	}
 }

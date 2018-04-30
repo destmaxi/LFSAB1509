@@ -82,7 +82,7 @@ public class PlayScreen extends Screen {
             }
         });
 
-        scoreLabel = new Label(game.i18n.format("score"), aaronScoreSkin, "score");
+        scoreLabel = new Label(game.i18n.format("score"), game.aaronScoreSkin, "score");
         scoreLabel.setText(game.i18n.format("score", score));
 
         // TODO ça prend 100-200 msec

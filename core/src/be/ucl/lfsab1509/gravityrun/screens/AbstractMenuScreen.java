@@ -32,6 +32,11 @@ abstract class AbstractMenuScreen extends Screen {
 
     @Override
     public void render(float dt) {
+        if (clickedBack() && openDialogs == 0) {
+            screenManager.pop();
+            return;
+        }
+
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
     }
@@ -71,7 +76,7 @@ abstract class AbstractMenuScreen extends Screen {
         private DialogResultMethod resultMethod;
 
         EmptyButtonsDialog(String title, Table content, DialogResultMethod resultMethod) {
-            super(title, tableSkin);
+            super(title, game.tableSkin);
             this.resultMethod = resultMethod;
             this.getContentTable().add(content);
             this.key(Input.Keys.BACK, false).key(Input.Keys.ESCAPE, false);
@@ -107,7 +112,7 @@ abstract class AbstractMenuScreen extends Screen {
     class MessageDialog extends EmptyButtonsDialog {
         MessageDialog(String title, Table content, DialogResultMethod resultMethod) {
             super(title, content, resultMethod);
-            TextButton okButton = new TextButton(game.i18n.format("ok"), aaronScoreSkin, "round");
+            TextButton okButton = new TextButton(game.i18n.format("ok"), game.aaronScoreSkin, "round");
             this.button(okButton, true).key(Input.Keys.ENTER, true);
         }
     }
@@ -119,13 +124,13 @@ abstract class AbstractMenuScreen extends Screen {
     class EditDialog extends MessageDialog {
         EditDialog(String title, Table content, DialogResultMethod resultMethod) {
             super(title, content, resultMethod);
-            TextButton cancelButton = new TextButton(game.i18n.format("cancel"), aaronScoreSkin, "round");
+            TextButton cancelButton = new TextButton(game.i18n.format("cancel"), game.aaronScoreSkin, "round");
             this.button(cancelButton, false);
         }
     }
 
     void spawnErrorDialog(String title, String message) {
-        Label errorLabel = new Label(message, aaronScoreSkin);
+        Label errorLabel = new Label(message, game.aaronScoreSkin);
         errorLabel.setAlignment(Align.center); // Pour que le texte soit centré à l'intérieur du label, sinon c'est moche
         errorLabel.setWrap(true); // Longs labels
         Table content = new Table();

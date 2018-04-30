@@ -21,8 +21,13 @@ public class ScreenManager {
 
     void pop() {
         Screen oldScreen = screens.pop();
-        game.setScreen(screens.peek());
-        oldScreen.dispose();
+        if (screens.empty()) {
+            oldScreen.dispose();
+            game.exit();
+        } else {
+            game.setScreen(screens.peek());
+            oldScreen.dispose();
+        }
     }
 
     public void push(Screen screen) {

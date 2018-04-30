@@ -15,15 +15,15 @@ public class ScoreboardScreen extends AbstractMenuScreen {
     ScoreboardScreen(GravityRun gravityRun) {
         super(gravityRun);
 
-        Label title = new Label(game.i18n.format("my_score"), titleSkin, "title");
+        Label title = new Label(game.i18n.format("my_score"), game.titleSkin, "title");
 
-        Label beginnerLabel = new Label(game.i18n.format("beginner") + " :", labelScoreBoardSkin, "round");
-        Label intermediateLabel = new Label(game.i18n.format("inter") + " :", labelScoreBoardSkin, "round");
-        Label expertLabel = new Label(game.i18n.format("expert") + " :", labelScoreBoardSkin, "round");
+        Label beginnerLabel = new Label(game.i18n.format("beginner") + " :", game.labelScoreBoardSkin, "round");
+        Label intermediateLabel = new Label(game.i18n.format("inter") + " :", game.labelScoreBoardSkin, "round");
+        Label expertLabel = new Label(game.i18n.format("expert") + " :", game.labelScoreBoardSkin, "round");
 
-        List beginnerScoreList = new List(tableScoreBoardSkin);
-        List intermediateScoreList = new List(tableScoreBoardSkin);
-        List expertScoreList = new List(tableScoreBoardSkin);
+        List beginnerScoreList = new List(game.tableScoreBoardSkin);
+        List intermediateScoreList = new List(game.tableScoreBoardSkin);
+        List expertScoreList = new List(game.tableScoreBoardSkin);
 
         java.util.List[] lists = {user.getBeginner(), user.getInter(), user.getExpert()};
         List[] list = {beginnerScoreList, intermediateScoreList, expertScoreList};
@@ -69,15 +69,4 @@ public class ScoreboardScreen extends AbstractMenuScreen {
 
         initStage(table);
     }
-
-    @Override
-    public void render(float dt) {
-        if (clickedBack()) {
-            screenManager.pop();
-            return;
-        }
-
-        super.render(dt);
-    }
-
 }

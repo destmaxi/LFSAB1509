@@ -16,9 +16,9 @@ public class HomeScreen extends AbstractMenuScreen {
     public HomeScreen(GravityRun gravityRun) {
         super(gravityRun);
 
-        Label title = new Label(game.i18n.format("menu"), titleSkin, "title");
+        Label title = new Label(game.i18n.format("menu"), game.titleSkin, "title");
 
-        TextButton startGameButton = new TextButton(game.i18n.format("new_game"), tableSkin, "round");
+        TextButton startGameButton = new TextButton(game.i18n.format("new_game"), game.tableSkin, "round");
         startGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -26,14 +26,14 @@ public class HomeScreen extends AbstractMenuScreen {
                 screenManager.push(new PlayScreen(game));
             }
         });
-        TextButton scoreBoardButton = new TextButton(game.i18n.format("my_score"), tableSkin, "round");
+        TextButton scoreBoardButton = new TextButton(game.i18n.format("my_score"), game.tableSkin, "round");
         scoreBoardButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 screenManager.push(new ScoreboardScreen(game));
             }
         });
-        TextButton optionButton = new TextButton(game.i18n.format("option"), tableSkin, "round");
+        TextButton optionButton = new TextButton(game.i18n.format("option"), game.tableSkin, "round");
         optionButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -42,7 +42,7 @@ public class HomeScreen extends AbstractMenuScreen {
         });
         // TODO ici, ça prend environ 10ms
 
-        hyLabel = new Label("", tableSkin);
+        hyLabel = new Label("", game.tableSkin);
         hyLabel.setAlignment(Align.center);
         hyLabel.setWidth(containerWidth);
         hyLabel.setWrap(true);
@@ -65,15 +65,13 @@ public class HomeScreen extends AbstractMenuScreen {
     @Override
     public void dispose() {
         super.dispose();
-        disposeSkins();
     }
 
     @Override
     public void render(float dt) {
         if (clickedBack()) {
             user.write();
-            game.exit();
-            return;
+            // La suite sera gérée par super.render(dt)
         }
 
         super.render(dt);

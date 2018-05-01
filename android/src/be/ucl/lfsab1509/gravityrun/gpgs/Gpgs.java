@@ -37,6 +37,10 @@ public class Gpgs extends GpgsMultiplayer implements IGpgs {
         signInSilently();
     }
 
+    public void setStartGameCallbask(StartGameCallback startGameCallbask) {
+        this.startGameCallback = startGameCallbask;
+    }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "onActivityResult()");
 
@@ -72,7 +76,6 @@ public class Gpgs extends GpgsMultiplayer implements IGpgs {
             mJoinedRoomConfig = roomBuilder.build();
             mRealTimeMultiplayerClient.create(mJoinedRoomConfig);
         } else if (requestCode == RC_WAITING_ROOM) {
-
             // Look for finishing the waiting room from code, for example if a
             // "start game" message is received.  In this case, ignore the result.
             if (mWaitingRoomFinishedFromCode) {
@@ -92,6 +95,8 @@ public class Gpgs extends GpgsMultiplayer implements IGpgs {
             } else if (resultCode == GamesActivityResultCodes.RESULT_LEFT_ROOM) {
                 mRealTimeMultiplayerClient.leave(mJoinedRoomConfig, mRoom.getRoomId());
             }
+
+            startGameCallback.startGame();
         } else if (requestCode == RC_INVITATION_INBOX) {
             if (resultCode != Activity.RESULT_OK)
                 return;

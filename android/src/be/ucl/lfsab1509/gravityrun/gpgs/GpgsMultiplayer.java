@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import be.ucl.lfsab1509.gravityrun.tools.IGpgs;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.games.*;
@@ -49,7 +50,7 @@ public class GpgsMultiplayer {
     Room mRoom;
     RoomConfig mJoinedRoomConfig;
     Set<String> mFinishedRacers;
-    StartGameCallback startGameCallback;
+    IGpgs.StartGameCallback startGameCallback;
     String mDisplayName = null, mMyParticipantId = null, mPlayerId = null;
 
     /*
@@ -70,12 +71,13 @@ public class GpgsMultiplayer {
                                               }
                                           }
                                       }
-                ).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                errorCallback.error("Erreur lors de la vérification des Invitations");
-            }
-        });
+                )
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        errorCallback.error("Erreur lors de la vérification des Invitations");
+                    }
+                });
     }
 
     boolean haveAllRacersFinished(Room room) {
@@ -97,12 +99,13 @@ public class GpgsMultiplayer {
                     public void onSuccess(Intent intent) {
                         context.startActivityForResult(intent, RC_SELECT_PLAYERS);
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                errorCallback.error("Erreur lors de l'invitation des autres joueurs.");
-            }
-        });
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        errorCallback.error("Erreur lors de l'invitation des autres joueurs.");
+                    }
+                });
     }
 
     private void onStartGameMessageReceived() {
@@ -157,27 +160,29 @@ public class GpgsMultiplayer {
                     public void onSuccess(Intent intent) {
                         context.startActivityForResult(intent, RC_INVITATION_INBOX);
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                errorCallback.error("Impossible de charger les Invitations.");
-            }
-        });
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        errorCallback.error("Impossible de charger les Invitations.");
+                    }
+                });
     }
 
-    private void showWaitingRoom(Room room, int maxPlayersToStartGame) {
+    void showWaitingRoom(Room room, int maxPlayersToStartGame) {
         mRealTimeMultiplayerClient.getWaitingRoomIntent(room, maxPlayersToStartGame)
                 .addOnSuccessListener(new OnSuccessListener<Intent>() {
                     @Override
                     public void onSuccess(Intent intent) {
                         context.startActivityForResult(intent, RC_WAITING_ROOM);
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                errorCallback.error("Erreur lors de l'affichage de la salle d'attente");
-            }
-        });
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        errorCallback.error("Erreur lors de l'affichage de la salle d'attente");
+                    }
+                });
     }
 
     public void startQuickGame(long role) {
@@ -285,12 +290,13 @@ public class GpgsMultiplayer {
                         public void onSuccess(String playerId) {
                             mMyParticipantId = mRoom.getParticipantId(playerId);
                         }
-                    }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    errorCallback.error("Erreur lors de la connexion à la salle.");
-                }
-            });
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            errorCallback.error("Erreur lors de la connexion à la salle.");
+                        }
+                    });
         }
 
         @Override
@@ -340,6 +346,8 @@ public class GpgsMultiplayer {
             // Update UI and internal state based on room updates.
             if (code == GamesCallbackStatusCodes.OK && room != null) {
                 Log.d(TAG, "Room " + room.getRoomId() + " created.");
+                mRoom = room;
+                showWaitingRoom(room, 2);
             } else {
                 Log.w(TAG, "Error creating room: " + code);
             }
@@ -372,10 +380,6 @@ public class GpgsMultiplayer {
 
     public interface ErrorCallback {
         void error(String message);
-    }
-
-    public interface StartGameCallback {
-        void startGame();
     }
 
 }

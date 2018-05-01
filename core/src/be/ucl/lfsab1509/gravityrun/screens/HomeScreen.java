@@ -1,6 +1,7 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
+import be.ucl.lfsab1509.gravityrun.tools.IGpgs;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.utils.Align;
 
 public class HomeScreen extends AbstractMenuScreen {
 
+    private boolean canStartMultiplayerGame = false;
     private final ImageButton achievementsButton, gpgsButton, leaderboardsButton;
     private Label hyLabel;
     private Texture achievementsImage, gpgsImage, leaderboardsImage;
@@ -84,8 +86,14 @@ public class HomeScreen extends AbstractMenuScreen {
         scoreBoardButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-//                screenManager.push(new ScoreboardScreen(game));
-                game.gpgs.invitePlayers();
+                game.gpgs.setStartGameCallbask(new IGpgs.StartGameCallback() {
+                    @Override
+                    public void startGame() {
+                        canStartMultiplayerGame = true;
+                    }
+                });
+//                game.gpgs.invitePlayers();
+                canStartMultiplayerGame = true;
             }
         });
         TextButton optionButton = new TextButton(game.i18n.format("option"), tableSkin, "round");
@@ -130,6 +138,11 @@ public class HomeScreen extends AbstractMenuScreen {
 
     @Override
     public void render(float dt) {
+        if (canStartMultiplayerGame) {
+            canStartMultiplayerGame = false;
+            startMultiplayerGame();
+        }
+
         if (clickedBack()) {
             user.write();
             game.exit();
@@ -151,6 +164,10 @@ public class HomeScreen extends AbstractMenuScreen {
         achievementsButton.setChecked(game.gpgs.isSignedIn());
         gpgsButton.setChecked(game.gpgs.isSignedIn());
         leaderboardsButton.setChecked(game.gpgs.isSignedIn());
+    }
+
+    private void startMultiplayerGame() {
+        screenManager.push(new PlayScreen(game));
     }
 
 }

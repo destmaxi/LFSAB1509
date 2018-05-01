@@ -12,6 +12,8 @@ public interface IGpgs {
 
     void onResume();
 
+    void setStartGameCallbask(StartGameCallback startGameCallbask);
+
     void signInSilently();
 
     void signOut();
@@ -29,5 +31,9 @@ public interface IGpgs {
     void submitScore(String leaderboardId, int score);
 
     void unlockAchievement(String achievementId);
+
+    interface StartGameCallback {
+        void startGame();
+    }
 
 }

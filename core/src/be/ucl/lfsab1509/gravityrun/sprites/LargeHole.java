@@ -10,4 +10,5 @@ public class LargeHole extends Obstacle {
         bounds = new Rectangle(position.x + marbleWidth / 2, position.y + marbleWidth / 2,
                 obstacleTexture.getWidth() - marbleWidth, obstacleTexture.getHeight() - marbleWidth);
     }
+
 }

@@ -1,8 +1,7 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
-import com.badlogic.gdx.math.Rectangle;
-
 import be.ucl.lfsab1509.gravityrun.GravityRun;
+import com.badlogic.gdx.math.Rectangle;
 
 public class Hole extends Obstacle {
 
@@ -13,4 +12,5 @@ public class Hole extends Obstacle {
         bounds = new Rectangle(position.x + marbleWidth / 2, position.y + marbleWidth / 2,
                 obstacleTexture.getWidth() - marbleWidth, obstacleTexture.getHeight() - marbleWidth);
     }
+
 }

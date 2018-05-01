@@ -2,7 +2,6 @@ package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.sprites.*;
-import be.ucl.lfsab1509.gravityrun.tools.GpgsMappers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -27,9 +26,10 @@ public class PlayScreen extends Screen {
     private static int OBSTACLE_SPACING;
     private static int STANDARD_WIDTH;
 
-    public static boolean isCollideWall = false, gameOver = false;
+    private static boolean deadBottom = false;
+    public static boolean deadHole = false, gameOver = false, isCollideWall = false;
     private static int collidedWall = 0;
-    public static int score = 0, scoreBonus = 0;
+    public static int nbInvincible = 0, nbNewLife = 0, nbScoreBonus = 0, nbSlowDown = 0, score = 0, scoreBonus = 0;
 
     private Array<Bonus> bonuses, catchedBonuses;
     private Array<Obstacle> obstacles;
@@ -53,13 +53,11 @@ public class PlayScreen extends Screen {
         STANDARD_WIDTH = calculateStandardWidth();
 
         marble = new Marble((int) width / 2, 0, STANDARD_WIDTH, user.getIndexSelected() + 1);
-        gameOver = false;
-        isCollideWall = false;
-        scoreBonus = 0;
 
         Bonus.initMarble(marble);
         Invincible.resetBonus();
         SlowDown.resetBonus();
+        initPlay();
 
         bonuses = new Array<Bonus>();
         catchedBonuses = new Array<Bonus>();
@@ -158,7 +156,49 @@ public class PlayScreen extends Screen {
 
     private void handleEndGame() {
         if (gameOver) {
-            game.gpgs.submitScore(GpgsMappers.LEADERBOARD + marble.difficulty, score);
+            if (score >= 1_000)
+                game.gpgs.unlockAchievement("SCORE1_000");
+            if (score >= 10_000)
+                game.gpgs.unlockAchievement("SCORE10_000");
+            if (score >= 100_000)
+                game.gpgs.unlockAchievement("SCORE100_000");
+            if (score >= 1_000_000)
+                game.gpgs.unlockAchievement("SCORE1_000_000");
+            if (deadBottom) {
+                game.gpgs.incrementAchievement("BOTTOM100", 1);
+                game.gpgs.incrementAchievement("BOTTOM500", 1);
+                game.gpgs.incrementAchievement("BOTTOM1000", 1);
+            }
+            if (deadHole) {
+                game.gpgs.incrementAchievement("HOLE100", 1);
+                game.gpgs.incrementAchievement("HOLE500", 1);
+                game.gpgs.incrementAchievement("HOLE1000", 1);
+            }
+            if (nbInvincible >= 10)
+                game.gpgs.unlockAchievement("INVINCIBLE10");
+            if (nbInvincible >= 50)
+                game.gpgs.unlockAchievement("INVINCIBLE50");
+            if (nbInvincible >= 100)
+                game.gpgs.unlockAchievement("INVINCIBLE100");
+            if (nbNewLife >= 10)
+                game.gpgs.unlockAchievement("NEWLIFE10");
+            if (nbNewLife >= 50)
+                game.gpgs.unlockAchievement("NEWLIFE50");
+            if (nbNewLife >= 100)
+                game.gpgs.unlockAchievement("NEWLIFE100");
+            if (nbScoreBonus >= 10)
+                game.gpgs.unlockAchievement("SCOREBONUS10");
+            if (nbScoreBonus >= 50)
+                game.gpgs.unlockAchievement("SCOREBONUS50");
+            if (nbScoreBonus >= 100)
+                game.gpgs.unlockAchievement("SCOREBONUS100");
+            if (nbSlowDown >= 10)
+                game.gpgs.unlockAchievement("SLOWDOWN10");
+            if (nbSlowDown >= 50)
+                game.gpgs.unlockAchievement("SLOWDOWN50");
+            if (nbSlowDown >= 100)
+                game.gpgs.unlockAchievement("SLOWDOWN100");
+            game.gpgs.submitScore("LEADERBOARD" + marble.difficulty, score);
             game.scoreList.add(score);
             soundManager.replayMenu();
             screenManager.set(new GameOverScreen(game));
@@ -177,6 +217,11 @@ public class PlayScreen extends Screen {
         if (!gameOver)
             screenManager.push(new PauseScreen(game));
         // FIXME le SoundManager n'arrête pas la musique.
+    }
+
+    private void initPlay() {
+        deadBottom = deadHole = gameOver = isCollideWall = false;
+        collidedWall = nbInvincible = nbNewLife = nbScoreBonus = nbSlowDown = score = scoreBonus = 0;
     }
 
     private Bonus newBonus(float position, int offset) {
@@ -276,6 +321,7 @@ public class PlayScreen extends Screen {
 
         if (!marble.isInvincible() && marble.isOutOfScreen(camera.position.y)) {
             soundManager.marbleBreak(gameOver);
+            deadBottom = true;
             gameOver = true;
         }
 

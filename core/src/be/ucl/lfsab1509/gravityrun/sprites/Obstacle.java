@@ -31,6 +31,8 @@ public abstract class Obstacle {
         if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds) && marble.getCenterPosition().z == 0) {
             soundManager.marbleBreak(PlayScreen.gameOver);
             PlayScreen.gameOver = true;
+            if (this instanceof Hole)
+                PlayScreen.deadHole = true;
         }
     }
 

@@ -1,7 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.screens.PlayScreen;
-
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -13,7 +12,11 @@ public class ScoreBonus extends Bonus {
 
     @Override
     public boolean collidesMarble() {
-        return Intersector.overlaps(marble.getBounds(), (Rectangle) bounds);
+        if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
+            PlayScreen.nbScoreBonus++;
+            return true;
+        }
+        return false;
     }
 
     @Override

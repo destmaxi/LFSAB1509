@@ -1,5 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
+import be.ucl.lfsab1509.gravityrun.screens.PlayScreen;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -17,6 +18,7 @@ public class Invincible extends Bonus {
             activeInvincibles++;
             collideTime = 0;
             marble.setInvincible(true);
+            PlayScreen.nbInvincible++;
             return true;
         }
         return false;

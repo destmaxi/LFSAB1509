@@ -26,7 +26,7 @@ import java.util.Set;
 
 public class GpgsMultiplayer {
 
-    final static int MIN_PLAYERS = 2;
+    static final int MIN_PLAYERS = 2;
     static final int RC_SIGN_IN = 9001;
     static final int RC_ACHIEVEMENT_UI = 9003;
     static final int RC_LEADERBOARD_UI = 9004;
@@ -43,6 +43,7 @@ public class GpgsMultiplayer {
     GoogleSignInClient mGoogleSignInClient;
     GoogleSignInAccount mSignedInAccount = null;
     HashSet<Integer> pendingMessageSet = new HashSet<>();
+    IGpgs.StartGameCallback startGameCallback;
     InvitationsClient mInvitationsClient = null;
     LeaderboardsClient mLeaderboardsClient = null;
     PlayersClient mPlayersClient = null;
@@ -50,7 +51,7 @@ public class GpgsMultiplayer {
     Room mRoom;
     RoomConfig mJoinedRoomConfig;
     Set<String> mFinishedRacers;
-    IGpgs.StartGameCallback startGameCallback;
+    String opponentId;
     String mDisplayName = null, mMyParticipantId = null, mPlayerId = null;
 
     /*
@@ -131,6 +132,15 @@ public class GpgsMultiplayer {
                         });
             }
         }
+    }
+
+    void sendReliable(byte[] message) {
+        mRealTimeMultiplayerClient.sendReliableMessage(message, mRoom.getRoomId(), opponentId, handleMessageSentCallback);
+    }
+
+    void sendUnreliable(byte[] message) {
+//        mRealTimeMultiplayerClient.sendUnreliableMessageToOthers(message, mRoom.getRoomId());
+        mRealTimeMultiplayerClient.sendUnreliableMessage(message, mRoom.getRoomId(), opponentId);
     }
 
     // Returns whether the room is in a state where the game should be canceled.
@@ -306,6 +316,7 @@ public class GpgsMultiplayer {
             // show error message and return to main screen
             mRoom = null;
             mJoinedRoomConfig = null;
+            opponentId = null;
         }
 
         @Override

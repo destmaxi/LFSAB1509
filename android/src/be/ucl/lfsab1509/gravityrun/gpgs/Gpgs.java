@@ -96,6 +96,9 @@ public class Gpgs extends GpgsMultiplayer implements IGpgs {
                 mRealTimeMultiplayerClient.leave(mJoinedRoomConfig, mRoom.getRoomId());
             }
 
+            for (String opponent : mRoom.getParticipantIds())
+                if (opponent != mMyParticipantId)
+                    opponentId = opponent;
             startGameCallback.startGame();
         } else if (requestCode == RC_INVITATION_INBOX) {
             if (resultCode != Activity.RESULT_OK)

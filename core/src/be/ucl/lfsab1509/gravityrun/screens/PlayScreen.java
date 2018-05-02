@@ -273,9 +273,7 @@ public class PlayScreen extends Screen {
             if (bonus != null)
                 bonus.render(game.spriteBatch);
 
-        float marbleX = marble.getCenterPosition().x - marble.getDiameter() / 2;
-        float marbleY = marble.getCenterPosition().y - marble.getDiameter() / 2;
-        game.spriteBatch.draw(marble.getMarble(), marbleX, marbleY);
+        marble.render(game.spriteBatch);
 
         if (gameOver)
             game.spriteBatch.draw(gameOverImage,

@@ -6,6 +6,7 @@ import be.ucl.lfsab1509.gravityrun.screens.PlayScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector3;
@@ -39,78 +40,29 @@ public class Marble {
         difficulty = level;
     }
 
-    public void update(float dt, boolean gameOver) {
-        marbleAnimation.update(dt, gameOver);
-
-        if (playScreen.getScore() < 1000)
-            speed = 1f;
-        else if (playScreen.getScore() < 2000)
-            speed = 1.2f;
-        else if (playScreen.getScore() < 3000)
-            speed = 1.4f;
-        else if (playScreen.getScore() < 4000)
-            speed = 1.6f;
-        else if (playScreen.getScore() < 5000)
-            speed = 1.8f;
-        else
-            speed = 2f;
-
-        if ((Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) && position.z <= 0)
-            position.z = JUMP_HEIGHT;
-
-        if (position.z > 0 && !gameOver)
-            position.add(0, 0, -10 * difficulty * speed * slowDown);
-        else
-            position.z = 0;
-/*
-POUR JOUER AVEC LES FLECHES QUAND T'ES SUR UN PUTAIN D'EMULATEUR !!!
-C'EST PAS OUF MAIS CA FONCTIONNE +_
-        int arrow = 0;
-        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT))
-            arrow = -10;
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT))
-            arrow = 10;
-
-        if (!gameOver) {
-            if ((blockedOnRight && Gdx.input.getGyroscopeY() > 0) || (blockedOnLeft && Gdx.input.getGyroscopeY() < 0))
-                position.add(0, difficulty * MOVEMENT * speed * slowDown * dt, 0);
-            else if ((blockedOnLeft && Gdx.input.getGyroscopeY() < 0) && blockedOnTop)
-                position.add(0, 0, 0);
-            else if ((blockedOnRight && Gdx.input.getGyroscopeY() > 0) && blockedOnTop)
-                position.add(0, 0, 0);
-            else if (blockedOnTop)
-                position.add(arrow * GravityRun.WIDTH / 75, 0, 0);
-            else
-                position.add(arrow * GravityRun.WIDTH / 75, difficulty * MOVEMENT * speed * slowDown * dt, 0);
-        }
-*/
-        if (!gameOver) {
-            if ((blockedOnRight && Gdx.input.getGyroscopeY() > 0) || (blockedOnLeft && Gdx.input.getGyroscopeY() < 0))
-                position.add(0, difficulty * MOVEMENT * speed * slowDown * dt, 0);
-            else if ((blockedOnLeft && Gdx.input.getGyroscopeY() < 0) && blockedOnTop)
-                position.add(0, 0, 0);
-            else if ((blockedOnRight && Gdx.input.getGyroscopeY() > 0) && blockedOnTop)
-                position.add(0, 0, 0);
-            else if (blockedOnTop)
-                position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, 0, 0);
-            else
-                position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, difficulty * MOVEMENT * speed * slowDown * dt, 0);
-        }
-
-        // TODO voir ce qu'on fait lorsque la bille touche le bord : est-ce qu'il y a une marge ?
-        if (position.x < marbleAnimation.getDiameter(position.z) / 2)
-            position.x = marbleAnimation.getDiameter(position.z) / 2;
-
-        if (position.x > GravityRun.WIDTH - marbleAnimation.getDiameter(position.z) / 2)
-            position.x = GravityRun.WIDTH - marbleAnimation.getDiameter(position.z) / 2;
-
-        bounds.setPosition(position.x, position.y);
-    }
-
     public void dispose() {
         marble.dispose();
         marbleAnimation.dispose();
+    }
+
+    public void render(SpriteBatch spriteBatch) {
+        float marbleX = getCenterPosition().x - getDiameter() / 2;
+        float marbleY = getCenterPosition().y - getDiameter() / 2;
+        spriteBatch.draw(getMarble(), marbleX, marbleY);
+    }
+
+    public void update(float dt, boolean gameOver) {
+        marbleAnimation.update(dt, gameOver);
+
+        updateSpeed();
+
+        updateJump(gameOver);
+
+        updatePosition(dt, gameOver);
+
+        repositionWithinScreen();
+
+        bounds.setPosition(position.x, position.y);
     }
 
     Circle getBounds() {
@@ -163,6 +115,15 @@ C'EST PAS OUF MAIS CA FONCTIONNE +_
                 || position.y <= cameraCenterY - GravityRun.HEIGHT / 2 + getDiameter() / 2;
     }
 
+    private void repositionWithinScreen() {
+        // TODO voir ce qu'on fait lorsque la bille touche le bord : est-ce qu'il y a une marge ?
+        if (position.x < marbleAnimation.getDiameter(position.z) / 2)
+            position.x = marbleAnimation.getDiameter(position.z) / 2;
+
+        if (position.x > GravityRun.WIDTH - marbleAnimation.getDiameter(position.z) / 2)
+            position.x = GravityRun.WIDTH - marbleAnimation.getDiameter(position.z) / 2;
+    }
+
     void setBlockedOnLeft(boolean blockedOnLeft) {
         this.blockedOnLeft = blockedOnLeft;
     }
@@ -197,6 +158,69 @@ C'EST PAS OUF MAIS CA FONCTIONNE +_
 
     void setSlowDown(float slowDown) {
         this.slowDown = slowDown;
+    }
+
+    private void updateJump(boolean gameOver) {
+        if ((Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) && position.z <= 0)
+            position.z = JUMP_HEIGHT;
+
+        if (position.z > 0 && !gameOver)
+            position.add(0, 0, -10 * difficulty * speed * slowDown);
+        else
+            position.z = 0;
+    }
+
+    private void updatePosition(float dt, boolean gameOver) {
+/*
+POUR JOUER AVEC LES FLECHES QUAND T'ES SUR UN PUTAIN D'EMULATEUR !!!
+C'EST PAS OUF MAIS CA FONCTIONNE +_
+        int arrow = 0;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT))
+            arrow = -10;
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT))
+            arrow = 10;
+
+        if (!gameOver) {
+            if ((blockedOnRight && Gdx.input.getGyroscopeY() > 0) || (blockedOnLeft && Gdx.input.getGyroscopeY() < 0))
+                position.add(0, difficulty * MOVEMENT * speed * slowDown * dt, 0);
+            else if ((blockedOnLeft && Gdx.input.getGyroscopeY() < 0) && blockedOnTop)
+                position.add(0, 0, 0);
+            else if ((blockedOnRight && Gdx.input.getGyroscopeY() > 0) && blockedOnTop)
+                position.add(0, 0, 0);
+            else if (blockedOnTop)
+                position.add(arrow * GravityRun.WIDTH / 75, 0, 0);
+            else
+                position.add(arrow * GravityRun.WIDTH / 75, difficulty * MOVEMENT * speed * slowDown * dt, 0);
+        }
+*/
+        if (!gameOver) {
+            if ((blockedOnRight && Gdx.input.getGyroscopeY() > 0) || (blockedOnLeft && Gdx.input.getGyroscopeY() < 0))
+                position.add(0, difficulty * MOVEMENT * speed * slowDown * dt, 0);
+            else if ((blockedOnLeft && Gdx.input.getGyroscopeY() < 0) && blockedOnTop)
+                position.add(0, 0, 0);
+            else if ((blockedOnRight && Gdx.input.getGyroscopeY() > 0) && blockedOnTop)
+                position.add(0, 0, 0);
+            else if (blockedOnTop)
+                position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, 0, 0);
+            else
+                position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, difficulty * MOVEMENT * speed * slowDown * dt, 0);
+        }
+    }
+
+    private void updateSpeed() {
+        if (playScreen.getScore() < 1000)
+            speed = 1f;
+        else if (playScreen.getScore() < 2000)
+            speed = 1.2f;
+        else if (playScreen.getScore() < 3000)
+            speed = 1.4f;
+        else if (playScreen.getScore() < 4000)
+            speed = 1.6f;
+        else if (playScreen.getScore() < 5000)
+            speed = 1.8f;
+        else
+            speed = 2f;
     }
 
 }

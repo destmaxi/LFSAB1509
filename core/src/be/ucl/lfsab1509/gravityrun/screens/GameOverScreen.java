@@ -40,23 +40,15 @@ public class GameOverScreen extends AbstractMenuScreen {
         table.row();
 
         if (isNewHighScore) {
-            Label newHighScoreLabel = new Label(game.i18n.format("new_high_score", finalScore), game.aaronScoreSkin);
-            newHighScoreLabel.setAlignment(Align.center);
-            newHighScoreLabel.setWrap(true);
-            Label previousHighScoreLabel = new Label(game.i18n.format("previous_high_score", previousHighScore), game.aaronScoreSkin);
-            previousHighScoreLabel.setAlignment(Align.center);
-            previousHighScoreLabel.setWrap(true);
+            Label newHighScoreLabel = newCenteredLabel(game.i18n.format("new_high_score", finalScore));
+            Label previousHighScoreLabel = newCenteredLabel(game.i18n.format("previous_high_score", previousHighScore));
             table.add(newHighScoreLabel).padTop(height - containerHeight).width(containerWidth).expandX();
             table.row();
             table.add(previousHighScoreLabel).padTop(height - containerHeight).width(containerWidth).expandX();
             table.row();
         } else {
-            Label highScoreLabel = new Label(game.i18n.format("high_score", previousHighScore), game.aaronScoreSkin);
-            highScoreLabel.setAlignment(Align.center);
-            highScoreLabel.setWrap(true);
-            Label scoreLabel = new Label(game.i18n.format("final_score", finalScore), game.aaronScoreSkin);
-            scoreLabel.setAlignment(Align.center);
-            scoreLabel.setWrap(true);
+            Label highScoreLabel = newCenteredLabel(game.i18n.format("high_score", previousHighScore));
+            Label scoreLabel = newCenteredLabel(game.i18n.format("final_score", finalScore));
             table.add(scoreLabel).padTop(height - containerHeight).width(containerWidth).expandX();
             table.row();
             table.add(highScoreLabel).padTop(height - containerHeight).width(containerWidth).expandX();
@@ -70,4 +62,10 @@ public class GameOverScreen extends AbstractMenuScreen {
         initStage(table);
     }
 
+    private Label newCenteredLabel(String labelText) {
+        Label label = new Label(labelText, game.aaronScoreSkin);
+        label.setAlignment(Align.center);
+        label.setWrap(true);
+        return label;
+    }
 }

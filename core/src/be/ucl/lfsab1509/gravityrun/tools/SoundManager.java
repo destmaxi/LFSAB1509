@@ -24,6 +24,7 @@ public class SoundManager {
         gameMusic.setVolume(0.8f);
     }
 
+    // called when simply exiting the app with back button
     public void dispose() {
         gameMusic.dispose();
         menuMusic.dispose();

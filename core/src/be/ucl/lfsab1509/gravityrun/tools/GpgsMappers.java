@@ -7,33 +7,31 @@ public class GpgsMappers {
             return null;
 
         String gpgsId;
-
         switch (independantId) {
-            case "SCORE1_000": gpgsId = "CgkI0ITMmsAMEAIQDw"; break;
-            case "SCORE10_000": gpgsId = "CgkI0ITMmsAMEAIQEA"; break;
-            case "SCORE100_000": gpgsId = "CgkI0ITMmsAMEAIQEQ"; break;
-            case "SCORE1_000_000": gpgsId = "CgkI0ITMmsAMEAIQEg"; break;
-            case "HOLE100": gpgsId = "CgkI0ITMmsAMEAIQCQ"; break;
-            case "HOLE500": gpgsId = "CgkI0ITMmsAMEAIQCg"; break;
-            case "HOLE1000": gpgsId = "CgkI0ITMmsAMEAIQCw"; break;
-            case "BOTTOM100": gpgsId = "CgkI0ITMmsAMEAIQDA"; break;
-            case "BOTTOM500": gpgsId = "CgkI0ITMmsAMEAIQDQ"; break;
-            case "BOTTOM1000": gpgsId = "CgkI0ITMmsAMEAIQDg"; break;
-            case "INVINCIBLE10": gpgsId = "CgkI0ITMmsAMEAIQEw"; break;
-            case "INVINCIBLE50": gpgsId = "CgkI0ITMmsAMEAIQFA"; break;
-            case "INVINCIBLE100": gpgsId = "CgkI0ITMmsAMEAIQFQ"; break;
-            case "NEWLIFE10": gpgsId = "CgkI0ITMmsAMEAIQFg"; break;
-            case "NEWLIFE50": gpgsId = "CgkI0ITMmsAMEAIQFw"; break;
-            case "NEWLIFE100": gpgsId = "CgkI0ITMmsAMEAIQGA"; break;
-            case "SCOREBONUS10": gpgsId = "CgkI0ITMmsAMEAIQGQ"; break;
-            case "SCOREBONUS50": gpgsId = "CgkI0ITMmsAMEAIQGg"; break;
-            case "SCOREBONUS100": gpgsId = "CgkI0ITMmsAMEAIQGw"; break;
-            case "SLOWDOWN10": gpgsId = "CgkI0ITMmsAMEAIQHA"; break;
-            case "SLOWDOWN50": gpgsId = "CgkI0ITMmsAMEAIQHQ"; break;
-            case "SLOWDOWN100": gpgsId = "CgkI0ITMmsAMEAIQHg"; break;
+            case "SCORE_1_000": gpgsId = "CgkI0ITMmsAMEAIQDw"; break;
+            case "SCORE_10_000": gpgsId = "CgkI0ITMmsAMEAIQEA"; break;
+            case "SCORE_100_000": gpgsId = "CgkI0ITMmsAMEAIQEQ"; break;
+            case "SCORE_1_000_000": gpgsId = "CgkI0ITMmsAMEAIQEg"; break;
+            case "HOLE_100": gpgsId = "CgkI0ITMmsAMEAIQCQ"; break;
+            case "HOLE_500": gpgsId = "CgkI0ITMmsAMEAIQCg"; break;
+            case "HOLE_1000": gpgsId = "CgkI0ITMmsAMEAIQCw"; break;
+            case "BOTTOM_100": gpgsId = "CgkI0ITMmsAMEAIQDA"; break;
+            case "BOTTOM_500": gpgsId = "CgkI0ITMmsAMEAIQDQ"; break;
+            case "BOTTOM_1000": gpgsId = "CgkI0ITMmsAMEAIQDg"; break;
+            case "INVINCIBLE_10": gpgsId = "CgkI0ITMmsAMEAIQEw"; break;
+            case "INVINCIBLE_50": gpgsId = "CgkI0ITMmsAMEAIQFA"; break;
+            case "INVINCIBLE_100": gpgsId = "CgkI0ITMmsAMEAIQFQ"; break;
+            case "NEWLIFE_10": gpgsId = "CgkI0ITMmsAMEAIQFg"; break;
+            case "NEWLIFE_50": gpgsId = "CgkI0ITMmsAMEAIQFw"; break;
+            case "NEWLIFE_100": gpgsId = "CgkI0ITMmsAMEAIQGA"; break;
+            case "SCOREBONUS_10": gpgsId = "CgkI0ITMmsAMEAIQGQ"; break;
+            case "SCOREBONUS_50": gpgsId = "CgkI0ITMmsAMEAIQGg"; break;
+            case "SCOREBONUS_100": gpgsId = "CgkI0ITMmsAMEAIQGw"; break;
+            case "SLOWDOWN_10": gpgsId = "CgkI0ITMmsAMEAIQHA"; break;
+            case "SLOWDOWN_50": gpgsId = "CgkI0ITMmsAMEAIQHQ"; break;
+            case "SLOWDOWN_100": gpgsId = "CgkI0ITMmsAMEAIQHg"; break;
             default: gpgsId = null;
         }
-
         return gpgsId;
     }
 
@@ -42,14 +40,12 @@ public class GpgsMappers {
             return null;
 
         String gpgsId;
-
         switch (independantId) {
-            case "LEADERBOARD1": gpgsId = "CgkI0ITMmsAMEAIQAw"; break;
-            case "LEADERBOARD2": gpgsId = "CgkI0ITMmsAMEAIQAg"; break;
-            case "LEADERBOARD3": gpgsId = "CgkI0ITMmsAMEAIQBA"; break;
+            case "LEADERBOARD_1": gpgsId = "CgkI0ITMmsAMEAIQAw"; break;
+            case "LEADERBOARD_2": gpgsId = "CgkI0ITMmsAMEAIQAg"; break;
+            case "LEADERBOARD_3": gpgsId = "CgkI0ITMmsAMEAIQBA"; break;
             default: gpgsId = null;
         }
-
         return gpgsId;
     }
 

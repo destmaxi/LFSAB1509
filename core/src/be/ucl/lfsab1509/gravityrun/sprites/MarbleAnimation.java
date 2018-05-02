@@ -17,7 +17,7 @@ public class MarbleAnimation {
 
     MarbleAnimation(Texture marbles, float standardWidth) {
         TextureRegion region = new TextureRegion(marbles);
-        frames = new Array<Array<TextureRegion>>();
+        frames = new Array<>();
         for (int i = 0; i < MARBLE_COUNT; i++) {
             frames.add(new Array<TextureRegion>());
             for (int j = 0; j < FRAME_COUNT; j++) {
@@ -57,7 +57,7 @@ public class MarbleAnimation {
     private int getMarble(float z) {
         int marble;
         if (z == 0)
-            marble =  0;
+            marble = 0;
         else if (z <= Marble.JUMP_HEIGHT * .25f)
             marble = 1;
         else if (z <= Marble.JUMP_HEIGHT * .5f)

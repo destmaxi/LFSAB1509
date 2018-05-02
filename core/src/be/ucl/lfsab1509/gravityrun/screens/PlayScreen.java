@@ -29,7 +29,8 @@ public class PlayScreen extends Screen {
     private static boolean deadBottom = false;
     public static boolean deadHole = false, gameOver = false, isCollideWall = false;
     private static int collidedWall = 0;
-    public static int nbInvincible = 0, nbNewLife = 0, nbScoreBonus = 0, nbSlowDown = 0, score = 0, scoreBonus = 0;
+    public static int nbInvincible = 0, nbNewLife = 0, nbScoreBonus = 0, nbSlowDown = 0;
+    private int score = 0, scoreBonus = 0;
 
     private Array<Bonus> bonuses, catchedBonuses;
     private Array<Obstacle> obstacles;
@@ -48,26 +49,26 @@ public class PlayScreen extends Screen {
         camera.setToOrtho(false, width, height);
 
         if (game.scoreList == null)
-            game.scoreList = new ArrayList<Integer>();
+            game.scoreList = new ArrayList<>();
 
         STANDARD_WIDTH = calculateStandardWidth();
 
-        marble = new Marble((int) width / 2, 0, STANDARD_WIDTH, user.getIndexSelected() + 1);
+        marble = new Marble((int) width / 2, 0, STANDARD_WIDTH, game.user.getIndexSelected() + 1, this);
 
         Bonus.initMarble(marble);
         Invincible.resetBonus();
         SlowDown.resetBonus();
         initPlay();
 
-        bonuses = new Array<Bonus>();
-        catchedBonuses = new Array<Bonus>();
-        obstacles = new Array<Obstacle>();
+        bonuses = new Array<>();
+        catchedBonuses = new Array<>();
+        obstacles = new Array<>();
 
         background = new Texture("drawable-" + STANDARD_WIDTH + "/background.png");
         gameOverImage = new Texture("drawable-" + STANDARD_WIDTH + "/gameover.png");
         pauseImage = new Texture("drawable-" + STANDARD_WIDTH + "/pause.png");
 
-        backgroundPositions = new Array<Vector2>();
+        backgroundPositions = new Array<>();
         for (int i = 0; i < 3; i++)
             backgroundPositions.add(new Vector2((width - background.getWidth()) / 2, -height / 2 + i * background.getHeight()));
 
@@ -80,16 +81,15 @@ public class PlayScreen extends Screen {
             }
         });
 
-        scoreLabel = new Label(game.i18n.format("score"), aaronScoreSkin, "score");
+        scoreLabel = new Label(game.i18n.format("score"), game.aaronScoreSkin, "score");
         scoreLabel.setText(game.i18n.format("score", score));
-
         // TODO ça prend 100-200 msec
 
         scoreLabel.setPosition((width - scoreLabel.getWidth()) / 2, height - scoreLabel.getHeight());
 
         // TODO: mettre des coeurs pour montrer le nombre de vie restante
 
-        scoreStage = new Stage(new ScreenViewport());
+        scoreStage = new Stage(new ScreenViewport(), game.spriteBatch);
         scoreStage.addActor(scoreLabel);
         scoreStage.addActor(pauseButton);
 
@@ -127,6 +127,10 @@ public class PlayScreen extends Screen {
         render();
     }
 
+    public void setScoreBonus(int newScoreBonus) {
+        scoreBonus = newScoreBonus;
+    }
+
     @Override
     public void show() {
         Gdx.input.setInputProcessor(scoreStage);
@@ -154,54 +158,18 @@ public class PlayScreen extends Screen {
             marble.setRepositioning(1f);
     }
 
+    public int getScore() {
+        return score;
+    }
+
+    public int getScoreBonus() {
+        return scoreBonus;
+    }
+
     private void handleEndGame() {
         if (gameOver) {
-            if (score >= 1_000)
-                game.gpgs.unlockAchievement("SCORE1_000");
-            if (score >= 10_000)
-                game.gpgs.unlockAchievement("SCORE10_000");
-            if (score >= 100_000)
-                game.gpgs.unlockAchievement("SCORE100_000");
-            if (score >= 1_000_000)
-                game.gpgs.unlockAchievement("SCORE1_000_000");
-            if (deadBottom) {
-                game.gpgs.incrementAchievement("BOTTOM100", 1);
-                game.gpgs.incrementAchievement("BOTTOM500", 1);
-                game.gpgs.incrementAchievement("BOTTOM1000", 1);
-            }
-            if (deadHole) {
-                game.gpgs.incrementAchievement("HOLE100", 1);
-                game.gpgs.incrementAchievement("HOLE500", 1);
-                game.gpgs.incrementAchievement("HOLE1000", 1);
-            }
-            if (nbInvincible >= 10)
-                game.gpgs.unlockAchievement("INVINCIBLE10");
-            if (nbInvincible >= 50)
-                game.gpgs.unlockAchievement("INVINCIBLE50");
-            if (nbInvincible >= 100)
-                game.gpgs.unlockAchievement("INVINCIBLE100");
-            if (nbNewLife >= 10)
-                game.gpgs.unlockAchievement("NEWLIFE10");
-            if (nbNewLife >= 50)
-                game.gpgs.unlockAchievement("NEWLIFE50");
-            if (nbNewLife >= 100)
-                game.gpgs.unlockAchievement("NEWLIFE100");
-            if (nbScoreBonus >= 10)
-                game.gpgs.unlockAchievement("SCOREBONUS10");
-            if (nbScoreBonus >= 50)
-                game.gpgs.unlockAchievement("SCOREBONUS50");
-            if (nbScoreBonus >= 100)
-                game.gpgs.unlockAchievement("SCOREBONUS100");
-            if (nbSlowDown >= 10)
-                game.gpgs.unlockAchievement("SLOWDOWN10");
-            if (nbSlowDown >= 50)
-                game.gpgs.unlockAchievement("SLOWDOWN50");
-            if (nbSlowDown >= 100)
-                game.gpgs.unlockAchievement("SLOWDOWN100");
-            game.gpgs.submitScore("LEADERBOARD" + marble.difficulty, score);
-            game.scoreList.add(score);
             soundManager.replayMenu();
-            screenManager.set(new GameOverScreen(game));
+            screenManager.set(new GameOverScreen(game, score, marble.difficulty, deadBottom, deadHole, nbInvincible, nbNewLife, nbScoreBonus, nbSlowDown));
         }
     }
 
@@ -215,7 +183,7 @@ public class PlayScreen extends Screen {
 
     private void handlePause() {
         if (!gameOver)
-            screenManager.push(new PauseScreen(game));
+            screenManager.push(new PauseScreen(game, score));
         // FIXME le SoundManager n'arrête pas la musique.
     }
 
@@ -243,7 +211,7 @@ public class PlayScreen extends Screen {
                 bonus = new SlowDown(position, offset, STANDARD_WIDTH);
                 break;
             default:
-                bonus = new ScoreBonus(position, offset, STANDARD_WIDTH);
+                bonus = new ScoreBonus(position, offset, STANDARD_WIDTH, this);
         }
         return bonus;
     }

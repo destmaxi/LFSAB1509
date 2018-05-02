@@ -1,7 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.tools.IGpgs;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -23,7 +22,7 @@ public class HomeScreen extends AbstractMenuScreen {
     public HomeScreen(GravityRun gravityRun) {
         super(gravityRun);
 
-        Label title = new Label(game.i18n.format("menu"), titleSkin, "title");
+        Label title = new Label(game.i18n.format("menu"), game.titleSkin, "title");
 
         int standardWidth = calculateStandardWidth();
         achievementsImage = new Texture("drawable-" + standardWidth + "/achievements.png");
@@ -74,7 +73,7 @@ public class HomeScreen extends AbstractMenuScreen {
 
         refreshButtons();
 
-        TextButton startGameButton = new TextButton(game.i18n.format("new_game"), tableSkin, "round");
+        TextButton startGameButton = new TextButton(game.i18n.format("new_game"), game.tableSkin, "round");
         startGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -82,21 +81,22 @@ public class HomeScreen extends AbstractMenuScreen {
                 screenManager.push(new PlayScreen(game));
             }
         });
-        TextButton scoreBoardButton = new TextButton(game.i18n.format("my_score"), tableSkin, "round");
+        TextButton scoreBoardButton = new TextButton(game.i18n.format("my_score"), game.tableSkin, "round");
         scoreBoardButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.gpgs.setStartGameCallbask(new IGpgs.StartGameCallback() {
+                screenManager.push(new ScoreboardScreen(game));
+                /*game.gpgs.setStartGameCallbask(new IGpgs.StartGameCallback() {
                     @Override
                     public void startGame() {
                         canStartMultiplayerGame = true;
                     }
                 });
 //                game.gpgs.invitePlayers();
-                canStartMultiplayerGame = true;
+                canStartMultiplayerGame = true;*/
             }
         });
-        TextButton optionButton = new TextButton(game.i18n.format("option"), tableSkin, "round");
+        TextButton optionButton = new TextButton(game.i18n.format("option"), game.tableSkin, "round");
         optionButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -105,7 +105,7 @@ public class HomeScreen extends AbstractMenuScreen {
         });
         // TODO ici, ça prend environ 10ms
 
-        hyLabel = new Label("", tableSkin);
+        hyLabel = new Label("", game.tableSkin);
         hyLabel.setAlignment(Align.center);
         hyLabel.setWidth(containerWidth);
         hyLabel.setWrap(true);
@@ -132,8 +132,12 @@ public class HomeScreen extends AbstractMenuScreen {
         achievementsImage.dispose();
         gpgsImage.dispose();
         leaderboardsImage.dispose();
+    }
 
-        disposeSkins();
+    @Override
+    public void hide() {
+        game.user.write();
+        super.hide();
     }
 
     @Override
@@ -141,12 +145,6 @@ public class HomeScreen extends AbstractMenuScreen {
         if (canStartMultiplayerGame) {
             canStartMultiplayerGame = false;
             startMultiplayerGame();
-        }
-
-        if (clickedBack()) {
-            user.write();
-            game.exit();
-            return;
         }
 
         super.render(dt);
@@ -157,7 +155,7 @@ public class HomeScreen extends AbstractMenuScreen {
     @Override
     public void show() {
         super.show();
-        hyLabel.setText(game.i18n.format("hello", user.getUsername()));
+        hyLabel.setText(game.i18n.format("hello", game.user.getUsername()));
     }
 
     private void refreshButtons() {

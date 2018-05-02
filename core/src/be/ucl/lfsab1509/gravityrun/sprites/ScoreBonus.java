@@ -6,8 +6,11 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class ScoreBonus extends Bonus {
 
-    public ScoreBonus(float y, int offset, int standardWidth) {
+    private PlayScreen playScreen;
+
+    public ScoreBonus(float y, int offset, int standardWidth, PlayScreen playScreen) {
         super(y, offset, "drawable-" + standardWidth + "/scorebonus.png");
+        this.playScreen = playScreen;
     }
 
     @Override
@@ -21,7 +24,7 @@ public class ScoreBonus extends Bonus {
 
     @Override
     public boolean isFinished() {
-        PlayScreen.scoreBonus += 100;
+        playScreen.setScoreBonus(playScreen.getScoreBonus() + 100);
         return true;
     }
 

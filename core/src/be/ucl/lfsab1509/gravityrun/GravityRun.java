@@ -1,7 +1,11 @@
 package be.ucl.lfsab1509.gravityrun;
 
-import be.ucl.lfsab1509.gravityrun.screens.*;
+import be.ucl.lfsab1509.gravityrun.screens.AbstractMenuScreen;
+import be.ucl.lfsab1509.gravityrun.screens.FirstScreen;
+import be.ucl.lfsab1509.gravityrun.screens.HomeScreen;
+import be.ucl.lfsab1509.gravityrun.screens.ScreenManager;
 import be.ucl.lfsab1509.gravityrun.tools.IGpgs;
+import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 import be.ucl.lfsab1509.gravityrun.tools.User;
 import com.badlogic.gdx.Game;
@@ -9,6 +13,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.I18NBundle;
 
 import java.util.ArrayList;
@@ -20,6 +26,8 @@ public class GravityRun extends Game {
     public static int HEIGHT;
     public static final String TITLE = "Gravity Run";
     public static int WIDTH;
+    public Skin aaronScoreSkin, labelScoreBoardSkin, tableScoreBoardSkin, tableSkin, titleSkin;
+    private TextureAtlas skinTextureAtlas;
 
     public ArrayList<Integer> scoreList;
     public I18NBundle i18n;
@@ -38,7 +46,7 @@ public class GravityRun extends Game {
         HEIGHT = Gdx.graphics.getHeight();
         WIDTH = Gdx.graphics.getWidth();
 
-        Screen.initializeSkins();
+        initializeSkins();
 
         i18n = I18NBundle.createBundle(Gdx.files.internal("strings/string"));
         screenManager = new ScreenManager(this);
@@ -63,7 +71,8 @@ public class GravityRun extends Game {
     public void dispose() {
         screenManager.disposeAll();
         soundManager.dispose();
-//        spriteBatch.dispose();    // FIXME : already disposed ?
+        spriteBatch.dispose();    // FIXME : already disposed ?
+        disposeSkins();
     }
 
     @Override
@@ -93,13 +102,48 @@ public class GravityRun extends Game {
             gpgs.startSignInIntent();
     }
 
-    public void exit() {
-        dispose();
-        Gdx.app.exit();
+    private void disposeSkins() {
+        aaronScoreSkin.dispose();
+        labelScoreBoardSkin.dispose();
+        tableScoreBoardSkin.dispose();
+        tableSkin.dispose();
+        titleSkin.dispose();
+
+        skinTextureAtlas.dispose();
     }
 
     void errorMessage(String message) {
         ((AbstractMenuScreen) getScreen()).spawnErrorDialog("Erreur", message);
+    }
+
+    public void exit() {
+        Gdx.app.exit();
+    }
+
+    private void initializeSkins() {
+        float d = DENSITY;
+        float width = WIDTH;
+
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("arial.ttf"));
+        skinTextureAtlas = new TextureAtlas("skin/uiskin.atlas");
+
+        tableScoreBoardSkin = new Skin();
+        tableScoreBoardSkin.createSkin((int) (0.5f * width / d / 10), generator, skinTextureAtlas);
+
+        aaronScoreSkin = new Skin();
+        aaronScoreSkin.createSkin((int) (0.75f * width / d / 10), generator, skinTextureAtlas);
+
+        labelScoreBoardSkin = new Skin();
+        labelScoreBoardSkin.createSkin((int) (0.9f * width / d / 10), generator, skinTextureAtlas);
+
+        tableSkin = new Skin();
+        tableSkin.createSkin((int) (width / d / 10), generator, skinTextureAtlas);
+
+        titleSkin = new Skin();
+        titleSkin.createSkin((int) (1.5f * width / d / 10), generator, skinTextureAtlas);
+        // En espérant qu'il ne soit pas interrompu entre-temps.
+
+        generator.dispose();
     }
 
 }

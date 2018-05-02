@@ -2,7 +2,7 @@ apply plugin: "java"
 
 project.ext.assetsDir = new File("../android/assets")
 project.ext.mainClassName = "be.ucl.lfsab1509.gravityrun.desktop.DesktopLauncher"
-sourceCompatibility = 1.6
+sourceCompatibility = 1.7
 sourceSets.main.java.srcDirs = ["src/"]
 
 task debug(dependsOn: classes, type: JavaExec) {

@@ -1,34 +1,31 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-
-import java.util.ArrayList;
-import java.util.Collections;
+import com.badlogic.gdx.utils.Align;
 
 public class GameOverScreen extends AbstractMenuScreen {
 
-    GameOverScreen(GravityRun gravityRun) {
+    GameOverScreen(GravityRun gravityRun, int finalScore, int difficulty, boolean deadBottom, boolean deadHole, int nbInvincible, int nbNewLife, int nbScoreBonus, int nbSlowDown) {
         super(gravityRun);
 
-        ArrayList<Integer> userList = user.getHighScore();
-        for (Integer score : game.scoreList)
-            if (score > userList.get(user.getIndexSelected()))
-                userList.set(user.getIndexSelected(), score);
+        int previousHighScore = game.user.getHighScore();
+        boolean isNewHighScore = game.user.addScore(finalScore);
 
-        TextButton menuButton = new TextButton(game.i18n.format("menu"), tableSkin, "round");
+        submitGpgs(finalScore, difficulty, deadBottom, deadHole, nbInvincible, nbNewLife, nbScoreBonus, nbSlowDown);
+
+        TextButton menuButton = new TextButton(game.i18n.format("menu"), game.tableSkin, "round");
         menuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                handleReturn();
+                screenManager.pop();
             }
         });
-        TextButton replayButton = new TextButton(game.i18n.format("replay"), tableSkin, "round");
+        TextButton replayButton = new TextButton(game.i18n.format("replay"), game.tableSkin, "round");
         replayButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -36,17 +33,36 @@ public class GameOverScreen extends AbstractMenuScreen {
             }
         });
 
-        Label highScore = new Label(game.i18n.format("high_score", user.getHighScore().get(user.getIndexSelected())), aaronScoreSkin);
-        Label score = new Label(game.i18n.format("final_score", PlayScreen.score), aaronScoreSkin);
-        Label title = new Label(game.i18n.format("game_over"), titleSkin, "title");
+        Label title = new Label(game.i18n.format("game_over"), game.titleSkin, "title");
 
         Table table = new Table();
         table.add(title).top();
         table.row();
-        table.add(score).padTop(height - containerHeight);
-        table.row();
-        table.add(highScore).padTop(height - containerHeight);
-        table.row();
+
+        if (isNewHighScore) {
+            Label newHighScoreLabel = new Label(game.i18n.format("new_high_score", finalScore), game.aaronScoreSkin);
+            newHighScoreLabel.setAlignment(Align.center);
+            newHighScoreLabel.setWrap(true);
+            Label previousHighScoreLabel = new Label(game.i18n.format("previous_high_score", previousHighScore), game.aaronScoreSkin);
+            previousHighScoreLabel.setAlignment(Align.center);
+            previousHighScoreLabel.setWrap(true);
+            table.add(newHighScoreLabel).padTop(height - containerHeight).width(containerWidth).expandX();
+            table.row();
+            table.add(previousHighScoreLabel).padTop(height - containerHeight).width(containerWidth).expandX();
+            table.row();
+        } else {
+            Label highScoreLabel = new Label(game.i18n.format("high_score", previousHighScore), game.aaronScoreSkin);
+            highScoreLabel.setAlignment(Align.center);
+            highScoreLabel.setWrap(true);
+            Label scoreLabel = new Label(game.i18n.format("final_score", finalScore), game.aaronScoreSkin);
+            scoreLabel.setAlignment(Align.center);
+            scoreLabel.setWrap(true);
+            table.add(scoreLabel).padTop(height - containerHeight).width(containerWidth).expandX();
+            table.row();
+            table.add(highScoreLabel).padTop(height - containerHeight).width(containerWidth).expandX();
+            table.row();
+        }
+
         table.add(replayButton).expandX().fillX().padTop((height - containerHeight) * 2);
         table.row();
         table.add(menuButton).expandX().fillX().padTop(height - containerHeight);
@@ -55,49 +71,61 @@ public class GameOverScreen extends AbstractMenuScreen {
     }
 
     @Override
-    public void render(float dt) {
-        if (clickedBack()) {
-            handleReturn();
-            return;
-        }
-
-        super.render(dt);
+    public void hide() {
+        game.user.write();
+        super.hide();
     }
 
-    public ArrayList<Integer> add(ArrayList<Integer> userList) {
-        for (Integer score : game.scoreList) {
-            if (userList != null)
-                Collections.sort(userList);
-            else
-                userList = new ArrayList<Integer>();
+    private void submitGpgs(int score, int difficulty, boolean deadBottom, boolean deadHole, int nbInvincible, int nbNewLife, int nbScoreBonus, int nbSlowDown) {
+        if (score >= 1_000)
+            game.gpgs.unlockAchievement("SCORE_1_000");
+        if (score >= 10_000)
+            game.gpgs.unlockAchievement("SCORE_10_000");
+        if (score >= 100_000)
+            game.gpgs.unlockAchievement("SCORE_100_000");
+        if (score >= 1_000_000)
+            game.gpgs.unlockAchievement("SCORE_1_000_000");
 
-            if (!userList.contains(score) && userList.size() < 3)
-                userList.add(score);
-            else if (!userList.contains(score) && userList.get(0) < score) {
-                userList.remove(0);
-                userList.add(score);
-            }
+        if (deadBottom) {
+            game.gpgs.incrementAchievement("BOTTOM_100", 1);
+            game.gpgs.incrementAchievement("BOTTOM_500", 1);
+            game.gpgs.incrementAchievement("BOTTOM_1000", 1);
+        }
+        if (deadHole) {
+            game.gpgs.incrementAchievement("HOLE_100", 1);
+            game.gpgs.incrementAchievement("HOLE_500", 1);
+            game.gpgs.incrementAchievement("HOLE_1000", 1);
         }
 
-        return userList;
-    }
+        if (nbInvincible >= 10)
+            game.gpgs.unlockAchievement("INVINCIBLE_10");
+        if (nbInvincible >= 50)
+            game.gpgs.unlockAchievement("INVINCIBLE_50");
+        if (nbInvincible >= 100)
+            game.gpgs.unlockAchievement("INVINCIBLE_100");
 
-    private void handleReturn() {
-        switch (user.getIndexSelected() + 1) {
-            case 1:
-                user.setBeginner(add(user.getBeginner()));
-                break;
-            case 2:
-                user.setInter(add(user.getInter()));
-                break;
-            case 3:
-                user.setExpert(add(user.getExpert()));
-                break;
-        }
+        if (nbNewLife >= 10)
+            game.gpgs.unlockAchievement("NEWLIFE_10");
+        if (nbNewLife >= 50)
+            game.gpgs.unlockAchievement("NEWLIFE_50");
+        if (nbNewLife >= 100)
+            game.gpgs.unlockAchievement("NEWLIFE_100");
 
-        user.write();
-        game.scoreList = null;
-        screenManager.pop();
+        if (nbScoreBonus >= 10)
+            game.gpgs.unlockAchievement("SCOREBONUS_10");
+        if (nbScoreBonus >= 50)
+            game.gpgs.unlockAchievement("SCOREBONUS_50");
+        if (nbScoreBonus >= 100)
+            game.gpgs.unlockAchievement("SCOREBONUS_100");
+
+        if (nbSlowDown >= 10)
+            game.gpgs.unlockAchievement("SLOWDOWN_10");
+        if (nbSlowDown >= 50)
+            game.gpgs.unlockAchievement("SLOWDOWN_50");
+        if (nbSlowDown >= 100)
+            game.gpgs.unlockAchievement("SLOWDOWN_100");
+
+        game.gpgs.submitScore("LEADERBOARD_" + difficulty, score);
     }
 
 }

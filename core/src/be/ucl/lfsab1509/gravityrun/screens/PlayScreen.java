@@ -29,7 +29,7 @@ public class PlayScreen extends Screen {
 
     public static boolean isCollideWall = false, gameOver = false;
     private static int collidedWall = 0;
-    public static int score = 0, scoreBonus = 0;
+    private int score = 0, scoreBonus = 0;
 
     private Array<Bonus> bonuses, catchedBonuses;
     private Array<Obstacle> obstacles;
@@ -55,7 +55,6 @@ public class PlayScreen extends Screen {
         marble = new Marble((int) width / 2, 0, STANDARD_WIDTH, game.user.getIndexSelected() + 1, this);
         gameOver = false;
         isCollideWall = false;
-        scoreBonus = 0;
 
         Bonus.initMarble(marble);
         Invincible.resetBonus();
@@ -84,7 +83,6 @@ public class PlayScreen extends Screen {
 
         scoreLabel = new Label(game.i18n.format("score"), game.aaronScoreSkin, "score");
         scoreLabel.setText(game.i18n.format("score", score));
-
         // TODO ça prend 100-200 msec
 
         scoreLabel.setPosition((width - scoreLabel.getWidth()) / 2, height - scoreLabel.getHeight());
@@ -123,10 +121,22 @@ public class PlayScreen extends Screen {
             obstacle.dispose();
     }
 
+    public int getScore() {
+        return score;
+    }
+
+    public int getScoreBonus() {
+        return scoreBonus;
+    }
+
     @Override
     public void render(float dt) {
         update(dt);
         render();
+    }
+
+    public void setScoreBonus(int newScoreBonus) {
+        scoreBonus = newScoreBonus;
     }
 
     @Override
@@ -191,7 +201,7 @@ public class PlayScreen extends Screen {
 
     private void handlePause() {
         if (!gameOver)
-            screenManager.push(new PauseScreen(game));
+            screenManager.push(new PauseScreen(game, score));
         // FIXME le SoundManager n'arrête pas la musique.
     }
 
@@ -214,7 +224,7 @@ public class PlayScreen extends Screen {
                 bonus = new SlowDown(position, offset, STANDARD_WIDTH);
                 break;
             default:
-                bonus = new ScoreBonus(position, offset, STANDARD_WIDTH);
+                bonus = new ScoreBonus(position, offset, STANDARD_WIDTH, this);
         }
         return bonus;
     }

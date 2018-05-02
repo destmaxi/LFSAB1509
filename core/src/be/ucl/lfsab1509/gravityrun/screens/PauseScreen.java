@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 public class PauseScreen extends AbstractMenuScreen {
 
-    PauseScreen(GravityRun gravityRun) {
+    PauseScreen(GravityRun gravityRun, int currentScore) {
         super(gravityRun);
 
         TextButton continueButton = new TextButton(game.i18n.format("continue"), game.tableSkin, "round");
@@ -29,7 +29,7 @@ public class PauseScreen extends AbstractMenuScreen {
             }
         });
 
-        Label score = new Label(game.i18n.format("score", PlayScreen.score), game.aaronScoreSkin);
+        Label score = new Label(game.i18n.format("score", currentScore), game.aaronScoreSkin);
         Label title = new Label(game.i18n.format("pause"), game.titleSkin, "title");
 
         Table table = new Table();

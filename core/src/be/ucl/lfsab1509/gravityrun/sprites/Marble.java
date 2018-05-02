@@ -25,10 +25,12 @@ public class Marble {
     private int marbleLife = 5;
     public int difficulty;
     private MarbleAnimation marbleAnimation;
+    private PlayScreen playScreen;
     private Texture marble;
     private Vector3 position, velocity;
 
-    public Marble(int x, int y, int standardWidth, int level) {
+    public Marble(int x, int y, int standardWidth, int level, PlayScreen screen) {
+        playScreen = screen;
         marble = new Texture("drawable-" + standardWidth + "/marbles.png");
         marbleAnimation = new MarbleAnimation(marble, standardWidth);
         position = new Vector3(x, y, 0);
@@ -40,15 +42,15 @@ public class Marble {
     public void update(float dt, boolean gameOver) {
         marbleAnimation.update(dt, gameOver);
 
-        if (PlayScreen.score < 1000)
+        if (playScreen.getScore() < 1000)
             speed = 1f;
-        else if (PlayScreen.score < 2000)
+        else if (playScreen.getScore() < 2000)
             speed = 1.2f;
-        else if (PlayScreen.score < 3000)
+        else if (playScreen.getScore() < 3000)
             speed = 1.4f;
-        else if (PlayScreen.score < 4000)
+        else if (playScreen.getScore() < 4000)
             speed = 1.6f;
-        else if (PlayScreen.score < 5000)
+        else if (playScreen.getScore() < 5000)
             speed = 1.8f;
         else
             speed = 2f;

@@ -68,13 +68,9 @@ public class HomeScreen extends AbstractMenuScreen {
     }
 
     @Override
-    public void render(float dt) {
-        if (clickedBack()) {
-            game.user.write();
-            // La suite sera gérée par super.render(dt)
-        }
-
-        super.render(dt);
+    public void hide() {
+        game.user.write();
+        super.hide();
     }
 
     @Override

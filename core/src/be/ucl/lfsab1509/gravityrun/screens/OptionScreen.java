@@ -55,7 +55,7 @@ public class OptionScreen extends AbstractMenuScreen {
 
     @Override
     public void hide() {
-        game.user.write();
+        game.user.write(); // don't trust it, it may not be called when the activity is actually destroyed
         super.hide();
     }
 
@@ -129,6 +129,7 @@ public class OptionScreen extends AbstractMenuScreen {
             game.user.setIndexSelected(1);
         else if (levelList.getSelected().equals(game.i18n.format("expert")))
             game.user.setIndexSelected(2);
+        game.user.write();
     }
 
 }

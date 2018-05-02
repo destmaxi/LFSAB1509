@@ -16,6 +16,7 @@ public class GameOverScreen extends AbstractMenuScreen {
 
         int previousHighScore = game.user.getHighScore();
         boolean isNewHighScore = game.user.addScore(finalScore);
+        game.user.write();
 
         TextButton menuButton = new TextButton(game.i18n.format("menu"), game.tableSkin, "round");
         menuButton.addListener(new ChangeListener() {
@@ -69,9 +70,4 @@ public class GameOverScreen extends AbstractMenuScreen {
         initStage(table);
     }
 
-    @Override
-    public void hide() {
-        game.user.write();
-        super.hide();
-    }
 }

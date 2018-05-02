@@ -2,6 +2,7 @@ package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 
+import be.ucl.lfsab1509.gravityrun.tools.User;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -61,27 +62,11 @@ public class FirstScreen extends AbstractMenuScreen {
         initStage(table);
     }
 
-    private void initUser(String username) {
-        ArrayList<Integer> arrayList = new ArrayList<>();
-        for (int i = 0; i < 3; i++)
-            arrayList.add(0);
-
-        game.user.setUsername(username);
-        game.user.setFirstTimeTrue();
-        game.user.setBeginnerScoreList(new ArrayList<>());
-        game.user.setIntermediateScoreList(new ArrayList<>());
-        game.user.setExpertScoreList(new ArrayList<>());
-        game.user.setIndexSelected(1);
-        game.user.setHighScoreList(arrayList);
-
-        game.user.write();
-    }
-
     private void validateUsername(String username) {
-        if (!game.user.checkUsername(username)) {
-            spawnErrorDialog(game.i18n.format("error_username_default"), game.user.getUsernameError(username));
+        if (!User.checkUsername(username)) {
+            spawnErrorDialog(game.i18n.format("error_username_default"), User.getUsernameError(username));
         } else {
-            initUser(username);
+            game.user = new User(game, username);
             screenManager.set(new HomeScreen(game));
         }
     }

@@ -1,5 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.tools;
 
+import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.Json;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class User {
     private static final String USERNAME = "username";
     private static final int MAX_USERNAME_LENGTH = 32; // FIXME probablement trop long.
     private static final int HIGH_SCORE_MAX_COUNT = 3;
+    public static I18NBundle i18n;
 
     // La liste des scores obtenus, triés du plus grand au plus petit.
     private ArrayList<Integer> beginnerScoreList, expertScoreList, intermediateScoreList;
@@ -28,9 +30,17 @@ public class User {
     private Integer indexSelected;
     private String username;
 
-    public User(GravityRun gravityRun) {
+    public User(GravityRun gravityRun, String username) {
         game = gravityRun;
-        firstTime = false;
+        this.username = username;
+        this.firstTime = true;
+        indexSelected = 1; // default
+        beginnerScoreList = new ArrayList<>();
+        intermediateScoreList = new ArrayList<>();
+        expertScoreList = new ArrayList<>();
+        highScoreList = new ArrayList<>();
+        for (int i = 0; i < 3; i++)
+            highScoreList.add(0);
     }
 
     public User(GravityRun gravityRun, Map<String, ?> userMap) {
@@ -63,17 +73,14 @@ public class User {
      * @param level le niveau auquel il faut ajouter le score ; commence à 0.
      * @return {@code true} s'il s'agit du nouveau high score, {@code false} sinon.
      */
-    private boolean addScore(int score, int level) {
+    public boolean addScore(int score, int level) {
         ArrayList<Integer> liste = getScoreList(level);
         int insertionIndex = 0;
         for (; insertionIndex < liste.size() && liste.get(insertionIndex) > score; insertionIndex++) {
             // empty
         }
         if (insertionIndex >= liste.size() || score != liste.get(insertionIndex)) {
-            liste.add(0);
-            for (int j = liste.size() - 1; j > insertionIndex; j--)
-                liste.set(j, liste.get(j-1));
-            liste.set(insertionIndex, score);
+            liste.add(insertionIndex, score);
             return insertionIndex == 0;
         } else {
             return false;
@@ -93,8 +100,8 @@ public class User {
         return result;
     }
 
-    public boolean checkUsername(String username) {
-        return (username.length() > 0) && (username.length() <= MAX_USERNAME_LENGTH) && (!username.equals(game.i18n.format("username")));
+    public static boolean checkUsername(String username) {
+        return (username.length() > 0) && (username.length() <= MAX_USERNAME_LENGTH) && (!username.equals(i18n.format("username")));
     }
 
     public ArrayList<Integer> getBeginnerScoreList() {
@@ -115,10 +122,6 @@ public class User {
             return 0;
         else
             return list.get(0);
-    }
-
-    public ArrayList<Integer> getHighScores(int count) {
-        return getHighScores(indexSelected, count);
     }
 
     public ArrayList<Integer> getHighScores(int level, int count) {
@@ -153,39 +156,19 @@ public class User {
         return username;
     }
 
-    public String getUsernameError(String username) {
+    public static String getUsernameError(String username) {
         if (username.length() > 42)
-            return game.i18n.format("error_username_length");
+            return i18n.format("error_username_length");
         else if (username.length() <= 0)
-            return game.i18n.format("error_username_empty");
-        else if (username.equals(game.i18n.format("username")))
-            return game.i18n.format("error_username_default");
+            return i18n.format("error_username_empty");
+        else if (username.equals(i18n.format("username")))
+            return i18n.format("error_username_default");
         else
-            return game.i18n.format("error_username_default");
-    }
-
-    public void setBeginnerScoreList(ArrayList<Integer> beginnerScoreList) {
-        this.beginnerScoreList = beginnerScoreList;
-    }
-
-    public void setExpertScoreList(ArrayList<Integer> expertScoreList) {
-        this.expertScoreList = expertScoreList;
-    }
-
-    public void setFirstTimeTrue() {
-        this.firstTime = true;
-    }
-
-    public void setHighScoreList(ArrayList<Integer> highScoreList) {
-        this.highScoreList = highScoreList;
+            return i18n.format("error_username_default");
     }
 
     public void setIndexSelected(Integer indexSelected) {
         this.indexSelected = indexSelected;
-    }
-
-    public void setIntermediateScoreList(ArrayList<Integer> intermediateScoreList) {
-        this.intermediateScoreList = intermediateScoreList;
     }
 
     // Utilisé uniquement dans FirstScreen...

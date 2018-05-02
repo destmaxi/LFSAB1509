@@ -2,6 +2,7 @@ package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 
+import be.ucl.lfsab1509.gravityrun.tools.User;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -115,7 +116,7 @@ public class OptionScreen extends AbstractMenuScreen {
             username = newUsername; // don't forget me too
             return true;
         } else {
-            spawnErrorDialog(game.i18n.format("error_username_default"), game.user.getUsernameError(newUsername));
+            spawnErrorDialog(game.i18n.format("error_username_default"), User.getUsernameError(newUsername));
             usernameField.setText(username);
             return false;
         }

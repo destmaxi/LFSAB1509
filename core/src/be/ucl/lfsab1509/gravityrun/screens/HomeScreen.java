@@ -70,7 +70,7 @@ public class HomeScreen extends AbstractMenuScreen {
     @Override
     public void render(float dt) {
         if (clickedBack()) {
-            user.write();
+            game.user.write();
             // La suite sera gérée par super.render(dt)
         }
 
@@ -80,7 +80,7 @@ public class HomeScreen extends AbstractMenuScreen {
     @Override
     public void show() {
         super.show();
-        hyLabel.setText(game.i18n.format("hello", user.getUsername()));
+        hyLabel.setText(game.i18n.format("hello", game.user.getUsername()));
     }
 
 }

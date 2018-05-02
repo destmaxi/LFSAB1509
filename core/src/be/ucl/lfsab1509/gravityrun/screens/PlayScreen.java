@@ -52,7 +52,7 @@ public class PlayScreen extends Screen {
 
         calculateStandardWidth();
 
-        marble = new Marble((int) width / 2, 0, STANDARD_WIDTH, user.getIndexSelected() + 1);
+        marble = new Marble((int) width / 2, 0, STANDARD_WIDTH, game.user.getIndexSelected() + 1, this);
         gameOver = false;
         isCollideWall = false;
         scoreBonus = 0;
@@ -177,7 +177,7 @@ public class PlayScreen extends Screen {
         if (gameOver) {
             game.scoreList.add(score);
             soundManager.replayMenu();
-            screenManager.set(new GameOverScreen(game));
+            screenManager.set(new GameOverScreen(game, score));
         }
     }
 

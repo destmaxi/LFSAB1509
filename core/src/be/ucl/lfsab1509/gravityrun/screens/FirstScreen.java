@@ -71,20 +71,20 @@ public class FirstScreen extends AbstractMenuScreen {
         for (int i = 0; i < 3; i++)
             arrayList.add(0);
 
-        user.setUsername(username);
-        user.setFirstTimeTrue();
-        user.setBeginner(new ArrayList<>());
-        user.setInter(new ArrayList<>());
-        user.setExpert(new ArrayList<>());
-        user.setIndexSelected(1);
-        user.setHighScore(arrayList);
+        game.user.setUsername(username);
+        game.user.setFirstTimeTrue();
+        game.user.setBeginnerScoreList(new ArrayList<>());
+        game.user.setIntermediateScoreList(new ArrayList<>());
+        game.user.setExpertScoreList(new ArrayList<>());
+        game.user.setIndexSelected(1);
+        game.user.setHighScoreList(arrayList);
 
-        user.write();
+        game.user.write();
     }
 
     private void validateUsername() {
-        if (!user.checkUsername(username)) {
-            spawnErrorDialog(game.i18n.format("error_username_default"), user.getUsernameError(username));
+        if (!game.user.checkUsername(username)) {
+            spawnErrorDialog(game.i18n.format("error_username_default"), game.user.getUsernameError(username));
         } else {
             initUser();
             screenManager.set(new HomeScreen(game));

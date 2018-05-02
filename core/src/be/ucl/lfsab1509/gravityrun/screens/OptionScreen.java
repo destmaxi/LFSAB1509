@@ -15,7 +15,7 @@ public class OptionScreen extends AbstractMenuScreen {
     OptionScreen(GravityRun gravityRun) {
         super(gravityRun);
 
-        username = user.getUsername();
+        username = game.user.getUsername();
 
         Label title = new Label(game.i18n.get("option"), game.titleSkin, "title");
 
@@ -54,7 +54,7 @@ public class OptionScreen extends AbstractMenuScreen {
 
     @Override
     public void hide() {
-        user.write();
+        game.user.write();
         super.hide();
     }
 
@@ -86,7 +86,7 @@ public class OptionScreen extends AbstractMenuScreen {
     private void popLevelSelectionDialog() {
         List<String> levelSelectionList = new List<>(game.aaronScoreSkin);
         levelSelectionList.setItems(game.i18n.format("beginner"), game.i18n.format("inter"), game.i18n.format("expert"));
-        levelSelectionList.setSelectedIndex(user.getIndexSelected());
+        levelSelectionList.setSelectedIndex(game.user.getIndexSelected());
         levelSelectionList.setAlignment(Align.center);
         Table content = new Table();
         content.add(levelSelectionList);
@@ -110,12 +110,12 @@ public class OptionScreen extends AbstractMenuScreen {
 
     private boolean validateUserName(TextField usernameField) {
         String newUsername = usernameField.getText();
-        if (user.setUsername(newUsername)) {
-            user.write();
+        if (game.user.setUsername(newUsername)) {
+            game.user.write();
             username = newUsername; // don't forget me too
             return true;
         } else {
-            spawnErrorDialog(game.i18n.format("error_username_default"), user.getUsernameError(newUsername));
+            spawnErrorDialog(game.i18n.format("error_username_default"), game.user.getUsernameError(newUsername));
             usernameField.setText(username);
             return false;
         }
@@ -123,11 +123,11 @@ public class OptionScreen extends AbstractMenuScreen {
 
     private void validateLevelSelection(List levelList) {
         if (levelList.getSelected().equals(game.i18n.format("beginner")))
-            user.setIndexSelected(0);
+            game.user.setIndexSelected(0);
         else if (levelList.getSelected().equals(game.i18n.format("inter")))
-            user.setIndexSelected(1);
+            game.user.setIndexSelected(1);
         else if (levelList.getSelected().equals(game.i18n.format("expert")))
-            user.setIndexSelected(2);
+            game.user.setIndexSelected(2);
     }
 
 }

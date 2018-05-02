@@ -14,7 +14,6 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
     GravityRun game;
     ScreenManager screenManager;
     SoundManager soundManager;
-    User user;
 
     Screen(GravityRun gravityRun) {
         game = gravityRun;
@@ -22,7 +21,6 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
         width = GravityRun.WIDTH;
         screenManager = game.screenManager;
         soundManager = game.soundManager;
-        user = game.user;
     }
 
     @Override

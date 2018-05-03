@@ -197,12 +197,12 @@ public class PlayScreen extends Screen {
     private void initialiseTextures() {
         String basePath = "drawable-" + STANDARD_WIDTH + "/";
         background = new Texture(basePath + "background.png");
-        camRepositionImage = new Texture(basePath + "slowdown.png"); // FIXME
+        camRepositionImage = new Texture(basePath + "camreposition.png");
         gameOverImage = new Texture(basePath + "gameover.png");
         holeImage = new Texture(basePath + "hole.png");
         invincibleImage = new Texture(basePath + "invincible.png");
         largeHoleImage = new Texture(basePath + "largehole.png");
-        newLifeImage = new Texture(basePath + "slowdown.png"); // FIXME
+        newLifeImage = new Texture(basePath + "newlife.png");
         pauseImage = new Texture(basePath + "pause.png");
         scoreBonusImage = new Texture(basePath + "scorebonus.png");
         slowDownImage = new Texture(basePath + "slowdown.png");

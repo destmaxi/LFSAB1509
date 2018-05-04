@@ -4,6 +4,7 @@ import be.ucl.lfsab1509.gravityrun.screens.PlayScreen;
 import com.badlogic.gdx.graphics.Texture;
 
 public class CamReposition extends Bonus {
+
     private PlayScreen playScreen;
 
     public CamReposition(float y, int offset, Texture texture, PlayScreen playScreen) {
@@ -32,4 +33,5 @@ public class CamReposition extends Bonus {
         if (playScreen.getCameraPosition().y <= marble2.getCenterPosition().y)
             marble2.setRepositioning(1f);
     }
+
 }

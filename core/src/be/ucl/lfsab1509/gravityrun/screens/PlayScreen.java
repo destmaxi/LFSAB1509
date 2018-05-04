@@ -2,7 +2,6 @@ package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.sprites.*;
-
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -82,8 +81,6 @@ public class PlayScreen extends Screen {
 
         scoreLabel.setPosition((width - scoreLabel.getWidth()) / 2, height - scoreLabel.getHeight());
 
-        // TODO: mettre des coeurs pour montrer le nombre de vie restante
-
         scoreStage = new Stage(new ScreenViewport(), game.spriteBatch);
         scoreStage.addActor(scoreLabel);
         scoreStage.addActor(pauseButton);
@@ -102,10 +99,6 @@ public class PlayScreen extends Screen {
         }
 
         camera.position.y = marble.getCenterPosition().y;
-    }
-
-    public void addScoreBonus(int pointsEarned) {
-        this.scoreBonus += pointsEarned;
     }
 
     @Override
@@ -140,6 +133,10 @@ public class PlayScreen extends Screen {
     public void show() {
         Gdx.input.setInputProcessor(scoreStage);
         soundManager.replayGame();
+    }
+
+    public void addScoreBonus(int pointsEarned) {
+        this.scoreBonus += pointsEarned;
     }
 
     private void calculateStandardWidth() {
@@ -265,8 +262,8 @@ public class PlayScreen extends Screen {
 
         marble.render(game.spriteBatch);
 
-        if (gameOver)
-            renderGameOver();
+        renderGameOver();
+        renderLives();
 
         game.spriteBatch.end();
 
@@ -275,9 +272,15 @@ public class PlayScreen extends Screen {
     }
 
     private void renderGameOver() {
-        game.spriteBatch.draw(gameOverImage,
-                camera.position.x - gameOverImage.getWidth() / 2,
-                camera.position.y);
+        if (gameOver)
+            game.spriteBatch.draw(gameOverImage,
+                    camera.position.x - gameOverImage.getWidth() / 2,
+                    camera.position.y);
+    }
+
+    private void renderLives() {
+        for (int i = 0, y = newLifeImage.getHeight() + pauseImage.getHeight(); i < marble.getMarbleLife(); i++, y += newLifeImage.getHeight())
+            game.spriteBatch.draw(newLifeImage, 0, camera.position.y + GravityRun.HEIGHT / 2 - y);
     }
 
     private void repositionBonus(Bonus bonus, int i) {

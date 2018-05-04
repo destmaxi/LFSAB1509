@@ -1,7 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.screens.PlayScreen;
-
 import com.badlogic.gdx.graphics.Texture;
 
 import java.util.Random;

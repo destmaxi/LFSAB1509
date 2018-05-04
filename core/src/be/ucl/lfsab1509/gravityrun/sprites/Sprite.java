@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
  * Un sprite possède une position, une texture sous-jacente et une forme définissant ses limites.
  */
 public abstract class Sprite {
+
     Rectangle bounds;
     Texture texture;
     Vector2 position;
@@ -32,7 +33,11 @@ public abstract class Sprite {
     public abstract boolean collides(Marble marble);
 
     public void dispose() {
-        //texture.dispose();
+//        texture.dispose();
+    }
+
+    public Vector2 getPosition() {
+        return position;
     }
 
     /**
@@ -48,15 +53,12 @@ public abstract class Sprite {
         return screenBottom >= top;
     }
 
-    public Vector2 getPosition() {
-        return position;
+    boolean overlaps(Marble marble) {
+        return Intersector.overlaps(marble.getBounds(), bounds);
     }
 
     public void render(SpriteBatch spriteBatch) {
         spriteBatch.draw(texture, position.x, position.y);
     }
 
-    boolean overlaps(Marble marble) {
-        return Intersector.overlaps(marble.getBounds(), bounds);
-    }
 }

@@ -11,4 +11,5 @@ public class LargeHole extends Hole {
         bounds.set(position.x, position.y + marbleWidth / 2,
                 texture.getWidth(), texture.getHeight() - marbleWidth);
     }
+
 }

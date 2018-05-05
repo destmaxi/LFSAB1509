@@ -40,7 +40,7 @@ public class PlayScreen extends Screen {
     private Random random;
     private Stage scoreStage;
     private OrthographicCamera camera;
-    private Texture background, camRepositionImage, gameOverImage, holeImage, invicibleImage, largeHoleImage, newLifeImage, pauseImage, scoreBonusImage, slowDownImage, wallImage;
+    private Texture background, camRepositionImage, gameOverImage, holeImage, invincibleImage, largeHoleImage, newLifeImage, pauseImage, scoreBonusImage, slowDownImage, wallImage;
 
     PlayScreen(GravityRun gravityRun) {
         super(gravityRun);
@@ -110,11 +110,9 @@ public class PlayScreen extends Screen {
 
     @Override
     public void dispose() {
-        background.dispose();
-        gameOverImage.dispose();
         marble.dispose();
-        pauseImage.dispose();
         scoreStage.dispose();
+        disposeTextures();
 
         for (Obstacle obstacle : obstacles)
             obstacle.dispose();
@@ -161,6 +159,20 @@ public class PlayScreen extends Screen {
             STANDARD_WIDTH = 1600;
     }
 
+    private void disposeTextures() {
+        background.dispose();
+        camRepositionImage.dispose();
+        gameOverImage.dispose();
+        holeImage.dispose();
+        invincibleImage.dispose();
+        largeHoleImage.dispose();
+        newLifeImage.dispose();
+        pauseImage.dispose();
+        scoreBonusImage.dispose();
+        slowDownImage.dispose();
+        wallImage.dispose();
+    }
+
     private void handleEndGame() {
         if (gameOver) {
             soundManager.replayMenu();
@@ -188,7 +200,7 @@ public class PlayScreen extends Screen {
         camRepositionImage = new Texture(basePath + "slowdown.png"); // FIXME
         gameOverImage = new Texture(basePath + "gameover.png");
         holeImage = new Texture(basePath + "hole.png");
-        invicibleImage = new Texture(basePath + "invincible.png");
+        invincibleImage = new Texture(basePath + "invincible.png");
         largeHoleImage = new Texture(basePath + "largehole.png");
         newLifeImage = new Texture(basePath + "slowdown.png"); // FIXME
         pauseImage = new Texture(basePath + "pause.png");
@@ -210,7 +222,7 @@ public class PlayScreen extends Screen {
                 bonus = new CamReposition(positionY, offset, camRepositionImage, this);
                 break;
             case 4:
-                bonus = new Invincible(positionY, offset, invicibleImage);
+                bonus = new Invincible(positionY, offset, invincibleImage);
                 break;
             case 5:
                 bonus = new SlowDown(positionY, offset, slowDownImage);

@@ -14,7 +14,7 @@ public class Hole extends Obstacle {
                 texture.getWidth() - marbleWidth, texture.getHeight() - marbleWidth);
     }
 
-    public Hole(float x, float y, int marbleWidth, Texture texture, PlayScreen playScreen) {
+    Hole(float x, float y, int marbleWidth, Texture texture, PlayScreen playScreen) {
         super(x, y, texture, playScreen);
         bounds.set(position.x + marbleWidth / 2, position.y + marbleWidth / 2,
                 texture.getWidth() - marbleWidth, texture.getHeight() - marbleWidth);

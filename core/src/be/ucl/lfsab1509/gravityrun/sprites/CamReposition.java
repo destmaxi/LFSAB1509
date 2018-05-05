@@ -4,7 +4,7 @@ import be.ucl.lfsab1509.gravityrun.screens.PlayScreen;
 import com.badlogic.gdx.graphics.Texture;
 
 public class CamReposition extends Bonus {
-    PlayScreen playScreen;
+    private PlayScreen playScreen;
 
     public CamReposition(float y, int offset, Texture texture, PlayScreen playScreen) {
         super(y, offset, texture);

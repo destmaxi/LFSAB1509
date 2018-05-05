@@ -27,7 +27,6 @@ public class GravityRun extends Game {
     public Skin aaronScoreSkin, labelScoreBoardSkin, tableScoreBoardSkin, tableSkin, titleSkin;
     private TextureAtlas skinTextureAtlas;
 
-    public ArrayList<Integer> scoreList;
     public I18NBundle i18n;
     public Preferences preferences;
     public ScreenManager screenManager;

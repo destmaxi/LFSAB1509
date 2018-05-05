@@ -39,22 +39,19 @@ public class GameOverScreen extends AbstractMenuScreen {
         table.add(title).top();
         table.row();
 
+        Label label1, label2;
         if (isNewHighScore) {
-            Label newHighScoreLabel = newCenteredLabel(game.i18n.format("new_high_score", finalScore));
-            Label previousHighScoreLabel = newCenteredLabel(game.i18n.format("previous_high_score", previousHighScore));
-            table.add(newHighScoreLabel).padTop(height - containerHeight).width(containerWidth).expandX();
-            table.row();
-            table.add(previousHighScoreLabel).padTop(height - containerHeight).width(containerWidth).expandX();
-            table.row();
+            label1 = newCenteredLabel(game.i18n.format("new_high_score", finalScore));
+            label2 = newCenteredLabel(game.i18n.format("previous_high_score", previousHighScore));
         } else {
-            Label highScoreLabel = newCenteredLabel(game.i18n.format("high_score", previousHighScore));
-            Label scoreLabel = newCenteredLabel(game.i18n.format("final_score", finalScore));
-            table.add(scoreLabel).padTop(height - containerHeight).width(containerWidth).expandX();
-            table.row();
-            table.add(highScoreLabel).padTop(height - containerHeight).width(containerWidth).expandX();
-            table.row();
+            label1 = newCenteredLabel(game.i18n.format("high_score", previousHighScore));
+            label2 = newCenteredLabel(game.i18n.format("final_score", finalScore));
         }
 
+        table.add(label1).padTop(height - containerHeight).width(containerWidth).expandX();
+        table.row();
+        table.add(label2).padTop(height - containerHeight).width(containerWidth).expandX();
+        table.row();
         table.add(replayButton).expandX().fillX().padTop((height - containerHeight) * 2);
         table.row();
         table.add(menuButton).expandX().fillX().padTop(height - containerHeight);

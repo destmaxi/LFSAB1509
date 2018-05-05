@@ -185,7 +185,6 @@ public class PlayScreen extends Screen {
 
     private void handleEndGame() {
         if (gameOver) {
-            game.scoreList.add(score);
             soundManager.replayMenu();
             screenManager.set(new GameOverScreen(game, score));
         }

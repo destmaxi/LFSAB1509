@@ -40,6 +40,10 @@ public class Marble {
         difficulty = level;
     }
 
+    public void addMarbleLife(int lives) {
+        this.marbleLife += lives;
+    }
+
     public void dispose() {
         marble.dispose();
         marbleAnimation.dispose();
@@ -148,10 +152,6 @@ public class Marble {
         this.inWall = inWall;
     }
 
-    public void setMarbleLife(int marbleLife) {
-        this.marbleLife = marbleLife;
-    }
-
     public void setRepositioning(float repositioning) {
         this.repositioning = repositioning;
     }
@@ -194,18 +194,19 @@ C'EST PAS OUF MAIS CA FONCTIONNE +_
                 position.add(arrow * GravityRun.WIDTH / 75, difficulty * MOVEMENT * speed * slowDown * dt, 0);
         }
 */
-        if (!gameOver) {
-            if ((blockedOnRight && Gdx.input.getGyroscopeY() > 0) || (blockedOnLeft && Gdx.input.getGyroscopeY() < 0))
-                position.add(0, difficulty * MOVEMENT * speed * slowDown * dt, 0);
-            else if ((blockedOnLeft && Gdx.input.getGyroscopeY() < 0) && blockedOnTop)
-                position.add(0, 0, 0);
-            else if ((blockedOnRight && Gdx.input.getGyroscopeY() > 0) && blockedOnTop)
-                position.add(0, 0, 0);
-            else if (blockedOnTop)
-                position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, 0, 0);
-            else
-                position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, difficulty * MOVEMENT * speed * slowDown * dt, 0);
-        }
+        if (gameOver)
+            return;
+
+        if ((blockedOnRight && Gdx.input.getGyroscopeY() > 0) || (blockedOnLeft && Gdx.input.getGyroscopeY() < 0))
+            position.add(0, difficulty * MOVEMENT * speed * slowDown * dt, 0);
+        else if ((blockedOnLeft && Gdx.input.getGyroscopeY() < 0) && blockedOnTop)
+            position.add(0, 0, 0);
+        else if ((blockedOnRight && Gdx.input.getGyroscopeY() > 0) && blockedOnTop)
+            position.add(0, 0, 0);
+        else if (blockedOnTop)
+            position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, 0, 0);
+        else
+            position.add(Gdx.input.getGyroscopeY() * GravityRun.WIDTH / 75, difficulty * MOVEMENT * speed * slowDown * dt, 0);
     }
 
     private void updateSpeed() {

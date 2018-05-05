@@ -3,62 +3,30 @@ package be.ucl.lfsab1509.gravityrun.sprites;
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Shape2D;
-import com.badlogic.gdx.math.Vector2;
 
 import java.util.Random;
 
-public abstract class Bonus {
+public abstract class Bonus extends Sprite {
 
-    static Marble marble;
-
-    float collideTime;
     private int offset;
-    Shape2D bounds;
-    private Texture bonusTexture;
-    private Vector2 position;
+    Marble marble2;
 
-    Bonus(float y, int offset, String path) {
+    Bonus(float y, int offset, Texture texture) {
+        super(0, y, texture);
         this.offset = offset;
         Random random = new Random();
-
-        bonusTexture = new Texture(path);
-        position = new Vector2(random.nextInt(GravityRun.WIDTH - bonusTexture.getWidth()), y);
-        bounds = new Rectangle(position.x, position.y, bonusTexture.getWidth(), bonusTexture.getHeight());    }
-
-    public void dispose() {
-        bonusTexture.dispose();
+        position.x = random.nextInt(GravityRun.WIDTH - texture.getWidth());
+        bounds.x = position.x;
     }
 
     public int getOffset() {
         return offset;
     }
 
-    public Vector2 getPosition() {
-        return position;
-    }
-
-    public static void initMarble(Marble marble1) {
-        marble = marble1;
-    }
-
-    public boolean isOutOfScreen(float screenCenterY) {
-        float screenBottom = screenCenterY - GravityRun.HEIGHT / 2;
-        float bonusTop = position.y + bonusTexture.getHeight();
-
-        return screenBottom >= bonusTop;
-    }
-
-    public void render(SpriteBatch spriteBatch) {
-        spriteBatch.draw(bonusTexture, position.x, position.y);
-    }
-
-    public abstract boolean collidesMarble();
-
     public abstract boolean isFinished();
 
-    public abstract void update(float dt);
+    public void update(float dt) {
+
+    }
 
 }

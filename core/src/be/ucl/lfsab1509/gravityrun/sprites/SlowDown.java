@@ -1,25 +1,28 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.graphics.Texture;
 
 public class SlowDown extends Bonus {
 
     private static int activeSlowDowns = 0;
 
-    public SlowDown(float y, int offset, int standardWidth) {
-        super(y, offset, "drawable-" + standardWidth + "/slowdown.png");
+    private float collideTime;
+
+    public SlowDown(float y, int offset, Texture texture) {
+        super(y, offset, texture);
     }
 
     @Override
-    public boolean collidesMarble() {
-        if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
+    public boolean collides(Marble marble) {
+        if (overlaps(marble)) {
+            marble2 = marble;
             activeSlowDowns++;
             collideTime = 0;
-            marble.setSlowDown(.5f);
+            marble2.setSlowDown(.5f);
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     @Override
@@ -32,7 +35,7 @@ public class SlowDown extends Bonus {
         collideTime += dt;
 
         if (collideTime >= 5 && --activeSlowDowns == 0)
-            marble.setSlowDown(1f);
+            marble2.setSlowDown(1f);
     }
 
     public static void resetBonus() {

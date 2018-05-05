@@ -1,25 +1,28 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.graphics.Texture;
 
 public class Invincible extends Bonus {
 
     private static int activeInvincibles = 0;
 
-    public Invincible(float y, int offset, int standardWidth) {
-        super(y, offset, "drawable-" + standardWidth + "/invincible.png");
+    private float collideTime;
+
+    public Invincible(float y, int offset, Texture texture) {
+        super(y, offset, texture);
     }
 
     @Override
-    public boolean collidesMarble() {
-        if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
+    public boolean collides(Marble marble) {
+        if (overlaps(marble)) {
+            marble2 = marble;
             activeInvincibles++;
             collideTime = 0;
-            marble.setInvincible(true);
+            marble2.setInvincible(true);
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     @Override
@@ -32,8 +35,8 @@ public class Invincible extends Bonus {
         collideTime += dt;
 
         if (collideTime >= 3 && --activeInvincibles == 0) {
-            marble.setInvincible(false);
-            marble.setInWall(true);
+            marble2.setInvincible(false);
+            marble2.setInWall(true);
         }
     }
 

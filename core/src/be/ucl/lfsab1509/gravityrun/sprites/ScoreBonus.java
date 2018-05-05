@@ -2,31 +2,29 @@ package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.screens.PlayScreen;
 
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.graphics.Texture;
 
 public class ScoreBonus extends Bonus {
     private PlayScreen playScreen;
 
-    public ScoreBonus(float y, int offset, int standardWidth, PlayScreen playScreen) {
-        super(y, offset, "drawable-" + standardWidth + "/scorebonus.png");
+    public ScoreBonus(float y, int offset, Texture texture, PlayScreen playScreen) {
+        super(y, offset, texture);
         this.playScreen = playScreen;
     }
 
     @Override
-    public boolean collidesMarble() {
-        return Intersector.overlaps(marble.getBounds(), (Rectangle) bounds);
+    public boolean collides(Marble marble) {
+        if (overlaps(marble)) {
+            marble2 = marble;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public boolean isFinished() {
-        playScreen.setScoreBonus(playScreen.getScoreBonus() + 100);
+        playScreen.addScoreBonus(100);
         return true;
     }
-
-    @Override
-    public void update(float dt) {
-
-    }
-
 }

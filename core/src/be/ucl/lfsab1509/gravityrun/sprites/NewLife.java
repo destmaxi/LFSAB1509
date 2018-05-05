@@ -1,29 +1,25 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.graphics.Texture;
 
 public class NewLife extends Bonus {
-    public NewLife(float y, int offset, int standardWidth) {
-        super(y, offset, "drawable-" + standardWidth + "/slowdown.png");
+    public NewLife(float y, int offset, Texture texture) {
+        super(y, offset, texture);
     }
 
     @Override
-    public boolean collidesMarble() {
-        if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
-            marble.setMarbleLife(marble.getMarbleLife() + 1);
+    public boolean collides(Marble marble) {
+        if (overlaps(marble)) {
+            marble2 = marble;
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     @Override
     public boolean isFinished() {
+        marble2.addMarbleLife(1);
         return true;
-    }
-
-    @Override
-    public void update(float dt) {
-
     }
 }

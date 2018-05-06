@@ -27,14 +27,13 @@ public class PlayScreen extends Screen {
     private static int OBSTACLE_SPACING;
     private static int STANDARD_WIDTH;
 
-    public static boolean isCollideWall = false;
     private static int collidedWall = 0;
-    private int score = 0, scoreBonus = 0;
 
     private Array<Bonus> bonuses, caughtBonuses;
     private Array<Obstacle> obstacles;
     private Array<Vector2> backgroundPositions;
-    public boolean gameOver = false;
+    public boolean gameOver = false, isCollideWall = false;
+    private int score = 0, scoreBonus = 0;
     private Label scoreLabel;
     private Marble marble;
     private Random random;
@@ -51,7 +50,6 @@ public class PlayScreen extends Screen {
         calculateStandardWidth();
 
         marble = new Marble((int) width / 2, 0, STANDARD_WIDTH, game.user.getIndexSelected() + 1, this);
-        isCollideWall = false;
 
         Invincible.resetBonus();
         SlowDown.resetBonus();
@@ -210,22 +208,22 @@ public class PlayScreen extends Screen {
         Bonus bonus;
         switch (random.nextInt(10)) {
             case 1:
-                bonus = new NewLife(positionY, offset, newLifeImage);
+                bonus = new NewLife(positionY, offset, marble, newLifeImage);
                 break;
             case 2:
                 bonus = null;
                 break;
             case 3:
-                bonus = new CamReposition(positionY, offset, camRepositionImage, this);
+                bonus = new CamReposition(positionY, offset, marble, this, camRepositionImage);
                 break;
             case 4:
-                bonus = new Invincible(positionY, offset, invincibleImage);
+                bonus = new Invincible(positionY, offset, marble, this, invincibleImage);
                 break;
             case 5:
-                bonus = new SlowDown(positionY, offset, slowDownImage);
+                bonus = new SlowDown(positionY, offset, marble, this, slowDownImage);
                 break;
             default:
-                bonus = new ScoreBonus(positionY, offset, scoreBonusImage, this);
+                bonus = new ScoreBonus(positionY, offset, marble, this, scoreBonusImage);
         }
         return bonus;
     }
@@ -234,13 +232,13 @@ public class PlayScreen extends Screen {
         Obstacle obstacle;
         switch (random.nextInt(5)) {
             case 0:
-                obstacle = new Hole(position, marble.getNormalDiameter(), holeImage, this);
+                obstacle = new Hole(position, marble.getNormalDiameter(), this, holeImage);
                 break;
             case 3:
-                obstacle = new LargeHole(position, marble.getNormalDiameter(), largeHoleImage, this);
+                obstacle = new LargeHole(position, marble.getNormalDiameter(), this, largeHoleImage);
                 break;
             default:
-                obstacle = new Wall(position, marble.getNormalDiameter(), wallImage, this);
+                obstacle = new Wall(position, marble.getNormalDiameter(), this, wallImage);
         }
         return obstacle;
     }
@@ -341,16 +339,15 @@ public class PlayScreen extends Screen {
     }
 
     private void updateCamera(float dt) {
-        if (!gameOver) {
+        if (!gameOver)
             camera.position.add(0, marble.getSpeedFactor() * dt, 0);
-        }
         camera.update();
     }
 
     private void updateCaughtBonuses(float dt) {
         for (int i = 0; i < caughtBonuses.size; i++) {
             Bonus bonus = caughtBonuses.get(i);
-            bonus.update(dt, gameOver);
+            bonus.update(dt);
             if (bonus.isFinished()) {
                 bonus.dispose();
                 caughtBonuses.removeIndex(i--);

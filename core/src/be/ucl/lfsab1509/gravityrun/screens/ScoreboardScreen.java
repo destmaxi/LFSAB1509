@@ -1,16 +1,15 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
-public class ScoreboardScreen extends AbstractMenuScreen {
+class ScoreboardScreen extends AbstractMenuScreen {
+
     private static final int HIGH_SCORE_COUNT = 3;
 
     ScoreboardScreen(GravityRun gravityRun) {
@@ -28,9 +27,8 @@ public class ScoreboardScreen extends AbstractMenuScreen {
             listWidget[level] = new List(game.tableScoreBoardSkin);
             Array<String> array = new Array<>(HIGH_SCORE_COUNT);
             ArrayList<Integer> list = game.user.getHighScores(level, HIGH_SCORE_COUNT);
-            for (int i = 0; i < HIGH_SCORE_COUNT; i++) {
+            for (int i = 0; i < HIGH_SCORE_COUNT; i++)
                 array.add(i + ".  " + list.get(i));
-            }
             listWidget[level].setItems(array);
         }
 
@@ -48,4 +46,5 @@ public class ScoreboardScreen extends AbstractMenuScreen {
 
         initStage(table);
     }
+
 }

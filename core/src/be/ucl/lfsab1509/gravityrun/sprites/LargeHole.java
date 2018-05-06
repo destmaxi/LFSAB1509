@@ -5,9 +5,8 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class LargeHole extends Hole {
 
-    public LargeHole(float y, int marbleWidth, Texture texture, PlayScreen playScreen) {
-        super(0, y, marbleWidth, texture, playScreen);
-
+    public LargeHole(float y, int marbleWidth, PlayScreen playScreen, Texture texture) {
+        super(0, y, playScreen, texture);
         bounds.set(position.x, position.y + marbleWidth / 2,
                 texture.getWidth(), texture.getHeight() - marbleWidth);
     }

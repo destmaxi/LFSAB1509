@@ -1,5 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
+import be.ucl.lfsab1509.gravityrun.screens.PlayScreen;
 import com.badlogic.gdx.graphics.Texture;
 
 public class SlowDown extends Bonus {
@@ -8,21 +9,18 @@ public class SlowDown extends Bonus {
 
     private float collideTime;
 
-    public SlowDown(float y, int offset, Texture texture) {
-        super(y, offset, texture);
+    public SlowDown(float y, int offset, Marble marble, PlayScreen playScreen, Texture texture) {
+        super(y, offset, marble, playScreen, texture);
     }
 
     @Override
     public boolean collides(Marble marble) {
         if (overlaps(marble)) {
-            marble2 = marble;
             activeSlowDowns++;
             collideTime = 0;
-            marble2.setSlowDown(.5f);
-            return true;
-        } else {
-            return false;
+            marble.setSlowDown(.5f);
         }
+        return super.collides(marble);
     }
 
     @Override
@@ -31,11 +29,11 @@ public class SlowDown extends Bonus {
     }
 
     @Override
-    public void update(float dt, boolean gameOver) {
+    public void update(float dt) {
         collideTime += dt;
 
-        if (!gameOver && collideTime >= 5 && --activeSlowDowns == 0)
-            marble2.setSlowDown(1f);
+        if (!playScreen.gameOver && collideTime >= 5 && --activeSlowDowns == 0)
+            marble.setSlowDown(1f);
     }
 
     public static void resetBonus() {

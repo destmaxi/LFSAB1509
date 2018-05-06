@@ -1,5 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
+import be.ucl.lfsab1509.gravityrun.GravityRun;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Action;
@@ -8,12 +9,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import be.ucl.lfsab1509.gravityrun.GravityRun;
-
 abstract class AbstractMenuScreen extends Screen {
 
-    int openDialogs = 0;
     float containerHeight, containerWidth;
+    private int openDialogs = 0;
     Stage stage;
 
     AbstractMenuScreen(GravityRun gravityRun) {
@@ -57,7 +56,24 @@ abstract class AbstractMenuScreen extends Screen {
         stage.addActor(tableContainer);
     }
 
+    void spawnErrorDialog(String title, String message) {
+        Label errorLabel = new Label(message, game.aaronScoreSkin);
+        errorLabel.setAlignment(Align.center); // Pour que le texte soit centré à l'intérieur du label, sinon c'est moche
+        errorLabel.setWrap(true); // Longs labels
+        Table content = new Table();
+        content.add(errorLabel).width(width * .7f).pad(10);
+        Dialog errorDialog = new MessageDialog(title, content, new DialogResultMethod() {
+            @Override
+            public boolean result(Object object) {
+                // do nothing
+                return true;
+            }
+        });
+        errorDialog.show(stage);
+    }
+
     public interface DialogResultMethod {
+
         /**
          * Action à effectuer lors de la sortie de la boîte de dialogue (appui sur un bouton ou sur une touche).
          *
@@ -65,6 +81,7 @@ abstract class AbstractMenuScreen extends Screen {
          * @return true si la boîte de dialogue peut se fermer, false sinon.
          */
         boolean result(Object object);
+
     }
 
     /**
@@ -73,6 +90,7 @@ abstract class AbstractMenuScreen extends Screen {
      * Toute autre méthode doit être ajoutée explicitement.
      */
     class EmptyButtonsDialog extends Dialog {
+
         private DialogResultMethod resultMethod;
 
         EmptyButtonsDialog(String title, Table content, DialogResultMethod resultMethod) {
@@ -102,6 +120,7 @@ abstract class AbstractMenuScreen extends Screen {
             openDialogs++;
             return super.show(stage, action);
         }
+
     }
 
     /**
@@ -110,11 +129,13 @@ abstract class AbstractMenuScreen extends Screen {
      * ils sont tous les deux associés à la valeur {@code true}.
      */
     class MessageDialog extends EmptyButtonsDialog {
+
         MessageDialog(String title, Table content, DialogResultMethod resultMethod) {
             super(title, content, resultMethod);
             TextButton okButton = new TextButton(game.i18n.format("ok"), game.aaronScoreSkin, "round");
             this.button(okButton, true).key(Input.Keys.ENTER, true);
         }
+
     }
 
     /**
@@ -122,27 +143,13 @@ abstract class AbstractMenuScreen extends Screen {
      * permettant de quitter la fenêtre dans sauver les changements, et associé à la valeur {@code false}.
      */
     class EditDialog extends MessageDialog {
+
         EditDialog(String title, Table content, DialogResultMethod resultMethod) {
             super(title, content, resultMethod);
             TextButton cancelButton = new TextButton(game.i18n.format("cancel"), game.aaronScoreSkin, "round");
             this.button(cancelButton, false);
         }
-    }
 
-    void spawnErrorDialog(String title, String message) {
-        Label errorLabel = new Label(message, game.aaronScoreSkin);
-        errorLabel.setAlignment(Align.center); // Pour que le texte soit centré à l'intérieur du label, sinon c'est moche
-        errorLabel.setWrap(true); // Longs labels
-        Table content = new Table();
-        content.add(errorLabel).width(width * .7f).pad(10);
-        Dialog errorDialog = new MessageDialog(title, content, new DialogResultMethod() {
-            @Override
-            public boolean result(Object object) {
-                // do nothing
-                return true;
-            }
-        });
-        errorDialog.show(stage);
     }
 
 }

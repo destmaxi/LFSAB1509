@@ -1,10 +1,11 @@
 package be.ucl.lfsab1509.gravityrun;
 
-import be.ucl.lfsab1509.gravityrun.screens.*;
+import be.ucl.lfsab1509.gravityrun.screens.FirstScreen;
+import be.ucl.lfsab1509.gravityrun.screens.HomeScreen;
+import be.ucl.lfsab1509.gravityrun.screens.ScreenManager;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 import be.ucl.lfsab1509.gravityrun.tools.User;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -15,7 +16,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.I18NBundle;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 public class GravityRun extends Game {
@@ -30,7 +30,7 @@ public class GravityRun extends Game {
     public I18NBundle i18n;
     public Preferences preferences;
     public ScreenManager screenManager;
-	public SoundManager soundManager;
+    public SoundManager soundManager;
     public SpriteBatch spriteBatch;
     public User user;
 
@@ -72,7 +72,12 @@ public class GravityRun extends Game {
         soundManager.dispose();
         spriteBatch.dispose();    // FIXME : already disposed ?
         disposeSkins();
-        User.i18n = null;
+    }
+
+    @Override
+    public void pause() {
+        System.out.println("GravityRun.pause");
+        super.pause();
     }
 
     @Override
@@ -95,12 +100,6 @@ public class GravityRun extends Game {
         super.resume();
     }
 
-    @Override
-    public void pause() {
-        System.out.println("GravityRun.pause");
-        super.pause();
-    }
-
     private void disposeSkins() {
         aaronScoreSkin.dispose();
         labelScoreBoardSkin.dispose();
@@ -109,6 +108,10 @@ public class GravityRun extends Game {
         titleSkin.dispose();
 
         skinTextureAtlas.dispose();
+    }
+
+    public void exit() {
+        Gdx.app.exit();
     }
 
     private void initializeSkins() {
@@ -135,10 +138,6 @@ public class GravityRun extends Game {
         // En espérant qu'il ne soit pas interrompu entre-temps.
 
         generator.dispose();
-    }
-
-    public void exit() {
-        Gdx.app.exit();
     }
 
 }

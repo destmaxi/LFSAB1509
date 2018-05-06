@@ -1,14 +1,13 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-public class PauseScreen extends AbstractMenuScreen {
+class PauseScreen extends AbstractMenuScreen {
 
     PauseScreen(GravityRun gravityRun, int currentScore) {
         super(gravityRun);
@@ -43,4 +42,5 @@ public class PauseScreen extends AbstractMenuScreen {
 
         initStage(table);
     }
+
 }

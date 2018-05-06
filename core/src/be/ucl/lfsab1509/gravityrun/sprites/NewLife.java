@@ -4,23 +4,13 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class NewLife extends Bonus {
 
-    public NewLife(float y, int offset, Texture texture) {
-        super(y, offset, texture);
-    }
-
-    @Override
-    public boolean collides(Marble marble) {
-        if (overlaps(marble)) {
-            marble2 = marble;
-            return true;
-        } else {
-            return false;
-        }
+    public NewLife(float y, int offset, Marble marble, Texture texture) {
+        super(y, offset, marble, texture);
     }
 
     @Override
     public boolean isFinished() {
-        marble2.addMarbleLife(1);
+        marble.addMarbleLife(1);
         return true;
     }
 

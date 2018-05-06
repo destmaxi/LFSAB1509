@@ -1,7 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-
 import be.ucl.lfsab1509.gravityrun.tools.User;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -59,31 +58,6 @@ public class OptionScreen extends AbstractMenuScreen {
         super.hide();
     }
 
-    private void popUsernameDialog() {
-        Gdx.input.setOnscreenKeyboardVisible(false);
-        TextField usernameField = new TextField(username, game.tableSkin);
-        usernameField.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                usernameField.selectAll();
-            }
-        });
-        Table content = new Table();
-        content.add(usernameField).width(0.7f * width).pad(10);
-        EditDialog editUsernameDialog = new EditDialog(game.i18n.format("enter_username"), content, new DialogResultMethod() {
-            @Override
-            public boolean result(Object object) {
-                Gdx.input.setOnscreenKeyboardVisible(false);
-                if (object.equals(true))
-                    return validateUserName(usernameField);
-                else {
-                    return true;
-                }
-            }
-        });
-        editUsernameDialog.show(stage);
-    }
-
     private void popLevelSelectionDialog() {
         List<String> levelSelectionList = new List<>(game.aaronScoreSkin);
         levelSelectionList.setItems(game.i18n.format("beginner"), game.i18n.format("inter"), game.i18n.format("expert"));
@@ -109,6 +83,41 @@ public class OptionScreen extends AbstractMenuScreen {
         editLevelSelectionDialog.show(stage);
     }
 
+    private void popUsernameDialog() {
+        Gdx.input.setOnscreenKeyboardVisible(false);
+        TextField usernameField = new TextField(username, game.tableSkin);
+        usernameField.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                usernameField.selectAll();
+            }
+        });
+        Table content = new Table();
+        content.add(usernameField).width(0.7f * width).pad(10);
+        EditDialog editUsernameDialog = new EditDialog(game.i18n.format("enter_username"), content, new DialogResultMethod() {
+            @Override
+            public boolean result(Object object) {
+                Gdx.input.setOnscreenKeyboardVisible(false);
+                if (object.equals(true))
+                    return validateUserName(usernameField);
+                else {
+                    return true;
+                }
+            }
+        });
+        editUsernameDialog.show(stage);
+    }
+
+    private void validateLevelSelection(List levelList) {
+        if (levelList.getSelected().equals(game.i18n.format("beginner")))
+            game.user.setIndexSelected(0);
+        else if (levelList.getSelected().equals(game.i18n.format("inter")))
+            game.user.setIndexSelected(1);
+        else if (levelList.getSelected().equals(game.i18n.format("expert")))
+            game.user.setIndexSelected(2);
+        game.user.write();
+    }
+
     private boolean validateUserName(TextField usernameField) {
         String newUsername = usernameField.getText();
         if (game.user.setUsername(newUsername)) {
@@ -120,16 +129,6 @@ public class OptionScreen extends AbstractMenuScreen {
             usernameField.setText(username);
             return false;
         }
-    }
-
-    private void validateLevelSelection(List levelList) {
-        if (levelList.getSelected().equals(game.i18n.format("beginner")))
-            game.user.setIndexSelected(0);
-        else if (levelList.getSelected().equals(game.i18n.format("inter")))
-            game.user.setIndexSelected(1);
-        else if (levelList.getSelected().equals(game.i18n.format("expert")))
-            game.user.setIndexSelected(2);
-        game.user.write();
     }
 
 }

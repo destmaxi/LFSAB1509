@@ -7,7 +7,6 @@ import com.badlogic.gdx.audio.Sound;
 /**
  * Manage the creation, deletion and playing of sounds and music.
  */
-
 public class SoundManager {
 
     private final float soundLevel = 0.5f;

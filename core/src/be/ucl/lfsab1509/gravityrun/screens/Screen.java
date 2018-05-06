@@ -2,15 +2,12 @@ package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
-
-import be.ucl.lfsab1509.gravityrun.tools.User;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
 public abstract class Screen implements com.badlogic.gdx.Screen {
 
     float height, width;
-
     GravityRun game;
     ScreenManager screenManager;
     SoundManager soundManager;

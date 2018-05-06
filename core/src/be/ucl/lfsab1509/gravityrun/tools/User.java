@@ -1,13 +1,12 @@
 package be.ucl.lfsab1509.gravityrun.tools;
 
+import be.ucl.lfsab1509.gravityrun.GravityRun;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.Json;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import be.ucl.lfsab1509.gravityrun.GravityRun;
 
 public class User {
 
@@ -25,19 +24,19 @@ public class User {
     // La liste des scores obtenus, triés du plus grand au plus petit.
     private ArrayList<Integer> beginnerScoreList, expertScoreList, intermediateScoreList;
     private ArrayList<Integer> highScoreList;
-    private boolean firstTime;
+    private boolean firstTime = true;
     private GravityRun game;
-    private Integer indexSelected;
+    private int indexSelected = 1;
     private String username;
 
     public User(GravityRun gravityRun, String username) {
         game = gravityRun;
         this.username = username;
-        this.firstTime = true;
-        indexSelected = 1; // default
+
         beginnerScoreList = new ArrayList<>();
-        intermediateScoreList = new ArrayList<>();
         expertScoreList = new ArrayList<>();
+        intermediateScoreList = new ArrayList<>();
+
         highScoreList = new ArrayList<>();
         for (int i = 0; i < 3; i++)
             highScoreList.add(0);
@@ -75,16 +74,15 @@ public class User {
      */
     public boolean addScore(int score, int level) {
         ArrayList<Integer> liste = getScoreList(level);
+
         int insertionIndex = 0;
-        for (; insertionIndex < liste.size() && liste.get(insertionIndex) > score; insertionIndex++) {
-            // empty
-        }
+        for (; insertionIndex < liste.size() && liste.get(insertionIndex) > score; insertionIndex++) ;
+
         if (insertionIndex >= liste.size() || score != liste.get(insertionIndex)) {
             liste.add(insertionIndex, score);
             return insertionIndex == 0;
-        } else {
+        } else
             return false;
-        }
     }
 
     /**
@@ -102,6 +100,19 @@ public class User {
 
     public static boolean checkUsername(String username) {
         return (username.length() > 0) && (username.length() <= MAX_USERNAME_LENGTH) && (!username.equals(i18n.format("username")));
+    }
+
+    private String convertAtoS(ArrayList<Integer> arrayList) {
+        Json json = new Json();
+        return json.toJson(arrayList, ArrayList.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    private ArrayList<Integer> convertStoA(String text) {
+        Json json = new Json();
+        if (text == null)
+            return new ArrayList<>();
+        return json.fromJson(ArrayList.class, text);
     }
 
     public ArrayList<Integer> getBeginnerScoreList() {
@@ -127,7 +138,7 @@ public class User {
     public ArrayList<Integer> getHighScores(int level, int count) {
         ArrayList<Integer> scoreList = getScoreList(level);
         ArrayList<Integer> ret = new ArrayList<>(scoreList.subList(0, Math.min(count, scoreList.size())));
-        if (count > scoreList.size()) // 0-padding
+        if (count > scoreList.size())   // 0-padding
             for (int i = scoreList.size(); i < count; i++)
                 ret.add(0); // FIXME simplifier ce code qui est assez moche...
         return ret;
@@ -176,33 +187,14 @@ public class User {
         if (checkUsername(username)) {
             this.username = username;
             return true;
-        } else {
+        } else
             return false;
-        }
     }
 
-    public void shrinkScoreList(int level) {
+    private void shrinkScoreList(int level) {
         ArrayList<Integer> list = getScoreList(level);
         while (list.size() > HIGH_SCORE_MAX_COUNT)
             list.remove(list.size() - 1);
-    }
-
-    public void write() {
-        game.preferences.put(toMap());
-        game.preferences.flush();
-    }
-
-    private String convertAtoS(ArrayList<Integer> arrayList) {
-        Json json = new Json();
-        return json.toJson(arrayList, ArrayList.class);
-    }
-
-    @SuppressWarnings("unchecked")
-    private ArrayList<Integer> convertStoA(String text) {
-        Json json = new Json();
-        if (text == null)
-            return new ArrayList<>();
-        return json.fromJson(ArrayList.class, text);
     }
 
     private Map<String, Object> toMap() {
@@ -218,4 +210,10 @@ public class User {
 
         return map;
     }
+
+    public void write() {
+        game.preferences.put(toMap());
+        game.preferences.flush();
+    }
+
 }

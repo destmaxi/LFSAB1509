@@ -5,33 +5,26 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class CamReposition extends Bonus {
 
-    private PlayScreen playScreen;
-
-    public CamReposition(float y, int offset, Texture texture, PlayScreen playScreen) {
-        super(y, offset, texture);
-        this.playScreen = playScreen;
+    public CamReposition(float y, int offset, Marble marble, PlayScreen playScreen, Texture texture) {
+        super(y, offset, marble, playScreen, texture);
     }
 
     @Override
     public boolean collides(Marble marble) {
-        if (overlaps(marble)) {
-            marble2 = marble;
-            marble2.setRepositioning(.5f);
-            return true;
-        } else {
-            return false;
-        }
+        if (overlaps(marble))
+            marble.setRepositioning(.5f);
+        return super.collides(marble);
     }
 
     @Override
     public boolean isFinished() {
-        return playScreen.getCameraPosition().y <= marble2.getCenterPosition().y;
+        return playScreen.getCameraPosition().y <= marble.getCenterPosition().y;
     }
 
     @Override
-    public void update(float dt, boolean gameOver) {
-        if (!gameOver && playScreen.getCameraPosition().y <= marble2.getCenterPosition().y)
-            marble2.setRepositioning(1f);
+    public void update(float dt) {
+        if (!playScreen.gameOver && playScreen.getCameraPosition().y <= marble.getCenterPosition().y)
+            marble.setRepositioning(1f);
     }
 
 }

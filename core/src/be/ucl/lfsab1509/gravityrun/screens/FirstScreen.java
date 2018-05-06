@@ -1,19 +1,14 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-
 import be.ucl.lfsab1509.gravityrun.tools.User;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-
-import java.util.ArrayList;
 
 public class FirstScreen extends AbstractMenuScreen {
 
@@ -23,7 +18,7 @@ public class FirstScreen extends AbstractMenuScreen {
         String username = game.i18n.format("username");
         Label title = new Label(game.i18n.format("welcome"), game.titleSkin, "title");
 
-        final TextField usernameField = new TextField(username, game.tableSkin);
+        TextField usernameField = new TextField(username, game.tableSkin);
         usernameField.setText(username);
         usernameField.setMessageText(game.i18n.format("username"));
         usernameField.addListener(new ClickListener() {
@@ -35,14 +30,14 @@ public class FirstScreen extends AbstractMenuScreen {
         usernameField.setTextFieldListener(new TextField.TextFieldListener() {
             @Override
             public void keyTyped(TextField textField, char c) {
-                if (c == '\n' || c== '\r') {
+                if (c == '\n' || c == '\r') {
                     Gdx.input.setOnscreenKeyboardVisible(false);
                     String username = usernameField.getText();
                     validateUsername(username);
                 }
             }
         });
-        final TextButton startButton = new TextButton(game.i18n.format("start"), game.tableSkin, "round");
+        TextButton startButton = new TextButton(game.i18n.format("start"), game.tableSkin, "round");
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -63,11 +58,12 @@ public class FirstScreen extends AbstractMenuScreen {
     }
 
     private void validateUsername(String username) {
-        if (!User.checkUsername(username)) {
+        if (!User.checkUsername(username))
             spawnErrorDialog(game.i18n.format("error_username_default"), User.getUsernameError(username));
-        } else {
+        else {
             game.user = new User(game, username);
             screenManager.set(new HomeScreen(game));
         }
     }
+
 }

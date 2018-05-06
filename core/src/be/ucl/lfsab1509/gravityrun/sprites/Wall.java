@@ -6,11 +6,13 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class Wall extends Obstacle {
 
-    public Wall(float y, int marbleWidth, Texture texture, PlayScreen playScreen) {
-        super(y, texture, playScreen);
-        setX(random.nextBoolean()
+    public Wall(float y, int marbleWidth, PlayScreen playScreen, Texture texture) {
+        super(y, playScreen, texture);
+        int x = random.nextBoolean()
                 ? -random.nextInt(2 * marbleWidth)
-                : -random.nextInt(2 * marbleWidth) + GravityRun.WIDTH / 2);
+                : -random.nextInt(2 * marbleWidth) + GravityRun.WIDTH / 2;
+        bounds.x = x;
+        position.x = x;
     }
 
     @Override
@@ -29,7 +31,7 @@ public class Wall extends Obstacle {
                 marble.setBlockedOnLeft(marbleCenterX > rightBound);
                 marble.setBlockedOnRight(marbleCenterX < leftBound);
                 marble.setBlockedOnTop(marbleCenterY < bottomBound);
-                PlayScreen.isCollideWall = true;
+                playScreen.isCollideWall = true;
                 if (!marble.isLifeLost()) {
                     marble.addMarbleLife(-1);
                     marble.setLifeLost(true);
@@ -38,7 +40,7 @@ public class Wall extends Obstacle {
                 marble.setBlockedOnLeft(false);
                 marble.setBlockedOnRight(false);
                 marble.setBlockedOnTop(false);
-                PlayScreen.isCollideWall = false;
+                playScreen.isCollideWall = false;
                 marble.setLifeLost(false);
             }
         }

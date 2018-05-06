@@ -5,21 +5,8 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class ScoreBonus extends Bonus {
 
-    private PlayScreen playScreen;
-
-    public ScoreBonus(float y, int offset, Texture texture, PlayScreen playScreen) {
-        super(y, offset, texture);
-        this.playScreen = playScreen;
-    }
-
-    @Override
-    public boolean collides(Marble marble) {
-        if (overlaps(marble)) {
-            marble2 = marble;
-            return true;
-        } else {
-            return false;
-        }
+    public ScoreBonus(float y, int offset, Marble marble, PlayScreen playScreen, Texture texture) {
+        super(y, offset, marble, playScreen, texture);
     }
 
     @Override

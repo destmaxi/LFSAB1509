@@ -12,11 +12,8 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Marble {
 
-    public static final float GRAVITY_COMPENSATION = 1.4f;
-    public static final float GYRO_COMPENSATION = 2;
     static final int JUMP_HEIGHT = 666;
     private static final int MOVEMENT = GravityRun.HEIGHT / 5;
-    public static final float SQRT_2 = (float) Math.sqrt(2);
 
     private boolean blockedOnLeft = false, blockedOnRight = false, blockedOnTop = false, inHole = false, invincible = false, inWall = false, lifeLost = false;
     private Circle bounds;
@@ -25,7 +22,7 @@ public class Marble {
     private MarbleAnimation marbleAnimation, marbleAnimationInvincible;
     private PlayScreen playScreen;
     private Texture marble, marbleInvincible;
-    private Vector3 position, velocity;
+    private Vector3 position;
 
     public Marble(int x, int y, int standardWidth, int level, PlayScreen screen) {
         playScreen = screen;
@@ -34,7 +31,6 @@ public class Marble {
         marbleAnimation = new MarbleAnimation(marble, standardWidth);
         marbleAnimationInvincible = new MarbleAnimation(marbleInvincible, standardWidth);
         position = new Vector3(x, y, 0);
-        velocity = new Vector3(0, MOVEMENT, 0);
         bounds = new Circle(x, y, getRadius());
         difficulty = level;
     }
@@ -56,10 +52,6 @@ public class Marble {
         return position;
     }
 
-    private int getRadius() {
-        return getMarbleAnimation().getDiameter(position.z) / 2;
-    }
-
     public TextureRegion getMarble() {
         return getMarbleAnimation().getFrame(position.z);
     }
@@ -74,6 +66,10 @@ public class Marble {
 
     public int getNormalDiameter() {
         return getMarbleAnimation().getDiameter(0);
+    }
+
+    private int getRadius() {
+        return getMarbleAnimation().getDiameter(position.z) / 2;
     }
 
     public float getSpeedFactor() {
@@ -176,9 +172,9 @@ public class Marble {
     }
 
     private void updatePosition(float dt, boolean gameOver) {
-/*
-POUR JOUER AVEC LES FLECHES QUAND T'ES SUR UN PUTAIN D'EMULATEUR !!!
-C'EST PAS OUF MAIS CA FONCTIONNE +_
+    /*
+    POUR JOUER AVEC LES FLECHES QUAND T'ES SUR UN PUTAIN D'EMULATEUR !!!
+    C'EST PAS OUF MAIS CA FONCTIONNE +_
         int arrow = 0;
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT))
             arrow = -10;
@@ -198,7 +194,8 @@ C'EST PAS OUF MAIS CA FONCTIONNE +_
             else
                 position.add(arrow * GravityRun.WIDTH / 75, difficulty * MOVEMENT * speed * slowDown * dt, 0);
         }
-*/
+    */
+
         if (gameOver)
             return;
 

@@ -7,22 +7,17 @@ import java.util.Random;
 
 public abstract class Obstacle extends Sprite {
 
-    Random random;
     PlayScreen playScreen;
+    Random random;
 
-    Obstacle(float y, Texture texture, PlayScreen playScreen) {
-        this(0, y, texture, playScreen);
+    Obstacle(float y, PlayScreen playScreen, Texture texture) {
+        this(0, y, playScreen, texture);
     }
 
-    Obstacle(float x, float y, Texture texture, PlayScreen playScreen) {
+    Obstacle(float x, float y, PlayScreen playScreen, Texture texture) {
         super(x, y, texture);
-        random = new Random();
         this.playScreen = playScreen;
-    }
-
-    void setX(int x) {
-        bounds.x = x;
-        position.x = x;
+        random = new Random();
     }
 
 }

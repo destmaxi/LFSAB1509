@@ -15,7 +15,7 @@ public class Skin extends com.badlogic.gdx.scenes.scene2d.ui.Skin {
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 //        parameter.incremental = true;
         parameter.size = (int) (size * GravityRun.DENSITY);
-        
+
         font = generator.generateFont(parameter);
 
         this.add("arial", font);

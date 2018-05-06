@@ -342,7 +342,7 @@ public class PlayScreen extends Screen {
 
     private void updateCamera(float dt) {
         if (!gameOver) {
-            camera.position.add(0, marble.difficulty * Marble.MOVEMENT * marble.speed * marble.getSlowDown() * marble.getRepositioning() * dt, 0);
+            camera.position.add(0, marble.getSpeedFactor() * dt, 0);
         }
         camera.update();
     }

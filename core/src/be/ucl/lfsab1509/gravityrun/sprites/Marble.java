@@ -15,15 +15,13 @@ public class Marble {
     public static final float GRAVITY_COMPENSATION = 1.4f;
     public static final float GYRO_COMPENSATION = 2;
     static final int JUMP_HEIGHT = 666;
-    public static final int MOVEMENT = GravityRun.HEIGHT / 5;
+    private static final int MOVEMENT = GravityRun.HEIGHT / 5;
     public static final float SQRT_2 = (float) Math.sqrt(2);
 
     private boolean blockedOnLeft = false, blockedOnRight = false, blockedOnTop = false, invincible = false, inWall = false, lifeLost = false;
     private Circle bounds;
-    public float speed = 1f;
-    private float repositioning = 1f, slowDown = 1f;
-    private int marbleLife = 5;
-    public int difficulty;
+    private float repositioning = 1f, slowDown = 1f, speed = 1f;
+    private int difficulty, marbleLife = 5;
     private MarbleAnimation marbleAnimation;
     private PlayScreen playScreen;
     private Texture marble;
@@ -39,33 +37,13 @@ public class Marble {
         difficulty = level;
     }
 
-    public void addMarbleLife(int lives) {
+    void addMarbleLife(int lives) {
         this.marbleLife += lives;
     }
 
     public void dispose() {
         marble.dispose();
         marbleAnimation.dispose();
-    }
-
-    public void render(SpriteBatch spriteBatch) {
-        float marbleX = getCenterPosition().x - getDiameter() / 2;
-        float marbleY = getCenterPosition().y - getDiameter() / 2;
-        spriteBatch.draw(getMarble(), marbleX, marbleY);
-    }
-
-    public void update(float dt, boolean gameOver) {
-        marbleAnimation.update(dt, gameOver);
-
-        updateSpeed();
-
-        updateJump(gameOver);
-
-        updatePosition(dt, gameOver);
-
-        repositionWithinScreen();
-
-        bounds.setPosition(position.x, position.y);
     }
 
     Circle getBounds() {
@@ -76,7 +54,7 @@ public class Marble {
         return position;
     }
 
-    public int getDiameter() {
+    private int getDiameter() {
         return marbleAnimation.getDiameter(position.z);
     }
 
@@ -84,24 +62,16 @@ public class Marble {
         return marbleAnimation.getFrame(position.z);
     }
 
-    public int getNormalDiameter() {
-        return marbleAnimation.getDiameter(0);
-    }
-
     public int getMarbleLife() {
         return marbleLife;
     }
 
-    public float getRepositioning() {
-        return repositioning;
+    public int getNormalDiameter() {
+        return marbleAnimation.getDiameter(0);
     }
 
-    public float getSlowDown() {
-        return slowDown;
-    }
-
-    public boolean isLifeLost() {
-        return lifeLost;
+    public float getSpeedFactor() {
+        return difficulty * MOVEMENT * repositioning * slowDown * speed;
     }
 
     public boolean isInvincible() {
@@ -112,10 +82,20 @@ public class Marble {
         return inWall;
     }
 
+    boolean isLifeLost() {
+        return lifeLost;
+    }
+
     public boolean isOutOfScreen(float cameraCenterY) {
         return position.x <= getDiameter() / 2
                 || position.x >= (GravityRun.WIDTH - getDiameter() / 2)
                 || position.y <= cameraCenterY - GravityRun.HEIGHT / 2 + getDiameter() / 2;
+    }
+
+    public void render(SpriteBatch spriteBatch) {
+        float marbleX = getCenterPosition().x - getDiameter() / 2;
+        float marbleY = getCenterPosition().y - getDiameter() / 2;
+        spriteBatch.draw(getMarble(), marbleX, marbleY);
     }
 
     private void repositionWithinScreen() {
@@ -139,10 +119,6 @@ public class Marble {
         this.blockedOnTop = blockedOnTop;
     }
 
-    public void setLifeLost(boolean lifeLost) {
-        this.lifeLost = lifeLost;
-    }
-
     void setInvincible(boolean invincible) {
         this.invincible = invincible;
     }
@@ -151,12 +127,30 @@ public class Marble {
         this.inWall = inWall;
     }
 
-    public void setRepositioning(float repositioning) {
+    void setLifeLost(boolean lifeLost) {
+        this.lifeLost = lifeLost;
+    }
+
+    void setRepositioning(float repositioning) {
         this.repositioning = repositioning;
     }
 
     void setSlowDown(float slowDown) {
         this.slowDown = slowDown;
+    }
+
+    public void update(float dt, boolean gameOver) {
+        marbleAnimation.update(dt, gameOver);
+
+        updateSpeed();
+
+        updateJump(gameOver);
+
+        updatePosition(dt, gameOver);
+
+        repositionWithinScreen();
+
+        bounds.setPosition(position.x, position.y);
     }
 
     private void updateJump(boolean gameOver) {

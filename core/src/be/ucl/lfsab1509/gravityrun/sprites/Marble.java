@@ -18,7 +18,7 @@ public class Marble {
     private static final int MOVEMENT = GravityRun.HEIGHT / 5;
     public static final float SQRT_2 = (float) Math.sqrt(2);
 
-    private boolean blockedOnLeft = false, blockedOnRight = false, blockedOnTop = false, invincible = false, inWall = false, lifeLost = false;
+    private boolean blockedOnLeft = false, blockedOnRight = false, blockedOnTop = false, inHole = false, invincible = false, inWall = false, lifeLost = false;
     private Circle bounds;
     private float repositioning = 1f, slowDown = 1f, speed = 1f;
     private int difficulty, marbleLife = 5;
@@ -119,6 +119,10 @@ public class Marble {
         this.blockedOnTop = blockedOnTop;
     }
 
+    void setInHole(boolean inHole) {
+        this.inHole = inHole;
+    }
+
     void setInvincible(boolean invincible) {
         this.invincible = invincible;
     }
@@ -157,7 +161,7 @@ public class Marble {
         if ((Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) && position.z <= 0)
             position.z = JUMP_HEIGHT;
 
-        if (position.z > 0 && !gameOver)
+        if (position.z > 0 && !gameOver || position.z <= 0 && gameOver && inHole)
             position.add(0, 0, -10 * difficulty * speed * slowDown);
         else
             position.z = 0;

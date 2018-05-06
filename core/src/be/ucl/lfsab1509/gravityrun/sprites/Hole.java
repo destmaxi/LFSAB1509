@@ -22,6 +22,7 @@ public class Hole extends Obstacle {
     @Override
     public boolean collides(Marble marble) {
         if (overlaps(marble) && marble.getCenterPosition().z == 0) {
+            marble.setInHole(true);
             playScreen.getSoundManager().marbleBreak(playScreen.gameOver);
             playScreen.gameOver = true;
             return true;

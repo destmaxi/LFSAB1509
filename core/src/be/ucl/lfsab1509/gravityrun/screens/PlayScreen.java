@@ -350,7 +350,7 @@ public class PlayScreen extends Screen {
     private void updateCaughtBonuses(float dt) {
         for (int i = 0; i < caughtBonuses.size; i++) {
             Bonus bonus = caughtBonuses.get(i);
-            bonus.update(dt);
+            bonus.update(dt, gameOver);
             if (bonus.isFinished()) {
                 bonus.dispose();
                 caughtBonuses.removeIndex(i--);

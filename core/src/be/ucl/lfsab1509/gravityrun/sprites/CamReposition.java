@@ -29,8 +29,8 @@ public class CamReposition extends Bonus {
     }
 
     @Override
-    public void update(float dt) {
-        if (playScreen.getCameraPosition().y <= marble2.getCenterPosition().y)
+    public void update(float dt, boolean gameOver) {
+        if (!gameOver && playScreen.getCameraPosition().y <= marble2.getCenterPosition().y)
             marble2.setRepositioning(1f);
     }
 

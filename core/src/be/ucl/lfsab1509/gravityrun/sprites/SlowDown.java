@@ -31,10 +31,10 @@ public class SlowDown extends Bonus {
     }
 
     @Override
-    public void update(float dt) {
+    public void update(float dt, boolean gameOver) {
         collideTime += dt;
 
-        if (collideTime >= 5 && --activeSlowDowns == 0)
+        if (!gameOver && collideTime >= 5 && --activeSlowDowns == 0)
             marble2.setSlowDown(1f);
     }
 

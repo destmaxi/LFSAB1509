@@ -31,10 +31,10 @@ public class Invincible extends Bonus {
     }
 
     @Override
-    public void update(float dt) {
+    public void update(float dt, boolean gameOver) {
         collideTime += dt;
 
-        if (collideTime >= 3 && --activeInvincibles == 0) {
+        if (!gameOver && collideTime >= 3 && --activeInvincibles == 0) {
             marble2.setInvincible(false);
             marble2.setInWall(true);
         }

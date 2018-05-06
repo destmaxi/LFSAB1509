@@ -24,7 +24,7 @@ public abstract class Bonus extends Sprite {
 
     public abstract boolean isFinished();
 
-    public void update(float dt) {
+    public void update(float dt, boolean gameOver) {
 
     }
 

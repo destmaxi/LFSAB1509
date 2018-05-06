@@ -27,13 +27,14 @@ public class PlayScreen extends Screen {
     private static int OBSTACLE_SPACING;
     private static int STANDARD_WIDTH;
 
-    public static boolean isCollideWall = false, gameOver = false;
+    public static boolean isCollideWall = false;
     private static int collidedWall = 0;
     private int score = 0, scoreBonus = 0;
 
     private Array<Bonus> bonuses, caughtBonuses;
     private Array<Obstacle> obstacles;
     private Array<Vector2> backgroundPositions;
+    public boolean gameOver = false;
     private Label scoreLabel;
     private Marble marble;
     private Random random;
@@ -50,7 +51,6 @@ public class PlayScreen extends Screen {
         calculateStandardWidth();
 
         marble = new Marble((int) width / 2, 0, STANDARD_WIDTH, game.user.getIndexSelected() + 1, this);
-        gameOver = false;
         isCollideWall = false;
 
         Invincible.resetBonus();

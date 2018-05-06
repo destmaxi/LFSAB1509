@@ -22,18 +22,20 @@ public class Marble {
     private Circle bounds;
     private float repositioning = 1f, slowDown = 1f, speed = 1f;
     private int difficulty, marbleLife = 5;
-    private MarbleAnimation marbleAnimation;
+    private MarbleAnimation marbleAnimation, marbleAnimationInvincible;
     private PlayScreen playScreen;
-    private Texture marble;
+    private Texture marble, marbleInvincible;
     private Vector3 position, velocity;
 
     public Marble(int x, int y, int standardWidth, int level, PlayScreen screen) {
         playScreen = screen;
         marble = new Texture("drawable-" + standardWidth + "/marbles.png");
+        marbleInvincible = new Texture("drawable-" + standardWidth + "/marbles_invincible.png");
         marbleAnimation = new MarbleAnimation(marble, standardWidth);
+        marbleAnimationInvincible = new MarbleAnimation(marbleInvincible, standardWidth);
         position = new Vector3(x, y, 0);
         velocity = new Vector3(0, MOVEMENT, 0);
-        bounds = new Circle(x, y, marbleAnimation.getDiameter(position.z) / 2);
+        bounds = new Circle(x, y, getRadius());
         difficulty = level;
     }
 
@@ -43,7 +45,7 @@ public class Marble {
 
     public void dispose() {
         marble.dispose();
-        marbleAnimation.dispose();
+        marbleInvincible.dispose();
     }
 
     Circle getBounds() {
@@ -54,12 +56,16 @@ public class Marble {
         return position;
     }
 
-    private int getDiameter() {
-        return marbleAnimation.getDiameter(position.z);
+    private int getRadius() {
+        return getMarbleAnimation().getDiameter(position.z) / 2;
     }
 
     public TextureRegion getMarble() {
-        return marbleAnimation.getFrame(position.z);
+        return getMarbleAnimation().getFrame(position.z);
+    }
+
+    private MarbleAnimation getMarbleAnimation() {
+        return invincible ? marbleAnimationInvincible : marbleAnimation;
     }
 
     public int getMarbleLife() {
@@ -67,7 +73,7 @@ public class Marble {
     }
 
     public int getNormalDiameter() {
-        return marbleAnimation.getDiameter(0);
+        return getMarbleAnimation().getDiameter(0);
     }
 
     public float getSpeedFactor() {
@@ -87,24 +93,25 @@ public class Marble {
     }
 
     public boolean isOutOfScreen(float cameraCenterY) {
-        return position.x <= getDiameter() / 2
-                || position.x >= (GravityRun.WIDTH - getDiameter() / 2)
-                || position.y <= cameraCenterY - GravityRun.HEIGHT / 2 + getDiameter() / 2;
+        return position.x <= getRadius()
+                || position.x >= (GravityRun.WIDTH - getRadius())
+                || position.y <= cameraCenterY - GravityRun.HEIGHT / 2 + getRadius();
     }
 
     public void render(SpriteBatch spriteBatch) {
-        float marbleX = getCenterPosition().x - getDiameter() / 2;
-        float marbleY = getCenterPosition().y - getDiameter() / 2;
+        float marbleX = getCenterPosition().x - getRadius();
+        float marbleY = getCenterPosition().y - getRadius();
+
         spriteBatch.draw(getMarble(), marbleX, marbleY);
     }
 
     private void repositionWithinScreen() {
         // TODO voir ce qu'on fait lorsque la bille touche le bord : est-ce qu'il y a une marge ?
-        if (position.x < marbleAnimation.getDiameter(position.z) / 2)
-            position.x = marbleAnimation.getDiameter(position.z) / 2;
+        if (position.x < getRadius())
+            position.x = getRadius();
 
-        if (position.x > GravityRun.WIDTH - marbleAnimation.getDiameter(position.z) / 2)
-            position.x = GravityRun.WIDTH - marbleAnimation.getDiameter(position.z) / 2;
+        if (position.x > GravityRun.WIDTH - getRadius())
+            position.x = GravityRun.WIDTH - getRadius();
     }
 
     void setBlockedOnLeft(boolean blockedOnLeft) {
@@ -145,6 +152,7 @@ public class Marble {
 
     public void update(float dt, boolean gameOver) {
         marbleAnimation.update(dt, gameOver);
+        marbleAnimationInvincible.update(dt, gameOver);
 
         updateSpeed();
 

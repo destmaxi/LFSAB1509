@@ -31,10 +31,6 @@ public class MarbleAnimation {
         frame = 0;
     }
 
-    public void dispose() {
-
-    }
-
     int getDiameter(float z) {
         int marble = getMarble(z);
         return frames.get(marble).get(frame).getRegionWidth();

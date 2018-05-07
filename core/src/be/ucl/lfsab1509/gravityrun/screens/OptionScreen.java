@@ -77,7 +77,7 @@ public class OptionScreen extends AbstractMenuScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 validateLevelSelection(levelSelectionList);
-                editLevelSelectionDialog.hide();
+                editLevelSelectionDialog.requestHide();
             }
         });
         editLevelSelectionDialog.show(stage);

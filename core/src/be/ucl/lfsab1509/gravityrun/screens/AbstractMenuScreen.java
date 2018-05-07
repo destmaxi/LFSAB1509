@@ -3,8 +3,8 @@ package be.ucl.lfsab1509.gravityrun.screens;
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -76,9 +76,16 @@ abstract class AbstractMenuScreen extends Screen {
 
         /**
          * Action à effectuer lors de la sortie de la boîte de dialogue (appui sur un bouton ou sur une touche).
+         * Par convention, {@code object} peut prendre deux valeurs au comportement standard : {@code true} et {@code false}.
+         * Dans le premier cas, la boîte de dialogue demande confirmation des changements effectués (appui sur "Ok").
+         * Dans le second cas, la boîte de dialogue indique que l'utilisateur ne souhaite pas retenir les changements (appui sur "Annuler").
+         * Le comportement attendu est que cette méthode renvoie {@code true} lorsque {@code object=false},
+         * et que les résultats de la boîte de dialogues doivent être ignorés.
+         * Une implémentation ne respectant pas cette règle risque de petits problèmes.
          *
          * @param object la valeur de sortie associée à l'évènement. Peut être {@code null} si aucune valeur n'a été associée.
-         * @return true si la boîte de dialogue peut se fermer, false sinon.
+         * @return true si la boîte de dialogue peut se fermer, false sinon. Dans ce dernier cas,
+         * la méthode {@link Dialog#cancel()} est appelée.
          */
         boolean result(Object object);
 
@@ -108,6 +115,11 @@ abstract class AbstractMenuScreen extends Screen {
             super.hide(action);
         }
 
+        void requestHide() {
+            resultMethod.result(false); // discard return value as we won't use it
+            hide();
+        }
+
         @Override
         protected void result(Object object) {
             if (!resultMethod.result(object)) {
@@ -118,6 +130,31 @@ abstract class AbstractMenuScreen extends Screen {
         @Override
         public Dialog show(Stage stage, Action action) {
             openDialogs++;
+            this.addListener(new EventListener() {
+                private final float MARGIN = width / 20; // FIXME la rendre dépendante de la résolution de l'écran
+                @Override
+                public boolean handle(Event event) {
+                    if (!(event instanceof InputEvent)) {
+                        return false;
+                    }
+                    InputEvent inputEvent = (InputEvent) event;
+                    if (inputEvent.getType() != InputEvent.Type.touchDown) {
+                        return false;
+                    }
+                    Vector2 position = inputEvent.toCoordinates(event.getListenerActor(), new Vector2());
+                    if (isOutsideOfDialog(position.x, position.y)) {
+                        EmptyButtonsDialog.this.requestHide();
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+
+                private boolean isOutsideOfDialog(float x, float y) {
+                    return (x < -MARGIN) || (x > EmptyButtonsDialog.this.getWidth() + MARGIN)
+                            || (y < -MARGIN) || (y > EmptyButtonsDialog.this.getHeight() + MARGIN);
+                }
+            });
             return super.show(stage, action);
         }
 

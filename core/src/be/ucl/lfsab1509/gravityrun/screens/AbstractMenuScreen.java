@@ -176,8 +176,8 @@ abstract class AbstractMenuScreen extends Screen {
     }
 
     /**
-     * Fenêtre de dialogue comportant, en plus de {@link EmptyButtonsDialog}, un bouton "Annuler"
-     * permettant de quitter la fenêtre dans sauver les changements, et associé à la valeur {@code false}.
+     * Fenêtre de dialogue comportant, en plus de {@link MessageDialog}, un bouton "Annuler"
+     * permettant de quitter la fenêtre sans sauver les changements, et associé à la valeur {@code false}.
      */
     class EditDialog extends MessageDialog {
 
@@ -185,6 +185,23 @@ abstract class AbstractMenuScreen extends Screen {
             super(title, content, resultMethod);
             TextButton cancelButton = new TextButton(game.i18n.format("cancel"), game.aaronScoreSkin, "round");
             this.button(cancelButton, false);
+        }
+
+    }
+
+    /**
+     * Fenêtre de dialogue comportant un bouton "Annuler" permettant de quitter la fenêtre sans sauver les changements,
+     * comme {@link EditDialog}, mais ne comportant pas de bouton "Ok" pour confirmer les changements.
+     * Les différentes modifications doivent être gérées par les acteurs de la table {@code content},
+     * la {@link DialogResultMethod} doit toujours renvoyer {@code false}, et il est nécessaire de faire appel à
+     * {@link NoOkEditDialog#requestHide()} pour fermer la fenêtre lorsque les changements sont acceptés.
+     */
+    class NoOkEditDialog extends EmptyButtonsDialog {
+
+        NoOkEditDialog(String title, Table content, DialogResultMethod resultMethod) {
+            super(title, content, resultMethod);
+            TextButton cancelButton = new TextButton(game.i18n.format("cancel"), game.aaronScoreSkin, "round");
+            this.button(cancelButton, false); // ESCAPE and BACK are also set to false
         }
 
     }

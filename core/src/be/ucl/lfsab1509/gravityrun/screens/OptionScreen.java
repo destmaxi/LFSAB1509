@@ -65,7 +65,7 @@ public class OptionScreen extends AbstractMenuScreen {
         levelSelectionList.setAlignment(Align.center);
         Table content = new Table();
         content.add(levelSelectionList);
-        EditDialog editLevelSelectionDialog = new EditDialog(game.i18n.format("select_level"), content, new DialogResultMethod() {
+        NoOkEditDialog editLevelSelectionDialog = new NoOkEditDialog(game.i18n.format("select_level"), content, new DialogResultMethod() {
             @Override
             public boolean result(Object object) {
                 if (object.equals(true))

@@ -103,10 +103,21 @@ abstract class AbstractMenuScreen extends Screen {
         EmptyButtonsDialog(String title, Table content, DialogResultMethod resultMethod) {
             super(title, game.tableSkin);
             this.resultMethod = resultMethod;
-            this.getContentTable().add(content);
+            this.getContentTable().add(content).width(0.8f * width).pad(width / 40f); // FIXME rendre le padding dépendante de la résolution de l'écran
+            this.getButtonTable().add(new Actor()).expandX(); // parce qu'il en faut au moins un.
             this.key(Input.Keys.BACK, false).key(Input.Keys.ESCAPE, false);
             this.setModal(true);
             this.setMovable(false);
+        }
+
+        @Override
+        public Dialog button(Button button, Object object) {
+            getButtonTable().add(button);
+            // gros hack : on ajoute des acteurs vides entre les boutons pour que seuls les acteurs vides expand,
+            // tous de la même manière, de sorte à avoir des espacements égaux entre boutons.
+            getButtonTable().add(new Actor()).expandX();
+            setObject(button, object);
+            return this;
         }
 
         @Override
@@ -169,7 +180,7 @@ abstract class AbstractMenuScreen extends Screen {
 
         MessageDialog(String title, Table content, DialogResultMethod resultMethod) {
             super(title, content, resultMethod);
-            TextButton okButton = new TextButton(game.i18n.format("ok"), game.aaronScoreSkin, "round");
+            TextButton okButton = new TextButton(game.i18n.format("ok"), game.tableSkin, "round");
             this.button(okButton, true).key(Input.Keys.ENTER, true);
         }
 
@@ -183,7 +194,7 @@ abstract class AbstractMenuScreen extends Screen {
 
         EditDialog(String title, Table content, DialogResultMethod resultMethod) {
             super(title, content, resultMethod);
-            TextButton cancelButton = new TextButton(game.i18n.format("cancel"), game.aaronScoreSkin, "round");
+            TextButton cancelButton = new TextButton(game.i18n.format("cancel"), game.tableSkin, "round");
             this.button(cancelButton, false);
         }
 
@@ -200,7 +211,7 @@ abstract class AbstractMenuScreen extends Screen {
 
         NoOkEditDialog(String title, Table content, DialogResultMethod resultMethod) {
             super(title, content, resultMethod);
-            TextButton cancelButton = new TextButton(game.i18n.format("cancel"), game.aaronScoreSkin, "round");
+            TextButton cancelButton = new TextButton(game.i18n.format("cancel"), game.tableSkin, "round");
             this.button(cancelButton, false); // ESCAPE and BACK are also set to false
         }
 

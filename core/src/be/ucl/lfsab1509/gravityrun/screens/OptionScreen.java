@@ -59,12 +59,13 @@ public class OptionScreen extends AbstractMenuScreen {
     }
 
     private void popLevelSelectionDialog() {
-        List<String> levelSelectionList = new List<>(game.aaronScoreSkin);
+        List<String> levelSelectionList = new List<>(game.tableSkin);
         levelSelectionList.setItems(game.i18n.format("beginner"), game.i18n.format("inter"), game.i18n.format("expert"));
         levelSelectionList.setSelectedIndex(game.user.getIndexSelected());
         levelSelectionList.setAlignment(Align.center);
         Table content = new Table();
         content.add(levelSelectionList);
+        // FIXME il n'y a pas de manière simple d'agrandir la taille des items dans une List... Peut-être passer à des boutons ? Merci libGDX.
         NoOkEditDialog editLevelSelectionDialog = new NoOkEditDialog(game.i18n.format("select_level"), content, new DialogResultMethod() {
             @Override
             public boolean result(Object object) {

@@ -36,7 +36,7 @@ public class Marble {
     }
 
     void addMarbleLife(int lives) {
-        this.marbleLife += lives;
+        this.marbleLife = Math.min(lives + this.marbleLife, 10);
     }
 
     public void dispose() {

@@ -326,7 +326,13 @@ public class MultiPlayScreen extends AbstractPlayScreen {
     }
 
     public void onDisconnect() {
+        if (!startMultiPlayState)
+            return;
+
+
         MultiplayerConnectionScreen.ready = false;
+        screenManager.pop();
+        ((AbstractMenuScreen) screenManager.peak()).spawnErrorDialog(game.i18n.format("error"), "Connection lost ...");
     }
 
     private boolean isValidMessage(String[] strings) {

@@ -19,6 +19,10 @@ public class ScreenManager {
             screens.pop().dispose();
     }
 
+    Screen peak() {
+        return screens.peek();
+    }
+
     void pop() {
         Screen oldScreen = screens.pop();
         if (screens.empty()) {

@@ -44,7 +44,7 @@ public class Marble {
     }
 
     void addMarbleLife(int lives) {
-        this.marbleLife = Math.min(lives + this.marbleLife, 10);
+        this.marbleLife += lives;
     }
 
     public void addPosition(float gyroY, float slowDown, boolean blockedOnLeft, boolean blockedOnRight, boolean blockedOnTop, float positionZ, float speed, boolean invincible) {

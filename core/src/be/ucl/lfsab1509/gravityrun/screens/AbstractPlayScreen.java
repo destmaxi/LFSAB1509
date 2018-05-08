@@ -388,10 +388,10 @@ public abstract class AbstractPlayScreen extends Screen {
     void update(float dt) {
         initGame(dt);
 
-        updateGame(dt);
-
         if (!isInitDone())
             return;
+
+        updateGame(dt);
 
         score = (int) (playerMarble.getCenterPosition().y / height * 100) + scoreBonus;
         scoreLabel.setText(game.i18n.format("score", score));

@@ -17,7 +17,6 @@ abstract class AbstractMenuScreen extends Screen {
 
     AbstractMenuScreen(GravityRun gravityRun) {
         super(gravityRun);
-
         containerHeight = height * .9f;
         containerWidth = width * .9f;
 
@@ -32,6 +31,9 @@ abstract class AbstractMenuScreen extends Screen {
     @Override
     public void render(float dt) {
         if (clickedBack() && openDialogs == 0) {
+            if (isHost())
+                screenManager.pop();
+
             screenManager.pop();
             return;
         }

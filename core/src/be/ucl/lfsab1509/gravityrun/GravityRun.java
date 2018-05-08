@@ -3,6 +3,7 @@ package be.ucl.lfsab1509.gravityrun;
 import be.ucl.lfsab1509.gravityrun.screens.FirstScreen;
 import be.ucl.lfsab1509.gravityrun.screens.HomeScreen;
 import be.ucl.lfsab1509.gravityrun.screens.ScreenManager;
+import be.ucl.lfsab1509.gravityrun.tools.BluetoothManager;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 import be.ucl.lfsab1509.gravityrun.tools.User;
@@ -22,17 +23,25 @@ public class GravityRun extends Game {
 
     public static float DENSITY;
     public static int HEIGHT;
+    public static final int MULTI_HEIGHT = 800;
+    public static final int MULTI_WIDTH = 480;
     public static final String TITLE = "Gravity Run";
     public static int WIDTH;
-    public Skin aaronScoreSkin, labelScoreBoardSkin, tableScoreBoardSkin, tableSkin, titleSkin;
-    private TextureAtlas skinTextureAtlas;
 
     public I18NBundle i18n;
     public Preferences preferences;
     public ScreenManager screenManager;
+    public Skin aaronScoreSkin, labelScoreBoardSkin, tableScoreBoardSkin, tableSkin, titleSkin;
     public SoundManager soundManager;
     public SpriteBatch spriteBatch;
+    private TextureAtlas skinTextureAtlas;
     public User user;
+
+    public GravityRun (BluetoothManager bluetoothManager) {
+        super();
+
+        BluetoothManager.bluetoothManager = bluetoothManager;
+    }
 
     @Override
     public void create() {
@@ -50,6 +59,7 @@ public class GravityRun extends Game {
 
         FileHandle baseFileHandle = Gdx.files.internal("strings/string");
         i18n = I18NBundle.createBundle(baseFileHandle);
+       // I18NBundle.setExceptionOnMissingKey(false);
         User.i18n = i18n;
 
         preferences = Gdx.app.getPreferences("Player");

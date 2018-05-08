@@ -1,18 +1,23 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
-import be.ucl.lfsab1509.gravityrun.GravityRun;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.Random;
+
+import javax.xml.soap.Text;
+
 /**
  * Un sprite possède une position, une texture sous-jacente et une forme définissant ses limites.
  */
 public abstract class Sprite {
 
+    Random random;
     Rectangle bounds;
+    Marble marble;
     Texture texture;
     Vector2 position;
 
@@ -22,15 +27,20 @@ public abstract class Sprite {
         bounds = new Rectangle(position.x, position.y, texture.getWidth(), texture.getHeight());
     }
 
+    Sprite(float x, float y, Marble marble, Random random, Texture texture) {
+        this(x, y, texture);
+        this.marble = marble;
+        this.random = random;
+    }
+
     /**
      * Retourne true si la collision a eu lieu, false sinon.
      * La méthode peut effectuer des actions supplémentaires, comme tuer la bille,
      * changer son nombre de points ou de bonus, changer les vitesses etc.
      *
-     * @param marble la bille qui collisionne
      * @return voir ci-dessus
      */
-    public abstract boolean collides(Marble marble);
+    public abstract boolean collidesMarble();
 
     public void dispose() {
 //        texture.dispose();
@@ -44,10 +54,11 @@ public abstract class Sprite {
      * Retourne true si l'objet est en dehors de l'écran défini par son centre.
      *
      * @param screenCenterY
+     * @param height
      * @return voir ci-dessus
      */
-    public boolean isOutOfScreen(float screenCenterY) {
-        float screenBottom = screenCenterY - GravityRun.HEIGHT / 2;
+    public boolean isOutOfScreen(float screenCenterY, int height) {
+        float screenBottom = screenCenterY - height / 2;
         float top = position.y + texture.getHeight();
 
         return screenBottom >= top;
@@ -60,5 +71,4 @@ public abstract class Sprite {
     public void render(SpriteBatch spriteBatch) {
         spriteBatch.draw(texture, position.x, position.y);
     }
-
 }

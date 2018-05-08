@@ -1,23 +1,24 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
-import be.ucl.lfsab1509.gravityrun.screens.PlayScreen;
+import be.ucl.lfsab1509.gravityrun.screens.AbstractPlayScreen;
+
 import com.badlogic.gdx.graphics.Texture;
 
 import java.util.Random;
 
 public abstract class Obstacle extends Sprite {
 
-    PlayScreen playScreen;
+    AbstractPlayScreen playScreen;
     Random random;
 
-    Obstacle(float y, PlayScreen playScreen, Texture texture) {
-        this(0, y, playScreen, texture);
+    Obstacle(float y, Marble marble, AbstractPlayScreen playScreen, Random random, Texture texture) {
+        this(0, y, marble, playScreen, random, texture);
     }
 
-    Obstacle(float x, float y, PlayScreen playScreen, Texture texture) {
-        super(x, y, texture);
+    Obstacle(float x, float y, Marble marble, AbstractPlayScreen playScreen, Random random, Texture texture) {
+        super(x, y, marble, random, texture);
         this.playScreen = playScreen;
-        random = new Random();
+        this.random = new Random();
     }
 
 }

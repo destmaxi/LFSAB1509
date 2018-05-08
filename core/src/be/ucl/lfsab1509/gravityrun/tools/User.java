@@ -16,6 +16,8 @@ public class User {
     private static final String HIGHSCORE = "highscore";
     private static final String INDEX = "index";
     private static final String INTER = "intermediate";
+    private static final String MULTILIVES = "multilives";
+    private static final String MULTI_INDEX = "multi_index";
     private static final String USERNAME = "username";
     private static final int MAX_USERNAME_LENGTH = 32; // FIXME probablement trop long.
     private static final int HIGH_SCORE_MAX_COUNT = 3;
@@ -26,7 +28,7 @@ public class User {
     private ArrayList<Integer> highScoreList;
     private boolean firstTime = true;
     private GravityRun game;
-    private int indexSelected = 1;
+    private int indexSelected = 1, multi_IndexSelected = 1, multiLives = 3;
     private String username;
 
     public User(GravityRun gravityRun, String username) {
@@ -127,6 +129,14 @@ public class User {
         return getHighScore(indexSelected);
     }
 
+    public int getMulti_IndexSelected() {
+        return multi_IndexSelected;
+    }
+
+    public Integer getMultiLives() {
+        return multiLives;
+    }
+
     private int getHighScore(int level) {
         ArrayList<Integer> list = getScoreList(level);
         if (list.size() == 0)
@@ -189,6 +199,14 @@ public class User {
             return true;
         } else
             return false;
+    }
+
+    public void setMulti_IndexSelected(int multi_IndexSelected) {
+        this.multi_IndexSelected = multi_IndexSelected;
+    }
+
+    public void setMultiLives(int multiLives) {
+        this.multiLives = multiLives;
     }
 
     private void shrinkScoreList(int level) {

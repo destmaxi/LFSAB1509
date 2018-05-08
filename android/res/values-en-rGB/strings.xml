@@ -2,5 +2,6 @@
 <resources>
     <string name="app_name">Gravity Run</string>
     <string name="menu">Menu</string>
+    <string name="searching">Searching ...</string>
 
 </resources>

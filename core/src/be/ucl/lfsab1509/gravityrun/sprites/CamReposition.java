@@ -1,19 +1,22 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
-import be.ucl.lfsab1509.gravityrun.screens.PlayScreen;
+import be.ucl.lfsab1509.gravityrun.screens.AbstractPlayScreen;
+
 import com.badlogic.gdx.graphics.Texture;
+
+import java.util.Random;
 
 public class CamReposition extends Bonus {
 
-    public CamReposition(float y, int offset, Marble marble, PlayScreen playScreen, Texture texture) {
-        super(y, offset, marble, playScreen, texture);
+    public CamReposition(float y, int offset, Marble marble, AbstractPlayScreen playScreen, Random random, Texture texture) {
+        super(y, offset, marble, playScreen, random, texture);
     }
 
     @Override
-    public boolean collides(Marble marble) {
+    public boolean collidesMarble() {
         if (overlaps(marble))
             marble.setRepositioning(.5f);
-        return super.collides(marble);
+        return super.collidesMarble();
     }
 
     @Override
@@ -23,7 +26,7 @@ public class CamReposition extends Bonus {
 
     @Override
     public void update(float dt) {
-        if (!playScreen.gameOver && playScreen.getCameraPosition().y <= marble.getCenterPosition().y)
+        if (!playScreen.died && playScreen.getCameraPosition().y <= marble.getCenterPosition().y)
             marble.setRepositioning(1f);
     }
 

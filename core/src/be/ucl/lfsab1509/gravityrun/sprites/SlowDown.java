@@ -1,7 +1,10 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
-import be.ucl.lfsab1509.gravityrun.screens.PlayScreen;
+import be.ucl.lfsab1509.gravityrun.screens.AbstractPlayScreen;
+
 import com.badlogic.gdx.graphics.Texture;
+
+import java.util.Random;
 
 public class SlowDown extends Bonus {
 
@@ -9,18 +12,18 @@ public class SlowDown extends Bonus {
 
     private float collideTime;
 
-    public SlowDown(float y, int offset, Marble marble, PlayScreen playScreen, Texture texture) {
-        super(y, offset, marble, playScreen, texture);
+    public SlowDown(float y, int offset, Marble marble, AbstractPlayScreen playScreen, Random random, Texture texture) {
+        super(y, offset, marble, playScreen, random, texture);
     }
 
     @Override
-    public boolean collides(Marble marble) {
+    public boolean collidesMarble() {
         if (overlaps(marble)) {
             activeSlowDowns++;
             collideTime = 0;
             marble.setSlowDown(.5f);
         }
-        return super.collides(marble);
+        return super.collidesMarble();
     }
 
     @Override
@@ -32,7 +35,7 @@ public class SlowDown extends Bonus {
     public void update(float dt) {
         collideTime += dt;
 
-        if (!playScreen.gameOver && collideTime >= 5 && --activeSlowDowns == 0)
+        if (!playScreen.died && collideTime >= 5 && --activeSlowDowns == 0)
             marble.setSlowDown(1f);
     }
 

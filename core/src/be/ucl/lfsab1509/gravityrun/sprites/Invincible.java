@@ -1,7 +1,10 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
-import be.ucl.lfsab1509.gravityrun.screens.PlayScreen;
+import be.ucl.lfsab1509.gravityrun.screens.AbstractPlayScreen;
+
 import com.badlogic.gdx.graphics.Texture;
+
+import java.util.Random;
 
 public class Invincible extends Bonus {
 
@@ -9,18 +12,19 @@ public class Invincible extends Bonus {
 
     private float collideTime;
 
-    public Invincible(float y, int offset, Marble marble, PlayScreen playScreen, Texture texture) {
-        super(y, offset, marble, playScreen, texture);
+    public Invincible(float y, int offset, Marble marble, AbstractPlayScreen playScreen, Random random, Texture texture) {
+        super(y, offset, marble, playScreen, random, texture);
     }
 
     @Override
-    public boolean collides(Marble marble) {
+    public boolean collidesMarble() {
         if (overlaps(marble)) {
             activeInvincibles++;
             collideTime = 0;
             marble.setInvincible(true);
         }
-        return super.collides(marble);
+
+        return super.collidesMarble();
     }
 
     @Override
@@ -32,7 +36,7 @@ public class Invincible extends Bonus {
     public void update(float dt) {
         collideTime += dt;
 
-        if (!playScreen.gameOver && collideTime >= 3 && --activeInvincibles == 0) {
+        if (!playScreen.died && collideTime >= 3 && --activeInvincibles == 0) {
             marble.setInvincible(false);
             marble.setInWall(true);
         }

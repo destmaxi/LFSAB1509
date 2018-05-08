@@ -1,22 +1,26 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.screens.PlayScreen;
+import be.ucl.lfsab1509.gravityrun.screens.AbstractPlayScreen;
+
 import com.badlogic.gdx.graphics.Texture;
+
+import java.util.Random;
 
 public class Wall extends Obstacle {
 
-    public Wall(float y, int marbleWidth, PlayScreen playScreen, Texture texture) {
-        super(y, playScreen, texture);
-        int x = random.nextBoolean()
-                ? -random.nextInt(2 * marbleWidth)
-                : -random.nextInt(2 * marbleWidth) + GravityRun.WIDTH / 2;
+    public Wall(float y, Random random, Marble marble, AbstractPlayScreen playScreen, Texture texture) {
+        super(y, marble, playScreen, random, texture);
+        int x = this.random.nextBoolean()
+                ? -this.random.nextInt(2 * this.marble.getNormalDiameter())
+                : -this.random.nextInt(2 * this.marble.getNormalDiameter()) + playScreen.width / 2;
+
         bounds.x = x;
         position.x = x;
     }
 
     @Override
-    public boolean collides(Marble marble) {
+    public boolean collidesMarble() {
         float marbleCenterX = marble.getCenterPosition().x;
         float marbleCenterY = marble.getCenterPosition().y;
 

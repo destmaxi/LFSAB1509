@@ -36,6 +36,15 @@ public class OptionScreen extends AbstractMenuScreen {
             }
         });
 
+        TextButton multiplayerButton = new TextButton(game.i18n.format("multiplayer"), game.tableSkin, "round");
+        multiplayerButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                screenManager.push(new MultiplayerConnectionScreen(game));
+            }
+        });
+
 
         Table table = new Table();
         table.add(title).colspan(2).expandX();
@@ -43,6 +52,8 @@ public class OptionScreen extends AbstractMenuScreen {
         table.add(usernameButton).colspan(2).expandX().fillX().padTop(height - containerHeight).maxWidth(containerWidth);
         table.row();
         table.add(lvlButton).colspan(2).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
+        table.row();
+        table.add(multiplayerButton).colspan(2).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
 
         initStage(table);
     }

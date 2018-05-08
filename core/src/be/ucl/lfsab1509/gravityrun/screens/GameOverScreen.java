@@ -21,14 +21,30 @@ class GameOverScreen extends AbstractMenuScreen {
         menuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+
+                disconnect();
+
+                if (isHost())
+                    screenManager.pop();
+
                 screenManager.pop();
             }
         });
         TextButton replayButton = new TextButton(game.i18n.format("replay"), game.tableSkin, "round");
+        replayButton.setVisible(isHost() || !isConnected());
         replayButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                screenManager.set(new PlayScreen(game));
+                if(isConnected()) {
+                    int lives = game.user.getMultiLives();
+                    int difficulty = game.user.getMulti_IndexSelected() + 1;
+                    write("[" + 4 + ":" +  lives + ":" + difficulty + ":" + GravityRun.HEIGHT / 5 + "]#");
+                    MultiPlayScreen multiPlayScreen = new MultiPlayScreen(game);
+                    setMultiPlayScreen(multiPlayScreen);
+                    screenManager.set(multiPlayScreen);
+                }
+                else
+                    screenManager.set(new SoloPlayScreen(game));
             }
         });
 
@@ -56,6 +72,25 @@ class GameOverScreen extends AbstractMenuScreen {
         table.add(menuButton).expandX().fillX().padTop(height - containerHeight);
 
         initStage(table);
+    }
+
+    @Override
+    public boolean isHost() {
+        return bluetoothManager.isHost();
+    }
+
+    @Override
+    public void render(float dt) {
+        super.render(dt);
+        handelInput();
+    }
+
+    private void handelInput() {
+        if (MultiplayerConnectionScreen.isClient && MultiplayerConnectionScreen.ready) {
+            MultiPlayScreen multiPlayScreen = new MultiPlayScreen(game);
+            setMultiPlayScreen(multiPlayScreen);
+            screenManager.set(multiPlayScreen);
+        }
     }
 
     private Label newCenteredLabel(String labelText) {

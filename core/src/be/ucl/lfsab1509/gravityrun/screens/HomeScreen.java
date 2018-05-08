@@ -22,7 +22,7 @@ public class HomeScreen extends AbstractMenuScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 soundManager.replayGame(); // FIXME le placement de cette instruction laisse à désirer. 20 msec de délai
-                screenManager.push(new PlayScreen(game));
+                screenManager.push(new SoloPlayScreen(game));
             }
         });
         TextButton scoreBoardButton = new TextButton(game.i18n.format("my_score"), game.tableSkin, "round");

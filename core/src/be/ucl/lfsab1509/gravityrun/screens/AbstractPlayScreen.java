@@ -431,9 +431,6 @@ public abstract class AbstractPlayScreen extends Screen {
     }
 
     private void updateGame(float dt) {
-        if (!isInitDone())
-            return;
-
         updateBonuses();
         updateCaughtBonus(dt);
         updateMarbles(dt);

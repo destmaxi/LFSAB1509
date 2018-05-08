@@ -163,7 +163,7 @@ public class MultiPlayScreen extends AbstractPlayScreen {
             checkCamReposition(opponentMarble);
             camera.position.add(0, opponentMarble.getSpeedFactor() * dt, 0);
             viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        } else if (!gameOver){
+        } else if (!gameOver) {
             super.updateCamera(dt);
         }
     }

@@ -175,6 +175,7 @@ public class AndroidBluetoothManager implements BluetoothConstants {
         Message msg = mHandler.obtainMessage(MESSAGE_TOAST);
         Bundle bundle = new Bundle();
         bundle.putString(TOAST, "Device connection was lost");
+        stop();
         msg.setData(bundle);
         mHandler.sendMessage(msg);
 

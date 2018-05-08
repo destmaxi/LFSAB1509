@@ -327,10 +327,10 @@ public abstract class AbstractPlayScreen extends Screen {
             setObstacle(i);
         }
 
-      /*  if (!isCollideWall || collidedWall == i) {
+        if (!isCollideWall || collidedWall == i) {
             obstacle.collidesMarble();
             collidedWall = i;
-        }*/
+        }
     }
 
     private void render() {

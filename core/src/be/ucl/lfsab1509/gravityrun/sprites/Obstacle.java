@@ -11,12 +11,12 @@ public abstract class Obstacle extends Sprite {
     AbstractPlayScreen playScreen;
     Random random;
 
-    Obstacle(float y, Marble marble, AbstractPlayScreen playScreen, Random random, Texture texture) {
-        this(0, y, marble, playScreen, random, texture);
+    Obstacle(float y, AbstractPlayScreen playScreen, Random random, Texture texture) {
+        this(0, y, playScreen, random, texture);
     }
 
-    Obstacle(float x, float y, Marble marble, AbstractPlayScreen playScreen, Random random, Texture texture) {
-        super(x, y, marble, random, texture);
+    Obstacle(float x, float y, AbstractPlayScreen playScreen, Random random, Texture texture) {
+        super(x, y, random, texture);
         this.playScreen = playScreen;
         this.random = new Random();
     }

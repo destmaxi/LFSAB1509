@@ -12,31 +12,31 @@ public class Invincible extends Bonus {
 
     private float collideTime;
 
-    public Invincible(float y, int offset, Marble marble, AbstractPlayScreen playScreen, Random random, Texture texture) {
-        super(y, offset, marble, playScreen, random, texture);
+    public Invincible(float y, int offset, AbstractPlayScreen playScreen, Random random, Texture texture) {
+        super(y, offset, playScreen, random, texture);
     }
 
     @Override
-    public boolean collidesMarble() {
+    public boolean collides(Marble marble) {
         if (overlaps(marble)) {
             activeInvincibles++;
             collideTime = 0;
             marble.setInvincible(true);
         }
 
-        return super.collidesMarble();
+        return super.collides(marble);
     }
 
     @Override
-    public boolean isFinished() {
+    public boolean isFinished(Marble marble) {
         return collideTime >= 3;
     }
 
     @Override
-    public void update(float dt) {
+    public void update(float dt, Marble marble) {
         collideTime += dt;
 
-        if (!playScreen.died && collideTime >= 3 && --activeInvincibles == 0) {
+        if (!marble.isDead() && collideTime >= 3 && --activeInvincibles == 0) {
             marble.setInvincible(false);
             marble.setInWall(true);
         }

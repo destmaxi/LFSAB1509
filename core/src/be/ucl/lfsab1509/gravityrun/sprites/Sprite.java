@@ -8,8 +8,6 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.util.Random;
 
-import javax.xml.soap.Text;
-
 /**
  * Un sprite possède une position, une texture sous-jacente et une forme définissant ses limites.
  */
@@ -17,7 +15,7 @@ public abstract class Sprite {
 
     Random random;
     Rectangle bounds;
-    Marble marble;
+    //Marble marble;
     Texture texture;
     Vector2 position;
 
@@ -27,9 +25,8 @@ public abstract class Sprite {
         bounds = new Rectangle(position.x, position.y, texture.getWidth(), texture.getHeight());
     }
 
-    Sprite(float x, float y, Marble marble, Random random, Texture texture) {
+    Sprite(float x, float y, Random random, Texture texture) {
         this(x, y, texture);
-        this.marble = marble;
         this.random = random;
     }
 
@@ -39,8 +36,9 @@ public abstract class Sprite {
      * changer son nombre de points ou de bonus, changer les vitesses etc.
      *
      * @return voir ci-dessus
+     * @param marble
      */
-    public abstract boolean collidesMarble();
+    public abstract boolean collides(Marble marble);
 
     public void dispose() {
 //        texture.dispose();

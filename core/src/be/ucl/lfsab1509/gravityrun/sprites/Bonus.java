@@ -6,8 +6,6 @@ import com.badlogic.gdx.graphics.Texture;
 
 import java.util.Random;
 
-import javax.xml.soap.Text;
-
 public abstract class Bonus extends Sprite {
 
     private int bonusId, offset;
@@ -18,16 +16,15 @@ public abstract class Bonus extends Sprite {
         this.offset = offset;
     }
 
-    Bonus(float y, int offset, Marble marble, AbstractPlayScreen playScreen, Random random, Texture texture) {
+    Bonus(float y, int offset, AbstractPlayScreen playScreen, Random random, Texture texture) {
         this(y, offset, texture);
-        this.marble = marble;
         this.playScreen = playScreen;
         position.x = random.nextInt(playScreen.width - texture.getWidth());
         bounds.x = position.x;
     }
 
     @Override
-    public boolean collidesMarble() {
+    public boolean collides(Marble marble) {
         return overlaps(marble);
     }
 
@@ -39,13 +36,13 @@ public abstract class Bonus extends Sprite {
         return offset;
     }
 
-    public abstract boolean isFinished();
+    public abstract boolean isFinished(Marble marble);
 
     public void setBonusId(int bonusId) {
         this.bonusId = bonusId;
     }
 
-    public void update(float dt) {
+    public void update(float dt, Marble marble) {
 
     }
 

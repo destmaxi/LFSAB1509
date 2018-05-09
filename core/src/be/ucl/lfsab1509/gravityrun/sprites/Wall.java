@@ -1,6 +1,5 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
-import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.screens.AbstractPlayScreen;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -10,17 +9,17 @@ import java.util.Random;
 public class Wall extends Obstacle {
 
     public Wall(float y, Random random, Marble marble, AbstractPlayScreen playScreen, Texture texture) {
-        super(y, marble, playScreen, random, texture);
+        super(y, playScreen, random, texture);
         int x = this.random.nextBoolean()
-                ? -this.random.nextInt(2 * this.marble.getNormalDiameter())
-                : -this.random.nextInt(2 * this.marble.getNormalDiameter()) + playScreen.width / 2;
+                ? -this.random.nextInt(2 * marble.getNormalDiameter())
+                : -this.random.nextInt(2 * marble.getNormalDiameter()) + playScreen.width / 2;
 
         bounds.x = x;
         position.x = x;
     }
 
     @Override
-    public boolean collidesMarble() {
+    public boolean collides(Marble marble) {
         float marbleCenterX = marble.getCenterPosition().x;
         float marbleCenterY = marble.getCenterPosition().y;
 
@@ -35,7 +34,7 @@ public class Wall extends Obstacle {
                 marble.setBlockedOnLeft(marbleCenterX > rightBound);
                 marble.setBlockedOnRight(marbleCenterX < leftBound);
                 marble.setBlockedOnTop(marbleCenterY < bottomBound);
-                playScreen.isCollideWall = true;
+                marble.setCollideWall(true);
                 if (!marble.isLifeLost()) {
                     marble.addMarbleLife(-1);
                     marble.setLifeLost(true);
@@ -44,7 +43,7 @@ public class Wall extends Obstacle {
                 marble.setBlockedOnLeft(false);
                 marble.setBlockedOnRight(false);
                 marble.setBlockedOnTop(false);
-                playScreen.isCollideWall = false;
+                marble.setCollideWall(false);
                 marble.setLifeLost(false);
             }
         }

@@ -11,12 +11,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector3;
 
+import java.util.ArrayList;
+
 public class Marble {
 
     static final int JUMP_HEIGHT = 666;
     private static int MOVEMENT;
 
-    private boolean blockedOnLeft = false, blockedOnRight = false, blockedOnTop = false, inHole = false, invincible = false, inWall = false, lifeLost = false, myMarble;
+    private ArrayList<Bonus> caughtBonuses;
+    private int scoreBonus, collidedWall, score;
+    private boolean blockedOnLeft = false, blockedOnRight = false, blockedOnTop = false, inHole = false, invincible = false, inWall = false, lifeLost = false, myMarble, dead = false, isCollideWall = false;
     private Circle bounds;
     private float repositioning = 1f, slowDown = 1f, speed = 1f, gyroY;
     private int difficulty, height, marbleLife = 5, width;
@@ -28,6 +32,7 @@ public class Marble {
     public Marble(boolean myMarble, boolean multiplayer, int x, int y, int standardWidth, int level, AbstractPlayScreen screen) {
         this.myMarble = myMarble;
         playScreen = screen;
+        caughtBonuses = new ArrayList<>();
         marble = new Texture("drawable-" + standardWidth + "/marbles.png");
         marbleInvincible = new Texture("drawable-" + standardWidth + "/marbles_invincible.png");
         marbleAnimation = new MarbleAnimation(marble, standardWidth);
@@ -41,6 +46,10 @@ public class Marble {
         position = new Vector3(x, y, 0);
         bounds = new Circle(x, y, getRadius());
         difficulty = level;
+    }
+
+    public void addCatchedBonuses(Bonus bonus) {
+        caughtBonuses.add(bonus);
     }
 
     void addMarbleLife(int lives) {
@@ -58,6 +67,10 @@ public class Marble {
         this.invincible = invincible;
     }
 
+    public void addScoreBonus () {
+        scoreBonus += 100;
+    }
+
     public void dispose() {
         marble.dispose();
         marbleInvincible.dispose();
@@ -69,6 +82,10 @@ public class Marble {
 
     public Vector3 getCenterPosition() {
         return position;
+    }
+
+    public int getCollidedWall() {
+        return collidedWall;
     }
 
     public TextureRegion getMarble() {
@@ -91,6 +108,14 @@ public class Marble {
         return blockedOnTop;
     }
 
+    public ArrayList<Bonus> getCaughtBonuses() {
+        return caughtBonuses;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
     public float getSlowDown() {
         return slowDown;
     }
@@ -111,8 +136,20 @@ public class Marble {
         return getMarbleAnimation().getDiameter(position.z) / 2;
     }
 
+    public int getScoreBonus() {
+        return scoreBonus;
+    }
+
     public float getSpeedFactor() {
         return difficulty * MOVEMENT * repositioning * slowDown * speed;
+    }
+
+    public boolean isCollideWall() {
+        return isCollideWall;
+    }
+
+    public boolean isDead() {
+        return dead;
     }
 
     public boolean isInvincible() {
@@ -161,12 +198,20 @@ public class Marble {
         this.blockedOnTop = blockedOnTop;
     }
 
-    public void setDifficulty(int difficulty) {
-        this.difficulty = difficulty;
+    public void setCollidedWall(int collidedWall) {
+        this.collidedWall = collidedWall;
     }
 
-    public void setMarbleLife(int marbleLife) {
-        this.marbleLife = marbleLife;
+    public void setCollideWall(boolean collideWall) {
+        isCollideWall = collideWall;
+    }
+
+    public void setDead(boolean dead) {
+        this.dead = dead;
+    }
+
+    public void setDifficulty(int difficulty) {
+        this.difficulty = difficulty;
     }
 
     void setInHole(boolean inHole) {
@@ -185,23 +230,31 @@ public class Marble {
         this.lifeLost = lifeLost;
     }
 
+    public void setMarbleLife(int marbleLife) {
+        this.marbleLife = marbleLife;
+    }
+
     public void setRepositioning(float repositioning) {
         this.repositioning = repositioning;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 
     void setSlowDown(float slowDown) {
         this.slowDown = slowDown;
     }
 
-    public void update(float dt, boolean gameOver) {
-        marbleAnimation.update(dt, gameOver);
-        marbleAnimationInvincible.update(dt, gameOver);
+    public void update(float dt) {
+        marbleAnimation.update(dt, isDead());
+        marbleAnimationInvincible.update(dt, isDead());
 
         updateSpeed();
 
-        updateJump(gameOver);
+        updateJump(isDead());
 
-        updatePosition(dt, gameOver);
+        updatePosition(dt, isDead());
 
         repositionWithinScreen();
 
@@ -238,15 +291,15 @@ public class Marble {
     }
 
     private void updateSpeed() {
-        if (playScreen.getScore() < 1000)
+        if (score < 1000)
             speed = 1f;
-        else if (playScreen.getScore() < 2000)
+        else if (score < 2000)
             speed = 1.2f;
-        else if (playScreen.getScore() < 3000)
+        else if (score < 3000)
             speed = 1.4f;
-        else if (playScreen.getScore() < 4000)
+        else if (score < 4000)
             speed = 1.6f;
-        else if (playScreen.getScore() < 5000)
+        else if (score < 5000)
             speed = 1.8f;
         else
             speed = 2f;

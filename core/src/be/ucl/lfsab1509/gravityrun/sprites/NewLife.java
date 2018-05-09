@@ -8,12 +8,12 @@ import be.ucl.lfsab1509.gravityrun.screens.AbstractPlayScreen;
 
 public class NewLife extends Bonus {
 
-    public NewLife(float y, int offset, AbstractPlayScreen playScreen, Marble marble, Random random, Texture texture) {
-        super(y, offset, marble, playScreen, random, texture);
+    public NewLife(float y, int offset, AbstractPlayScreen playScreen, Random random, Texture texture) {
+        super(y, offset, playScreen, random, texture);
     }
 
     @Override
-    public boolean isFinished() {
+    public boolean isFinished(Marble marble) {
         marble.addMarbleLife(1);
         return true;
     }

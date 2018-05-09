@@ -32,11 +32,6 @@ public class SoloPlayScreen extends AbstractPlayScreen {
     }
 
     @Override
-    public void disposeMarbles() {
-        playerMarble.dispose();
-    }
-
-    @Override
     void handleInput() {
         super.handleInput();
 
@@ -59,6 +54,7 @@ public class SoloPlayScreen extends AbstractPlayScreen {
     public void initMarbles() {
         int level = game.user.getIndexSelected() + 1;
         playerMarble = new Marble(true,false,width / 2, height / 10, STANDARD_WIDTH, level, this);
+        marbles.add(playerMarble);
     }
 
     @Override
@@ -75,13 +71,8 @@ public class SoloPlayScreen extends AbstractPlayScreen {
     void update(float dt) {
         super.update(dt);
 
-        if(died)
+        if(playerMarble.isDead())
             gameOver = true;
-    }
-
-    @Override
-    public void updateMarbles(float dt) {
-        playerMarble.update(dt, died);
     }
 
     @Override
@@ -90,8 +81,8 @@ public class SoloPlayScreen extends AbstractPlayScreen {
     }
 
     private void handlePause() {
-        if (!died)
-            screenManager.push(new PauseScreen(game, score));
+        if (!playerMarble.isDead())
+            screenManager.push(new PauseScreen(game, playerMarble.getScore()));
         //FIXME le SoundManager n'arrête pas la musique.
     }
 

@@ -11,6 +11,6 @@ public class DesktopLauncher {
 		config.height = 1824;
 		config.overrideDensity = 2 * 160;
 		config.title = GravityRun.TITLE;
-		new LwjglApplication(new GravityRun(), config);
+	//	new LwjglApplication(new GravityRun(), config);
 	}
 }

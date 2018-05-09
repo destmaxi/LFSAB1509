@@ -17,13 +17,11 @@ public class MultiPlayScreen extends AbstractPlayScreen {
     private static final long COUNTDOWN = 3000L;
     private Marble opponentMarble;
 
-    private ArrayList<Boolean> wallPositionsX;
-    private ArrayList<Float> holePositionsX, offsets, discaredOffsets;
-    private ArrayList<Integer> obstacleTypes, bonusTypes, bonusIds, discaredIds, discaredTypes;
+    private ArrayList<Integer> caughtBonusIds;
 
     private boolean diedReceved = false, opponentReady = false, initDone = false, obstaclesInitialized = false, gotSeed = false;
     private boolean startMultiPlayState = false, opponentDied = false;
-    private int opponentScore = 0;
+    private int opponentScore = 0, bonusId;
     private Label opponentScoreLabel;
     private long hostTimeStamp1, clientTimestamp, clientStartTime = Long.MAX_VALUE, hostStartTime = Long.MAX_VALUE;
 
@@ -37,17 +35,10 @@ public class MultiPlayScreen extends AbstractPlayScreen {
     MultiPlayScreen(GravityRun gravityRun) {
         super(gravityRun, true);
 
-        obstacleTypes = new ArrayList<>();
-        bonusIds = new ArrayList<>();
-        holePositionsX = new ArrayList<>();
-        wallPositionsX = new ArrayList<>();
-        bonusTypes = new ArrayList<>();
-        offsets = new ArrayList<>();
-        discaredIds = new ArrayList<>();
-        discaredOffsets = new ArrayList<>();
-        discaredTypes = new ArrayList<>();
+        caughtBonusIds = new ArrayList<>();
 
-        opponentScoreLabel = new Label(game.i18n.format("opponent_score", score), game.aaronScoreSkin, "score");
+
+        opponentScoreLabel = new Label(game.i18n.format("opponent_score", 0), game.aaronScoreSkin, "score");
         opponentScoreLabel.setPosition((GravityRun.WIDTH - opponentScoreLabel.getWidth()) / 2, GravityRun.HEIGHT - 2 * opponentScoreLabel.getHeight());
 
         scoreStage.addActor(opponentScoreLabel);
@@ -64,15 +55,9 @@ public class MultiPlayScreen extends AbstractPlayScreen {
     }
 
     @Override
-    void bonusCollidesMarble(Bonus bonus, int i) {
+    void bonusCollides(Bonus bonus, int i, Marble marble) {
         write("[2:" + bonus.getBonusId() + "]");
-        super.bonusCollidesMarble(bonus, i);
-    }
-
-    @Override
-    public void disposeMarbles() {
-        playerMarble.dispose();
-        opponentMarble.dispose();
+        super.bonusCollides(bonus, i, marble);
     }
 
     @Override
@@ -133,6 +118,9 @@ public class MultiPlayScreen extends AbstractPlayScreen {
         playerMarble.setDifficulty(game.user.getMulti_IndexSelected() + 1);
         opponentMarble.setMarbleLife(game.user.getMultiLives());
         opponentMarble.setDifficulty(game.user.getMulti_IndexSelected() + 1);
+
+        marbles.add(playerMarble);
+        marbles.add(opponentMarble);
     }
 
     @Override
@@ -146,23 +134,37 @@ public class MultiPlayScreen extends AbstractPlayScreen {
     }
 
     @Override
+    Bonus newBonus(float position, int offset) {
+        Bonus bonus;
+        int bonusType = randomBonus.nextInt(10);
+
+        if (caughtBonusIds.contains(bonusId)) {
+            bonus = genereateNewBonus(2, offset, position);
+            caughtBonusIds.remove(caughtBonusIds.indexOf(bonusId));
+        } else {
+            bonus = genereateNewBonus(bonusType, offset, position);
+        }
+
+        bonus.setBonusId(bonusId++);
+
+        return bonus;
+    }
+
+    @Override
     public void renderMarbles() {
         if (!initDone)
             return;
 
-        playerMarble.render(game.spriteBatch);
-        opponentMarble.render(game.spriteBatch);
+        super.renderMarbles();
     }
 
     @Override
     void update(float dt) {
-
-
         super.update(dt);
 
         opponentScoreLabel.setText(game.i18n.format("opponent_score", opponentScore));
 
-        if (!died)
+        if (!playerMarble.isDead())
             return;
 
         if (!diedReceved)
@@ -176,7 +178,7 @@ public class MultiPlayScreen extends AbstractPlayScreen {
 
     @Override
     void updateCamera(float dt) {
-        if (died && !opponentDied) {
+        if (playerMarble.isDead() && !opponentDied) {
             checkCamReposition(opponentMarble);
             camera.position.add(0, opponentMarble.getSpeedFactor() * dt, 0);
             viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -187,12 +189,10 @@ public class MultiPlayScreen extends AbstractPlayScreen {
 
     @Override
     public void updateMarbles(float dt) {
-        playerMarble.update(dt, died);
+        super.updateMarbles(dt);
 
-        opponentMarble.update(dt, opponentDied);
-
-        if (!died) {
-            String marbleUpdate = "[6" + ":" + Gdx.input.getGyroscopeY() + ":" + playerMarble.getSlowDown() + ":" + playerMarble.isBlockedOnLeft() + ":" + playerMarble.isBlockedOnRight() + ":" + playerMarble.isBlockedOnTop() + ":" + playerMarble.getCenterPosition().z + ":" + playerMarble.getSpeed() + ":" + score + ":" + playerMarble.isInvincible() + "]#";
+        if (!playerMarble.isDead()) {
+            String marbleUpdate = "[6" + ":" + Gdx.input.getGyroscopeY() + ":" + playerMarble.getSlowDown() + ":" + playerMarble.isBlockedOnLeft() + ":" + playerMarble.isBlockedOnRight() + ":" + playerMarble.isBlockedOnTop() + ":" + playerMarble.getCenterPosition().z + ":" + playerMarble.getSpeed() + ":" + playerMarble.getScore() + ":" + playerMarble.isInvincible() + "]#";
             write(marbleUpdate);
         }
     }

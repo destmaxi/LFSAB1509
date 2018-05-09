@@ -152,6 +152,22 @@ public class User {
         return intermediateScoreList;
     }
 
+    public String getLevelDescription() {
+        return getLevelDescription(indexSelected);
+    }
+
+    private static String getLevelDescription(int level) {
+        switch (level) {
+            case 0:
+                return i18n.format("beginner");
+            case 1:
+            default:
+                return i18n.format("inter");
+            case 2:
+                return i18n.format("expert");
+        }
+    }
+
     private ArrayList<Integer> getScoreList(int level) {
         switch (level) {
             case 0:

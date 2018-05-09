@@ -10,13 +10,13 @@ import java.util.Map;
 
 public class User {
 
-    private static final String DEB = "beginner";
-    private static final String EXPERT = "expert";
-    public static final String FIRSTTIME = "firstTime";
-    private static final String HIGHSCORE = "highscore";
-    private static final String INDEX = "index";
-    private static final String INTER = "intermediate";
-    private static final String USERNAME = "username";
+    private static final String KEY_DEB = "beginner";
+    private static final String KEY_EXPERT = "expert";
+    public static final String KEY_FIRSTTIME = "firstTime";
+    private static final String KEY_HIGHSCORE = "highscore";
+    private static final String KEY_INDEX = "index";
+    private static final String KEY_INTER = "intermediate";
+    private static final String KEY_USERNAME = "username";
     private static final int MAX_USERNAME_LENGTH = 32; // FIXME probablement trop long.
     private static final int HIGH_SCORE_MAX_COUNT = 3;
     public static I18NBundle i18n;
@@ -44,24 +44,24 @@ public class User {
 
     public User(GravityRun gravityRun, Map<String, ?> userMap) {
         game = gravityRun;
-        username = userMap.get(USERNAME).toString();
+        username = userMap.get(KEY_USERNAME).toString();
 
-        Object firstTime1 = userMap.get(FIRSTTIME);
+        Object firstTime1 = userMap.get(KEY_FIRSTTIME);
         if (firstTime1 instanceof Boolean)
             firstTime = (Boolean) firstTime1;
         else
             firstTime = Boolean.parseBoolean((String) firstTime1);
 
-        Object indexSelected1 = userMap.get(INDEX);
+        Object indexSelected1 = userMap.get(KEY_INDEX);
         if (indexSelected1 instanceof Integer)
             indexSelected = (Integer) indexSelected1;
         else
             indexSelected = Integer.parseInt((String) indexSelected1);
 
-        highScoreList = convertStoA((String) userMap.get(HIGHSCORE));
-        beginnerScoreList = convertStoA((String) userMap.get(DEB));
-        intermediateScoreList = convertStoA((String) userMap.get(INTER));
-        expertScoreList = convertStoA((String) userMap.get(EXPERT));
+        highScoreList = convertStoA((String) userMap.get(KEY_HIGHSCORE));
+        beginnerScoreList = convertStoA((String) userMap.get(KEY_DEB));
+        intermediateScoreList = convertStoA((String) userMap.get(KEY_INTER));
+        expertScoreList = convertStoA((String) userMap.get(KEY_EXPERT));
     }
 
     /**
@@ -200,13 +200,13 @@ public class User {
     private Map<String, Object> toMap() {
         HashMap<String, Object> map = new HashMap<>();
 
-        map.put(USERNAME, username);
-        map.put(DEB, convertAtoS(beginnerScoreList));
-        map.put(INTER, convertAtoS(intermediateScoreList));
-        map.put(EXPERT, convertAtoS(expertScoreList));
-        map.put(FIRSTTIME, firstTime);
-        map.put(INDEX, indexSelected);
-        map.put(HIGHSCORE, convertAtoS(highScoreList));
+        map.put(KEY_USERNAME, username);
+        map.put(KEY_DEB, convertAtoS(beginnerScoreList));
+        map.put(KEY_INTER, convertAtoS(intermediateScoreList));
+        map.put(KEY_EXPERT, convertAtoS(expertScoreList));
+        map.put(KEY_FIRSTTIME, firstTime);
+        map.put(KEY_INDEX, indexSelected);
+        map.put(KEY_HIGHSCORE, convertAtoS(highScoreList));
 
         return map;
     }

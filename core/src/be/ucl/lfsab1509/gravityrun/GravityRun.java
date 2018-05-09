@@ -57,7 +57,7 @@ public class GravityRun extends Game {
 
         Map<String, ?> map = preferences.get();
 
-        if (!preferences.getBoolean(User.FIRSTTIME)) {
+        if (!preferences.getBoolean(User.KEY_FIRSTTIME)) {
             user = null;
             screenManager.push(new FirstScreen(this));
         } else {

@@ -43,4 +43,10 @@ public class SlowDown extends Bonus {
         activeSlowDowns = 0;
     }
 
+    public void activateSlowDown() {
+        activeSlowDowns++;
+        collideTime = 0;
+        marble.setSlowDown(1.5f);
+    }
+
 }

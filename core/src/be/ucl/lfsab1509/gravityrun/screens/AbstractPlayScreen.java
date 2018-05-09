@@ -56,7 +56,7 @@ public abstract class AbstractPlayScreen extends Screen {
     OrthographicCamera camera;
     Random randomObstacle, randomBonus;
     Stage scoreStage;
-    private Texture background, camRepositionImage, gameOverImage, holeImage, invincibleImage, largeHoleImage, scoreBonusImage, slowDownImage, wallImage;
+    Texture background, camRepositionImage, gameOverImage, holeImage, invincibleImage, largeHoleImage, scoreBonusImage, slowDownImage, wallImage;
     Texture pauseImage, newLifeImage;
     Viewport viewport;
 
@@ -237,6 +237,15 @@ public abstract class AbstractPlayScreen extends Screen {
 
     public Vector3 getCameraPosition() {
         return camera.position;
+    }
+
+    int getIntegerFromStr(String str) {
+        int returnInt = -1;
+        if (str != null) {
+            returnInt = Integer.parseInt(str);
+        }
+
+        return returnInt;
     }
 
     public int getScore() {

@@ -16,13 +16,13 @@ public class MultiPlayScreen extends AbstractPlayScreen {
     private static final long COUNTDOWN = 3000L;
     private Marble opponentMarble;
 
-    private boolean diedReceved = false, opponentReady = false, initDone = false, obstaclesInitialized = false, gotSeed = false;
+    boolean diedReceved = false, opponentReady = false, initDone = false, obstaclesInitialized = false, gotSeed = false;
     private boolean startMultiPlayState = false, opponentDied = false;
-    private int opponentScore = 0;
+    int opponentScore = 0;
     private Label opponentScoreLabel;
-    private long hostTimeStamp1, clientTimestamp, clientStartTime = Long.MAX_VALUE, hostStartTime = Long.MAX_VALUE;
+    long hostTimeStamp1, clientTimestamp, clientStartTime = Long.MAX_VALUE, hostStartTime = Long.MAX_VALUE;
 
-    private long seed;
+    long seed;
 
     public MultiPlayScreen(GravityRun gravityRun, boolean startMultiPlayState) {
         super(gravityRun);
@@ -32,7 +32,7 @@ public class MultiPlayScreen extends AbstractPlayScreen {
     MultiPlayScreen(GravityRun gravityRun) {
         super(gravityRun, true);
 
-        opponentScoreLabel = new Label(game.i18n.format("opponent_score", score), game.aaronScoreSkin, "score");
+        opponentScoreLabel = new Label(game.i18n.format("opponent_score", opponentScore), game.aaronScoreSkin, "score");
         opponentScoreLabel.setPosition((GravityRun.WIDTH - opponentScoreLabel.getWidth()) / 2, GravityRun.HEIGHT - 2 * opponentScoreLabel.getHeight());
 
         scoreStage.addActor(opponentScoreLabel);
@@ -91,7 +91,6 @@ public class MultiPlayScreen extends AbstractPlayScreen {
 
             initObstacles();
             initBonuses();
-            write("[1]#");
             initialized = true;
         }
 
@@ -192,7 +191,7 @@ public class MultiPlayScreen extends AbstractPlayScreen {
         }
     }
 
-    private void applyMessage(String[] message) {
+    void applyMessage(String[] message) {
         int messageType = getIntegerFromStr(message[0]);
 
         switch (messageType) {
@@ -292,11 +291,10 @@ public class MultiPlayScreen extends AbstractPlayScreen {
                     e.printStackTrace();
                 }
                 break;
-
         }
     }
 
-    private long getLongFromStr(String str) {
+    long getLongFromStr(String str) {
         try {
             return Long.parseLong(str);
         } catch (NumberFormatException ex) {
@@ -305,26 +303,17 @@ public class MultiPlayScreen extends AbstractPlayScreen {
         }
     }
 
-    private boolean getBooleanFromStr(String str) {
+    boolean getBooleanFromStr(String str) {
         return Boolean.parseBoolean(str);
     }
 
-    private float getFloatFromStr(String str) {
+    float getFloatFromStr(String str) {
         try {
             return Float.parseFloat(str);
         } catch (NumberFormatException ex) {
             Gdx.app.error("ERROR", "parse float error");
             return 0.0f;
         }
-    }
-
-    private int getIntegerFromStr(String str) {
-        int returnInt = -1;
-        if (str != null) {
-            returnInt = Integer.parseInt(str);
-        }
-
-        return returnInt;
     }
 
     public void incomingMessage(String str) {

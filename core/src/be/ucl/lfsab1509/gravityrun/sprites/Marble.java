@@ -43,7 +43,7 @@ public class Marble {
         difficulty = level;
     }
 
-    void addMarbleLife(int lives) {
+    public void addMarbleLife(int lives) {
         this.marbleLife += lives;
     }
 
@@ -181,7 +181,7 @@ public class Marble {
         this.inWall = inWall;
     }
 
-    void setLifeLost(boolean lifeLost) {
+    public void setLifeLost(boolean lifeLost) {
         this.lifeLost = lifeLost;
     }
 
@@ -189,7 +189,7 @@ public class Marble {
         this.repositioning = repositioning;
     }
 
-    void setSlowDown(float slowDown) {
+    public void setSlowDown(float slowDown) {
         this.slowDown = slowDown;
     }
 

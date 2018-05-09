@@ -10,9 +10,9 @@ public class Wall extends Obstacle {
 
     public Wall(float y, Random random, Marble marble, AbstractPlayScreen playScreen, Texture texture) {
         super(y, playScreen, random, texture);
-        int x = this.random.nextBoolean()
-                ? -this.random.nextInt(2 * marble.getNormalDiameter())
-                : -this.random.nextInt(2 * marble.getNormalDiameter()) + playScreen.width / 2;
+        int x = random.nextBoolean()
+                ? -random.nextInt(2 * marble.getNormalDiameter())
+                : -random.nextInt(2 * marble.getNormalDiameter()) + playScreen.width / 2;
 
         bounds.x = x;
         position.x = x;

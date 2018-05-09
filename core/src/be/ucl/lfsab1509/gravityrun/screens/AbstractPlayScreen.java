@@ -39,16 +39,17 @@ public abstract class AbstractPlayScreen extends Screen {
 
     //private static int collidedWall = 0;
 
-    boolean initialized = false;
+    boolean
+            initialized = false;
 
     ArrayList<Bonus> bonuses;
     Array<Obstacle> obstacles;
 
     ArrayList<Marble> marbles;
     private Array<Vector2> backgroundPositions;
-  //  public boolean died = false, isCollideWall = false;
+    //  public boolean died = false, isCollideWall = false;
     boolean gameOver = false, endGameReceived = false;
-   // private int scoreBonus = 0;
+    // private int scoreBonus = 0;
     //int score = 0;
     private Label scoreLabel;
     Marble playerMarble;
@@ -79,15 +80,13 @@ public abstract class AbstractPlayScreen extends Screen {
 
         calculateStandardWidth();
 
-        Invincible.resetBonus();
-        SlowDown.resetBonus();
-
         bonuses = new ArrayList<>();
-       // catchedBonuses = new ArrayList<>();
+        // catchedBonuses = new ArrayList<>();
         obstacles = new Array<>();
         marbles = new ArrayList<>();
 
         initialiseTextures();
+        initMarbles();
 
         backgroundPositions = new Array<>();
         for (int i = 0; i < 3; i++)
@@ -144,7 +143,7 @@ public abstract class AbstractPlayScreen extends Screen {
     }*/
 
     void bonusCollides(Bonus bonus, int i, Marble marble) {
-        marble.addCatchedBonuses(bonus);
+        marble.addCaughtBonuses(bonus);
         Bonus emptyBonus = new EmptyBonus(bonus.getPosition().y, bonus.getOffset(), newLifeImage);
         emptyBonus.setBonusId(bonus.getBonusId());
         bonuses.set(i, emptyBonus);
@@ -190,7 +189,7 @@ public abstract class AbstractPlayScreen extends Screen {
     }
 
     private void disposeMarbles() {
-        for (Marble marble: marbles)
+        for (Marble marble : marbles)
             marble.dispose();
     }
 
@@ -245,8 +244,8 @@ public abstract class AbstractPlayScreen extends Screen {
         if (!gameOver)
             return;
 
-            soundManager.replayMenu();
-            screenManager.set(new GameOverScreen(game, playerMarble.getScore()));
+        soundManager.replayMenu();
+        screenManager.set(new GameOverScreen(game, playerMarble.getScore()));
     }
 
     void handleInput() {
@@ -361,7 +360,7 @@ public abstract class AbstractPlayScreen extends Screen {
     }
 
     void renderMarbles() {
-        for (Marble marble: marbles)
+        for (Marble marble : marbles)
             marble.render(game.spriteBatch);
     }
 
@@ -382,17 +381,13 @@ public abstract class AbstractPlayScreen extends Screen {
         if (!isInitDone())
             return;
 
-        for (Marble marble: marbles)
-            updateGame(dt, marble);
+        updateGame(dt);
 
-        playerMarble.setScore((int) (playerMarble.getCenterPosition().y / height * 100) + playerMarble.getScoreBonus());
         scoreLabel.setText(game.i18n.format("score", playerMarble.getScore()));
 
-        for (Marble marble: marbles) {
-            if (!marble.isInvincible() && marble.isOutOfScreen(camera.position.y)) {
-                soundManager.marbleBreak(marble.isDead());
-                marble.setDead(true);
-            }
+        if (!playerMarble.isInvincible() && playerMarble.isOutOfScreen(camera.position.y)) {
+            soundManager.marbleBreak(playerMarble.isDead());
+            playerMarble.setDead(true);
         }
 
         handleInput();
@@ -418,19 +413,18 @@ public abstract class AbstractPlayScreen extends Screen {
             Bonus bonus = marble.getCaughtBonuses().get(i);
             bonus.update(dt, marble);
             if (bonus.isFinished(marble)) {
-                bonus.dispose();
                 marble.getCaughtBonuses().remove(i--);
             }
         }
     }
 
-    private void updateGame(float dt, Marble marble) {
-        updateBonuses(marble);
-        updateCaughtBonus(dt, marble);
+    private void updateGame(float dt) {
+        updateBonuses(playerMarble);
+        updateCaughtBonus(dt, playerMarble);
+        updateObstacles(playerMarble);
         updateMarbles(dt);
         updateCamera(dt);
         updateGround();
-        updateObstacles(marble);
     }
 
     private void updateGround() {
@@ -440,7 +434,7 @@ public abstract class AbstractPlayScreen extends Screen {
     }
 
     void updateMarbles(float dt) {
-        for (Marble marble: marbles)
+        for (Marble marble : marbles)
             marble.update(dt);
     }
 

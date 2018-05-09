@@ -17,13 +17,14 @@ public class MultiplayerConnectionScreen extends AbstractMenuScreen {
     static boolean ready = false;
     private final List<String> listDeviceName;
 
+    //FIXME le son s'arrete lorsqu'un popup s'ouvre
     MultiplayerConnectionScreen(GravityRun gravityRun) {
         super(gravityRun);
 
         Label title = new Label(game.i18n.get("multiplayer"), game.titleSkin, "title");
 
         if (!supportDeviceBluetooth())
-            screenManager.pop();
+            spawnErrorDialog("Error", "Bluetooth not supported");
 
         enableBluetooth();
 
@@ -74,9 +75,8 @@ public class MultiplayerConnectionScreen extends AbstractMenuScreen {
         if (isClient && ready) {
             MultiPlayScreen multiPlayScreen = new MultiPlayScreen(game);
             setMultiPlayScreen(multiPlayScreen);
-            screenManager.set(multiPlayScreen);
+            screenManager.push(multiPlayScreen);
         }
-
     }
 
     @Override

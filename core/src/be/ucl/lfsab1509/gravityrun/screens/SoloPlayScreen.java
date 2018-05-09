@@ -44,7 +44,6 @@ public class SoloPlayScreen extends AbstractPlayScreen {
         if (initialized)
             return;
 
-        initMarbles();
         initObstacles();
         initBonuses();
         initialized = true;

@@ -23,7 +23,7 @@ public class Marble {
     private boolean blockedOnLeft = false, blockedOnRight = false, blockedOnTop = false, inHole = false, invincible = false, inWall = false, lifeLost = false, myMarble, dead = false, isCollideWall = false;
     private Circle bounds;
     private float repositioning = 1f, slowDown = 1f, speed = 1f, gyroY;
-    private int difficulty, height, marbleLife = 5, width;
+    private int difficulty, height, marbleLife = 5, width, activeSlowdowns, activeInvincibles;
     private MarbleAnimation marbleAnimation, marbleAnimationInvincible;
     private AbstractPlayScreen playScreen;
     private Texture marble, marbleInvincible;
@@ -48,7 +48,7 @@ public class Marble {
         difficulty = level;
     }
 
-    public void addCatchedBonuses(Bonus bonus) {
+    public void addCaughtBonuses(Bonus bonus) {
         caughtBonuses.add(bonus);
     }
 
@@ -56,7 +56,7 @@ public class Marble {
         this.marbleLife += lives;
     }
 
-    public void addPosition(float gyroY, float slowDown, boolean blockedOnLeft, boolean blockedOnRight, boolean blockedOnTop, float positionZ, float speed, boolean invincible) {
+    public void addPosition(float gyroY, float slowDown, boolean blockedOnLeft, boolean blockedOnRight, boolean blockedOnTop, float positionZ, float speed, boolean invincible, float score) {
         this.gyroY = gyroY;
         this.position.z = positionZ;
         this.slowDown = slowDown;
@@ -64,16 +64,25 @@ public class Marble {
         this.blockedOnRight = blockedOnRight;
         this.blockedOnLeft = blockedOnLeft;
         this.speed = speed;
+        this.score = (int) score;
         this.invincible = invincible;
     }
 
-    public void addScoreBonus () {
+    public void addScoreBonus() {
         scoreBonus += 100;
     }
 
     public void dispose() {
         marble.dispose();
         marbleInvincible.dispose();
+    }
+
+    public int decreaseActiveInvicibles() {
+        return --activeInvincibles;
+    }
+
+    public int decreaseActiveSlowdowns() {
+        return --activeSlowdowns;
     }
 
     Circle getBounds() {
@@ -94,18 +103,6 @@ public class Marble {
 
     private MarbleAnimation getMarbleAnimation() {
         return invincible ? marbleAnimationInvincible : marbleAnimation;
-    }
-
-    public boolean isBlockedOnLeft() {
-        return blockedOnLeft;
-    }
-
-    public boolean isBlockedOnRight() {
-        return blockedOnRight;
-    }
-
-    public boolean isBlockedOnTop() {
-        return blockedOnTop;
     }
 
     public ArrayList<Bonus> getCaughtBonuses() {
@@ -144,6 +141,26 @@ public class Marble {
         return difficulty * MOVEMENT * repositioning * slowDown * speed;
     }
 
+    public void increaseActiveInvincibles() {
+        activeInvincibles++;
+    }
+
+    public void increaseActiveSlowdowns() {
+        activeSlowdowns++;
+    }
+
+    public boolean isBlockedOnLeft() {
+        return blockedOnLeft;
+    }
+
+    public boolean isBlockedOnRight() {
+        return blockedOnRight;
+    }
+
+    public boolean isBlockedOnTop() {
+        return blockedOnTop;
+    }
+
     public boolean isCollideWall() {
         return isCollideWall;
     }
@@ -165,9 +182,7 @@ public class Marble {
     }
 
     public boolean isOutOfScreen(float cameraCenterY) {
-        return position.x <= getRadius()
-                || position.x >= (width - getRadius())
-                || position.y <= cameraCenterY - height / 2 + getRadius();
+        return position.y <= cameraCenterY - height / 2 + getRadius();
     }
 
     public void render(SpriteBatch spriteBatch) {
@@ -247,35 +262,46 @@ public class Marble {
     }
 
     public void update(float dt) {
+        if (dead)
+            return;
+
         marbleAnimation.update(dt, isDead());
         marbleAnimationInvincible.update(dt, isDead());
 
+
         updateSpeed();
 
-        updateJump(isDead());
+        updateJump();
 
-        updatePosition(dt, isDead());
+        updatePosition(dt);
+
+        if(myMarble)
+            updateScore();
 
         repositionWithinScreen();
 
         bounds.setPosition(position.x, position.y);
     }
 
-    private void updateJump(boolean gameOver) {
+    private void updateScore() {
+        score = (int) (getCenterPosition().y / height * 100) + scoreBonus;
+    }
+
+    private void updateJump() {
         if (myMarble && (Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) && position.z <= 0)
             position.z = JUMP_HEIGHT;
 
-        if (position.z > 0 && !gameOver || position.z <= 0 && gameOver && inHole)
+        if (position.z > 0 && !dead || position.z <= 0 && dead && inHole)
             position.add(0, 0, -10 * difficulty * speed * slowDown);
         else
             position.z = 0;
     }
 
-    private void updatePosition(float dt, boolean died) {
-        if (died)
+    private void updatePosition(float dt) {
+        if (dead)
             return;
 
-        if(myMarble)
+        if (myMarble)
             gyroY = Gdx.input.getGyroscopeY();
 
         if ((blockedOnRight && gyroY > 0) || (blockedOnLeft && gyroY < 0))

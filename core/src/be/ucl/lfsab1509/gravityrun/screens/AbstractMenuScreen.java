@@ -31,9 +31,7 @@ abstract class AbstractMenuScreen extends Screen {
     @Override
     public void render(float dt) {
         if (clickedBack() && openDialogs == 0) {
-            if (isHost())
-                screenManager.pop();
-
+            System.out.println("clickedBack");
             screenManager.pop();
             return;
         }

@@ -2,10 +2,12 @@ package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 class GameOverScreen extends AbstractMenuScreen {
@@ -18,18 +20,14 @@ class GameOverScreen extends AbstractMenuScreen {
         game.user.write();
 
         TextButton menuButton = new TextButton(game.i18n.format("menu"), game.tableSkin, "round");
-        menuButton.addListener(new ChangeListener() {
+        menuButton.addListener(new ClickListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
-
-                disconnect();
-
-                if (isHost())
-                    screenManager.pop();
-
+            public void clicked(InputEvent event, float x, float y) {
                 screenManager.pop();
+                disconnect();
             }
         });
+
         TextButton replayButton = new TextButton(game.i18n.format("replay"), game.tableSkin, "round");
         replayButton.setVisible(isHost() || !isConnected());
         replayButton.addListener(new ChangeListener() {
@@ -37,7 +35,7 @@ class GameOverScreen extends AbstractMenuScreen {
             public void changed(ChangeEvent event, Actor actor) {
                 if(isConnected()) {
                     int lives = game.user.getMultiLives();
-                    int difficulty = game.user.getMulti_IndexSelected() + 1;
+                    int difficulty = game.user.getMulti_IndexSelected();
                     write("[" + 4 + ":" +  lives + ":" + difficulty + ":" + GravityRun.HEIGHT / 5 + "]#");
                     MultiPlayScreen multiPlayScreen = new MultiPlayScreen(game);
                     setMultiPlayScreen(multiPlayScreen);

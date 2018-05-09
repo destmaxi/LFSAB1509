@@ -45,7 +45,7 @@ public class MultiplayerOptionScreen extends AbstractMenuScreen {
                 write("[" + 4 + ":" +  game.user.getMultiLives() + ":" + difficulty + ":" + GravityRun.HEIGHT / 5 + "]#");
                 MultiPlayScreen multiPlayScreen = new MultiPlayScreen(game);
                 setMultiPlayScreen(multiPlayScreen);
-                screenManager.set(multiPlayScreen);
+                screenManager.push(multiPlayScreen);
             }
         });
 

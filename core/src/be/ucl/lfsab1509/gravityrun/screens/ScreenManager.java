@@ -19,11 +19,12 @@ public class ScreenManager {
             screens.pop().dispose();
     }
 
-    Screen peak() {
+    Screen peek() {
         return screens.peek();
     }
 
     void pop() {
+        System.out.println("ScreenManager.pop");
         Screen oldScreen = screens.pop();
         if (screens.empty()) {
             oldScreen.dispose();
@@ -35,11 +36,13 @@ public class ScreenManager {
     }
 
     public void push(Screen screen) {
+        System.out.println("ScreenManager.push");
         screens.push(screen);
         game.setScreen(screens.peek());
     }
 
     void set(Screen screen) {
+        System.out.println("ScreenManager.set");
         Screen oldScreen = screens.pop();
         screens.push(screen);
         game.setScreen(screens.peek());

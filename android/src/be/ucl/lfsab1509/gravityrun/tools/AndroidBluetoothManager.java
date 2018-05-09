@@ -42,7 +42,7 @@ public class AndroidBluetoothManager implements BluetoothConstants {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         // If the adapter is null, then Bluetooth is not supported
-        return bluetoothAdapter == null;
+        return bluetoothAdapter != null;
     }
 
     public boolean isHost() {

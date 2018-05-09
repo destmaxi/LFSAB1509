@@ -63,22 +63,11 @@ public class OptionScreen extends AbstractMenuScreen {
         levelSelectionList.setItems(game.i18n.format("beginner"), game.i18n.format("inter"), game.i18n.format("expert"));
         levelSelectionList.setSelectedIndex(game.user.getIndexSelected());
         levelSelectionList.setAlignment(Align.center);
-        Table content = new Table();
-        content.add(levelSelectionList);
         // FIXME il n'y a pas de manière simple d'agrandir la taille des items dans une List... Peut-être passer à des boutons ? Merci libGDX.
-        NoOkEditDialog editLevelSelectionDialog = new NoOkEditDialog(game.i18n.format("select_level"), content, new DialogResultMethod() {
+        ListDialog editLevelSelectionDialog = new ListDialog(game.i18n.format("select_level"), levelSelectionList, new ListResultCallback() {
             @Override
-            public boolean result(Object object) {
-                if (object.equals(true))
-                    validateLevelSelection(levelSelectionList);
-                return true;
-            }
-        });
-        levelSelectionList.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                validateLevelSelection(levelSelectionList);
-                editLevelSelectionDialog.requestHide();
+            public void callback(String selected) {
+                validateLevelSelection(selected);
             }
         });
         editLevelSelectionDialog.show(stage);
@@ -109,12 +98,12 @@ public class OptionScreen extends AbstractMenuScreen {
         editUsernameDialog.show(stage);
     }
 
-    private void validateLevelSelection(List levelList) {
-        if (levelList.getSelected().equals(game.i18n.format("beginner")))
+    private void validateLevelSelection(String selected) {
+        if (selected.equals(game.i18n.format("beginner")))
             game.user.setIndexSelected(0);
-        else if (levelList.getSelected().equals(game.i18n.format("inter")))
+        else if (selected.equals(game.i18n.format("inter")))
             game.user.setIndexSelected(1);
-        else if (levelList.getSelected().equals(game.i18n.format("expert")))
+        else if (selected.equals(game.i18n.format("expert")))
             game.user.setIndexSelected(2);
         game.user.write();
     }

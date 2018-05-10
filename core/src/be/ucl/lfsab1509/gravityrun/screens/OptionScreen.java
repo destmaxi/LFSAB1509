@@ -49,13 +49,13 @@ public class OptionScreen extends AbstractMenuScreen {
             }
         });
 
-        Label musicLabel = new Label("Music", game.tableSkin);//TODO add internationalisation
+        Label musicLabel = new Label(game.i18n.format("music_level"), game.tableSkin);
 
         Slider musicSlider = new Slider(0f, 1f, 0.05f, false, game.tableSkin);
         musicSlider.setValue(1f);
         musicSlider.addListener(new MusicListener(soundManager, musicSlider));
 
-        Label soundLabel = new Label("Sound effects", game.tableSkin);//TODO add internationalisation
+        Label soundLabel = new Label(game.i18n.format("sound_level"), game.tableSkin);
 
         Slider soundSlider = new Slider(0f, 1f, 0.05f, false, game.tableSkin);
         soundSlider.setValue(0.5f);
@@ -64,21 +64,21 @@ public class OptionScreen extends AbstractMenuScreen {
         Table table = new Table();
         table.add(title).expandX();
         table.row();
-        table.add(usernameLabel).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
+        table.add(usernameLabel).expandX().fillX().padTop((height - containerHeight) / 4).maxWidth(containerWidth);
         table.row();
         table.add(usernameButton).expandX().fillX().maxWidth(containerWidth);
         table.row();
-        table.add(lvlLabel).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
+        table.add(lvlLabel).expandX().fillX().padTop((height - containerHeight) / 4).maxWidth(containerWidth);
         table.row();
         table.add(lvlButton).expandX().fillX().maxWidth(containerWidth);
         table.row();
-        table.add(multiplayerButton).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
+        table.add(multiplayerButton).expandX().fillX().padTop((height - containerHeight) / 4).maxWidth(containerWidth);
         table.row();
-        table.add(musicLabel).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
+        table.add(musicLabel).expandX().fillX().padTop((height - containerHeight) / 4).maxWidth(containerWidth);
         table.row();
         table.add(musicSlider).expandX().fillX().maxWidth(containerWidth);
         table.row();
-        table.add(soundLabel).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
+        table.add(soundLabel).expandX().fillX().maxWidth(containerWidth);
         table.row();
         table.add(soundSlider).expandX().fillX().maxWidth(containerWidth);
 

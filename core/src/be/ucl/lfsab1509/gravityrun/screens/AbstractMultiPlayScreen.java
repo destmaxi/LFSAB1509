@@ -17,9 +17,19 @@ import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
 
     private static final long COUNTDOWN = 3000L;
+    private static final int GAME_INFORMATION = 4;
+    private static final int INIT_SYNCH_MSG = 7;
+    private static final int END_GAME = 10;
+    private static final int SYNCH_TIME = 11;
+    private static final int START_TIME = 12;
+    static final int INIT_MESSAGE = 0;
+    static final int OPPONENT_DEAD = 8;
+    static final int ACK_DEAD = 9;
+    static final int OPPONENT_LIVES = 13;
 
-    private boolean diedReceved = false;
-    boolean startMultiPlayState = false, opponentReady = false, initDone = false;
+
+    private boolean ackDiedReceved = false, startMultiPlayState = false;
+    boolean opponentReady = false, initDone = false;
 
     private long hostTimeStamp1, startTime = Long.MAX_VALUE;
 
@@ -81,7 +91,7 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
 
         MultiplayerConnectionScreen.ready = false;
         startMultiPlayState = false;
-        write("[10]#");
+        write("[" + END_GAME + "]#");
     }
 
     @Override
@@ -89,7 +99,7 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
 
         if (isHost() && !initialized) {
             hostTimeStamp1 = System.currentTimeMillis();
-            write("[7]#");
+            write("[" + INIT_SYNCH_MSG + "]#");
             initialized = true;
         }
 
@@ -156,8 +166,8 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
         if (!playerMarble.isDead())
             return;
 
-        if (!diedReceved)
-            write("[8]#");
+        if (!ackDiedReceved)
+            write("[" + OPPONENT_DEAD + "]#");
 
     }
 
@@ -165,7 +175,7 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
     void updateMarbles(float dt) {
         super.updateMarbles(dt);
 
-        write("[13:" + playerMarble.getLives() + "]#");
+        write("[" + OPPONENT_LIVES + ":" + playerMarble.getLives() + "]#");
     }
 
     @Override
@@ -177,52 +187,26 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
         int messagetype = getIntegerFromStr(message[0]);
 
         switch (messagetype) {
-            case 0:
-                if (startMultiPlayState && !opponentReady) {
-                    opponentReady = true;
-                    write("[0]#");
-                } else {
-                    MultiplayerConnectionScreen.ready = true;
-                }
+            case INIT_MESSAGE:
+                initializeGame();
                 break;
-            case 4:
-                try {
-                    game.user.setMultiLives(getIntegerFromStr(message[1]));
-                    game.user.setMulti_IndexSelected(getIntegerFromStr(message[2]));
-                    game.user.setMultiMode(getIntegerFromStr(message[3]));
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    e.printStackTrace();
-                }
-
+            case GAME_INFORMATION:
+                saveInUser(message);
                 break;
-            case 7:
-                write("[11:" + System.currentTimeMillis() + "]#");
+            case INIT_SYNCH_MSG:
+                write("[" + SYNCH_TIME + ":" + System.currentTimeMillis() + "]#");
                 break;
-            case 9:
-                diedReceved = true;
+            case ACK_DEAD:
+                ackDiedReceved = true;
                 break;
-            case 10:
+            case END_GAME:
                 endGameReceived = true;
                 break;
-            case 11:
-                long hostTimestamp2 = System.currentTimeMillis();
-                long clientTimestamp = 0;
-                try {
-                    clientTimestamp = getLongFromStr(message[1]) + (hostTimestamp2 - hostTimeStamp1) / 2;
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    e.printStackTrace();
-                }
-                long rtt = hostTimestamp2 - hostTimeStamp1;
-                long clientStartTime = clientTimestamp + COUNTDOWN;
-                startTime = hostTimestamp2 + COUNTDOWN;
-                write("[12:" + clientStartTime + "]#");
+            case SYNCH_TIME:
+                synchTime(message);
                 break;
-            case 12:
-                try {
-                    startTime = getLongFromStr(message[1]);
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    e.printStackTrace();
-                }
+            case START_TIME:
+                setStartTime(message);
                 break;
         }
     }
@@ -266,6 +250,13 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
         }
     }
 
+    private void initializeGame() {
+        if (startMultiPlayState && !opponentReady) {
+            opponentReady = true;
+            write("[" + INIT_MESSAGE + "]#");
+        } else
+            MultiplayerConnectionScreen.setReady(true);
+    }
 
     private boolean isValidMessage(String[] strings) {
         int index, end;
@@ -290,5 +281,36 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
             screenManager.pop();
 
         ((AbstractMenuScreen) screenManager.peek()).spawnErrorDialog(game.i18n.format("error_connection"), game.i18n.format("error_connection_lost"));
+    }
+
+    private void saveInUser(String[] message) {
+        try {
+            game.user.setMultiLives(getIntegerFromStr(message[1]));
+            game.user.setMulti_IndexSelected(getIntegerFromStr(message[2]));
+            game.user.setMultiMode(getIntegerFromStr(message[3]));
+        } catch (ArrayIndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setStartTime(String[] message) {
+        try {
+            startTime = getLongFromStr(message[1]);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void synchTime(String[] message) {
+        long hostTimestamp2 = System.currentTimeMillis();
+        long clientTimestamp = 0;
+        try {
+            clientTimestamp = getLongFromStr(message[1]) + (hostTimestamp2 - hostTimeStamp1) / 2;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
+        long clientStartTime = clientTimestamp + COUNTDOWN;
+        startTime = hostTimestamp2 + COUNTDOWN;
+        write("[" + START_TIME + ":" + clientStartTime + "]#");
     }
 }

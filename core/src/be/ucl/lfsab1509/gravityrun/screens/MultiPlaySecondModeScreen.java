@@ -8,9 +8,14 @@ import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import be.ucl.lfsab1509.gravityrun.sprites.SlowDown;
 
 public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
+
+    private static final int LOST_LIFE = 1;
+    private static final int SLOWDOWN = 2;
+    private static final int LOST_SCORE_BONUS = 3;
+    private static final int OPPONENT_SCORE = 5;
+
     private Integer opponentScore = 0, opponentLives = 0;
     private boolean initialized = false, opponentDead = false;
-
 
     MultiPlaySecondModeScreen(GravityRun gravityRun) {
         super(gravityRun);
@@ -24,34 +29,26 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
         super.applyMessage(message);
         int messageType = getIntegerFromStr(message[0]);
         switch (messageType) {
-            case 1:
+            case LOST_LIFE:
                 playerMarble.addMarbleLife(-1);
                 break;
-            case 2:
-                Bonus slowDown = new SlowDown(0, 0, this, new Random(), slowDownImage);
-                ((SlowDown) slowDown).activateSlowdown(playerMarble);
-                playerMarble.addCaughtBonuses(slowDown);
+            case SLOWDOWN:
+                Bonus slowdown = new SlowDown(0, 0, this, new Random(), slowDownImage);
+                ((SlowDown) slowdown).activateSlowdown(playerMarble);
+                playerMarble.addCaughtBonuses(slowdown);
                 break;
-            case 3:
+            case LOST_SCORE_BONUS:
                 playerMarble.decreaseScoreBonus();
                 break;
-            case 5:
-                try {
-                    opponentScore = getIntegerFromStr(message[1]);
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    e.printStackTrace();
-                }
+            case OPPONENT_SCORE:
+                setOpponentScore(message);
                 break;
-            case 8:
+            case OPPONENT_DEAD:
                 opponentDead = true;
-                write("[9]");
+                write("[" + ACK_DEAD + "]");
                 break;
-            case 13:
-                try {
-                    opponentLives = getIntegerFromStr(message[1]);
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    e.printStackTrace();
-                }
+            case OPPONENT_LIVES:
+                setOpponentLives(message);
                 break;
         }
     }
@@ -60,13 +57,13 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
     void bonusCollides(Bonus bonus, int i, Marble marble) {
         switch (bonus.getValue()) {
             case 1:
-                write("[1]#");
+                write("[" + LOST_LIFE + "]#");
                 break;
             case 2:
-                write("[2]#");
+                write("[" + SLOWDOWN + "]#");
                 break;
             case 3:
-                write("[3]#");
+                write("[" + LOST_SCORE_BONUS + "]#");
                 break;
         }
 
@@ -80,7 +77,7 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
             return;
 
         if (!opponentReady) {
-            write("[0]#");
+            write("[" + INIT_MESSAGE + "]#");
             return;
         }
 
@@ -126,7 +123,7 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
         super.updateMarbles(dt);
 
         if (!playerMarble.isDead())
-            write("[5:" + playerMarble.getScore() + "]#");
+            write("[" + OPPONENT_SCORE + ":" + playerMarble.getScore() + "]#");
     }
 
     @Override
@@ -138,5 +135,21 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
     void updateOpponentScore() {
         opponentScoreLabel.setText(opponentScore.toString());
         opponentLivesLabel.setText(opponentLives.toString());
+    }
+
+    private void setOpponentLives(String[] message) {
+        try {
+            opponentLives = getIntegerFromStr(message[1]);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setOpponentScore(String[] message) {
+        try {
+            opponentScore = getIntegerFromStr(message[1]);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
     }
 }

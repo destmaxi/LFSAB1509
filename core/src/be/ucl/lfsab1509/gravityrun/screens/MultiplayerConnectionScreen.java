@@ -87,4 +87,8 @@ public class MultiplayerConnectionScreen extends AbstractMenuScreen {
             screenManager.push(abstractMultiPlayScreen);
         }
     }
+
+    public static void setReady(boolean mready) {
+        ready = mready;
+    }
 }

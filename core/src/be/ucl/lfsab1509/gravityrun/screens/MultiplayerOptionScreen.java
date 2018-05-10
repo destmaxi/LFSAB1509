@@ -14,12 +14,22 @@ public class MultiplayerOptionScreen extends AbstractMenuScreen {
 
     private int difficulty;
     private TextButton startGameButton;
+    private AbstractMultiPlayScreen abstractMultiPlayScreen;
+    private int multiplayerMode;
 
     MultiplayerOptionScreen(GravityRun gravityRun) {
         super(gravityRun);
 
         difficulty = game.user.getMulti_IndexSelected();
         Label title = new Label(game.i18n.get("option"), game.titleSkin, "title");
+
+        TextButton multiplayerModeButton = new TextButton(game.i18n.format("mode"), game.tableSkin, "round");
+        multiplayerModeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                popMultiplayerModeDialog();
+            }
+        });
 
         TextButton lvlButton = new TextButton(game.i18n.format("choose_lvl"), game.tableSkin, "round");
         lvlButton.addListener(new ClickListener() {
@@ -42,10 +52,13 @@ public class MultiplayerOptionScreen extends AbstractMenuScreen {
         startGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                write("[" + 4 + ":" +  game.user.getMultiLives() + ":" + difficulty + ":" + GravityRun.HEIGHT / 5 + "]#");
-                MultiPlayScreen multiPlayScreen = new MultiPlayScreen(game);
-                setMultiPlayScreen(multiPlayScreen);
-                screenManager.push(multiPlayScreen);
+                write("[4:" +  game.user.getMultiLives() + ":" + difficulty + ":" + game.user.getMultiMode() +"]#");
+                abstractMultiPlayScreen = (game.user.getMultiMode() == 0)
+                        ? new MultiPlayScreen(game)
+                        : new MultiPlaySecondModeScreen(game);
+
+                setMultiPlayScreen(abstractMultiPlayScreen);
+                screenManager.push(abstractMultiPlayScreen);
             }
         });
 
@@ -55,6 +68,8 @@ public class MultiplayerOptionScreen extends AbstractMenuScreen {
         table.add(livesButton).expandX().fillX().padTop(height - containerHeight);
         table.row();
         table.add(lvlButton).expandX().fillX().padTop((height - containerHeight) / 2);
+        table.row();
+        table.add(multiplayerModeButton).expandX().fillX().padTop((height - containerHeight) / 2);
         table.row();
         table.add(startGameButton).expandX().fillX().padTop((height - containerHeight) / 2);
 
@@ -97,6 +112,33 @@ public class MultiplayerOptionScreen extends AbstractMenuScreen {
         });
 
         livesDialog.show(stage);
+    }
+
+    private void popMultiplayerModeDialog() {
+        List<String> multiplayerModeList = new List<>(game.aaronScoreSkin);
+        multiplayerModeList.setItems(game.i18n.format("mode1"), game.i18n.format("mode2"));
+        multiplayerModeList.setSelectedIndex(game.user.getMultiMode());
+        multiplayerModeList.setAlignment(Align.center);
+        Table table = new Table();
+        table.add(multiplayerModeList);
+        EditDialog multiplayerModeDialog = new EditDialog(game.i18n.format("mode"), table, new DialogResultMethod() {
+            @Override
+            public boolean result(Object object) {
+                if (object.equals(true))
+                    game.user.setMultiMode(multiplayerModeList.getSelectedIndex());
+                return true;
+            }
+        });
+
+        multiplayerModeList.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.user.setMultiMode(multiplayerModeList.getSelectedIndex());
+                multiplayerModeDialog.hide();
+            }
+        });
+
+        multiplayerModeDialog.show(stage);
     }
 
     private void popLevelSelectionDialog() {

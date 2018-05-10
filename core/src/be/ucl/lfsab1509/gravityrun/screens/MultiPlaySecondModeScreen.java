@@ -1,78 +1,93 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-
 import java.util.Random;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.sprites.Bonus;
 import be.ucl.lfsab1509.gravityrun.sprites.Marble;
+import be.ucl.lfsab1509.gravityrun.sprites.NewLife;
+import be.ucl.lfsab1509.gravityrun.sprites.ScoreBonus;
 import be.ucl.lfsab1509.gravityrun.sprites.SlowDown;
 
-public class MultiPlaySecondModeScreen extends AbstractPlayScreen {
-    private Label opponentScoreLabel;
-    int opponentScore = 0;
-    private boolean opponentReady = false;
+public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
+    private int opponentScore = 0;
+    private boolean initialized = false, opponentDead = false;
 
 
-    public MultiPlaySecondModeScreen(GravityRun gravityRun) {
+    MultiPlaySecondModeScreen(GravityRun gravityRun) {
         super(gravityRun);
-        opponentScoreLabel = new Label(game.i18n.format("opponent_score", opponentScore), game.aaronScoreSkin, "score");
-        opponentScoreLabel.setPosition((GravityRun.WIDTH - opponentScoreLabel.getWidth()) / 2, GravityRun.HEIGHT - 2 * opponentScoreLabel.getHeight());
 
-        scoreStage.addActor(opponentScoreLabel);
+        randomBonus = new Random();
+        randomObstacle = new Random();
     }
 
-    void applyMessage(String[] message) {
-        applyMessage(message);
-
+    @Override
+    public void applyMessage(String[] message) {
+        super.applyMessage(message);
         int messageType = getIntegerFromStr(message[0]);
         switch (messageType) {
-            case 13:
+            case 1:
                 playerMarble.addMarbleLife(-1);
                 break;
-            case 14:
-                Bonus slowDown = new SlowDown(0, 0, playerMarble, this, new Random(), slowDownImage);
-                ((SlowDown) slowDown).activateSlowDown();
-                catchedBonuses.add(slowDown);
+            case 2:
+                Bonus slowDown = new SlowDown(0, 0, this, new Random(), slowDownImage);
+                ((SlowDown) slowDown).activateSlowdown(playerMarble);
+                playerMarble.addCaughtBonuses(slowDown);
                 break;
-            case 15:
-                score -= 100;
+            case 3:
+                playerMarble.decreaseScoreBonus();
                 break;
-            case 16:
+            case 5:
                 try {
                     opponentScore = getIntegerFromStr(message[1]);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     e.printStackTrace();
                 }
                 break;
+            case 8:
+                opponentDead = true;
+                write("[9]");
+                break;
         }
     }
 
     @Override
-    public void disposeMarbles() {
-        playerMarble.dispose();
+    void bonusCollides(Bonus bonus, int i, Marble marble) {
+        if (bonus instanceof  SlowDown)
+            write("[2]#");
+        else if (bonus instanceof NewLife)
+            write("[1]#");
+        else if (bonus instanceof ScoreBonus)
+            write("[3]#");
+
+        super.bonusCollides(bonus, i, marble);
     }
 
     @Override
     public void initGame(float dt) {
-        if (initialized || !opponentReady)
+
+        if (initDone)
             return;
 
-        initMarbles();
-        initObstacles();
-        initBonuses();
-        initialized = true;
+        if (!opponentReady) {
+            write("[0]#");
+            return;
+        }
+
+        super.initGame(dt);
+
+        if(!initialized) {
+            initObstacles();
+            initBonuses();
+            initialized = true;
+        }
     }
 
     @Override
     public void initMarbles() {
-        playerMarble = new Marble(true, false, width / 2, height / 10, STANDARD_WIDTH, game.user.getMulti_IndexSelected(), this);
-    }
-
-    @Override
-    public boolean isInitDone() {
-        return false;
+        playerMarble = new Marble(true, true, width / 2, height / 10, STANDARD_WIDTH, game.user.getMulti_IndexSelected() + 1);
+        playerMarble.setMarbleLife(game.user.getMultiLives());
+        marbles.add(playerMarble);
     }
 
     @Override
@@ -82,16 +97,35 @@ public class MultiPlaySecondModeScreen extends AbstractPlayScreen {
 
     @Override
     void update(float dt) {
+        super.update(dt);
 
+        if (opponentDead && playerMarble.isDead())
+            gameOver = true;
+    }
+
+    @Override
+    void renderGameOver() {
+        if (playerMarble.isDead())
+            game.spriteBatch.draw(gameOverImage,
+                    camera.position.x - gameOverImage.getWidth() / 2,
+                     camera.position.y);
     }
 
     @Override
     public void updateMarbles(float dt) {
-        playerMarble.update(dt, died);
+        super.updateMarbles(dt);
+
+        if (!playerMarble.isDead())
+            write("[5:" + playerMarble.getScore() + "]#");
     }
 
     @Override
     public void updateOpponentCaughtBonus(Bonus bonus) {
 
+    }
+
+    @Override
+    void updateOpponentScore() {
+        opponentScoreLabel.setText(game.i18n.format("opponent_score", opponentScore));
     }
 }

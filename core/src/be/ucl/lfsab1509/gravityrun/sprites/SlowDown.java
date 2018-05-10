@@ -38,4 +38,10 @@ public class SlowDown extends Bonus {
             marble.setSlowDown(1f);
     }
 
+    public void activateSlowdown(Marble marble) {
+        collideTime = 0;
+        marble.increaseActiveSlowdowns();
+        marble.setSlowDown(1.5f);
+    }
+
 }

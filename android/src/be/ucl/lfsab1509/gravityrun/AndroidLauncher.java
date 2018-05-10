@@ -10,6 +10,7 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.crashlytics.android.Crashlytics;
 
+import be.ucl.lfsab1509.gravityrun.screens.AbstractMultiPlayScreen;
 import be.ucl.lfsab1509.gravityrun.screens.MultiPlayScreen;
 import be.ucl.lfsab1509.gravityrun.tools.AndroidBluetoothManager;
 import be.ucl.lfsab1509.gravityrun.tools.BluetoothConstants;
@@ -17,7 +18,7 @@ import be.ucl.lfsab1509.gravityrun.tools.BluetoothFragment;
 import io.fabric.sdk.android.Fabric;
 
 public class AndroidLauncher extends AndroidApplication {
-    public static MultiPlayScreen multiPlayScreen;
+    public static AbstractMultiPlayScreen multiPlayScreen;
     private AndroidBluetoothManager androidBluetoothManager;
     public static AndroidLauncher instance;
     public static GravityRun gravityRun;

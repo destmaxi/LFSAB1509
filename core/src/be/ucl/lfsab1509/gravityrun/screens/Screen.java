@@ -67,7 +67,7 @@ public abstract class Screen extends BluetoothManager implements com.badlogic.gd
     }
 
     @Override
-    public void setMultiPlayScreen(MultiPlayScreen multiPlayScreen) {
+    public void setMultiPlayScreen(AbstractMultiPlayScreen multiPlayScreen) {
         bluetoothManager.setMultiPlayScreen(multiPlayScreen);
     }
 

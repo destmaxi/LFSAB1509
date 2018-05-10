@@ -1,7 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.screens.AbstractPlayScreen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -19,19 +18,17 @@ public class Marble {
     private static int MOVEMENT;
 
     private ArrayList<Bonus> caughtBonuses;
-    private int scoreBonus, collidedWall, score;
+
     private boolean blockedOnLeft = false, blockedOnRight = false, blockedOnTop = false, inHole = false, invincible = false, inWall = false, lifeLost = false, myMarble, dead = false, isCollideWall = false;
     private Circle bounds;
     private float repositioning = 1f, slowDown = 1f, speed = 1f, gyroY;
-    private int difficulty, height, marbleLife = 5, width, activeSlowdowns, activeInvincibles;
+    private int activeInvincibles, activeSlowdowns,  collidedWall, difficulty, height, marbleLife = 5, score, scoreBonus, width;
     private MarbleAnimation marbleAnimation, marbleAnimationInvincible;
-    private AbstractPlayScreen playScreen;
     private Texture marble, marbleInvincible;
     private Vector3 position;
 
-    public Marble(boolean myMarble, boolean multiplayer, int x, int y, int standardWidth, int level, AbstractPlayScreen screen) {
+    public Marble(boolean myMarble, boolean multiplayer, int x, int y, int standardWidth, int level) {
         this.myMarble = myMarble;
-        playScreen = screen;
         caughtBonuses = new ArrayList<>();
         marble = new Texture("drawable-" + standardWidth + "/marbles.png");
         marbleInvincible = new Texture("drawable-" + standardWidth + "/marbles_invincible.png");
@@ -52,7 +49,7 @@ public class Marble {
         caughtBonuses.add(bonus);
     }
 
-    void addMarbleLife(int lives) {
+    public void addMarbleLife(int lives) {
         this.marbleLife += lives;
     }
 
@@ -68,7 +65,7 @@ public class Marble {
         this.invincible = invincible;
     }
 
-    public void addScoreBonus() {
+    void addScoreBonus() {
         scoreBonus += 100;
     }
 
@@ -77,12 +74,16 @@ public class Marble {
         marbleInvincible.dispose();
     }
 
-    public int decreaseActiveInvicibles() {
+    int decreaseActiveInvicibles() {
         return --activeInvincibles;
     }
 
-    public int decreaseActiveSlowdowns() {
+    int decreaseActiveSlowdowns() {
         return --activeSlowdowns;
+    }
+
+    public void decreaseScoreBonus() {
+        scoreBonus -= 100;
     }
 
     Circle getBounds() {
@@ -125,27 +126,23 @@ public class Marble {
         return marbleLife;
     }
 
-    public int getNormalDiameter() {
+    int getNormalDiameter() {
         return getMarbleAnimation().getDiameter(0);
     }
 
-    public int getRadius() {
+    private int getRadius() {
         return getMarbleAnimation().getDiameter(position.z) / 2;
-    }
-
-    public int getScoreBonus() {
-        return scoreBonus;
     }
 
     public float getSpeedFactor() {
         return difficulty * MOVEMENT * repositioning * slowDown * speed;
     }
 
-    public void increaseActiveInvincibles() {
+    void increaseActiveInvincibles() {
         activeInvincibles++;
     }
 
-    public void increaseActiveSlowdowns() {
+    void increaseActiveSlowdowns() {
         activeSlowdowns++;
     }
 
@@ -217,20 +214,16 @@ public class Marble {
         this.collidedWall = collidedWall;
     }
 
-    public void setCollideWall(boolean collideWall) {
+    void setCollideWall(boolean collideWall) {
         isCollideWall = collideWall;
     }
 
-    public void setDead(boolean dead) {
-        this.dead = dead;
+    public void setDead() {
+        this.dead = true;
     }
 
-    public void setDifficulty(int difficulty) {
-        this.difficulty = difficulty;
-    }
-
-    void setInHole(boolean inHole) {
-        this.inHole = inHole;
+    void setInHole() {
+        this.inHole = true;
     }
 
     void setInvincible(boolean invincible) {
@@ -251,10 +244,6 @@ public class Marble {
 
     public void setRepositioning(float repositioning) {
         this.repositioning = repositioning;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
     }
 
     void setSlowDown(float slowDown) {

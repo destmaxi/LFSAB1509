@@ -2,6 +2,7 @@ package be.ucl.lfsab1509.gravityrun.tools;
 
 import com.badlogic.gdx.utils.Array;
 
+import be.ucl.lfsab1509.gravityrun.screens.AbstractMultiPlayScreen;
 import be.ucl.lfsab1509.gravityrun.screens.MultiPlayScreen;
 
 public abstract class BluetoothManager {
@@ -28,7 +29,7 @@ public abstract class BluetoothManager {
 
     public abstract boolean supportDeviceBluetooth();
 
-    public abstract void setMultiPlayScreen(MultiPlayScreen multiPlayScreen);
+    public abstract void setMultiPlayScreen(AbstractMultiPlayScreen multiPlayScreen);
 
     public abstract boolean isHost();
 }

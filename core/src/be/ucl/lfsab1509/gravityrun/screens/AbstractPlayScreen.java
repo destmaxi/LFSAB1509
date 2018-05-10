@@ -32,32 +32,29 @@ import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 
 public abstract class AbstractPlayScreen extends Screen {
 
-    public static int OBSTACLE_COUNT;
-    public static int OBSTACLE_HEIGHT;
-    public static int OBSTACLE_SPACING;
-    public static int STANDARD_WIDTH;
+    private static int OBSTACLE_COUNT;
+    private static int OBSTACLE_HEIGHT;
+    private static int OBSTACLE_SPACING;
+    static int STANDARD_WIDTH;
 
-    //private static int collidedWall = 0;
-
-    boolean
-            initialized = false;
+    private Array<Vector2> backgroundPositions;
+    private Array<Obstacle> obstacles;
 
     ArrayList<Bonus> bonuses;
-    Array<Obstacle> obstacles;
-
     ArrayList<Marble> marbles;
-    private Array<Vector2> backgroundPositions;
-    //  public boolean died = false, isCollideWall = false;
-    boolean gameOver = false, endGameReceived = false;
-    // private int scoreBonus = 0;
-    //int score = 0;
+
+    boolean  endGameReceived = false, gameOver = false, initialized = false;
+
     private Label scoreLabel;
+
     Marble playerMarble;
     OrthographicCamera camera;
-    Random randomObstacle, randomBonus;
+    Random randomBonus, randomObstacle;
     Stage scoreStage;
-    private Texture background, camRepositionImage, gameOverImage, holeImage, invincibleImage, largeHoleImage, scoreBonusImage, slowDownImage, wallImage;
-    Texture pauseImage, newLifeImage;
+
+    private Texture background, camRepositionImage, holeImage, invincibleImage, largeHoleImage, scoreBonusImage, wallImage;
+    Texture gameOverImage, newLifeImage, pauseImage, slowDownImage;
+
     Viewport viewport;
 
 
@@ -81,7 +78,6 @@ public abstract class AbstractPlayScreen extends Screen {
         calculateStandardWidth();
 
         bonuses = new ArrayList<>();
-        // catchedBonuses = new ArrayList<>();
         obstacles = new Array<>();
         marbles = new ArrayList<>();
 
@@ -137,10 +133,6 @@ public abstract class AbstractPlayScreen extends Screen {
         Gdx.input.setInputProcessor(scoreStage);
         soundManager.replayGame();
     }
-
-/*    public void addScoreBonus(int pointsEarned) {
-        this.scoreBonus += pointsEarned;
-    }*/
 
     void bonusCollides(Bonus bonus, int i, Marble marble) {
         marble.addCaughtBonuses(bonus);
@@ -339,7 +331,7 @@ public abstract class AbstractPlayScreen extends Screen {
         renderMarbles();
 
         renderGameOver();
-        renderLives();
+        renderLives(playerMarble);
 
         game.spriteBatch.end();
 
@@ -347,15 +339,15 @@ public abstract class AbstractPlayScreen extends Screen {
         scoreStage.draw();
     }
 
-    private void renderGameOver() {
+    void renderGameOver() {
         if (gameOver)
             game.spriteBatch.draw(gameOverImage,
                     camera.position.x - gameOverImage.getWidth() / 2,
                     camera.position.y);
     }
 
-    private void renderLives() {
-        for (int i = 0, y = newLifeImage.getHeight() + pauseImage.getHeight(); i < playerMarble.getMarbleLife(); i++, y += newLifeImage.getHeight())
+    void renderLives(Marble marble) {
+        for (int i = 0, y = newLifeImage.getHeight() + pauseImage.getHeight(); i < marble.getMarbleLife(); i++, y += newLifeImage.getHeight())
             game.spriteBatch.draw(newLifeImage, 0, camera.position.y + height / 2 - y);
     }
 
@@ -387,7 +379,7 @@ public abstract class AbstractPlayScreen extends Screen {
 
         if (!playerMarble.isInvincible() && playerMarble.isOutOfScreen(camera.position.y)) {
             soundManager.marbleBreak(playerMarble.isDead());
-            playerMarble.setDead(true);
+            playerMarble.setDead();
         }
 
         handleInput();
@@ -443,7 +435,7 @@ public abstract class AbstractPlayScreen extends Screen {
             obstacleReposition(obstacles.get(i), i, marble);
 
             if (marble.getMarbleLife() == 0)
-                marble.setDead(true);
+                marble.setDead();
         }
     }
 

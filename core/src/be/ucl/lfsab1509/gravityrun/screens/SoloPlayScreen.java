@@ -52,7 +52,7 @@ public class SoloPlayScreen extends AbstractPlayScreen {
     @Override
     public void initMarbles() {
         int level = game.user.getIndexSelected() + 1;
-        playerMarble = new Marble(true,false,width / 2, height / 10, STANDARD_WIDTH, level, this);
+        playerMarble = new Marble(true,false,width / 2, height / 10, STANDARD_WIDTH, level);
         marbles.add(playerMarble);
     }
 

@@ -15,7 +15,9 @@ import be.ucl.lfsab1509.gravityrun.GravityRun;
 public class MultiplayerConnectionScreen extends AbstractMenuScreen {
     static boolean isClient = false;
     static boolean ready = false;
+    static int multiplayerMode = 0;
     private final List<String> listDeviceName;
+    private AbstractMultiPlayScreen abstractMultiPlayScreen;
 
     //FIXME le son s'arrete lorsqu'un popup s'ouvre
     MultiplayerConnectionScreen(GravityRun gravityRun) {
@@ -73,9 +75,13 @@ public class MultiplayerConnectionScreen extends AbstractMenuScreen {
 
     private void handleInput() {
         if (isClient && ready) {
-            MultiPlayScreen multiPlayScreen = new MultiPlayScreen(game);
-            setMultiPlayScreen(multiPlayScreen);
-            screenManager.push(multiPlayScreen);
+            System.out.println("multiplayerMode = " + game.user.getMultiMode());
+            abstractMultiPlayScreen = (game.user.getMultiMode() == 0)
+                    ? new MultiPlayScreen(game)
+                    : new MultiPlaySecondModeScreen(game);
+
+            setMultiPlayScreen(abstractMultiPlayScreen);
+            screenManager.push(abstractMultiPlayScreen);
         }
     }
 

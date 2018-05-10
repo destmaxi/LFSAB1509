@@ -19,6 +19,7 @@ public class User {
     private static final String MULTILIVES = "multilives";
     private static final String MULTI_INDEX = "multi_index";
     private static final String USERNAME = "username";
+    private static final String MULTI_MODE = "multimode";
     private static final int MAX_USERNAME_LENGTH = 32; // FIXME probablement trop long.
     private static final int HIGH_SCORE_MAX_COUNT = 3;
     public static I18NBundle i18n;
@@ -28,7 +29,7 @@ public class User {
     private ArrayList<Integer> highScoreList;
     private boolean firstTime = true;
     private GravityRun game;
-    private int indexSelected = 1, multi_IndexSelected = 1, multiLives = 3;
+    private int indexSelected = 1, multi_IndexSelected = 1, multiLives = 3, multiMode = 0;
     private String username;
 
     public User(GravityRun gravityRun, String username) {
@@ -133,6 +134,10 @@ public class User {
         return multi_IndexSelected;
     }
 
+    public int getMultiMode() {
+        return multiMode;
+    }
+
     public Integer getMultiLives() {
         return multiLives;
     }
@@ -207,6 +212,10 @@ public class User {
 
     public void setMultiLives(int multiLives) {
         this.multiLives = multiLives;
+    }
+
+    public void setMultiMode(int multiMode) {
+        this.multiMode = multiMode;
     }
 
     private void shrinkScoreList(int level) {

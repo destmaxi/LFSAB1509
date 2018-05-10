@@ -1,7 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -27,7 +26,7 @@ public class HomeScreen extends AbstractMenuScreen {
             }
         });
 
-        TextButton multiplayerButton = new TextButton(game.i18n.format("multiplayer"), game.tableSkin, "round");
+        TextButton multiplayerButton = new TextButton(game.i18n.format("play_two"), game.tableSkin, "round");
         multiplayerButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

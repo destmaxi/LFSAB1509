@@ -1,6 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
-
+import be.ucl.lfsab1509.gravityrun.GravityRun;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
@@ -8,29 +8,35 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-import be.ucl.lfsab1509.gravityrun.GravityRun;
-
 public class MultiplayerConnectionScreen extends AbstractMenuScreen {
-    static boolean isClient = false;
-    static boolean ready = false;
+
+    static boolean isClient = false, ready = false;
+
     private final List<String> listDeviceName;
 
     //FIXME le son s'arrete lorsqu'un popup s'ouvre
     MultiplayerConnectionScreen(GravityRun gravityRun) {
         super(gravityRun);
 
-        Label title = new Label(game.i18n.get("multiplayer"), game.titleSkin, "title");
-
-        if (!supportDeviceBluetooth())
-            spawnErrorDialog("Error", "Bluetooth not supported");
+        if (!supportDeviceBluetooth()) {
+            spawnErrorDialog(game.i18n.format("error"), game.i18n.format("error_bluetooth_unsupported"));
+        }
 
         enableBluetooth();
 
+        Label title = new Label(game.i18n.get("multiplayer"), game.titleSkin, "title");
+
         listDeviceName = new List<>(game.tableSkin);
+        listDeviceName.setVisible(false);
+        listDeviceName.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                connect(listDeviceName.getSelectedIndex());
+                listDeviceName.setVisible(false);
+            }
+        });
 
-        TextButton hostButton = new TextButton("Create new Game", game.tableSkin, "round");
-        TextButton clientButton = new TextButton("Join Game", game.tableSkin, "round");
-
+        TextButton hostButton = new TextButton(game.i18n.format("create_game"), game.tableSkin, "round");
         hostButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -38,6 +44,8 @@ public class MultiplayerConnectionScreen extends AbstractMenuScreen {
                 screenManager.push(new MultiplayerOptionScreen(game));
             }
         });
+
+        TextButton clientButton = new TextButton(game.i18n.format("join_game"), game.tableSkin, "round");
         clientButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -45,15 +53,6 @@ public class MultiplayerConnectionScreen extends AbstractMenuScreen {
                 discoverDevices();
                 listDeviceName.setItems(devicesNames);
                 listDeviceName.setVisible(true);
-            }
-        });
-
-        listDeviceName.setVisible(false);
-        listDeviceName.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                connect(listDeviceName.getSelectedIndex());
-                listDeviceName.setVisible(false);
             }
         });
 
@@ -87,4 +86,5 @@ public class MultiplayerConnectionScreen extends AbstractMenuScreen {
             screenManager.push(abstractMultiPlayScreen);
         }
     }
+
 }

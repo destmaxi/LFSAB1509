@@ -26,6 +26,11 @@ public class Invincible extends Bonus {
     }
 
     @Override
+    public int getValue() {
+        return INVINCIBLE;
+    }
+
+    @Override
     public boolean isFinished(Marble marble) {
         return collideTime >= 3;
     }

@@ -19,8 +19,7 @@ import be.ucl.lfsab1509.gravityrun.AndroidLauncher;
 import be.ucl.lfsab1509.gravityrun.R;
 import be.ucl.lfsab1509.gravityrun.screens.AbstractMultiPlayScreen;
 
-public class BluetoothFragment extends BluetoothManager implements BluetoothConstants
-{
+public class BluetoothFragment extends BluetoothManager implements BluetoothConstants {
     private AndroidBluetoothManager androidBluetoothManager;
     private LinkedList<BluetoothDevice> mDevices;
     private Activity activity;
@@ -32,8 +31,7 @@ public class BluetoothFragment extends BluetoothManager implements BluetoothCons
         public void onReceive(Context context, Intent intent) {
             Log.i(TAG, "start onReceive");
             String action = intent.getAction();
-            if (BluetoothDevice.ACTION_FOUND.equals(action))
-            {
+            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 Log.i(TAG, "found new device " + device.getName());
 
@@ -42,14 +40,13 @@ public class BluetoothFragment extends BluetoothManager implements BluetoothCons
                     devicesNames.insert(devicesNames.size - 1, device.getName());
                     devicesAddress.add(device.getAddress());
                 }
-            }
-            else {
+            } else {
                 Log.i(TAG, "no devices found");
             }
         }
     };
 
-    public BluetoothFragment (Activity activity, Handler handler) {
+    public BluetoothFragment(Activity activity, Handler handler) {
         this.activity = activity;
         devicesNames = new Array<>();
         devicesAddress = new Array<>();
@@ -125,7 +122,7 @@ public class BluetoothFragment extends BluetoothManager implements BluetoothCons
 
     @Override
     public void connect(int devicePosition) {
-        if(!mDevices.isEmpty()) {
+        if (!mDevices.isEmpty()) {
             androidBluetoothManager.connect(mDevices.get(devicePosition));
         }
     }

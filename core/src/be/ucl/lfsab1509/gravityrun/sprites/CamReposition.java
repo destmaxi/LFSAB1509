@@ -20,6 +20,11 @@ public class CamReposition extends Bonus {
     }
 
     @Override
+    public int getValue() {
+        return CAM_REPOSITION;
+    }
+
+    @Override
     public boolean isFinished(Marble marble) {
         return playScreen.getCameraPosition().y <= marble.getCenterPosition().y;
     }

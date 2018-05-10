@@ -3,6 +3,7 @@ package be.ucl.lfsab1509.gravityrun.screens;
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.sprites.*;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -12,6 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import java.util.Random;
 
 public class SoloPlayScreen extends AbstractPlayScreen {
+
+    private Texture pauseImage;
 
     SoloPlayScreen(GravityRun gravityRun) {
         super(gravityRun, false);
@@ -29,6 +32,12 @@ public class SoloPlayScreen extends AbstractPlayScreen {
         });
 
         scoreStage.addActor(pauseButton);
+    }
+
+    @Override
+    void disposeTextures() {
+        super.disposeTextures();
+        pauseImage.dispose();
     }
 
     @Override
@@ -50,9 +59,15 @@ public class SoloPlayScreen extends AbstractPlayScreen {
     }
 
     @Override
+    void initialiseTextures() {
+        super.initialiseTextures();
+        pauseImage = new Texture("drawable-" + calculateStandardWidth(GravityRun.WIDTH) + "/pause.png");
+    }
+
+    @Override
     public void initMarbles() {
         int level = game.user.getIndexSelected() + 1;
-        playerMarble = new Marble(true,false,width / 2, height / 10, STANDARD_WIDTH, level);
+        playerMarble = new Marble(true, false, width / 2, height / 10, STANDARD_WIDTH, level);
         marbles.add(playerMarble);
     }
 
@@ -70,7 +85,7 @@ public class SoloPlayScreen extends AbstractPlayScreen {
     void update(float dt) {
         super.update(dt);
 
-        if(playerMarble.isDead())
+        if (playerMarble.isDead())
             gameOver = true;
     }
 

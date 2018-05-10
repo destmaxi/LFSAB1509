@@ -67,14 +67,13 @@ public class MarbleAnimation {
             marble = 10;
         else if (z <= Marble.JUMP_HEIGHT * .75f)
             marble = 11;
-        else    // z > Marble.JUMP_HEIGHT * .75f
+        else
             marble = 12;
         return marble;
     }
 
-    public void update(float dt, boolean gameOver) {
-        if (!gameOver)
-            currentFrameTime += dt;
+    public void update(float dt) {
+        currentFrameTime += dt;
         if (currentFrameTime > MAX_FRAME_TIME) {
             frame = (frame + 1) % FRAME_COUNT;
             currentFrameTime = 0;

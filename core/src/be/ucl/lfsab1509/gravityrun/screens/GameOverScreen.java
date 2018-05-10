@@ -1,6 +1,7 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
+
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -11,10 +12,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 class GameOverScreen extends AbstractMenuScreen {
+    private boolean multiplayer;
 
-    GameOverScreen(GravityRun gravityRun, int finalScore) {
+    GameOverScreen(GravityRun gravityRun, int finalScore, boolean multiplayer) {
         super(gravityRun);
 
+        this.multiplayer = multiplayer;
         int previousHighScore = game.user.getHighScore();
         boolean isNewHighScore = game.user.addScore(finalScore);
         game.user.write();
@@ -33,15 +36,17 @@ class GameOverScreen extends AbstractMenuScreen {
         replayButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if(isConnected()) {
+                if (multiplayer) {
                     int lives = game.user.getMultiLives();
                     int difficulty = game.user.getMulti_IndexSelected();
-                    write("[" + 4 + ":" +  lives + ":" + difficulty + ":" + GravityRun.HEIGHT / 5 + "]#");
-                    MultiPlayFirstModeScreen multiPlayFirstModeScreen = new MultiPlayFirstModeScreen(game);
-                    setMultiPlayScreen(multiPlayFirstModeScreen);
-                    screenManager.set(multiPlayFirstModeScreen);
-                }
-                else
+                    write("[" + 4 + ":" + lives + ":" + difficulty + ":" + game.user.getMultiMode() + "]#");
+                    AbstractMultiPlayScreen abstractMultiPlayScreen = game.user.getMultiMode() == 0
+                            ? new MultiPlayFirstModeScreen(game)
+                            : new MultiPlaySecondModeScreen(game);
+
+                    setMultiPlayScreen(abstractMultiPlayScreen);
+                    screenManager.set(abstractMultiPlayScreen);
+                } else
                     screenManager.set(new SoloPlayScreen(game));
             }
         });
@@ -81,13 +86,17 @@ class GameOverScreen extends AbstractMenuScreen {
     public void render(float dt) {
         super.render(dt);
         handelInput();
+        onDisconnect();
     }
 
     private void handelInput() {
         if (MultiplayerConnectionScreen.isClient && MultiplayerConnectionScreen.ready) {
-            MultiPlayFirstModeScreen multiPlayFirstModeScreen = new MultiPlayFirstModeScreen(game);
-            setMultiPlayScreen(multiPlayFirstModeScreen);
-            screenManager.set(multiPlayFirstModeScreen);
+            AbstractMultiPlayScreen abstractMultiPlayScreen = game.user.getMultiMode() == 0
+                    ? new MultiPlayFirstModeScreen(game)
+                    : new MultiPlaySecondModeScreen(game);
+
+            setMultiPlayScreen(abstractMultiPlayScreen);
+            screenManager.set(abstractMultiPlayScreen);
         }
     }
 
@@ -96,6 +105,19 @@ class GameOverScreen extends AbstractMenuScreen {
         label.setAlignment(Align.center);
         label.setWrap(true);
         return label;
+    }
+
+    private void onDisconnect() {
+        if (!multiplayer || isConnected())
+            return;
+
+        MultiplayerConnectionScreen.ready = false;
+        setMultiPlayScreen(new MultiPlayFirstModeScreen(game, false));
+
+        while (!(screenManager.peek() instanceof HomeScreen))
+            screenManager.pop();
+
+        ((AbstractMenuScreen) screenManager.peek()).spawnErrorDialog(game.i18n.format("error_connection"), game.i18n.format("error_connection_lost"));
     }
 
 }

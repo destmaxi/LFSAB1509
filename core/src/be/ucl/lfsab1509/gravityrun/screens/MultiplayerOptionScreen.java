@@ -15,7 +15,6 @@ public class MultiplayerOptionScreen extends AbstractMenuScreen {
     private int difficulty;
     private TextButton startGameButton;
     private AbstractMultiPlayScreen abstractMultiPlayScreen;
-    private int multiplayerMode;
 
     MultiplayerOptionScreen(GravityRun gravityRun) {
         super(gravityRun);
@@ -52,7 +51,7 @@ public class MultiplayerOptionScreen extends AbstractMenuScreen {
         startGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                write("[4:" +  game.user.getMultiLives() + ":" + difficulty + ":" + game.user.getMultiMode() +"]#");
+                write("[4:" + game.user.getMultiLives() + ":" + difficulty + ":" + game.user.getMultiMode() + "]#");
                 abstractMultiPlayScreen = (game.user.getMultiMode() == 0)
                         ? new MultiPlayFirstModeScreen(game)
                         : new MultiPlaySecondModeScreen(game);
@@ -89,7 +88,7 @@ public class MultiplayerOptionScreen extends AbstractMenuScreen {
 
     private void popLivesDiaglog() {
         List<Integer> livesList = new List<>(game.aaronScoreSkin);
-        livesList.setItems(1,2,3,4,5);
+        livesList.setItems(1, 2, 3, 4, 5);
         livesList.setSelectedIndex(game.user.getMultiLives() - 1);
         livesList.setAlignment(Align.center);
         Table table = new Table();

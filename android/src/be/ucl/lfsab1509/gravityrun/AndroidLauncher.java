@@ -19,15 +19,13 @@ import io.fabric.sdk.android.Fabric;
 
 public class AndroidLauncher extends AndroidApplication {
     public static AbstractMultiPlayScreen multiPlayScreen;
-    private AndroidBluetoothManager androidBluetoothManager;
     public static AndroidLauncher instance;
     public static GravityRun gravityRun;
 
-    private Handler handler  = new Handler(){
+    private Handler handler = new Handler() {
 
         @Override
-        public void handleMessage(Message msg)
-        {
+        public void handleMessage(Message msg) {
             switch (msg.what) {
 
                 case BluetoothConstants.MESSAGE_READ:
@@ -44,22 +42,21 @@ public class AndroidLauncher extends AndroidApplication {
                     break;
 
                 case BluetoothConstants.MESSAGE_STATE_CHANGE:
-                    if(AndroidBluetoothManager.getState() == BluetoothConstants.STATE_NONE )
-                    {
+                    if (AndroidBluetoothManager.getState() == BluetoothConstants.STATE_NONE) {
                         multiPlayScreen.onDisconnect();
                     }
                     break;
 
                 case BluetoothConstants.MESSAGE_TOAST:
                     CharSequence content = msg.getData().getString(BluetoothConstants.TOAST);
-                    Toast.makeText(instance, content , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(instance, content, Toast.LENGTH_SHORT).show();
                     break;
             }
         }
     };
 
     @Override
-    protected void onCreate (Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         instance = this;
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
@@ -71,7 +68,6 @@ public class AndroidLauncher extends AndroidApplication {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         BluetoothFragment bluetoothFragment = new BluetoothFragment(this, handler);
         gravityRun = new GravityRun(bluetoothFragment);
-        androidBluetoothManager = bluetoothFragment.getAndroidBluetoothManager();
         multiPlayScreen = new MultiPlayFirstModeScreen(gravityRun, false);
         initialize(gravityRun, config);
     }

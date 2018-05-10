@@ -45,7 +45,7 @@ public class AndroidBluetoothManager implements BluetoothConstants {
         return bluetoothAdapter != null;
     }
 
-    public boolean isHost() {
+    boolean isHost() {
         return this.isHost;
     }
 
@@ -214,16 +214,14 @@ public class AndroidBluetoothManager implements BluetoothConstants {
     }
 
     void enableBluetooth() {
-        System.out.println("AndroidBluetoothManager.enableBluetooth");
         if (!bluetoothAdapter.isEnabled()) {
-            System.out.println("AndroidBluetoothManager.enableBluetooth request");
             Intent enableIntent = new Intent(
                     BluetoothAdapter.ACTION_REQUEST_ENABLE);
             mCurrentActivity.startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
         }
     }
 
-    public void write(byte[] out) {
+    void write(byte[] out) {
         // Create temporary object
         ConnectedThread connectedThread;
         // Synchronize a copy of the ConnectedThread
@@ -398,12 +396,9 @@ public class AndroidBluetoothManager implements BluetoothConstants {
 
         void write(byte[] buffer) {
             try {
-  /*              System.out.print("bytes = ");
                 for (byte b : buffer)
-                    System.out.print(b);
-                System.out.println(); */
 
-                mmOutStream.write(buffer);
+                    mmOutStream.write(buffer);
             } catch (IOException e) {
                 Log.e(TAG, "Exception during write", e);
             }

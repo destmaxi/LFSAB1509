@@ -9,7 +9,9 @@ import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.sprites.Bonus;
 import be.ucl.lfsab1509.gravityrun.sprites.CamReposition;
 import be.ucl.lfsab1509.gravityrun.sprites.EmptyBonus;
+import be.ucl.lfsab1509.gravityrun.sprites.Hole;
 import be.ucl.lfsab1509.gravityrun.sprites.Marble;
+import be.ucl.lfsab1509.gravityrun.sprites.Obstacle;
 
 //FIXME revenir en arriere quand perdu (sauvegarder obstacle / bonus)
 public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
@@ -18,6 +20,7 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
 
     private boolean gotSeed = false, positionRecover = false, initialized;
     private int bonusId;
+    private float opponentMarblePositionUpdateTime;
 
     private long seed;
 
@@ -31,7 +34,7 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
         caughtBonusIds = new ArrayList<>();
 
         if (isHost()) {
-            seed = 123456789;
+            seed = System.currentTimeMillis();
             randomObstacle = new Random(seed);
             randomBonus = new Random(seed);
         }
@@ -45,7 +48,6 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
         switch (messageType) {
             case 0:
                 if (startMultiPlayState && !opponentReady) {
-                    System.out.println("opponent ready");
                     opponentReady = true;
                     write("[0]#");
                 } else {
@@ -69,7 +71,6 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
                 } catch (ArrayIndexOutOfBoundsException e) {
                     e.printStackTrace();
                 }
-                System.out.println("seed : " + seed);
                 randomObstacle = new Random(seed);
                 randomBonus = new Random(seed);
                 gotSeed = true;
@@ -86,14 +87,30 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
                             getBooleanFromStr(message[9]),
                             getFloatFromStr(message[8]));
 
-                    if(System.currentTimeMillis() % 500 == 0) {
+                    if (opponentMarblePositionUpdateTime >= 1f) {
                         opponentMarble.getCenterPosition().x = getFloatFromStr(message[10]);
                         opponentMarble.getCenterPosition().y = getFloatFromStr(message[11]);
+                        opponentMarblePositionUpdateTime %= 1f;
                     }
                 } catch (ArrayIndexOutOfBoundsException e) {
                     e.printStackTrace();
                 }
                 break;
+            case 8:
+                opponentMarble.setDead();
+                write("[9]#");
+                break;
+            case 13:
+                try {
+                    opponentMarble.setLives(getIntegerFromStr(message[1]));
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 14:
+                opponentMarble.setInHole();
+                break;
+
         }
     }
 
@@ -145,8 +162,8 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
                 : new Marble(false, true, width / 3, height / 10, STANDARD_WIDTH, level);
 
 
-        playerMarble.setMarbleLife(game.user.getMultiLives());
-        opponentMarble.setMarbleLife(game.user.getMultiLives());
+        playerMarble.setLives(game.user.getMultiLives());
+        opponentMarble.setLives(game.user.getMultiLives());
 
         marbles.add(playerMarble);
         marbles.add(opponentMarble);
@@ -171,16 +188,18 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
     }
 
     @Override
-    void renderLives(Marble marble) {
-        if(playerMarble.isDead())
-            super.renderLives(opponentMarble);
-        else
-            super.renderLives(marble);
+    void sendInHole(Obstacle obstacle, Marble marble) {
+        if (obstacle instanceof Hole && obstacle.collides(marble)) {
+            write("[14]#");
+        }
+
     }
 
     @Override
     void update(float dt) {
         super.update(dt);
+
+        opponentMarblePositionUpdateTime += dt;
 
         if (opponentMarble.isDead() && playerMarble.isDead())
             gameOver = true;
@@ -211,7 +230,6 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
         int index;
 
         if (caughtBonusIds.contains(bonus.getBonusId())) {
-            bonus.dispose();
             index = bonuses.indexOf(bonus);
             bonuses.set(index, new EmptyBonus(bonus.getPosition().y, bonus.getOffset(), newLifeImage));
             caughtBonusIds.remove(caughtBonusIds.indexOf(bonus.getBonusId()));
@@ -220,7 +238,8 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
 
     @Override
     void updateOpponentScore() {
-        opponentScoreLabel.setText(game.i18n.format("opponent_score", opponentMarble.getScore()));
+        opponentScoreLabel.setText(opponentMarble.getScore().toString());
+        opponentLivesLabel.setText(opponentMarble.getLives().toString());
     }
 
     private void checkCamReposition(Marble marble, float dt) {
@@ -228,9 +247,9 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
             camera.position.add(0, 4 * marble.getSpeedFactor() * dt, 0);
             if (marble.getCenterPosition().y <= camera.position.y)
                 positionRecover = true;
-        } else if (positionRecover){
+        } else if (positionRecover) {
             super.checkCamReposition(marble);
-            camera.position.add(0,  marble.getSpeedFactor() * dt, 0);
+            camera.position.add(0, marble.getSpeedFactor() * dt, 0);
         }
     }
 

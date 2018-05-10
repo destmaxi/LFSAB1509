@@ -13,9 +13,13 @@ public class NewLife extends Bonus {
     }
 
     @Override
+    public int getValue() {
+        return NEW_LIFE;
+    }
+
+    @Override
     public boolean isFinished(Marble marble) {
         marble.addMarbleLife(1);
         return true;
     }
-
 }

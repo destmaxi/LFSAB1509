@@ -3,6 +3,7 @@ package be.ucl.lfsab1509.gravityrun.screens;
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.BluetoothManager;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 

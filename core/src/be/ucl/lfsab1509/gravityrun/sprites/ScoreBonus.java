@@ -13,9 +13,13 @@ public class ScoreBonus extends Bonus {
     }
 
     @Override
+    public int getValue() {
+        return SCORE_BONUS;
+    }
+
+    @Override
     public boolean isFinished(Marble marble) {
         marble.addScoreBonus();
         return true;
     }
-
 }

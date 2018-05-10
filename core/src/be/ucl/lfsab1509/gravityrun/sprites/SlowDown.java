@@ -26,9 +26,15 @@ public class SlowDown extends Bonus {
     }
 
     @Override
+    public int getValue() {
+        return SLOWDOWN;
+    }
+
+    @Override
     public boolean isFinished(Marble marble) {
         return collideTime >= 5;
     }
+
 
     @Override
     public void update(float dt, Marble marble) {

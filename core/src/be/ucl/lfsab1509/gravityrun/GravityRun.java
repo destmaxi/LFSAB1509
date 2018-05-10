@@ -7,6 +7,7 @@ import be.ucl.lfsab1509.gravityrun.tools.BluetoothManager;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 import be.ucl.lfsab1509.gravityrun.tools.User;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -25,7 +26,6 @@ public class GravityRun extends Game {
     public static int HEIGHT;
     public static final int MULTI_HEIGHT = 800;
     public static final int MULTI_WIDTH = 480;
-    public static final String TITLE = "Gravity Run";
     public static int WIDTH;
 
     public I18NBundle i18n;
@@ -37,7 +37,7 @@ public class GravityRun extends Game {
     private TextureAtlas skinTextureAtlas;
     public User user;
 
-    public GravityRun (BluetoothManager bluetoothManager) {
+    public GravityRun(BluetoothManager bluetoothManager) {
         super();
 
         BluetoothManager.bluetoothManager = bluetoothManager;
@@ -59,7 +59,7 @@ public class GravityRun extends Game {
 
         FileHandle baseFileHandle = Gdx.files.internal("strings/string");
         i18n = I18NBundle.createBundle(baseFileHandle);
-       // I18NBundle.setExceptionOnMissingKey(false);
+        // I18NBundle.setExceptionOnMissingKey(false);
         User.i18n = i18n;
 
         preferences = Gdx.app.getPreferences("Player");
@@ -86,7 +86,6 @@ public class GravityRun extends Game {
 
     @Override
     public void pause() {
-        System.out.println("GravityRun.pause");
         super.pause();
     }
 
@@ -100,13 +99,11 @@ public class GravityRun extends Game {
 
     @Override
     public void resize(int width, int height) {
-        System.out.println("GravityRun.resize");
         super.resize(width, height);
     }
 
     @Override
     public void resume() {
-        System.out.println("GravityRun.resume");
         super.resume();
     }
 

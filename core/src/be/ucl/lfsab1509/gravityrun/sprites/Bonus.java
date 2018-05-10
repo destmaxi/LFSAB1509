@@ -8,6 +8,13 @@ import java.util.Random;
 
 public abstract class Bonus extends Sprite {
 
+    static final int NEW_LIFE = 1;
+    static final int SLOWDOWN = 2;
+    static final int SCORE_BONUS = 3;
+    static final int CAM_REPOSITION = 4;
+    static final int EMPTY_BONUS = 5;
+    static final int INVINCIBLE = 6;
+
     private int bonusId, offset;
     AbstractPlayScreen playScreen;
 
@@ -35,6 +42,8 @@ public abstract class Bonus extends Sprite {
     public int getOffset() {
         return offset;
     }
+
+    public abstract int getValue();
 
     public abstract boolean isFinished(Marble marble);
 

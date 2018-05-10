@@ -4,9 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 
-/**
- * Manage the creation, deletion and playing of sounds and music.
- */
 public class SoundManager {
 
     private final float soundLevel = 0.5f;
@@ -39,20 +36,6 @@ public class SoundManager {
     public void marbleBreak(boolean gameOver) {
         if (!gameOver)
             marbleBreak.play(soundLevel);
-    }
-
-    public void playGame() {
-        if (menuMusic.isPlaying())
-            menuMusic.pause();
-        if (!gameMusic.isPlaying())
-            gameMusic.play();
-    }
-
-    public void playMenu() {
-        if (gameMusic.isPlaying())
-            gameMusic.pause();
-        if (!menuMusic.isPlaying())
-            menuMusic.play();
     }
 
     public void replayGame() {

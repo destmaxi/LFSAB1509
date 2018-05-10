@@ -5,12 +5,10 @@ import java.util.Random;
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.sprites.Bonus;
 import be.ucl.lfsab1509.gravityrun.sprites.Marble;
-import be.ucl.lfsab1509.gravityrun.sprites.NewLife;
-import be.ucl.lfsab1509.gravityrun.sprites.ScoreBonus;
 import be.ucl.lfsab1509.gravityrun.sprites.SlowDown;
 
 public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
-    private int opponentScore = 0;
+    private Integer opponentScore = 0, opponentLives = 0;
     private boolean initialized = false, opponentDead = false;
 
 
@@ -48,17 +46,29 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
                 opponentDead = true;
                 write("[9]");
                 break;
+            case 13:
+                try {
+                    opponentLives = getIntegerFromStr(message[1]);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    e.printStackTrace();
+                }
+                break;
         }
     }
 
     @Override
     void bonusCollides(Bonus bonus, int i, Marble marble) {
-        if (bonus instanceof  SlowDown)
-            write("[2]#");
-        else if (bonus instanceof NewLife)
-            write("[1]#");
-        else if (bonus instanceof ScoreBonus)
-            write("[3]#");
+        switch (bonus.getValue()) {
+            case 1:
+                write("[1]#");
+                break;
+            case 2:
+                write("[2]#");
+                break;
+            case 3:
+                write("[3]#");
+                break;
+        }
 
         super.bonusCollides(bonus, i, marble);
     }
@@ -76,7 +86,7 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
 
         super.initGame(dt);
 
-        if(!initialized) {
+        if (!initialized) {
             initObstacles();
             initBonuses();
             initialized = true;
@@ -86,7 +96,7 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
     @Override
     public void initMarbles() {
         playerMarble = new Marble(true, true, width / 2, height / 10, STANDARD_WIDTH, game.user.getMulti_IndexSelected() + 1);
-        playerMarble.setMarbleLife(game.user.getMultiLives());
+        playerMarble.setLives(game.user.getMultiLives());
         marbles.add(playerMarble);
     }
 
@@ -108,7 +118,7 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
         if (playerMarble.isDead())
             game.spriteBatch.draw(gameOverImage,
                     camera.position.x - gameOverImage.getWidth() / 2,
-                     camera.position.y);
+                    camera.position.y);
     }
 
     @Override
@@ -126,6 +136,7 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
 
     @Override
     void updateOpponentScore() {
-        opponentScoreLabel.setText(game.i18n.format("opponent_score", opponentScore));
+        opponentScoreLabel.setText(opponentScore.toString());
+        opponentLivesLabel.setText(opponentLives.toString());
     }
 }

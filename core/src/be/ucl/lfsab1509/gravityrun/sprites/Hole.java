@@ -25,6 +25,7 @@ public class Hole extends Obstacle {
         if (overlaps(marble) && marble.getCenterPosition().z == 0) {
             marble.setInHole();
             playScreen.getSoundManager().marbleBreak(marble.isDead());
+            marble.setLives(0);
             marble.setDead();
             return true;
         } else

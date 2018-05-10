@@ -8,9 +8,6 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.util.Random;
 
-/**
- * Un sprite possède une position, une texture sous-jacente et une forme définissant ses limites.
- */
 public abstract class Sprite {
 
     Random random;
@@ -30,31 +27,12 @@ public abstract class Sprite {
         this.random = random;
     }
 
-    /**
-     * Retourne true si la collision a eu lieu, false sinon.
-     * La méthode peut effectuer des actions supplémentaires, comme tuer la bille,
-     * changer son nombre de points ou de bonus, changer les vitesses etc.
-     *
-     * @return voir ci-dessus
-     * @param marble
-     */
     public abstract boolean collides(Marble marble);
-
-    public void dispose() {
-//        texture.dispose();
-    }
 
     public Vector2 getPosition() {
         return position;
     }
 
-    /**
-     * Retourne true si l'objet est en dehors de l'écran défini par son centre.
-     *
-     * @param screenCenterY
-     * @param height
-     * @return voir ci-dessus
-     */
     public boolean isOutOfScreen(float screenCenterY, int height) {
         float screenBottom = screenCenterY - height / 2;
         float top = position.y + texture.getHeight();

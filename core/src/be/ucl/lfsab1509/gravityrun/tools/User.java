@@ -1,6 +1,7 @@
 package be.ucl.lfsab1509.gravityrun.tools;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
+
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.Json;
 
@@ -16,10 +17,7 @@ public class User {
     private static final String HIGHSCORE = "highscore";
     private static final String INDEX = "index";
     private static final String INTER = "intermediate";
-    private static final String MULTILIVES = "multilives";
-    private static final String MULTI_INDEX = "multi_index";
     private static final String USERNAME = "username";
-    private static final String MULTI_MODE = "multimode";
     private static final int MAX_USERNAME_LENGTH = 32; // FIXME probablement trop long.
     private static final int HIGH_SCORE_MAX_COUNT = 3;
     public static I18NBundle i18n;
@@ -67,19 +65,12 @@ public class User {
         expertScoreList = convertStoA((String) userMap.get(EXPERT));
     }
 
-    /**
-     * Ajoute {@code score} à la liste des scores pour le niveau spécifié,
-     * et renvoie true ou false selon qu'il s'agit du nouveau high score.
-     *
-     * @param score le score à ajouter à la liste
-     * @param level le niveau auquel il faut ajouter le score ; commence à 0.
-     * @return {@code true} s'il s'agit du nouveau high score, {@code false} sinon.
-     */
     public boolean addScore(int score, int level) {
         ArrayList<Integer> liste = getScoreList(level);
 
         int insertionIndex = 0;
-        for (; insertionIndex < liste.size() && liste.get(insertionIndex) > score; insertionIndex++) ;
+        for (; insertionIndex < liste.size() && liste.get(insertionIndex) > score; insertionIndex++)
+            ;
 
         if (insertionIndex >= liste.size() || score != liste.get(insertionIndex)) {
             liste.add(insertionIndex, score);
@@ -88,13 +79,6 @@ public class User {
             return false;
     }
 
-    /**
-     * Ajoute {@code score} à la liste des scores pour le niveau actuellement sélectionné,
-     * et renvoie true ou false selon qu'il s'agit du nouveau high score.
-     *
-     * @param score le score à ajouter à la liste du niveau courant
-     * @return {@code true} s'il s'agit du nouveau high score, {@code false} sinon.
-     */
     public boolean addScore(int score) {
         boolean result = addScore(score, this.indexSelected);
         shrinkScoreList(indexSelected);

@@ -1,6 +1,7 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
@@ -36,7 +37,7 @@ abstract class AbstractMenuScreen extends Screen {
             return;
         }
 
-        stage.act(Gdx.graphics.getDeltaTime());
+        stage.act(dt);
         stage.draw();
     }
 
@@ -73,29 +74,10 @@ abstract class AbstractMenuScreen extends Screen {
     }
 
     public interface DialogResultMethod {
-
-        /**
-         * Action à effectuer lors de la sortie de la boîte de dialogue (appui sur un bouton ou sur une touche).
-         * Par convention, {@code object} peut prendre deux valeurs au comportement standard : {@code true} et {@code false}.
-         * Dans le premier cas, la boîte de dialogue demande confirmation des changements effectués (appui sur "Ok").
-         * Dans le second cas, la boîte de dialogue indique que l'utilisateur ne souhaite pas retenir les changements (appui sur "Annuler").
-         * Le comportement attendu est que cette méthode renvoie {@code true} lorsque {@code object=false},
-         * et que les résultats de la boîte de dialogues doivent être ignorés.
-         * Une implémentation ne respectant pas cette règle risque de petits problèmes.
-         *
-         * @param object la valeur de sortie associée à l'évènement. Peut être {@code null} si aucune valeur n'a été associée.
-         * @return true si la boîte de dialogue peut se fermer, false sinon. Dans ce dernier cas,
-         * la méthode {@link Dialog#cancel()} est appelée.
-         */
         boolean result(Object object);
 
     }
 
-    /**
-     * Fenêtre de dialogue comportant uniquement un content et aucun bouton pour en sortir.
-     * Les seuls moyens d'en sortir sont le bouton BACK et la touche ESCAPE.
-     * Toute autre méthode doit être ajoutée explicitement.
-     */
     class EmptyButtonsDialog extends Dialog {
 
         private DialogResultMethod resultMethod;
@@ -143,6 +125,7 @@ abstract class AbstractMenuScreen extends Screen {
             openDialogs++;
             this.addListener(new EventListener() {
                 private final float MARGIN = width / 20; // FIXME la rendre dépendante de la résolution de l'écran
+
                 @Override
                 public boolean handle(Event event) {
                     if (!(event instanceof InputEvent)) {
@@ -171,11 +154,6 @@ abstract class AbstractMenuScreen extends Screen {
 
     }
 
-    /**
-     * Fenêtre de dialogue comportant, en plus de {@link EmptyButtonsDialog}, un bouton "Ok"
-     * et la touche "ENTER" permettant de confirmer les changements au lieu de les ignorer ;
-     * ils sont tous les deux associés à la valeur {@code true}.
-     */
     class MessageDialog extends EmptyButtonsDialog {
 
         MessageDialog(String title, Table content, DialogResultMethod resultMethod) {
@@ -186,10 +164,6 @@ abstract class AbstractMenuScreen extends Screen {
 
     }
 
-    /**
-     * Fenêtre de dialogue comportant, en plus de {@link MessageDialog}, un bouton "Annuler"
-     * permettant de quitter la fenêtre sans sauver les changements, et associé à la valeur {@code false}.
-     */
     class EditDialog extends MessageDialog {
 
         EditDialog(String title, Table content, DialogResultMethod resultMethod) {
@@ -200,13 +174,6 @@ abstract class AbstractMenuScreen extends Screen {
 
     }
 
-    /**
-     * Fenêtre de dialogue comportant un bouton "Annuler" permettant de quitter la fenêtre sans sauver les changements,
-     * comme {@link EditDialog}, mais ne comportant pas de bouton "Ok" pour confirmer les changements.
-     * Les différentes modifications doivent être gérées par les acteurs de la table {@code content},
-     * la {@link DialogResultMethod} doit toujours renvoyer {@code false}, et il est nécessaire de faire appel à
-     * {@link NoOkEditDialog#requestHide()} pour fermer la fenêtre lorsque les changements sont acceptés.
-     */
     class NoOkEditDialog extends EmptyButtonsDialog {
 
         NoOkEditDialog(String title, Table content, DialogResultMethod resultMethod) {

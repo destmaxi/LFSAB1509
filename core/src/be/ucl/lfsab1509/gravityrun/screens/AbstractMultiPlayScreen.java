@@ -1,7 +1,14 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.sprites.Bonus;
@@ -14,9 +21,14 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
     private boolean diedReceved = false;
     boolean startMultiPlayState = false, opponentReady = false, initDone = false;
 
-    private long hostTimeStamp1, clientTimestamp, clientStartTime = Long.MAX_VALUE, hostStartTime = Long.MAX_VALUE;
+    private long hostTimeStamp1, startTime = Long.MAX_VALUE;
 
-    Label opponentScoreLabel;
+    private Long countDown = 0L;
+
+    private Texture opponentLivesImage;
+    private Stage countDownStage;
+    private Label countDownLabel;
+    Label opponentScoreLabel, opponentLivesLabel;
     Marble opponentMarble;
 
     AbstractMultiPlayScreen(GravityRun gravityRun, boolean startMultiPlayState) {
@@ -24,18 +36,41 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
         this.startMultiPlayState = startMultiPlayState;
     }
 
-    AbstractMultiPlayScreen(GravityRun gravityRun ) {
+    AbstractMultiPlayScreen(GravityRun gravityRun) {
         super(gravityRun, true);
 
-        opponentScoreLabel = new Label(game.i18n.format("opponent_score", 0), game.aaronScoreSkin, "score");
-        opponentScoreLabel.setPosition((GravityRun.WIDTH - opponentScoreLabel.getWidth()) / 2, GravityRun.HEIGHT - 2 * opponentScoreLabel.getHeight());
+        countDownLabel = new Label(countDown.toString(), game.titleSkin, "title");
+        countDownLabel.setPosition((GravityRun.WIDTH - countDownLabel.getWidth()) / 2, (GravityRun.HEIGHT - countDownLabel.getHeight()) / 2);
 
+        countDownStage = new Stage(new ScreenViewport());
+        countDownStage.addActor(countDownLabel);
+
+        opponentScoreLabel = new Label("0", game.aaronScoreSkin, "opponent_score");
+        opponentScoreLabel.setAlignment(Align.center);
+        opponentScoreLabel.setPosition((GravityRun.WIDTH - opponentScoreLabel.getWidth()) / 2, GravityRun.HEIGHT - 2 * INIT_IMAGE_SIZE);
+
+        opponentLivesLabel = new Label("0", game.aaronScoreSkin, "opponent_score");
+        opponentLivesLabel.setAlignment(Align.center);
+        opponentLivesLabel.setPosition(GravityRun.WIDTH - (INIT_IMAGE_SIZE + opponentLivesLabel.getWidth()) / 2, GravityRun.HEIGHT - 2 * INIT_IMAGE_SIZE);
+
+        ImageButton opponentLivesButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(opponentLivesImage)));
+        opponentLivesButton.setPosition(GravityRun.WIDTH - 1.95f * INIT_IMAGE_SIZE, GravityRun.HEIGHT - 2 * INIT_IMAGE_SIZE);
+
+        scoreStage.addActor(opponentLivesButton);
+        scoreStage.addActor(opponentLivesLabel);
         scoreStage.addActor(opponentScoreLabel);
 
         startMultiPlayState = true;
     }
 
     abstract void updateOpponentScore();
+
+    @Override
+    void disposeTextures() {
+        super.disposeTextures();
+
+        opponentLivesImage.dispose();
+    }
 
     @Override
     void handleEndGame() {
@@ -45,6 +80,7 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
             return;
 
         MultiplayerConnectionScreen.ready = false;
+        startMultiPlayState = false;
         write("[10]#");
     }
 
@@ -57,15 +93,20 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
             initialized = true;
         }
 
-        if (isHost() && hostStartTime <= System.currentTimeMillis())
-            initDone = true;
-        else if (!isHost() && (clientStartTime <= System.currentTimeMillis()))
+        if (startTime <= System.currentTimeMillis())
             initDone = true;
     }
 
     @Override
     public void initMarbles() {
 
+    }
+
+    @Override
+    void initialiseTextures() {
+        super.initialiseTextures();
+
+        opponentLivesImage = new Texture("drawable-" + calculateStandardWidth(GravityRun.WIDTH) + "/newlife.png");
     }
 
     @Override
@@ -80,6 +121,21 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
     }
 
     @Override
+    void render() {
+        if (!initDone) {
+            countDown = (startTime == Long.MAX_VALUE)
+                    ? countDown = 3L
+                    : (long) Math.ceil((startTime - System.currentTimeMillis()) / 1000f);
+
+            countDownLabel.setText(countDown.toString());
+            countDownStage.act();
+            countDownStage.draw();
+        }
+
+        super.render();
+    }
+
+    @Override
     public void renderMarbles() {
         if (!initDone)
             return;
@@ -91,10 +147,11 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
     void update(float dt) {
         super.update(dt);
 
+        if (startMultiPlayState)
+            updateOpponentScore();
+
         if (gameOver)
             return;
-
-        updateOpponentScore();
 
         if (!playerMarble.isDead())
             return;
@@ -102,6 +159,13 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
         if (!diedReceved)
             write("[8]#");
 
+    }
+
+    @Override
+    void updateMarbles(float dt) {
+        super.updateMarbles(dt);
+
+        write("[13:" + playerMarble.getLives() + "]#");
     }
 
     @Override
@@ -115,7 +179,6 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
         switch (messagetype) {
             case 0:
                 if (startMultiPlayState && !opponentReady) {
-                    System.out.println("opponent ready");
                     opponentReady = true;
                     write("[0]#");
                 } else {
@@ -133,7 +196,6 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
 
                 break;
             case 7:
-                System.out.println("Client TIME 1 : " + System.currentTimeMillis());
                 write("[11:" + System.currentTimeMillis() + "]#");
                 break;
             case 9:
@@ -144,26 +206,20 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
                 break;
             case 11:
                 long hostTimestamp2 = System.currentTimeMillis();
-                System.out.println("hostTimestamp2 = " + hostTimestamp2);
+                long clientTimestamp = 0;
                 try {
                     clientTimestamp = getLongFromStr(message[1]) + (hostTimestamp2 - hostTimeStamp1) / 2;
                 } catch (ArrayIndexOutOfBoundsException e) {
                     e.printStackTrace();
                 }
-                System.out.println("getLongFromStr(message[1]) = " + getLongFromStr(message[1]));
                 long rtt = hostTimestamp2 - hostTimeStamp1;
-                System.out.println("rtt = " + rtt);
-                System.out.println("clientTimestamp = " + clientTimestamp);
-                clientStartTime = clientTimestamp + COUNTDOWN;
-                System.out.println("clientStartTime = " + clientStartTime);
-                hostStartTime = hostTimestamp2 + COUNTDOWN;
-                System.out.println("hostStartTime = " + hostStartTime);
+                long clientStartTime = clientTimestamp + COUNTDOWN;
+                startTime = hostTimestamp2 + COUNTDOWN;
                 write("[12:" + clientStartTime + "]#");
                 break;
             case 12:
                 try {
-                    clientStartTime = getLongFromStr(message[1]);
-                    System.out.println("clientStartTime = " + clientStartTime);
+                    startTime = getLongFromStr(message[1]);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     e.printStackTrace();
                 }
@@ -174,7 +230,11 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
     int getIntegerFromStr(String str) {
         int returnInt = -1;
         if (str != null) {
-            returnInt = Integer.parseInt(str);
+            try {
+                returnInt = Integer.parseInt(str);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
         }
 
         return returnInt;
@@ -220,14 +280,13 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
     }
 
     public void onDisconnect() {
-        System.out.println("startMultiPlayState = " + startMultiPlayState);
         if (!startMultiPlayState)
             return;
 
         MultiplayerConnectionScreen.ready = false;
         setMultiPlayScreen(new MultiPlayFirstModeScreen(game, false));
 
-        while (!(screenManager.peek() instanceof  HomeScreen))
+        while (!(screenManager.peek() instanceof HomeScreen))
             screenManager.pop();
 
         ((AbstractMenuScreen) screenManager.peek()).spawnErrorDialog(game.i18n.format("error_connection"), game.i18n.format("error_connection_lost"));

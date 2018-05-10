@@ -3,12 +3,12 @@ package be.ucl.lfsab1509.gravityrun.screens;
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.tools.BluetoothManager;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
 public abstract class Screen extends BluetoothManager implements com.badlogic.gdx.Screen {
 
+    BluetoothManager bluetoothManager;
     public int height, width;
     GravityRun game;
     ScreenManager screenManager;
@@ -18,6 +18,7 @@ public abstract class Screen extends BluetoothManager implements com.badlogic.gd
         game = gravityRun;
         height = GravityRun.HEIGHT;
         width = GravityRun.WIDTH;
+        bluetoothManager = game.bluetoothManager;
         screenManager = game.screenManager;
         soundManager = game.soundManager;
     }

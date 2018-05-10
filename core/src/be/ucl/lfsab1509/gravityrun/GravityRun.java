@@ -7,7 +7,6 @@ import be.ucl.lfsab1509.gravityrun.tools.BluetoothManager;
 import be.ucl.lfsab1509.gravityrun.tools.Skin;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 import be.ucl.lfsab1509.gravityrun.tools.User;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -28,6 +27,7 @@ public class GravityRun extends Game {
     public static final int MULTI_WIDTH = 480;
     public static int WIDTH;
 
+    public BluetoothManager bluetoothManager;
     public I18NBundle i18n;
     public Preferences preferences;
     public ScreenManager screenManager;
@@ -39,8 +39,7 @@ public class GravityRun extends Game {
 
     public GravityRun(BluetoothManager bluetoothManager) {
         super();
-
-        BluetoothManager.bluetoothManager = bluetoothManager;
+        this.bluetoothManager = bluetoothManager;
     }
 
     @Override
@@ -57,9 +56,9 @@ public class GravityRun extends Game {
         soundManager = new SoundManager();
         spriteBatch = new SpriteBatch();
 
-        FileHandle baseFileHandle = Gdx.files.internal("strings/string");
+        FileHandle baseFileHandle = Gdx.files.internal("strings/strings");
         i18n = I18NBundle.createBundle(baseFileHandle);
-        // I18NBundle.setExceptionOnMissingKey(false);
+        I18NBundle.setExceptionOnMissingKey(false);
         User.i18n = i18n;
 
         preferences = Gdx.app.getPreferences("Player");

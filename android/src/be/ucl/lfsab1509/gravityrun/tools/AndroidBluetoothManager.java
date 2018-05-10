@@ -190,6 +190,7 @@ public class AndroidBluetoothManager implements BluetoothConstants {
         mCurrentActivity.startActivity(discoverableIntent);
     }
 
+
     private void checkBTPermissions() {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
             Log.i(TAG, "checking permission");
@@ -376,28 +377,30 @@ public class AndroidBluetoothManager implements BluetoothConstants {
         public void run() {
             Log.i(TAG, "BEGIN mConnectedThread");
             byte[] buffer = new byte[1024];
-            int bytes;
 
-            while (true) {
-                if (!mHandler.hasMessages(MESSAGE_READ)) {
-                    try {
-                        bytes = mmInStream.read(buffer);
+            while (true)
+                if (!mHandler.hasMessages(MESSAGE_READ) && !readByffer(buffer))
+                    break;
+        }
 
-                        // Send the obtained bytes to the UI Activity
-                        mHandler.obtainMessage(BluetoothConstants.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
+        private boolean readByffer(byte[] buffer) {
+            try {
+                int bytes = mmInStream.read(buffer);
 
-                    } catch (IOException e) {
-                        connectionLost();
-                        break;
-                    }
-                }
+                // Send the obtained bytes to the UI Activity
+                mHandler.obtainMessage(BluetoothConstants.MESSAGE_READ, bytes, -1, buffer).sendToTarget();
+
+            } catch (IOException e) {
+                connectionLost();
+                return false;
             }
+            return true;
         }
 
         void write(byte[] buffer) {
             try {
-             //   for (byte b : buffer)
-                    mmOutStream.write(buffer);
+                //   for (byte b : buffer)
+                mmOutStream.write(buffer);
 
             } catch (IOException e) {
                 Log.e(TAG, "Exception during write", e);

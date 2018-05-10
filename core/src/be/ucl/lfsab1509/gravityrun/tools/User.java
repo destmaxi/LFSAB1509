@@ -11,6 +11,7 @@ import java.util.Map;
 
 public class User {
 
+    private static final int HIGH_SCORE_MAX_COUNT = 3;
     private static final String KEY_DEB = "beginner";
     private static final String KEY_EXPERT = "expert";
     public static final String KEY_FIRSTTIME = "firstTime";
@@ -18,8 +19,8 @@ public class User {
     private static final String KEY_INDEX = "index";
     private static final String KEY_INTER = "intermediate";
     private static final String KEY_USERNAME = "username";
-    private static final int MAX_USERNAME_LENGTH = 32; // FIXME probablement trop long.
-    private static final int HIGH_SCORE_MAX_COUNT = 3;
+    private static final int MAX_USERNAME_LENGTH = 32;  // FIXME probablement trop long.
+
     public static I18NBundle i18n;
 
     // La liste des scores obtenus, triés du plus grand au plus petit.
@@ -164,6 +165,16 @@ public class User {
                 return i18n.format("inter");
             case 2:
                 return i18n.format("expert");
+        }
+    }
+
+    public String getMultiModeDescription() {
+        switch (multiMode) {
+            default:
+            case 0:
+                return game.i18n.format("mode1");
+            case 1:
+                return game.i18n.format("mode2");
         }
     }
 

@@ -46,7 +46,6 @@ public class OptionScreen extends AbstractMenuScreen {
             }
         });
 
-
         Table table = new Table();
         table.add(title).expandX();
         table.row();
@@ -58,7 +57,7 @@ public class OptionScreen extends AbstractMenuScreen {
         table.row();
         table.add(lvlButton).expandX().fillX().maxWidth(containerWidth);
         table.row();
-        table.add(multiplayerButton).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
+        table.add(multiplayerButton).expandX().fillX().padTop(height - containerHeight).maxWidth(containerWidth);
 
         initStage(table);
     }

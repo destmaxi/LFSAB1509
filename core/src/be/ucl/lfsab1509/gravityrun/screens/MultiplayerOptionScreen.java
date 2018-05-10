@@ -1,5 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
+import be.ucl.lfsab1509.gravityrun.GravityRun;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
@@ -8,11 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
-import be.ucl.lfsab1509.gravityrun.GravityRun;
-
 public class MultiplayerOptionScreen extends AbstractMenuScreen {
 
-    private int difficulty;
+    private Integer difficulty;
     private TextButton startGameButton;
     private AbstractMultiPlayScreen abstractMultiPlayScreen;
 
@@ -22,27 +21,30 @@ public class MultiplayerOptionScreen extends AbstractMenuScreen {
         difficulty = game.user.getMulti_IndexSelected();
         Label title = new Label(game.i18n.get("option"), game.titleSkin, "title");
 
-        TextButton multiplayerModeButton = new TextButton(game.i18n.format("mode"), game.tableSkin, "round");
+        Label multiplayerModeLabel = new Label(game.i18n.format("mode"), game.tableSkin);
+        TextButton multiplayerModeButton = new TextButton(game.user.getMultiModeDescription(), game.tableSkin, "round");
         multiplayerModeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                popMultiplayerModeDialog();
+                popMultiplayerModeDialog(multiplayerModeButton);
             }
         });
 
-        TextButton lvlButton = new TextButton(game.i18n.format("level_display"), game.tableSkin, "round");
-        lvlButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                popLevelSelectionDialog();
-            }
-        });
-
-        TextButton livesButton = new TextButton(game.i18n.format("lives"), game.tableSkin, "round");
+        Label livesLabel = new Label(game.i18n.format("lives"), game.tableSkin);
+        TextButton livesButton = new TextButton(game.user.getMultiLives().toString(), game.tableSkin, "round");
         livesButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                popLivesDiaglog();
+                popLivesDiaglog(livesButton);
+            }
+        });
+
+        Label lvlLabel = new Label(game.i18n.format("level_display"), game.tableSkin);
+        TextButton lvlButton = new TextButton(game.user.getLevelDescription(), game.tableSkin, "round");
+        lvlButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                popLevelDialog(lvlButton);
             }
         });
 
@@ -64,13 +66,19 @@ public class MultiplayerOptionScreen extends AbstractMenuScreen {
         Table table = new Table();
         table.add(title).top().expandY();
         table.row();
-        table.add(livesButton).expandX().fillX().padTop(height - containerHeight);
+        table.add(multiplayerModeLabel).expandX().fillX().padTop(height - containerHeight);
         table.row();
-        table.add(lvlButton).expandX().fillX().padTop((height - containerHeight) / 2);
+        table.add(multiplayerModeButton).expandX().fillX();
         table.row();
-        table.add(multiplayerModeButton).expandX().fillX().padTop((height - containerHeight) / 2);
+        table.add(livesLabel).expandX().fillX().padTop((height - containerHeight) / 2);
         table.row();
-        table.add(startGameButton).expandX().fillX().padTop((height - containerHeight) / 2);
+        table.add(livesButton).expandX().fillX();
+        table.row();
+        table.add(lvlLabel).expandX().fillX().padTop((height - containerHeight) / 2);
+        table.row();
+        table.add(lvlButton).expandX().fillX();
+        table.row();
+        table.add(startGameButton).expandX().fillX().padTop(height - containerHeight);
 
         initStage(table);
     }
@@ -86,92 +94,52 @@ public class MultiplayerOptionScreen extends AbstractMenuScreen {
             startGameButton.setVisible(true);
     }
 
-    private void popLivesDiaglog() {
-        List<Integer> livesList = new List<>(game.aaronScoreSkin);
-        livesList.setItems(1, 2, 3, 4, 5);
-        livesList.setSelectedIndex(game.user.getMultiLives() - 1);
+    private void popLevelDialog(TextButton button) {
+        List<String> levelList = new List<>(game.aaronScoreSkin);
+        levelList.setAlignment(Align.center);
+        levelList.setItems(game.i18n.format("beginner"), game.i18n.format("inter"), game.i18n.format("expert"));
+        levelList.setSelectedIndex(game.user.getMulti_IndexSelected() - 1);
+
+        ListDialog levelDialog = new ListDialog(game.i18n.format("select_level"), levelList, new ListResultCallback() {
+            @Override
+            public void callback(String selected) {
+                game.user.setMulti_IndexSelected(levelList.getSelectedIndex() + 1);
+                button.setText(game.user.getLevelDescription());
+            }
+        });
+        levelDialog.show(stage);
+    }
+
+    private void popLivesDiaglog(TextButton button) {
+        List<String> livesList = new List<>(game.aaronScoreSkin);
         livesList.setAlignment(Align.center);
-        Table table = new Table();
-        table.add(livesList);
-        EditDialog livesDialog = new EditDialog(game.i18n.format("lives"), table, new DialogResultMethod() {
+        livesList.setItems("1", "2", "3", "4", "5");
+        livesList.setSelectedIndex(game.user.getMultiLives() - 1);
+
+        ListDialog livesDialog = new ListDialog(game.i18n.format("lives"), livesList, new ListResultCallback() {
             @Override
-            public boolean result(Object object) {
-                if (object.equals(true))
-                    game.user.setMultiLives(livesList.getSelected());
-                return true;
+            public void callback(String selected) {
+                game.user.setMultiLives(livesList.getSelectedIndex() + 1);
+                button.setText(game.user.getMultiLives().toString());
             }
         });
-
-        livesList.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.user.setMultiLives(livesList.getSelected());
-                livesDialog.hide();
-            }
-        });
-
         livesDialog.show(stage);
     }
 
-    private void popMultiplayerModeDialog() {
+    private void popMultiplayerModeDialog(TextButton button) {
         List<String> multiplayerModeList = new List<>(game.aaronScoreSkin);
         multiplayerModeList.setItems(game.i18n.format("mode1"), game.i18n.format("mode2"));
         multiplayerModeList.setSelectedIndex(game.user.getMultiMode());
         multiplayerModeList.setAlignment(Align.center);
-        Table table = new Table();
-        table.add(multiplayerModeList);
-        EditDialog multiplayerModeDialog = new EditDialog(game.i18n.format("mode"), table, new DialogResultMethod() {
-            @Override
-            public boolean result(Object object) {
-                if (object.equals(true))
-                    game.user.setMultiMode(multiplayerModeList.getSelectedIndex());
-                return true;
-            }
-        });
 
-        multiplayerModeList.addListener(new ClickListener() {
+        ListDialog multiplayerModeDialog = new ListDialog(game.i18n.format("mode"), multiplayerModeList, new ListResultCallback() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
+            public void callback(String selected) {
                 game.user.setMultiMode(multiplayerModeList.getSelectedIndex());
-                multiplayerModeDialog.hide();
+                button.setText(game.user.getMultiModeDescription());
             }
         });
-
         multiplayerModeDialog.show(stage);
-    }
-
-    private void popLevelSelectionDialog() {
-        List<String> levelSelectionList = new List<>(game.aaronScoreSkin);
-        levelSelectionList.setItems(game.i18n.format("beginner"), game.i18n.format("inter"), game.i18n.format("expert"));
-        levelSelectionList.setSelectedIndex(game.user.getMulti_IndexSelected());
-        levelSelectionList.setAlignment(Align.center);
-        Table content = new Table();
-        content.add(levelSelectionList);
-        EditDialog editLevelSelectionDialog = new EditDialog(game.i18n.format("select_level"), content, new DialogResultMethod() {
-            @Override
-            public boolean result(Object object) {
-                if (object.equals(true))
-                    validateLevelSelection(levelSelectionList);
-                return true;
-            }
-        });
-        levelSelectionList.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                validateLevelSelection(levelSelectionList);
-                editLevelSelectionDialog.hide();
-            }
-        });
-        editLevelSelectionDialog.show(stage);
-    }
-
-    private void validateLevelSelection(List levelList) {
-        if (levelList.getSelected().equals(game.i18n.format("beginner")))
-            game.user.setMulti_IndexSelected(0);
-        else if (levelList.getSelected().equals(game.i18n.format("inter")))
-            game.user.setMulti_IndexSelected(1);
-        else if (levelList.getSelected().equals(game.i18n.format("expert")))
-            game.user.setMulti_IndexSelected(2);
     }
 
 }

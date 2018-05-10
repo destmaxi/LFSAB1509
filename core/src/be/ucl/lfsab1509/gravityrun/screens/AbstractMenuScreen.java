@@ -7,6 +7,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -182,6 +183,44 @@ abstract class AbstractMenuScreen extends Screen {
             this.button(cancelButton, false); // ESCAPE and BACK are also set to false
         }
 
+    }
+
+    public interface ListResultCallback {
+
+        /**
+         * Méthode appelée par la boîte de dialogue lorsqu'un item est sélectionné.
+         * Pour le moment, un appel sur le bouton "Annuler" n'appelle pas ce callback.
+         *
+         * @param selected l'item sélectionné.
+         */
+        void callback(String selected);
+
+    }
+
+    class ListDialog extends NoOkEditDialog {
+
+        ListDialog(String title, List<String> list, ListResultCallback listResultCallback) {
+            super(title, embedTable(list), new DialogResultMethod() {
+                @Override
+                public boolean result(Object object) {
+                    return true;
+                }
+            });
+            list.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    listResultCallback.callback(list.getSelected());
+                    ListDialog.this.requestHide();
+                }
+            });
+        }
+
+    }
+
+    private static Table embedTable(List<String> list) {
+        Table table = new Table();
+        table.add(list);
+        return table;
     }
 
 }

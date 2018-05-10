@@ -11,14 +11,12 @@ import com.badlogic.gdx.utils.Align;
 
 public class MultiplayerOptionScreen extends AbstractMenuScreen {
 
-    private Integer difficulty;
     private TextButton startGameButton;
     private AbstractMultiPlayScreen abstractMultiPlayScreen;
 
     MultiplayerOptionScreen(GravityRun gravityRun) {
         super(gravityRun);
 
-        difficulty = game.user.getMulti_IndexSelected();
         Label title = new Label(game.i18n.get("option"), game.titleSkin, "title");
 
         Label multiplayerModeLabel = new Label(game.i18n.format("mode"), game.tableSkin);
@@ -39,12 +37,12 @@ public class MultiplayerOptionScreen extends AbstractMenuScreen {
             }
         });
 
-        Label lvlLabel = new Label(game.i18n.format("level_display"), game.tableSkin);
-        TextButton lvlButton = new TextButton(game.user.getLevelDescription(), game.tableSkin, "round");
-        lvlButton.addListener(new ClickListener() {
+        Label levelLabel = new Label(game.i18n.format("level_display"), game.tableSkin);
+        TextButton levelButton = new TextButton(game.user.getLevelDescription(), game.tableSkin, "round");
+        levelButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                popLevelDialog(lvlButton);
+                popLevelDialog(levelButton);
             }
         });
 
@@ -53,7 +51,7 @@ public class MultiplayerOptionScreen extends AbstractMenuScreen {
         startGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                write("[4:" + game.user.getMultiLives() + ":" + difficulty + ":" + game.user.getMultiMode() + "]#");
+                write("[4:" + game.user.getMultiLives() + ":" + game.user.getMulti_IndexSelected() + ":" + game.user.getMultiMode() + "]#");
                 abstractMultiPlayScreen = (game.user.getMultiMode() == 0)
                         ? new MultiPlayFirstModeScreen(game)
                         : new MultiPlaySecondModeScreen(game);
@@ -74,9 +72,9 @@ public class MultiplayerOptionScreen extends AbstractMenuScreen {
         table.row();
         table.add(livesButton).expandX().fillX();
         table.row();
-        table.add(lvlLabel).expandX().fillX().padTop((height - containerHeight) / 2);
+        table.add(levelLabel).expandX().fillX().padTop((height - containerHeight) / 2);
         table.row();
-        table.add(lvlButton).expandX().fillX();
+        table.add(levelButton).expandX().fillX();
         table.row();
         table.add(startGameButton).expandX().fillX().padTop(height - containerHeight);
 

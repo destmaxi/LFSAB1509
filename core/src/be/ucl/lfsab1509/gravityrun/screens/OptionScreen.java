@@ -37,15 +37,6 @@ public class OptionScreen extends AbstractMenuScreen {
             }
         });
 
-        TextButton multiplayerButton = new TextButton(game.i18n.format("multiplayer"), game.tableSkin, "round");
-        multiplayerButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-                screenManager.push(new MultiplayerConnectionScreen(game));
-            }
-        });
-
         Table table = new Table();
         table.add(title).expandX();
         table.row();
@@ -56,15 +47,8 @@ public class OptionScreen extends AbstractMenuScreen {
         table.add(lvlLabel).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
         table.row();
         table.add(lvlButton).expandX().fillX().maxWidth(containerWidth);
-        table.row();
-        table.add(multiplayerButton).expandX().fillX().padTop(height - containerHeight).maxWidth(containerWidth);
 
         initStage(table);
-    }
-
-    @Override
-    public void dispose() {
-        super.dispose();
     }
 
     @Override
@@ -74,19 +58,19 @@ public class OptionScreen extends AbstractMenuScreen {
     }
 
     private void popLevelSelectionDialog(TextButton levelButton) {
-        List<String> levelSelectionList = new List<>(game.tableSkin);
-        levelSelectionList.setItems(game.i18n.format("beginner"), game.i18n.format("inter"), game.i18n.format("expert"));
-        levelSelectionList.setSelectedIndex(game.user.getIndexSelected());
-        levelSelectionList.setAlignment(Align.center);
+        List<String> levelList = new List<>(game.tableSkin);
+        levelList.setItems(game.i18n.format("beginner"), game.i18n.format("inter"), game.i18n.format("expert"));
+        levelList.setSelectedIndex(game.user.getIndexSelected());
+        levelList.setAlignment(Align.center);
         // FIXME il n'y a pas de manière simple d'agrandir la taille des items dans une List... Peut-être passer à des boutons ? Merci libGDX.
-        ListDialog editLevelSelectionDialog = new ListDialog(game.i18n.format("select_level"), levelSelectionList, new ListResultCallback() {
+        ListDialog levelDialog = new ListDialog(game.i18n.format("select_level"), levelList, new ListResultCallback() {
             @Override
             public void callback(String selected) {
-                validateLevelSelection(selected);
+                game.user.setIndexSelected(levelList.getSelectedIndex());
                 levelButton.setText(game.user.getLevelDescription());
             }
         });
-        editLevelSelectionDialog.show(stage);
+        levelDialog.show(stage);
     }
 
     private void popUsernameDialog(TextButton usernameButton) {
@@ -112,16 +96,6 @@ public class OptionScreen extends AbstractMenuScreen {
             }
         });
         editUsernameDialog.show(stage);
-    }
-
-    private void validateLevelSelection(String selected) {
-        if (selected.equals(game.i18n.format("beginner")))
-            game.user.setIndexSelected(0);
-        else if (selected.equals(game.i18n.format("inter")))
-            game.user.setIndexSelected(1);
-        else if (selected.equals(game.i18n.format("expert")))
-            game.user.setIndexSelected(2);
-        game.user.write();
     }
 
     private boolean validateUserName(TextField usernameField, TextButton usernameButton) {

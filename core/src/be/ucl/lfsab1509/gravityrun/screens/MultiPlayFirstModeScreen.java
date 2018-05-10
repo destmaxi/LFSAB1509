@@ -1,27 +1,19 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
+import be.ucl.lfsab1509.gravityrun.GravityRun;
+import be.ucl.lfsab1509.gravityrun.sprites.*;
 import com.badlogic.gdx.Gdx;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.sprites.Bonus;
-import be.ucl.lfsab1509.gravityrun.sprites.CamReposition;
-import be.ucl.lfsab1509.gravityrun.sprites.EmptyBonus;
-import be.ucl.lfsab1509.gravityrun.sprites.Hole;
-import be.ucl.lfsab1509.gravityrun.sprites.Marble;
-import be.ucl.lfsab1509.gravityrun.sprites.Obstacle;
-
 //FIXME revenir en arriere quand perdu (sauvegarder obstacle / bonus)
 public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
 
     private ArrayList<Integer> caughtBonusIds;
-
-    private boolean gotSeed = false, positionRecover = false, initialized;
-    private int bonusId;
+    private boolean gotSeed = false, initialized, positionRecover = false;
     private float opponentMarblePositionUpdateTime;
-
+    private int bonusId;
     private long seed;
 
     public MultiPlayFirstModeScreen(GravityRun gravityRun, boolean startMultiPlayScreen) {
@@ -102,7 +94,6 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
             case 14:
                 opponentMarble.setInHole();
                 break;
-
         }
     }
 
@@ -117,15 +108,6 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
 
     @Override
     public void initGame(float dt) {
-
-        if (initDone)
-            return;
-
-        if (!opponentReady) {
-            write("[0]#");
-            return;
-        }
-
         super.initGame(dt);
 
         if (!gotSeed && isHost() && !initialized) {
@@ -164,15 +146,13 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
     @Override
     Bonus newBonus(float position, int offset) {
         Bonus bonus;
-        int bonusType = randomBonus.nextInt(10);
 
         if (caughtBonusIds.contains(bonusId)) {
             randomBonus.nextInt();
-            bonus = genereateNewBonus(2, offset, position);
-            caughtBonusIds.remove(caughtBonusIds.indexOf(bonusId));
-        } else {
-            bonus = genereateNewBonus(bonusType, offset, position);
-        }
+            bonus = new EmptyBonus(position, offset, newLifeImage);
+            caughtBonusIds.remove(bonusId);
+        } else
+            bonus = super.newBonus(position, offset);
 
         bonus.setBonusId(bonusId++);
 
@@ -181,10 +161,8 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
 
     @Override
     void sendInHole(Obstacle obstacle, Marble marble) {
-        if (obstacle instanceof Hole && obstacle.collides(marble)) {
+        if (obstacle instanceof Hole && obstacle.collides(marble))
             write("[14]#");
-        }
-
     }
 
     @Override
@@ -202,9 +180,8 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
         if (playerMarble.isDead() && !opponentMarble.isDead()) {
             checkCamReposition(opponentMarble, dt);
             viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        } else if (!gameOver) {
+        } else if (!gameOver)
             super.updateCamera(dt);
-        }
     }
 
     @Override
@@ -219,29 +196,27 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
 
     @Override
     public void updateOpponentCaughtBonus(Bonus bonus) {
-        int index;
-
         if (caughtBonusIds.contains(bonus.getBonusId())) {
-            index = bonuses.indexOf(bonus);
+            int index = bonuses.indexOf(bonus);
             bonuses.set(index, new EmptyBonus(bonus.getPosition().y, bonus.getOffset(), newLifeImage));
-            caughtBonusIds.remove(caughtBonusIds.indexOf(bonus.getBonusId()));
+            caughtBonusIds.remove(bonus.getBonusId());
         }
     }
 
     @Override
     void updateOpponentScore() {
-        opponentScoreLabel.setText(opponentMarble.getScore().toString());
         opponentLivesLabel.setText(opponentMarble.getLives().toString());
+        opponentScoreLabel.setText(opponentMarble.getScore().toString());
     }
 
     private void checkCamReposition(Marble marble, float dt) {
-        if (marble.getCenterPosition().y > camera.position.y && !positionRecover) {
+        if (positionRecover) {
+            super.checkCamReposition(marble);
+            camera.position.add(0, marble.getSpeedFactor() * dt, 0);
+        } else if (marble.getCenterPosition().y > camera.position.y) {
             camera.position.add(0, 4 * marble.getSpeedFactor() * dt, 0);
             if (marble.getCenterPosition().y <= camera.position.y)
                 positionRecover = true;
-        } else if (positionRecover) {
-            super.checkCamReposition(marble);
-            camera.position.add(0, marble.getSpeedFactor() * dt, 0);
         }
     }
 
@@ -254,7 +229,7 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
             return Float.parseFloat(str);
         } catch (NumberFormatException ex) {
             Gdx.app.error("ERROR", "parse float error");
-            return 0.0f;
+            return 0f;
         }
     }
 

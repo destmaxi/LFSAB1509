@@ -1,5 +1,8 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
+import be.ucl.lfsab1509.gravityrun.GravityRun;
+import be.ucl.lfsab1509.gravityrun.sprites.*;
+import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -19,49 +21,27 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.ArrayList;
 import java.util.Random;
 
-import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.sprites.Bonus;
-import be.ucl.lfsab1509.gravityrun.sprites.CamReposition;
-import be.ucl.lfsab1509.gravityrun.sprites.EmptyBonus;
-import be.ucl.lfsab1509.gravityrun.sprites.Hole;
-import be.ucl.lfsab1509.gravityrun.sprites.Invincible;
-import be.ucl.lfsab1509.gravityrun.sprites.LargeHole;
-import be.ucl.lfsab1509.gravityrun.sprites.Marble;
-import be.ucl.lfsab1509.gravityrun.sprites.NewLife;
-import be.ucl.lfsab1509.gravityrun.sprites.Obstacle;
-import be.ucl.lfsab1509.gravityrun.sprites.ScoreBonus;
-import be.ucl.lfsab1509.gravityrun.sprites.SlowDown;
-import be.ucl.lfsab1509.gravityrun.sprites.Wall;
-import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
-
 public abstract class AbstractPlayScreen extends Screen {
 
+    static int INIT_IMAGE_SIZE;
     private static int OBSTACLE_COUNT;
     private static int OBSTACLE_HEIGHT;
     private static int OBSTACLE_SPACING;
     static int STANDARD_WIDTH;
-    static int INIT_IMAGE_SIZE;
-
-    private Array<Vector2> backgroundPositions;
-    private Array<Obstacle> obstacles;
 
     ArrayList<Bonus> bonuses;
     ArrayList<Marble> marbles;
-
+    private ArrayList<Obstacle> obstacles;
+    private ArrayList<Vector2> backgroundPositions;
     boolean endGameReceived = false, gameOver = false, initialized = false;
-
-    private Label playerScoreLabel, playerLivesLabel;
-
+    private Label playerLivesLabel, playerScoreLabel;
     Marble playerMarble;
     OrthographicCamera camera;
     Random randomBonus, randomObstacle;
     Stage scoreStage;
-
-    private Texture background, camRepositionImage, holeImage, invincibleImage, largeHoleImage, scoreBonusImage, wallImage, playerLivesImage;
     Texture gameOverImage, newLifeImage, slowDownImage;
-
+    private Texture background, camRepositionImage, holeImage, invincibleImage, largeHoleImage, playerLivesImage, scoreBonusImage, wallImage;
     Viewport viewport;
-
 
     AbstractPlayScreen(GravityRun gravityRun) {
         super(gravityRun);
@@ -85,31 +65,31 @@ public abstract class AbstractPlayScreen extends Screen {
         STANDARD_WIDTH = calculateStandardWidth(width);
 
         bonuses = new ArrayList<>();
-        obstacles = new Array<>();
         marbles = new ArrayList<>();
+        obstacles = new ArrayList<>();
 
-        initialiseTextures();
+        initializeTextures();
         initMarbles();
 
-        backgroundPositions = new Array<>();
+        backgroundPositions = new ArrayList<>();
         for (int i = 0; i < 3; i++)
             backgroundPositions.add(new Vector2((width - background.getWidth()) / 2, -height / 2 + i * background.getHeight()));
 
-        playerScoreLabel = new Label(playerMarble.getScore().toString(), game.aaronScoreSkin, "player_score");
-        playerScoreLabel.setAlignment(Align.center);
-        playerScoreLabel.setPosition((GravityRun.WIDTH - playerScoreLabel.getWidth()) / 2, GravityRun.HEIGHT - INIT_IMAGE_SIZE);
+        ImageButton playerLivesButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(playerLivesImage)));
+        playerLivesButton.setPosition(GravityRun.WIDTH - 1.95f * INIT_IMAGE_SIZE, GravityRun.HEIGHT - INIT_IMAGE_SIZE);
 
         playerLivesLabel = new Label(playerMarble.getLives().toString(), game.aaronScoreSkin, "player_score");
         playerLivesLabel.setAlignment(Align.center);
         playerLivesLabel.setPosition(GravityRun.WIDTH - (INIT_IMAGE_SIZE + playerLivesLabel.getWidth()) / 2, GravityRun.HEIGHT - INIT_IMAGE_SIZE);
 
-        ImageButton playerLivesButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(playerLivesImage)));
-        playerLivesButton.setPosition(GravityRun.WIDTH - 1.95f * INIT_IMAGE_SIZE, GravityRun.HEIGHT - INIT_IMAGE_SIZE);
+        playerScoreLabel = new Label(playerMarble.getScore().toString(), game.aaronScoreSkin, "player_score");
+        playerScoreLabel.setAlignment(Align.center);
+        playerScoreLabel.setPosition((GravityRun.WIDTH - playerScoreLabel.getWidth()) / 2, GravityRun.HEIGHT - INIT_IMAGE_SIZE);
 
         scoreStage = new Stage(new ScreenViewport());
         scoreStage.addActor(playerLivesButton);
-        scoreStage.addActor(playerScoreLabel);
         scoreStage.addActor(playerLivesLabel);
+        scoreStage.addActor(playerScoreLabel);
 
         OBSTACLE_HEIGHT = STANDARD_WIDTH / 5;
         OBSTACLE_SPACING = (int) (1.5f * OBSTACLE_HEIGHT);
@@ -123,8 +103,6 @@ public abstract class AbstractPlayScreen extends Screen {
     public abstract void initMarbles();
 
     public abstract boolean isInitDone();
-
-    public abstract void updateOpponentCaughtBonus(Bonus bonus);
 
     @Override
     public void dispose() {
@@ -162,15 +140,13 @@ public abstract class AbstractPlayScreen extends Screen {
     }
 
     private void bonusReposition(Bonus bonus, int i, Marble marble) {
-
         updateOpponentCaughtBonus(bonus);
 
         if (bonus.isOutOfScreen(camera.position.y, height))
             setBonus(i, bonus);
 
-        if (bonus.collides(marble)) {
+        if (bonus.collides(marble))
             bonusCollides(bonus, i, marble);
-        }
     }
 
     int calculateStandardWidth(int width) {
@@ -218,31 +194,6 @@ public abstract class AbstractPlayScreen extends Screen {
         wallImage.dispose();
     }
 
-    Bonus genereateNewBonus(int bonusType, int offset, float positionY) {
-        Bonus bonus;
-        switch (bonusType) {
-            case 1:
-                bonus = new NewLife(positionY, offset, this, randomBonus, newLifeImage);
-                break;
-            case 2:
-                bonus = new EmptyBonus(positionY, offset, newLifeImage);
-                break;
-            case 3:
-                bonus = new CamReposition(positionY, offset, this, randomBonus, camRepositionImage);
-                break;
-            case 4:
-                bonus = new Invincible(positionY, offset, this, randomBonus, invincibleImage);
-                break;
-            case 5:
-                bonus = new SlowDown(positionY, offset, this, randomBonus, slowDownImage);
-                break;
-            default:
-                bonus = new ScoreBonus(positionY, offset, this, randomBonus, scoreBonusImage);
-        }
-
-        return bonus;
-    }
-
     public Vector3 getCameraPosition() {
         return camera.position;
     }
@@ -254,7 +205,6 @@ public abstract class AbstractPlayScreen extends Screen {
     void handleEndGame() {
         if (!gameOver)
             return;
-
 
         soundManager.replayMenu();
         screenManager.set(new GameOverScreen(game, playerMarble.getScore(), this instanceof AbstractMultiPlayScreen));
@@ -273,7 +223,7 @@ public abstract class AbstractPlayScreen extends Screen {
         }
     }
 
-    void initialiseTextures() {
+    void initializeTextures() {
         String basePath = "drawable-" + STANDARD_WIDTH + "/";
         background = new Texture(basePath + "background.png");
         camRepositionImage = new Texture(basePath + "camreposition.png");
@@ -295,16 +245,32 @@ public abstract class AbstractPlayScreen extends Screen {
 
     Bonus newBonus(float position, int offset) {
         Bonus bonus;
-        int bonusType = randomBonus.nextInt(10);
-        bonus = genereateNewBonus(bonusType, offset, position);
-
+        switch (randomBonus.nextInt(10)) {
+            case 0:
+                bonus = new EmptyBonus(position, offset, newLifeImage);
+                break;
+            case 2:
+                bonus = new CamReposition(position, offset, this, randomBonus, camRepositionImage);
+                break;
+            case 4:
+                bonus = new Invincible(position, offset, this, randomBonus, invincibleImage);
+                break;
+            case 6:
+                bonus = new NewLife(position, offset, this, randomBonus, newLifeImage);
+                break;
+            case 8:
+                bonus = new SlowDown(position, offset, this, randomBonus, slowDownImage);
+                break;
+            default:
+                bonus = new ScoreBonus(position, offset, this, randomBonus, scoreBonusImage);
+        }
         return bonus;
     }
 
     private Obstacle newObstacle(float position) {
         Obstacle obstacle;
         switch (randomObstacle.nextInt(5)) {
-            case 0:
+            case 1:
                 obstacle = new Hole(position, this, playerMarble, randomObstacle, holeImage);
                 break;
             case 3:
@@ -313,7 +279,6 @@ public abstract class AbstractPlayScreen extends Screen {
             default:
                 obstacle = new Wall(position, randomObstacle, playerMarble, this, wallImage);
         }
-
         return obstacle;
     }
 
@@ -329,7 +294,6 @@ public abstract class AbstractPlayScreen extends Screen {
     }
 
     void render() {
-
         if (!isInitDone())
             return;
 
@@ -406,10 +370,8 @@ public abstract class AbstractPlayScreen extends Screen {
     }
 
     private void updateBonuses(Marble marble) {
-        for (int i = 0; i < bonuses.size(); i++) {
-            Bonus bonus = bonuses.get(i);
-            bonusReposition(bonus, i, marble);
-        }
+        for (int i = 0; i < bonuses.size(); i++)
+            bonusReposition(bonuses.get(i), i, marble);
     }
 
     void updateCamera(float dt) {
@@ -424,9 +386,8 @@ public abstract class AbstractPlayScreen extends Screen {
         for (int i = 0; i < marble.getCaughtBonuses().size(); i++) {
             Bonus bonus = marble.getCaughtBonuses().get(i);
             bonus.update(dt, marble);
-            if (bonus.isFinished(marble)) {
+            if (bonus.isFinished(marble))
                 marble.getCaughtBonuses().remove(i--);
-            }
         }
     }
 
@@ -455,12 +416,16 @@ public abstract class AbstractPlayScreen extends Screen {
     }
 
     private void updateObstacles(Marble marble) {
-        for (int i = 0; i < obstacles.size; i++) {
+        for (int i = 0; i < obstacles.size(); i++) {
             obstacleReposition(obstacles.get(i), i, marble);
 
             if (marble.getLives() == 0)
                 marble.setDead();
         }
+    }
+
+    public void updateOpponentCaughtBonus(Bonus bonus) {
+
     }
 
 }

@@ -1,8 +1,7 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.sprites.*;
-
+import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -59,8 +58,8 @@ public class SoloPlayScreen extends AbstractPlayScreen {
     }
 
     @Override
-    void initialiseTextures() {
-        super.initialiseTextures();
+    void initializeTextures() {
+        super.initializeTextures();
         pauseImage = new Texture("drawable-" + calculateStandardWidth(GravityRun.WIDTH) + "/pause.png");
     }
 
@@ -87,11 +86,6 @@ public class SoloPlayScreen extends AbstractPlayScreen {
 
         if (playerMarble.isDead())
             gameOver = true;
-    }
-
-    @Override
-    public void updateOpponentCaughtBonus(Bonus bonus) {
-
     }
 
     private void handlePause() {

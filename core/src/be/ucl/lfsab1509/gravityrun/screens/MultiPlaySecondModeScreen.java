@@ -8,9 +8,9 @@ import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import be.ucl.lfsab1509.gravityrun.sprites.SlowDown;
 
 public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
-    private Integer opponentScore = 0, opponentLives = 0;
-    private boolean initialized = false, opponentDead = false;
 
+    private boolean initialized = false, opponentDead = false;
+    private Integer opponentLives = 0, opponentScore = 0;
 
     MultiPlaySecondModeScreen(GravityRun gravityRun) {
         super(gravityRun);
@@ -75,15 +75,6 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
 
     @Override
     public void initGame(float dt) {
-
-        if (initDone)
-            return;
-
-        if (!opponentReady) {
-            write("[0]#");
-            return;
-        }
-
         super.initGame(dt);
 
         if (!initialized) {
@@ -101,6 +92,14 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
     }
 
     @Override
+    void renderGameOver() {
+        if (playerMarble.isDead())
+            game.spriteBatch.draw(gameOverImage,
+                    camera.position.x - gameOverImage.getWidth() / 2,
+                    camera.position.y);
+    }
+
+    @Override
     public void renderMarbles() {
         playerMarble.render(game.spriteBatch);
     }
@@ -114,14 +113,6 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
     }
 
     @Override
-    void renderGameOver() {
-        if (playerMarble.isDead())
-            game.spriteBatch.draw(gameOverImage,
-                    camera.position.x - gameOverImage.getWidth() / 2,
-                    camera.position.y);
-    }
-
-    @Override
     public void updateMarbles(float dt) {
         super.updateMarbles(dt);
 
@@ -130,13 +121,9 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
     }
 
     @Override
-    public void updateOpponentCaughtBonus(Bonus bonus) {
-
-    }
-
-    @Override
     void updateOpponentScore() {
-        opponentScoreLabel.setText(opponentScore.toString());
         opponentLivesLabel.setText(opponentLives.toString());
+        opponentScoreLabel.setText(opponentScore.toString());
     }
+
 }

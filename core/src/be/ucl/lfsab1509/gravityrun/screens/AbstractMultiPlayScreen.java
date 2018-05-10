@@ -1,5 +1,8 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
+import be.ucl.lfsab1509.gravityrun.GravityRun;
+import be.ucl.lfsab1509.gravityrun.sprites.Bonus;
+import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -10,26 +13,18 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.sprites.Bonus;
-import be.ucl.lfsab1509.gravityrun.sprites.Marble;
-
 public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
 
     private static final long COUNTDOWN = 3000L;
 
-    private boolean diedReceved = false;
-    boolean startMultiPlayState = false, opponentReady = false, initDone = false;
-
-    private long hostTimeStamp1, startTime = Long.MAX_VALUE;
-
-    private Long countDown = 0L;
-
-    private Texture opponentLivesImage;
-    private Stage countDownStage;
-    private Label countDownLabel;
+    private boolean diedReceved = false, initDone = false, opponentReady = false, startMultiPlayState = false;
     Label opponentScoreLabel, opponentLivesLabel;
+    private Label countDownLabel;
+    private long hostTimeStamp1, startTime = Long.MAX_VALUE;
+    private Long countDown = 0L;
     Marble opponentMarble;
+    private Stage countDownStage;
+    private Texture opponentLivesImage;
 
     AbstractMultiPlayScreen(GravityRun gravityRun, boolean startMultiPlayState) {
         super(gravityRun);
@@ -86,6 +81,13 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
 
     @Override
     public void initGame(float dt) {
+        if (initDone)
+            return;
+
+        if (!opponentReady) {
+            write("[0]#");
+            return;
+        }
 
         if (isHost() && !initialized) {
             hostTimeStamp1 = System.currentTimeMillis();
@@ -98,14 +100,8 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
     }
 
     @Override
-    public void initMarbles() {
-
-    }
-
-    @Override
-    void initialiseTextures() {
-        super.initialiseTextures();
-
+    void initializeTextures() {
+        super.initializeTextures();
         opponentLivesImage = new Texture("drawable-" + calculateStandardWidth(GravityRun.WIDTH) + "/newlife.png");
     }
 
@@ -113,7 +109,6 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
     public boolean isHost() {
         return bluetoothManager.isHost();
     }
-
 
     @Override
     public boolean isInitDone() {
@@ -150,15 +145,11 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
         if (startMultiPlayState)
             updateOpponentScore();
 
-        if (gameOver)
-            return;
-
-        if (!playerMarble.isDead())
+        if (gameOver || !playerMarble.isDead())
             return;
 
         if (!diedReceved)
             write("[8]#");
-
     }
 
     @Override
@@ -229,14 +220,12 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
 
     int getIntegerFromStr(String str) {
         int returnInt = -1;
-        if (str != null) {
+        if (str != null)
             try {
                 returnInt = Integer.parseInt(str);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
-        }
-
         return returnInt;
     }
 
@@ -245,16 +234,15 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
             return Long.parseLong(str);
         } catch (NumberFormatException ex) {
             Gdx.app.error("ERROR", "parse Long error");
-            return 1;
+            return 0L;
         }
     }
 
     public void incomingMessage(String str) {
-
         int index, end;
         String[] firstSplit = str.split("#");
 
-        if (isValidMessage(firstSplit)) {
+        if (isValidMessage(firstSplit))
             for (String string : firstSplit) {
                 index = string.indexOf("[");
                 end = string.indexOf("]");
@@ -263,18 +251,15 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
 
                 applyMessage(splited);
             }
-        }
     }
-
 
     private boolean isValidMessage(String[] strings) {
         int index, end;
         for (String string : strings) {
             index = string.indexOf("[");
             end = string.indexOf("]");
-            if (!(index != -1 && end > index)) {
+            if (!(index != -1 && end > index))
                 return false;
-            }
         }
         return true;
     }
@@ -291,4 +276,5 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
 
         ((AbstractMenuScreen) screenManager.peek()).spawnErrorDialog(game.i18n.format("error_connection"), game.i18n.format("error_connection_lost"));
     }
+
 }

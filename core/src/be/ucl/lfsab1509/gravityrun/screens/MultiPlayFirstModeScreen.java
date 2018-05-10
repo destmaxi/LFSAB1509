@@ -46,14 +46,6 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
         int messageType = getIntegerFromStr(message[0]);
 
         switch (messageType) {
-            case 0:
-                if (startMultiPlayState && !opponentReady) {
-                    opponentReady = true;
-                    write("[0]#");
-                } else {
-                    MultiplayerConnectionScreen.ready = true;
-                }
-                break;
             case 1:
                 if (playerMarble.isDead())
                     opponentMarble.setRepositioning(.5f);

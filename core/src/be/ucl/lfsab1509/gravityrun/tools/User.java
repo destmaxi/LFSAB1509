@@ -18,6 +18,8 @@ public class User {
     private static final String KEY_INDEX = "index";
     private static final String KEY_INTER = "intermediate";
     private static final String KEY_USERNAME = "username";
+    private static final String KEY_MUSIC_LEVEL = "musicLevel";
+    private static final String KEY_SOUND_LEVEL = "soundLevel";
     private static final int MAX_USERNAME_LENGTH = 32; // FIXME probablement trop long.
     private static final int HIGH_SCORE_MAX_COUNT = 3;
     public static I18NBundle i18n;
@@ -25,6 +27,8 @@ public class User {
     // La liste des scores obtenus, triés du plus grand au plus petit.
     private ArrayList<Integer> beginnerScoreList, expertScoreList, intermediateScoreList;
     private ArrayList<Integer> highScoreList;
+    private float musicLevel = 0.8f;
+    private float soundLevel = 0.5f;
     private boolean firstTime = true;
     private GravityRun game;
     private int indexSelected = 1, multi_IndexSelected = 1, multiLives = 3, multiMode = 0;
@@ -46,6 +50,8 @@ public class User {
     public User(GravityRun gravityRun, Map<String, ?> userMap) {
         game = gravityRun;
         username = userMap.get(KEY_USERNAME).toString();
+        musicLevel = (Float) userMap.get(KEY_MUSIC_LEVEL);
+        soundLevel = (Float) userMap.get(KEY_SOUND_LEVEL);
 
         Object firstTime1 = userMap.get(KEY_FIRSTTIME);
         if (firstTime1 instanceof Boolean)
@@ -218,6 +224,22 @@ public class User {
         this.multiMode = multiMode;
     }
 
+    public float getMusicLevel(){
+        return musicLevel;
+    }
+
+    public float getSoundLevel(){
+        return soundLevel;
+    }
+
+    public void setMusicLevel(float musicLevel){
+        this.musicLevel = Math.min(musicLevel, 1.0f);
+    }
+
+    public void setSoundLevel(float soundLevel){
+        this.soundLevel = Math.min(soundLevel, 1.0f);
+    }
+
     private void shrinkScoreList(int level) {
         ArrayList<Integer> list = getScoreList(level);
         while (list.size() > HIGH_SCORE_MAX_COUNT)
@@ -234,6 +256,8 @@ public class User {
         map.put(KEY_FIRSTTIME, firstTime);
         map.put(KEY_INDEX, indexSelected);
         map.put(KEY_HIGHSCORE, convertAtoS(highScoreList));
+        map.put(KEY_MUSIC_LEVEL, musicLevel);
+        map.put(KEY_SOUND_LEVEL, soundLevel);
 
         return map;
     }

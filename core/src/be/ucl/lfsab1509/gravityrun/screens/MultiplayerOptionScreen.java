@@ -54,7 +54,7 @@ public class MultiplayerOptionScreen extends AbstractMenuScreen {
             public void clicked(InputEvent event, float x, float y) {
                 write("[4:" +  game.user.getMultiLives() + ":" + difficulty + ":" + game.user.getMultiMode() +"]#");
                 abstractMultiPlayScreen = (game.user.getMultiMode() == 0)
-                        ? new MultiPlayScreen(game)
+                        ? new MultiPlayFirstModeScreen(game)
                         : new MultiPlaySecondModeScreen(game);
 
                 setMultiPlayScreen(abstractMultiPlayScreen);

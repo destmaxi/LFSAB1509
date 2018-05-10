@@ -3,7 +3,6 @@ package be.ucl.lfsab1509.gravityrun.tools;
 import com.badlogic.gdx.utils.Array;
 
 import be.ucl.lfsab1509.gravityrun.screens.AbstractMultiPlayScreen;
-import be.ucl.lfsab1509.gravityrun.screens.MultiPlayScreen;
 
 public abstract class BluetoothManager {
 

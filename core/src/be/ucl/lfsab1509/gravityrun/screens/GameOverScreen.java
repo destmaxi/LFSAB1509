@@ -37,9 +37,9 @@ class GameOverScreen extends AbstractMenuScreen {
                     int lives = game.user.getMultiLives();
                     int difficulty = game.user.getMulti_IndexSelected();
                     write("[" + 4 + ":" +  lives + ":" + difficulty + ":" + GravityRun.HEIGHT / 5 + "]#");
-                    MultiPlayScreen multiPlayScreen = new MultiPlayScreen(game);
-                    setMultiPlayScreen(multiPlayScreen);
-                    screenManager.set(multiPlayScreen);
+                    MultiPlayFirstModeScreen multiPlayFirstModeScreen = new MultiPlayFirstModeScreen(game);
+                    setMultiPlayScreen(multiPlayFirstModeScreen);
+                    screenManager.set(multiPlayFirstModeScreen);
                 }
                 else
                     screenManager.set(new SoloPlayScreen(game));
@@ -85,9 +85,9 @@ class GameOverScreen extends AbstractMenuScreen {
 
     private void handelInput() {
         if (MultiplayerConnectionScreen.isClient && MultiplayerConnectionScreen.ready) {
-            MultiPlayScreen multiPlayScreen = new MultiPlayScreen(game);
-            setMultiPlayScreen(multiPlayScreen);
-            screenManager.set(multiPlayScreen);
+            MultiPlayFirstModeScreen multiPlayFirstModeScreen = new MultiPlayFirstModeScreen(game);
+            setMultiPlayScreen(multiPlayFirstModeScreen);
+            screenManager.set(multiPlayFirstModeScreen);
         }
     }
 

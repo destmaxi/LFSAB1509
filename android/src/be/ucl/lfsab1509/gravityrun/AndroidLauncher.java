@@ -11,7 +11,7 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.crashlytics.android.Crashlytics;
 
 import be.ucl.lfsab1509.gravityrun.screens.AbstractMultiPlayScreen;
-import be.ucl.lfsab1509.gravityrun.screens.MultiPlayScreen;
+import be.ucl.lfsab1509.gravityrun.screens.MultiPlayFirstModeScreen;
 import be.ucl.lfsab1509.gravityrun.tools.AndroidBluetoothManager;
 import be.ucl.lfsab1509.gravityrun.tools.BluetoothConstants;
 import be.ucl.lfsab1509.gravityrun.tools.BluetoothFragment;
@@ -72,7 +72,7 @@ public class AndroidLauncher extends AndroidApplication {
         BluetoothFragment bluetoothFragment = new BluetoothFragment(this, handler);
         gravityRun = new GravityRun(bluetoothFragment);
         androidBluetoothManager = bluetoothFragment.getAndroidBluetoothManager();
-        multiPlayScreen = new MultiPlayScreen(gravityRun, false);
+        multiPlayScreen = new MultiPlayFirstModeScreen(gravityRun, false);
         initialize(gravityRun, config);
     }
 

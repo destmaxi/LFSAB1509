@@ -12,7 +12,7 @@ import be.ucl.lfsab1509.gravityrun.sprites.EmptyBonus;
 import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 
 //FIXME revenir en arriere quand perdu (sauvegarder obstacle / bonus)
-public class MultiPlayScreen extends AbstractMultiPlayScreen {
+public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
 
     private ArrayList<Integer> caughtBonusIds;
 
@@ -21,11 +21,11 @@ public class MultiPlayScreen extends AbstractMultiPlayScreen {
 
     private long seed;
 
-    public MultiPlayScreen(GravityRun gravityRun, boolean startMultiPlayScreen) {
+    public MultiPlayFirstModeScreen(GravityRun gravityRun, boolean startMultiPlayScreen) {
         super(gravityRun, startMultiPlayScreen);
     }
 
-    MultiPlayScreen(GravityRun gravityRun) {
+    MultiPlayFirstModeScreen(GravityRun gravityRun) {
         super(gravityRun);
 
         caughtBonusIds = new ArrayList<>();

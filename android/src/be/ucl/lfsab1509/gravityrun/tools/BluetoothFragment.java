@@ -18,7 +18,6 @@ import java.util.Set;
 import be.ucl.lfsab1509.gravityrun.AndroidLauncher;
 import be.ucl.lfsab1509.gravityrun.R;
 import be.ucl.lfsab1509.gravityrun.screens.AbstractMultiPlayScreen;
-import be.ucl.lfsab1509.gravityrun.screens.MultiPlayScreen;
 
 public class BluetoothFragment extends BluetoothManager implements BluetoothConstants
 {

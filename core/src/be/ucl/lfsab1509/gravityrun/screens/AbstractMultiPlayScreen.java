@@ -225,7 +225,7 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
             return;
 
         MultiplayerConnectionScreen.ready = false;
-        setMultiPlayScreen(new MultiPlayScreen(game, false));
+        setMultiPlayScreen(new MultiPlayFirstModeScreen(game, false));
 
         while (!(screenManager.peek() instanceof  HomeScreen))
             screenManager.pop();

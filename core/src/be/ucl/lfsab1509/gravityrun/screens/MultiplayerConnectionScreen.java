@@ -1,8 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
@@ -77,7 +75,7 @@ public class MultiplayerConnectionScreen extends AbstractMenuScreen {
         if (isClient && ready) {
             System.out.println("multiplayerMode = " + game.user.getMultiMode());
             abstractMultiPlayScreen = (game.user.getMultiMode() == 0)
-                    ? new MultiPlayScreen(game)
+                    ? new MultiPlayFirstModeScreen(game)
                     : new MultiPlaySecondModeScreen(game);
 
             setMultiPlayScreen(abstractMultiPlayScreen);

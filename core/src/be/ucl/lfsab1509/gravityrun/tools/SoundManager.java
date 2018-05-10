@@ -11,16 +11,20 @@ public class SoundManager {
     private float soundLevel;
     private float musicLevel;
 
-    public SoundManager() {
+    public SoundManager(float soundLevel, float musicLevel) {
         this.bonus = Gdx.audio.newSound(Gdx.files.internal("sounds/bonus.wav"));
         this.gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/Game.mp3"));
         this.marbleBreak = Gdx.audio.newSound(Gdx.files.internal("sounds/break.wav"));
         this.menuMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/Menu.mp3"));
         gameMusic.setLooping(true);
         menuMusic.setLooping(true);
-        musicLevel = 0.8f;
-        soundLevel = 0.5f;
-	setMusicLevel(musicLevel);
+        this.soundLevel = soundLevel;
+        this.musicLevel = musicLevel;
+        setMusicLevel(musicLevel);
+    }
+
+    public SoundManager() {
+        this(0.5f, 0.8f);
     }
 
     // called when simply exiting the app with back button
@@ -41,13 +45,13 @@ public class SoundManager {
             marbleBreak.play(soundLevel);
     }
 
-    public void setMusicLevel(float musicLevel){
+    public void setMusicLevel(float musicLevel) {
         this.musicLevel = musicLevel;
         gameMusic.setVolume(musicLevel);
         menuMusic.setVolume(musicLevel);
     }
 
-    public void setSoundLevel(float soundLevel){
+    public void setSoundLevel(float soundLevel) {
         this.soundLevel = soundLevel;
     }
 

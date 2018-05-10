@@ -52,14 +52,14 @@ public class OptionScreen extends AbstractMenuScreen {
         Label musicLabel = new Label(game.i18n.format("music_level"), game.tableSkin);
 
         Slider musicSlider = new Slider(0f, 1f, 0.05f, false, game.tableSkin);
-        musicSlider.setValue(1f);
-        musicSlider.addListener(new MusicListener(soundManager, musicSlider));
+        musicSlider.setValue(game.user.getMusicLevel());
+        musicSlider.addListener(new MusicListener(soundManager, musicSlider, game));
 
         Label soundLabel = new Label(game.i18n.format("sound_level"), game.tableSkin);
 
         Slider soundSlider = new Slider(0f, 1f, 0.05f, false, game.tableSkin);
-        soundSlider.setValue(0.5f);
-        soundSlider.addListener(new SoundListener(soundManager, soundSlider));
+        soundSlider.setValue(game.user.getSoundLevel());
+        soundSlider.addListener(new SoundListener(soundManager, soundSlider, game));
 
         Table table = new Table();
         table.add(title).expandX();
@@ -165,40 +165,47 @@ public class OptionScreen extends AbstractMenuScreen {
     private class MusicListener extends DragListener{
         private SoundManager soundManager;
         private Slider musicSlider;
+        private GravityRun game;
 
-        public MusicListener(SoundManager soundManager, Slider musicSlider){
+        public MusicListener(SoundManager soundManager, Slider musicSlider, GravityRun game){
             this.soundManager = soundManager;
             this.musicSlider = musicSlider;
+	    this.game = game;
         }
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
-            soundManager.setMusicLevel(musicSlider.getValue());
+	    setVolume();
             return true;
         }
         @Override
         public void touchDragged(InputEvent event, float x, float y, int pointer){
-            soundManager.setMusicLevel(musicSlider.getValue());
+	    setVolume();
         }
         @Override
         public void touchUp(InputEvent event, float x, float y, int pointer, int button){
-            soundManager.setMusicLevel(musicSlider.getValue());
+	    setVolume();
         }
+
+        private void setVolume(){
+            soundManager.setMusicLevel(musicSlider.getValue());
+            game.user.setMusicLevel(musicSlider.getValue());
+	}
 
     }
 
     private class SoundListener extends DragListener{
         private SoundManager soundManager;
         private Slider soundSlider;
+        private GravityRun game;
 
-        public SoundListener(SoundManager soundManager, Slider soundSlider){
+        public SoundListener(SoundManager soundManager, Slider soundSlider, GravityRun game){
             this.soundManager = soundManager;
             this.soundSlider = soundSlider;
+	    this.game = game;
         }
 
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button){
-            //soundManager.setSoundLevel(soundSlider.getValue());
-            //soundManager.gotBonus();
             return true;
         }
 
@@ -206,8 +213,10 @@ public class OptionScreen extends AbstractMenuScreen {
         public void touchUp(InputEvent event, float x, float y, int pointer, int button){
             soundManager.setSoundLevel(soundSlider.getValue());
             soundManager.gotBonus();
+            soundManager.setSoundLevel(soundSlider.getValue());
+            game.user.setSoundLevel(soundSlider.getValue());
         }
-    }
 
+    }
 
 }

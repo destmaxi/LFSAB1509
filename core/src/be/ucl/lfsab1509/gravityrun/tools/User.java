@@ -1,7 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.tools;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.Json;
 

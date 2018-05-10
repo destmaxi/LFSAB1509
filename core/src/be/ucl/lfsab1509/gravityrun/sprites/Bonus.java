@@ -1,7 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.screens.AbstractPlayScreen;
-
 import com.badlogic.gdx.graphics.Texture;
 
 import java.util.Random;
@@ -30,6 +29,10 @@ public abstract class Bonus extends Sprite {
         bounds.x = position.x;
     }
 
+    public abstract int getValue();
+
+    public abstract boolean isFinished(Marble marble);
+
     @Override
     public boolean collides(Marble marble) {
         return overlaps(marble);
@@ -42,10 +45,6 @@ public abstract class Bonus extends Sprite {
     public int getOffset() {
         return offset;
     }
-
-    public abstract int getValue();
-
-    public abstract boolean isFinished(Marble marble);
 
     public void setBonusId(int bonusId) {
         this.bonusId = bonusId;

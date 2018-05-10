@@ -12,7 +12,6 @@ public abstract class Sprite {
 
     Random random;
     Rectangle bounds;
-    //Marble marble;
     Texture texture;
     Vector2 position;
 
@@ -47,4 +46,5 @@ public abstract class Sprite {
     public void render(SpriteBatch spriteBatch) {
         spriteBatch.draw(texture, position.x, position.y);
     }
+
 }

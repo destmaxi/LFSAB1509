@@ -30,7 +30,7 @@ public class MultiplayerOptionScreen extends AbstractMenuScreen {
             }
         });
 
-        TextButton lvlButton = new TextButton(game.i18n.format("choose_lvl"), game.tableSkin, "round");
+        TextButton lvlButton = new TextButton(game.i18n.format("level_display"), game.tableSkin, "round");
         lvlButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

@@ -1,7 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -35,15 +34,15 @@ class ScoreboardScreen extends AbstractMenuScreen {
 
         Table table = new Table();
         table.add(title).colspan(5).expandX();
-        table.row();//.expandX().expandY();
-        table.add(beginnerLabel).expandY().colspan(3).fillX().left();
-        table.add(listWidget[0]).expandY().colspan(2).center();
-        table.row();//.colspan(5);
-        table.add(intermediateLabel).expandY().colspan(3).fillX().left();
-        table.add(listWidget[1]).expandY().colspan(2).center();
-        table.row();//.colspan(5);
-        table.add(expertLabel).expandY().colspan(3).fillX().left();
-        table.add(listWidget[2]).expandY().colspan(2).center();
+        table.row();
+        table.add(beginnerLabel).colspan(3).expandY().fillX().left().padTop((height - containerHeight) / 2);
+        table.add(listWidget[0]).center().colspan(2).expandY().padTop((height - containerHeight) / 2);
+        table.row();
+        table.add(intermediateLabel).colspan(3).expandY().fillX().left().padTop((height - containerHeight) / 2);
+        table.add(listWidget[1]).center().colspan(2).expandY().padTop((height - containerHeight) / 2);
+        table.row();
+        table.add(expertLabel).colspan(3).expandY().fillX().left().padTop((height - containerHeight) / 2);
+        table.add(listWidget[2]).center().colspan(2).expandY().padTop((height - containerHeight) / 2);
 
         initStage(table);
     }

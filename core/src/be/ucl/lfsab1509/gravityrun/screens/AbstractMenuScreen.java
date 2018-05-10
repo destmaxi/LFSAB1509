@@ -129,20 +129,19 @@ abstract class AbstractMenuScreen extends Screen {
 
                 @Override
                 public boolean handle(Event event) {
-                    if (!(event instanceof InputEvent)) {
+                    if (!(event instanceof InputEvent))
                         return false;
-                    }
+
                     InputEvent inputEvent = (InputEvent) event;
-                    if (inputEvent.getType() != InputEvent.Type.touchDown) {
+                    if (inputEvent.getType() != InputEvent.Type.touchDown)
                         return false;
-                    }
+
                     Vector2 position = inputEvent.toCoordinates(event.getListenerActor(), new Vector2());
                     if (isOutsideOfDialog(position.x, position.y)) {
                         EmptyButtonsDialog.this.requestHide();
                         return true;
-                    } else {
+                    } else
                         return false;
-                    }
                 }
 
                 private boolean isOutsideOfDialog(float x, float y) {
@@ -187,12 +186,6 @@ abstract class AbstractMenuScreen extends Screen {
 
     public interface ListResultCallback {
 
-        /**
-         * Méthode appelée par la boîte de dialogue lorsqu'un item est sélectionné.
-         * Pour le moment, un appel sur le bouton "Annuler" n'appelle pas ce callback.
-         *
-         * @param selected l'item sélectionné.
-         */
         void callback(String selected);
 
     }

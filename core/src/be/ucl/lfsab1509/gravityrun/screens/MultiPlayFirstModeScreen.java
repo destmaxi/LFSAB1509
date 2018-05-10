@@ -216,15 +216,10 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
 
     private void addPositionToOpponentMarble(String[] message) {
         try {
-            opponentMarble.addPosition(getFloatFromStr(message[1]),
-                    getFloatFromStr(message[2]),
-                    getBooleanFromStr(message[3]),
-                    getBooleanFromStr(message[4]),
-                    getBooleanFromStr(message[5]),
-                    getFloatFromStr(message[6]),
-                    getFloatFromStr(message[7]),
-                    getBooleanFromStr(message[9]),
-                    getFloatFromStr(message[8]));
+            opponentMarble.addPosition(getFloatFromStr(message[1]), getFloatFromStr(message[6]));
+            opponentMarble.setBlockedObstacle(getBooleanFromStr(message[3]), getBooleanFromStr(message[4]), getBooleanFromStr(message[5]));
+            opponentMarble.setBonusStatus(getFloatFromStr(message[2]), getFloatFromStr(message[7]), getBooleanFromStr(message[9]));
+            opponentMarble.setScore((int) getFloatFromStr(message[8]));
 
             if (opponentMarblePositionUpdateTime >= 1f) {
                 opponentMarble.getCenterPosition().x = getFloatFromStr(message[10]);

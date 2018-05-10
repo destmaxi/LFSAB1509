@@ -55,16 +55,9 @@ public class Marble {
             this.lives = 0;
     }
 
-    public void addPosition(float gyroY, float slowDown, boolean blockedOnLeft, boolean blockedOnRight, boolean blockedOnTop, float positionZ, float speed, boolean invincible, float score) {
+    public void addPosition(float gyroY, float positionZ) {
         this.gyroY = gyroY;
         this.position.z = positionZ;
-        this.slowDown = slowDown;
-        this.blockedOnTop = blockedOnTop;
-        this.blockedOnRight = blockedOnRight;
-        this.blockedOnLeft = blockedOnLeft;
-        this.speed = speed;
-        this.score = (int) score;
-        this.invincible = invincible;
     }
 
     void addScoreBonus() {
@@ -200,6 +193,18 @@ public class Marble {
             position.x = width - getRadius();
     }
 
+    public void setBonusStatus(float slowDown, float speed, boolean invincible) {
+        this.slowDown = slowDown;
+        this.speed = speed;
+        this.invincible = invincible;
+    }
+
+    public void setBlockedObstacle(boolean blockedOnLeft, boolean blockedOnRight, boolean blockedOnTop) {
+        this.blockedOnLeft = blockedOnLeft;
+        this.blockedOnRight = blockedOnRight;
+        this.blockedOnTop = blockedOnTop;
+    }
+
     void setBlockedOnLeft(boolean blockedOnLeft) {
         this.blockedOnLeft = blockedOnLeft;
     }
@@ -246,6 +251,10 @@ public class Marble {
 
     public void setRepositioning(float repositioning) {
         this.repositioning = repositioning;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 
     void setSlowDown(float slowDown) {

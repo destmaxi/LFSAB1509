@@ -233,6 +233,22 @@ public class AndroidBluetoothManager implements BluetoothConstants {
         connectedThread.write(out);
     }
 
+    private void closeServerSocket(BluetoothServerSocket serverSocket) {
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            Log.e(TAG, "error while closing socket");
+        }
+    }
+
+    private void closeSocket(BluetoothSocket socket) {
+        try {
+            socket.close();
+        } catch (IOException e) {
+            Log.e(TAG, "error while closing socket");
+        }
+    }
+
     private class AcceptThread extends Thread {
 
         private final BluetoothServerSocket mmServerSocket;
@@ -252,7 +268,7 @@ public class AndroidBluetoothManager implements BluetoothConstants {
         }
 
         public void run() {
-            BluetoothSocket socket = null;
+            BluetoothSocket socket;
             while (mState != STATE_CONNECTED) {
                 try {
                     socket = mmServerSocket.accept();
@@ -263,41 +279,33 @@ public class AndroidBluetoothManager implements BluetoothConstants {
                     Log.i(TAG, "Connection accepted :" + mState);
 
                     synchronized (AndroidBluetoothManager.this) {
-                        switch (mState) {
-                            case STATE_LISTEN:
-                            case STATE_CONNECTING:
-                                // Situation normal. Start the connected thread.
-                                Log.i(TAG, "Accept Connecting");
-                                connected(socket, socket.getRemoteDevice());
-                                break;
-                            case STATE_NONE:
-                            case STATE_CONNECTED:
-                                try {
-                                    socket.close();
-                                } catch (IOException e) {
-                                    Log.e(TAG, "error while closing socket");
-                                }
-                                break;
-                        }
+                        checkState(socket);
                     }
-                    try {
-                        mmServerSocket.close();
-                    } catch (IOException e) {
-                        Log.e(TAG, "error while closing socket");
-                    }
+                    closeServerSocket(mmServerSocket);
                     break;
                 }
             }
             Log.i(TAG, "END mAcceptThread");
         }
 
+        private void checkState(BluetoothSocket socket) {
+            switch (mState) {
+                case STATE_LISTEN:
+                case STATE_CONNECTING:
+                    // Situation normal. Start the connected thread.
+                    Log.i(TAG, "Accept Connecting");
+                    connected(socket, socket.getRemoteDevice());
+                    break;
+                case STATE_NONE:
+                case STATE_CONNECTED:
+                    closeSocket(socket);
+                    break;
+            }
+        }
+
         void cancel() {
             Log.d(TAG, "cancel " + this);
-            try {
-                mmServerSocket.close();
-            } catch (IOException e) {
-                Log.e(TAG, "error while closing socket");
-            }
+            closeServerSocket(mmServerSocket);
         }
     }
 
@@ -327,11 +335,7 @@ public class AndroidBluetoothManager implements BluetoothConstants {
                 mmSocket.connect();
             } catch (IOException connectException) {
                 Log.e(TAG, "couldn't connect socket");
-                try {
-                    mmSocket.close();
-                } catch (IOException closeException) {
-                    Log.e(TAG, "unable to close() socket during connection failure", closeException);
-                }
+                closeSocket(mmSocket);
                 connectionFailed();
                 return;
             }
@@ -344,11 +348,7 @@ public class AndroidBluetoothManager implements BluetoothConstants {
         }
 
         void cancel() {
-            try {
-                mmSocket.close();
-            } catch (IOException e) {
-                Log.e(TAG, "error while closing socket");
-            }
+            closeSocket(mmSocket);
         }
     }
 
@@ -396,20 +396,16 @@ public class AndroidBluetoothManager implements BluetoothConstants {
 
         void write(byte[] buffer) {
             try {
-                for (byte b : buffer)
-
+             //   for (byte b : buffer)
                     mmOutStream.write(buffer);
+
             } catch (IOException e) {
                 Log.e(TAG, "Exception during write", e);
             }
         }
 
         void cancel() {
-            try {
-                mmSocket.close();
-            } catch (IOException e) {
-                Log.e(TAG, "close() of connect socket failed", e);
-            }
+            closeSocket(mmSocket);
         }
     }
 }

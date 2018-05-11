@@ -76,7 +76,7 @@ public class MultiplayerOptionScreen extends AbstractMenuScreen {
         table.row();
         table.add(levelButton).expandX().fillX();
         table.row();
-        table.add(startGameButton).expandX().fillX().padTop(height - containerHeight);
+        table.add(startGameButton).expandX().fillX().padTop((height - containerHeight) / 2);
 
         initStage(table);
     }

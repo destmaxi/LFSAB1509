@@ -108,8 +108,8 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
     @Override
     void initializeTextures() {
         super.initializeTextures();
-        opponentMarblesImage = new Texture("drawable-" + calculateStandardWidth(GravityRun.WIDTH) + "/marbles_opponent.png");
-        opponentMarblesInvincibleImage = new Texture("drawable-" + calculateStandardWidth(GravityRun.WIDTH) + "/marbles_opponent_invincible.png");
+        opponentMarblesImage = new Texture("drawable-" + calculateStandardWidth(width) + "/marbles_opponent.png");
+        opponentMarblesInvincibleImage = new Texture("drawable-" + calculateStandardWidth(width) + "/marbles_opponent_invincible.png");
     }
 
     @Override

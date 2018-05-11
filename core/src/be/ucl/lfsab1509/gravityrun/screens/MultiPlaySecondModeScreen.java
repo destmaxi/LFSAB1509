@@ -4,7 +4,6 @@ import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.sprites.Bonus;
 import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import be.ucl.lfsab1509.gravityrun.sprites.SlowDown;
-import com.badlogic.gdx.graphics.Texture;
 
 import java.util.Random;
 

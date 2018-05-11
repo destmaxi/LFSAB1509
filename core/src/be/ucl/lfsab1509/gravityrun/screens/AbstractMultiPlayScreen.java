@@ -110,7 +110,7 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
     void initializeTextures() {
         super.initializeTextures();
         opponentLivesImage = new Texture("drawable-" + calculateStandardWidth(GravityRun.WIDTH) + "/opponentlives.png");
-        youWinImage = new Texture("drawable-" + calculateStandardWidth(GravityRun.WIDTH) + "/youwin.png");
+        youWinImage = new Texture("drawable-" + calculateStandardWidth(width) + "/youwin.png");
     }
 
     @Override

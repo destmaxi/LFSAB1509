@@ -276,7 +276,7 @@ public class Marble {
     }
 
     private void updateJump() {
-        if (myMarble && (Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) && position.z <= 0)
+        if (myMarble && position.z == 0 && (Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)))
             position.z = JUMP_HEIGHT;
 
         if (position.z > 0 && !dead || (position.z <= 0 && dead && inHole))

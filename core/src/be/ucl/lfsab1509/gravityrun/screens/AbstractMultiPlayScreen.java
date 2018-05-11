@@ -24,8 +24,8 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
     private static final int START_TIME = 12;
     private static final int SYNC_TIME = 11;
 
-    boolean won = false;
-    private boolean ackDiedReceved = false, initDone = false, opponentReady = false, startMultiPlayState;
+    boolean initDone = false, opponentReady = false, won = false;
+    private boolean ackDiedReceved = false, startMultiPlayState;
     Label opponentLivesLabel, opponentScoreLabel;
     private Label countDownLabel;
     private long hostTimeStamp1, startTime = Long.MAX_VALUE;

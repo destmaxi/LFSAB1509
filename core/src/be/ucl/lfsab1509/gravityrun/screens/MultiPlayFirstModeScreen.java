@@ -91,6 +91,9 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
     public void initGame(float dt) {
         super.initGame(dt);
 
+        if (initDone || !opponentReady)
+            return;
+
         if (gotSeed) {
             initObstacles();
             initBonuses();

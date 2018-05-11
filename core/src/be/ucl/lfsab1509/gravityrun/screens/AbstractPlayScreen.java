@@ -273,7 +273,7 @@ public abstract class AbstractPlayScreen extends Screen {
         if (obstacle.isOutOfScreen(camera.position.y, height))
             setObstacle(i);
 
-        if (!marble.isCollideWall() || marble.getCollidedWall() == i) {
+        if (!marble.isCollidingWall() || marble.getCollidedWall() == i) {
             sendInHole(obstacle, marble);
             obstacle.collides(marble);
             marble.setCollidedWall(i);

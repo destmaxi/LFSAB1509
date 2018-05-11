@@ -17,7 +17,7 @@ public class Marble {
     private static int MOVEMENT;
 
     private ArrayList<Bonus> caughtBonuses;
-    private boolean blockedOnLeft = false, blockedOnRight = false, blockedOnTop = false, dead = false, inHole = false, invincible = false, inWall = false, isCollideWall = false, lifeLost = false, myMarble;
+    private boolean blockedOnLeft = false, blockedOnRight = false, blockedOnTop = false, dead = false, inHole = false, invincible = false, inWall = false, isCollidingWall = false, lifeLost = false, myMarble;
     private Circle bounds;
     private float repositioning = 1f, slowDown = 1f, speed = 1f, gyroY;
     private int activeInvincibles, activeSlowdowns, collidedWall, difficulty, height, lives = 5, score, scoreBonus, width;
@@ -75,12 +75,20 @@ public class Marble {
         return bounds;
     }
 
+    public ArrayList<Bonus> getCaughtBonuses() {
+        return caughtBonuses;
+    }
+
     public Vector3 getCenterPosition() {
         return position;
     }
 
     public int getCollidedWall() {
         return collidedWall;
+    }
+
+    public Integer getLives() {
+        return lives;
     }
 
     public TextureRegion getMarble() {
@@ -91,8 +99,12 @@ public class Marble {
         return invincible ? marbleAnimationInvincible : marbleAnimation;
     }
 
-    public ArrayList<Bonus> getCaughtBonuses() {
-        return caughtBonuses;
+    int getNormalDiameter() {
+        return getMarbleAnimation().getDiameter(0);
+    }
+
+    private int getRadius() {
+        return getMarbleAnimation().getDiameter(position.z) / 2;
     }
 
     public Integer getScore() {
@@ -105,18 +117,6 @@ public class Marble {
 
     public float getSpeed() {
         return speed;
-    }
-
-    public Integer getLives() {
-        return lives;
-    }
-
-    int getNormalDiameter() {
-        return getMarbleAnimation().getDiameter(0);
-    }
-
-    private int getRadius() {
-        return getMarbleAnimation().getDiameter(position.z) / 2;
     }
 
     public float getSpeedFactor() {
@@ -143,8 +143,8 @@ public class Marble {
         return blockedOnTop;
     }
 
-    public boolean isCollideWall() {
-        return isCollideWall;
+    public boolean isCollidingWall() {
+        return isCollidingWall;
     }
 
     public boolean isDead() {
@@ -183,12 +183,6 @@ public class Marble {
             position.x = width - getRadius();
     }
 
-    public void setBonusStatus(boolean invincible, float slowDown, float speed) {
-        this.invincible = invincible;
-        this.slowDown = slowDown;
-        this.speed = speed;
-    }
-
     public void setBlockedObstacle(boolean blockedOnLeft, boolean blockedOnRight, boolean blockedOnTop) {
         this.blockedOnLeft = blockedOnLeft;
         this.blockedOnRight = blockedOnRight;
@@ -207,12 +201,18 @@ public class Marble {
         this.blockedOnTop = blockedOnTop;
     }
 
+    public void setBonusStatus(boolean invincible, float slowDown, float speed) {
+        this.invincible = invincible;
+        this.slowDown = slowDown;
+        this.speed = speed;
+    }
+
     public void setCollidedWall(int collidedWall) {
         this.collidedWall = collidedWall;
     }
 
-    void setCollideWall(boolean collideWall) {
-        isCollideWall = collideWall;
+    void setCollidingWall(boolean collidingWall) {
+        isCollidingWall = collidingWall;
     }
 
     public void setDead() {
@@ -271,10 +271,6 @@ public class Marble {
         bounds.setPosition(position.x, position.y);
     }
 
-    private void updateScore() {
-        score = (int) (getCenterPosition().y / height * 100) + scoreBonus;
-    }
-
     private void updateJump() {
         if (myMarble && position.z == 0 && (Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE)))
             position.z = JUMP_HEIGHT;
@@ -300,19 +296,12 @@ public class Marble {
         position.add(x, y, 0);
     }
 
+    private void updateScore() {
+        score = (int) (getCenterPosition().y / height * 100) + scoreBonus;
+    }
+
     private void updateSpeed() {
-        if (score < 1000)
-            speed = 1f;
-        else if (score < 2000)
-            speed = 1.2f;
-        else if (score < 3000)
-            speed = 1.4f;
-        else if (score < 4000)
-            speed = 1.6f;
-        else if (score < 5000)
-            speed = 1.8f;
-        else
-            speed = 2f;
+        speed = (float) Math.log10(score / 100. + 10);
     }
 
 }

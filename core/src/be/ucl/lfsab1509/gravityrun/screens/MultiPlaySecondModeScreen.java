@@ -56,14 +56,14 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
     @Override
     void bonusCollides(Bonus bonus, int i, Marble marble) {
         switch (bonus.getValue()) {
-            case 1:
+            case Bonus.NEW_LIFE:
                 write("[" + LOST_LIFE + "]#");
                 break;
-            case 2:
-                write("[" + SLOWDOWN + "]#");
-                break;
-            case 3:
+            case Bonus.SCORE_BONUS:
                 write("[" + LOST_SCORE_BONUS + "]#");
+                break;
+            case Bonus.SLOWDOWN:
+                write("[" + SLOWDOWN + "]#");
                 break;
         }
 

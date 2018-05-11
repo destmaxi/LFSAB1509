@@ -7,15 +7,15 @@ import java.util.Random;
 
 public abstract class Bonus extends Sprite {
 
-    static final int NEW_LIFE = 1;
-    static final int SLOWDOWN = 2;
-    static final int SCORE_BONUS = 3;
     static final int CAM_REPOSITION = 4;
     static final int EMPTY_BONUS = 5;
     static final int INVINCIBLE = 6;
+    public static final int NEW_LIFE = 1;
+    public static final int SCORE_BONUS = 3;
+    public static final int SLOWDOWN = 2;
 
-    private int bonusId, offset;
     AbstractPlayScreen playScreen;
+    private int bonusId, offset;
 
     Bonus(float y, int offset, Texture texture) {
         super(0, y, texture);

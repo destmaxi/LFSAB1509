@@ -1,7 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.sprites.Bonus;
 import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,10 +14,19 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
 
+    static final int ACK_DEAD = 9;
     private static final long COUNTDOWN = 3000L;
+    private static final int END_GAME = 10;
+    private static final int GAME_INFO = 4;
+    private static final int INIT_MSG = 0;
+    private static final int INIT_SYNCH_MSG = 7;
+    static final int OPPONENT_DEAD = 8;
+    static final int OPPONENT_LIVES = 13;
+    private static final int START_TIME = 12;
+    private static final int SYNC_TIME = 11;
 
-    private boolean diedReceved = false, initDone = false, opponentReady = false, startMultiPlayState = false;
-    Label opponentScoreLabel, opponentLivesLabel;
+    private boolean ackDiedReceved = false, initDone = false, opponentReady = false, startMultiPlayState;
+    Label opponentLivesLabel, opponentScoreLabel;
     private Label countDownLabel;
     private long hostTimeStamp1, startTime = Long.MAX_VALUE;
     private Long countDown = 0L;
@@ -40,16 +48,16 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
         countDownStage = new Stage(new ScreenViewport());
         countDownStage.addActor(countDownLabel);
 
-        opponentScoreLabel = new Label("0", game.aaronScoreSkin, "opponent_score");
-        opponentScoreLabel.setAlignment(Align.center);
-        opponentScoreLabel.setPosition((GravityRun.WIDTH - opponentScoreLabel.getWidth()) / 2, GravityRun.HEIGHT - 2 * INIT_IMAGE_SIZE);
+        ImageButton opponentLivesButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(opponentLivesImage)));
+        opponentLivesButton.setPosition(GravityRun.WIDTH - 1.95f * INIT_IMAGE_SIZE, GravityRun.HEIGHT - 2 * INIT_IMAGE_SIZE);
 
         opponentLivesLabel = new Label("0", game.aaronScoreSkin, "opponent_score");
         opponentLivesLabel.setAlignment(Align.center);
         opponentLivesLabel.setPosition(GravityRun.WIDTH - (INIT_IMAGE_SIZE + opponentLivesLabel.getWidth()) / 2, GravityRun.HEIGHT - 2 * INIT_IMAGE_SIZE);
 
-        ImageButton opponentLivesButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(opponentLivesImage)));
-        opponentLivesButton.setPosition(GravityRun.WIDTH - 1.95f * INIT_IMAGE_SIZE, GravityRun.HEIGHT - 2 * INIT_IMAGE_SIZE);
+        opponentScoreLabel = new Label("0", game.aaronScoreSkin, "opponent_score");
+        opponentScoreLabel.setAlignment(Align.center);
+        opponentScoreLabel.setPosition((GravityRun.WIDTH - opponentScoreLabel.getWidth()) / 2, GravityRun.HEIGHT - 2 * INIT_IMAGE_SIZE);
 
         scoreStage.addActor(opponentLivesButton);
         scoreStage.addActor(opponentLivesLabel);
@@ -63,7 +71,6 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
     @Override
     void disposeTextures() {
         super.disposeTextures();
-
         opponentLivesImage.dispose();
     }
 
@@ -76,7 +83,7 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
 
         MultiplayerConnectionScreen.ready = false;
         startMultiPlayState = false;
-        write("[10]#");
+        write("[" + END_GAME + "]#");
     }
 
     @Override
@@ -91,7 +98,7 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
 
         if (isHost() && !initialized) {
             hostTimeStamp1 = System.currentTimeMillis();
-            write("[7]#");
+            write("[" + INIT_SYNCH_MSG + "]#");
             initialized = true;
         }
 
@@ -148,72 +155,41 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
         if (gameOver || !playerMarble.isDead())
             return;
 
-        if (!diedReceved)
-            write("[8]#");
+        if (!ackDiedReceved)
+            write("[" + OPPONENT_DEAD + "]#");
     }
 
     @Override
     void updateMarbles(float dt) {
         super.updateMarbles(dt);
 
-        write("[13:" + playerMarble.getLives() + "]#");
-    }
-
-    @Override
-    public void updateOpponentCaughtBonus(Bonus bonus) {
-
+        write("[" + OPPONENT_LIVES + ":" + playerMarble.getLives() + "]#");
     }
 
     public void applyMessage(String[] message) {
         int messagetype = getIntegerFromStr(message[0]);
 
         switch (messagetype) {
-            case 0:
-                if (startMultiPlayState && !opponentReady) {
-                    opponentReady = true;
-                    write("[0]#");
-                } else {
-                    MultiplayerConnectionScreen.ready = true;
-                }
+            case ACK_DEAD:
+                ackDiedReceved = true;
                 break;
-            case 4:
-                try {
-                    game.user.setMultiLives(getIntegerFromStr(message[1]));
-                    game.user.setMulti_IndexSelected(getIntegerFromStr(message[2]));
-                    game.user.setMultiMode(getIntegerFromStr(message[3]));
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    e.printStackTrace();
-                }
-
-                break;
-            case 7:
-                write("[11:" + System.currentTimeMillis() + "]#");
-                break;
-            case 9:
-                diedReceved = true;
-                break;
-            case 10:
+            case END_GAME:
                 endGameReceived = true;
                 break;
-            case 11:
-                long hostTimestamp2 = System.currentTimeMillis();
-                long clientTimestamp = 0;
-                try {
-                    clientTimestamp = getLongFromStr(message[1]) + (hostTimestamp2 - hostTimeStamp1) / 2;
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    e.printStackTrace();
-                }
-                long rtt = hostTimestamp2 - hostTimeStamp1;
-                long clientStartTime = clientTimestamp + COUNTDOWN;
-                startTime = hostTimestamp2 + COUNTDOWN;
-                write("[12:" + clientStartTime + "]#");
+            case GAME_INFO:
+                saveInUser(message);
                 break;
-            case 12:
-                try {
-                    startTime = getLongFromStr(message[1]);
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    e.printStackTrace();
-                }
+            case INIT_MSG:
+                initializeGame();
+                break;
+            case INIT_SYNCH_MSG:
+                write("[" + SYNC_TIME + ":" + System.currentTimeMillis() + "]#");
+                break;
+            case START_TIME:
+                setStartTime(message);
+                break;
+            case SYNC_TIME:
+                syncTime(message);
                 break;
         }
     }
@@ -253,6 +229,14 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
             }
     }
 
+    private void initializeGame() {
+        if (startMultiPlayState && !opponentReady) {
+            opponentReady = true;
+            write("[" + INIT_MSG + "]#");
+        } else
+            MultiplayerConnectionScreen.setReady(true);
+    }
+
     private boolean isValidMessage(String[] strings) {
         int index, end;
         for (String string : strings) {
@@ -275,6 +259,37 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
             screenManager.pop();
 
         ((AbstractMenuScreen) screenManager.peek()).spawnErrorDialog(game.i18n.format("error_connection"), game.i18n.format("error_connection_lost"));
+    }
+
+    private void saveInUser(String[] message) {
+        try {
+            game.user.setMultiLives(getIntegerFromStr(message[1]));
+            game.user.setMulti_IndexSelected(getIntegerFromStr(message[2]));
+            game.user.setMultiMode(getIntegerFromStr(message[3]));
+        } catch (ArrayIndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setStartTime(String[] message) {
+        try {
+            startTime = getLongFromStr(message[1]);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void syncTime(String[] message) {
+        long hostTimestamp2 = System.currentTimeMillis();
+        long clientTimestamp = 0;
+        try {
+            clientTimestamp = getLongFromStr(message[1]) + (hostTimestamp2 - hostTimeStamp1) / 2;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
+        long clientStartTime = clientTimestamp + COUNTDOWN;
+        startTime = hostTimestamp2 + COUNTDOWN;
+        write("[" + START_TIME + ":" + clientStartTime + "]#");
     }
 
 }

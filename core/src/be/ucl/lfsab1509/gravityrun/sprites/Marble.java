@@ -1,7 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
@@ -18,8 +17,7 @@ public class Marble {
     private static int MOVEMENT;
 
     private ArrayList<Bonus> caughtBonuses;
-
-    private boolean blockedOnLeft = false, blockedOnRight = false, blockedOnTop = false, inHole = false, invincible = false, inWall = false, lifeLost = false, myMarble, dead = false, isCollideWall = false;
+    private boolean blockedOnLeft = false, blockedOnRight = false, blockedOnTop = false, dead = false, inHole = false, invincible = false, inWall = false, isCollideWall = false, lifeLost = false, myMarble;
     private Circle bounds;
     private float repositioning = 1f, slowDown = 1f, speed = 1f, gyroY;
     private int activeInvincibles, activeSlowdowns, collidedWall, difficulty, height, lives = 5, score, scoreBonus, width;
@@ -55,16 +53,9 @@ public class Marble {
             this.lives = 0;
     }
 
-    public void addPosition(float gyroY, float slowDown, boolean blockedOnLeft, boolean blockedOnRight, boolean blockedOnTop, float positionZ, float speed, boolean invincible, float score) {
+    public void addPosition(float gyroY, float positionZ) {
         this.gyroY = gyroY;
         this.position.z = positionZ;
-        this.slowDown = slowDown;
-        this.blockedOnTop = blockedOnTop;
-        this.blockedOnRight = blockedOnRight;
-        this.blockedOnLeft = blockedOnLeft;
-        this.speed = speed;
-        this.score = (int) score;
-        this.invincible = invincible;
     }
 
     void addScoreBonus() {
@@ -200,6 +191,18 @@ public class Marble {
             position.x = width - getRadius();
     }
 
+    public void setBonusStatus(boolean invincible, float slowDown, float speed) {
+        this.invincible = invincible;
+        this.slowDown = slowDown;
+        this.speed = speed;
+    }
+
+    public void setBlockedObstacle(boolean blockedOnLeft, boolean blockedOnRight, boolean blockedOnTop) {
+        this.blockedOnLeft = blockedOnLeft;
+        this.blockedOnRight = blockedOnRight;
+        this.blockedOnTop = blockedOnTop;
+    }
+
     void setBlockedOnLeft(boolean blockedOnLeft) {
         this.blockedOnLeft = blockedOnLeft;
     }
@@ -246,6 +249,10 @@ public class Marble {
 
     public void setRepositioning(float repositioning) {
         this.repositioning = repositioning;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 
     void setSlowDown(float slowDown) {

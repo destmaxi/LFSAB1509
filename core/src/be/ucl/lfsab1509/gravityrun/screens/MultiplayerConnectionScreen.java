@@ -87,4 +87,8 @@ public class MultiplayerConnectionScreen extends AbstractMenuScreen {
         }
     }
 
+    static void setReady(boolean ready) {
+        MultiplayerConnectionScreen.ready = ready;
+    }
+
 }

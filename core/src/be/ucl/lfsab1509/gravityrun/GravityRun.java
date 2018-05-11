@@ -53,7 +53,6 @@ public class GravityRun extends Game {
         initializeSkins();
 
         screenManager = new ScreenManager(this);
-        soundManager = new SoundManager();
         spriteBatch = new SpriteBatch();
 
         FileHandle baseFileHandle = Gdx.files.internal("strings/strings");
@@ -68,9 +67,11 @@ public class GravityRun extends Game {
 
         if (!preferences.getBoolean(User.KEY_FIRSTTIME)) {
             user = null;
+            soundManager = new SoundManager();
             screenManager.push(new FirstScreen(this));
         } else {
             user = new User(this, map);
+            soundManager = new SoundManager(user.getSoundLevel(), user.getMusicLevel());
             screenManager.push(new HomeScreen(this));
         }
     }

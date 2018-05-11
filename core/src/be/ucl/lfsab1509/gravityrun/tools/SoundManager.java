@@ -6,18 +6,25 @@ import com.badlogic.gdx.audio.Sound;
 
 public class SoundManager {
 
-    private final float soundLevel = 0.5f;
     private Music gameMusic, menuMusic;
     private Sound bonus, marbleBreak;
+    private float soundLevel;
+    private float musicLevel;
 
-    public SoundManager() {
+    public SoundManager(float soundLevel, float musicLevel) {
         this.bonus = Gdx.audio.newSound(Gdx.files.internal("sounds/bonus.wav"));
         this.gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/Game.mp3"));
         this.marbleBreak = Gdx.audio.newSound(Gdx.files.internal("sounds/break.wav"));
         this.menuMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/Menu.mp3"));
         gameMusic.setLooping(true);
         menuMusic.setLooping(true);
-        gameMusic.setVolume(0.8f);
+        this.soundLevel = soundLevel;
+        this.musicLevel = musicLevel;
+        setMusicLevel(musicLevel);
+    }
+
+    public SoundManager() {
+        this(0.5f, 0.8f);
     }
 
     // called when simply exiting the app with back button
@@ -38,6 +45,30 @@ public class SoundManager {
             marbleBreak.play(soundLevel);
     }
 
+    public void setMusicLevel(float musicLevel) {
+        this.musicLevel = musicLevel;
+        gameMusic.setVolume(musicLevel);
+        menuMusic.setVolume(musicLevel);
+    }
+
+    public void setSoundLevel(float soundLevel) {
+        this.soundLevel = soundLevel;
+    }
+
+    public void playGame() {
+        if (menuMusic.isPlaying())
+            menuMusic.pause();
+        if (!gameMusic.isPlaying())
+            gameMusic.play();
+    }
+
+    public void playMenu() {
+        if (gameMusic.isPlaying())
+            gameMusic.pause();
+        if (!menuMusic.isPlaying())
+            menuMusic.play();
+    }
+
     public void replayGame() {
         if (menuMusic.isPlaying())
             menuMusic.pause();
@@ -55,5 +86,4 @@ public class SoundManager {
             menuMusic.play();
         }
     }
-
 }

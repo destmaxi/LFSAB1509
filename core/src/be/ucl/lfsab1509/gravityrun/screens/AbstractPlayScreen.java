@@ -230,7 +230,7 @@ public abstract class AbstractPlayScreen extends Screen {
         marblesImage = new Texture(basePath + "marbles.png");
         marblesInvincibleImage = new Texture(basePath + "marbles_invincible.png");
         newLifeImage = new Texture(basePath + "newlife.png");
-        playerLivesImage = new Texture("drawable-" + calculateStandardWidth(GravityRun.WIDTH) + "/newlife.png");
+        playerLivesImage = new Texture("drawable-" + calculateStandardWidth(GravityRun.WIDTH) + "/playerlives.png");
         scoreBonusImage = new Texture(basePath + "scorebonus.png");
         slowDownImage = new Texture(basePath + "slowdown.png");
         wallImage = new Texture(basePath + "wall.png");

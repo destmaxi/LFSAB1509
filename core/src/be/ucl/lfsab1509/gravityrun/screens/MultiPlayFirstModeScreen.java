@@ -22,6 +22,7 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
     private float opponentMarblePositionUpdateTime;
     private int bonusId;
     private long seed;
+    private Marble opponentMarble;
     private Texture opponentMarblesImage, opponentMarblesInvincibleImage;
 
     public MultiPlayFirstModeScreen(GravityRun gravityRun, boolean startMultiPlayScreen) {
@@ -152,6 +153,11 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
     }
 
     @Override
+    void renderLoseWin() {
+        renderLoseWin(won ? youWinImage : youLoseImage);
+    }
+
+    @Override
     void update(float dt) {
         super.update(dt);
 
@@ -159,6 +165,8 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
 
         if (opponentMarble.isDead() && playerMarble.isDead())
             gameOver = true;
+        else
+            won = opponentMarble.isDead();
     }
 
     @Override

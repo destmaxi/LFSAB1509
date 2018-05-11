@@ -4,6 +4,7 @@ import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.sprites.Bonus;
 import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import be.ucl.lfsab1509.gravityrun.sprites.SlowDown;
+import com.badlogic.gdx.graphics.Texture;
 
 import java.util.Random;
 
@@ -89,11 +90,8 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
     }
 
     @Override
-    void renderGameOver() {
-        if (playerMarble.isDead())
-            game.spriteBatch.draw(gameOverImage,
-                    camera.position.x - gameOverImage.getWidth() / 2,
-                    camera.position.y);
+    void renderLoseWin() {
+        renderLoseWin(won ? youWinImage : youLoseImage);
     }
 
     @Override
@@ -107,6 +105,8 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
 
         if (opponentDead && playerMarble.isDead())
             gameOver = true;
+        else
+            won = opponentDead;
     }
 
     @Override

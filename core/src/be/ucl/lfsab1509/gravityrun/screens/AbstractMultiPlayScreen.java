@@ -1,7 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -25,13 +24,14 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
     private static final int START_TIME = 12;
     private static final int SYNC_TIME = 11;
 
+    boolean won = false;
     private boolean ackDiedReceved = false, initDone = false, opponentReady = false, startMultiPlayState;
     Label opponentLivesLabel, opponentScoreLabel;
     private Label countDownLabel;
     private long hostTimeStamp1, startTime = Long.MAX_VALUE;
     private Long countDown = 0L;
-    Marble opponentMarble;
     private Stage countDownStage;
+    Texture youWinImage;
     private Texture opponentLivesImage;
 
     AbstractMultiPlayScreen(GravityRun gravityRun, boolean startMultiPlayState) {
@@ -110,6 +110,7 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
     void initializeTextures() {
         super.initializeTextures();
         opponentLivesImage = new Texture("drawable-" + calculateStandardWidth(GravityRun.WIDTH) + "/opponentlives.png");
+        youWinImage = new Texture("drawable-" + calculateStandardWidth(GravityRun.WIDTH) + "/youwin.png");
     }
 
     @Override

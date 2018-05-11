@@ -39,7 +39,7 @@ public abstract class AbstractPlayScreen extends Screen {
     OrthographicCamera camera;
     Random randomBonus, randomObstacle;
     Stage scoreStage;
-    Texture gameOverImage, marblesImage, marblesInvincibleImage, newLifeImage, slowDownImage;
+    Texture marblesImage, marblesInvincibleImage, newLifeImage, slowDownImage, youLoseImage;
     private Texture background, camRepositionImage, holeImage, invincibleImage, largeHoleImage, playerLivesImage, scoreBonusImage, wallImage;
     Viewport viewport;
 
@@ -103,6 +103,8 @@ public abstract class AbstractPlayScreen extends Screen {
     public abstract void initMarbles();
 
     public abstract boolean isInitDone();
+
+    abstract void renderLoseWin();
 
     @Override
     public void dispose() {
@@ -177,7 +179,7 @@ public abstract class AbstractPlayScreen extends Screen {
     void disposeTextures() {
         background.dispose();
         camRepositionImage.dispose();
-        gameOverImage.dispose();
+        youLoseImage.dispose();
         holeImage.dispose();
         invincibleImage.dispose();
         largeHoleImage.dispose();
@@ -223,7 +225,6 @@ public abstract class AbstractPlayScreen extends Screen {
         String basePath = "drawable-" + STANDARD_WIDTH + "/";
         background = new Texture(basePath + "background.png");
         camRepositionImage = new Texture(basePath + "camreposition.png");
-        gameOverImage = new Texture(basePath + "gameover.png");
         holeImage = new Texture(basePath + "hole.png");
         invincibleImage = new Texture(basePath + "invincible.png");
         largeHoleImage = new Texture(basePath + "largehole.png");
@@ -234,6 +235,7 @@ public abstract class AbstractPlayScreen extends Screen {
         scoreBonusImage = new Texture(basePath + "scorebonus.png");
         slowDownImage = new Texture(basePath + "slowdown.png");
         wallImage = new Texture(basePath + "wall.png");
+        youLoseImage = new Texture(basePath + "youlose.png");
     }
 
     void initObstacles() {
@@ -310,7 +312,7 @@ public abstract class AbstractPlayScreen extends Screen {
 
         renderMarbles();
 
-        renderGameOver();
+        renderLoseWin();
 
         game.spriteBatch.end();
 
@@ -318,11 +320,11 @@ public abstract class AbstractPlayScreen extends Screen {
         scoreStage.draw();
     }
 
-    void renderGameOver() {
-        if (gameOver)
-            game.spriteBatch.draw(gameOverImage,
-                    camera.position.x - gameOverImage.getWidth() / 2,
-                    camera.position.y);
+    void renderLoseWin(Texture loseWinImage) {
+        if (playerMarble.isDead())
+            game.spriteBatch.draw(loseWinImage,
+                    camera.position.x - loseWinImage.getWidth() / 2,
+                    camera.position.y + height / 4 - loseWinImage.getHeight() / 4);
     }
 
     void renderMarbles() {

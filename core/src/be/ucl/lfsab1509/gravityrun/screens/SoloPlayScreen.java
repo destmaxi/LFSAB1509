@@ -76,6 +76,11 @@ public class SoloPlayScreen extends AbstractPlayScreen {
     }
 
     @Override
+    void renderLoseWin() {
+        renderLoseWin(youLoseImage);
+    }
+
+    @Override
     public void renderMarbles() {
         playerMarble.render(game.spriteBatch);
     }

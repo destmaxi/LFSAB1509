@@ -3,6 +3,7 @@ package be.ucl.lfsab1509.gravityrun.screens;
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.sprites.*;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -21,6 +22,7 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
     private float opponentMarblePositionUpdateTime;
     private int bonusId;
     private long seed;
+    private Texture opponentMarblesImage, opponentMarblesInvincibleImage;
 
     public MultiPlayFirstModeScreen(GravityRun gravityRun, boolean startMultiPlayScreen) {
         super(gravityRun, startMultiPlayScreen);
@@ -79,6 +81,13 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
     }
 
     @Override
+    void disposeTextures() {
+        super.disposeTextures();
+        opponentMarblesImage.dispose();
+        opponentMarblesInvincibleImage.dispose();
+    }
+
+    @Override
     public void initGame(float dt) {
         super.initGame(dt);
 
@@ -94,16 +103,23 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
     }
 
     @Override
+    void initializeTextures() {
+        super.initializeTextures();
+        opponentMarblesImage = new Texture("drawable-" + calculateStandardWidth(GravityRun.WIDTH) + "/marbles_opponent.png");
+        opponentMarblesInvincibleImage = new Texture("drawable-" + calculateStandardWidth(GravityRun.WIDTH) + "/marbles_opponent_invincible.png");
+    }
+
+    @Override
     public void initMarbles() {
         int level = game.user.getMulti_IndexSelected() + 1;
 
         playerMarble = isHost()
-                ? new Marble(true, true, width / 3, height / 10, STANDARD_WIDTH, level)
-                : new Marble(true, true, width * 2 / 3, height / 10, STANDARD_WIDTH, level);
+                ? new Marble(true, true, level, STANDARD_WIDTH, width / 3, height / 10, marblesImage, marblesInvincibleImage)
+                : new Marble(true, true, level, STANDARD_WIDTH, width * 2 / 3, height / 10, marblesImage, marblesInvincibleImage);
 
         opponentMarble = isHost()
-                ? new Marble(false, true, width * 2 / 3, height / 10, STANDARD_WIDTH, level)
-                : new Marble(false, true, width / 3, height / 10, STANDARD_WIDTH, level);
+                ? new Marble(true, false, level, STANDARD_WIDTH, width * 2 / 3, height / 10, opponentMarblesImage, opponentMarblesInvincibleImage)
+                : new Marble(true, false, level, STANDARD_WIDTH, width / 3, height / 10, opponentMarblesImage, opponentMarblesInvincibleImage);
 
 
         playerMarble.setLives(game.user.getMultiLives());

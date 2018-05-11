@@ -39,7 +39,7 @@ public abstract class AbstractPlayScreen extends Screen {
     OrthographicCamera camera;
     Random randomBonus, randomObstacle;
     Stage scoreStage;
-    Texture gameOverImage, newLifeImage, slowDownImage;
+    Texture gameOverImage, marblesImage, marblesInvincibleImage, newLifeImage, slowDownImage;
     private Texture background, camRepositionImage, holeImage, invincibleImage, largeHoleImage, playerLivesImage, scoreBonusImage, wallImage;
     Viewport viewport;
 
@@ -108,7 +108,6 @@ public abstract class AbstractPlayScreen extends Screen {
     public void dispose() {
         scoreStage.dispose();
 
-        disposeMarbles();
         disposeTextures();
     }
 
@@ -175,11 +174,6 @@ public abstract class AbstractPlayScreen extends Screen {
             marble.setRepositioning(1f);
     }
 
-    private void disposeMarbles() {
-        for (Marble marble : marbles)
-            marble.dispose();
-    }
-
     void disposeTextures() {
         background.dispose();
         camRepositionImage.dispose();
@@ -187,6 +181,8 @@ public abstract class AbstractPlayScreen extends Screen {
         holeImage.dispose();
         invincibleImage.dispose();
         largeHoleImage.dispose();
+        marblesImage.dispose();
+        marblesInvincibleImage.dispose();
         newLifeImage.dispose();
         playerLivesImage.dispose();
         scoreBonusImage.dispose();
@@ -231,6 +227,8 @@ public abstract class AbstractPlayScreen extends Screen {
         holeImage = new Texture(basePath + "hole.png");
         invincibleImage = new Texture(basePath + "invincible.png");
         largeHoleImage = new Texture(basePath + "largehole.png");
+        marblesImage = new Texture(basePath + "marbles.png");
+        marblesInvincibleImage = new Texture(basePath + "marbles_invincible.png");
         newLifeImage = new Texture(basePath + "newlife.png");
         playerLivesImage = new Texture("drawable-" + calculateStandardWidth(GravityRun.WIDTH) + "/newlife.png");
         scoreBonusImage = new Texture(basePath + "scorebonus.png");

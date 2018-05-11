@@ -22,14 +22,11 @@ public class Marble {
     private float repositioning = 1f, slowDown = 1f, speed = 1f, gyroY;
     private int activeInvincibles, activeSlowdowns, collidedWall, difficulty, height, lives = 5, score, scoreBonus, width;
     private MarbleAnimation marbleAnimation, marbleAnimationInvincible;
-    private Texture marble, marbleInvincible;
     private Vector3 position;
 
-    public Marble(boolean myMarble, boolean multiplayer, int x, int y, int standardWidth, int level) {
+    public Marble(boolean multiplayer, boolean myMarble, int level, int standardWidth, int x, int y, Texture marble, Texture marbleInvincible) {
         this.myMarble = myMarble;
         caughtBonuses = new ArrayList<>();
-        marble = new Texture("drawable-" + standardWidth + "/marbles.png");
-        marbleInvincible = new Texture("drawable-" + standardWidth + "/marbles_invincible.png");
         marbleAnimation = new MarbleAnimation(marble, standardWidth);
         marbleAnimationInvincible = new MarbleAnimation(marbleInvincible, standardWidth);
 
@@ -60,11 +57,6 @@ public class Marble {
 
     void addScoreBonus() {
         scoreBonus += 100;
-    }
-
-    public void dispose() {
-        marble.dispose();
-        marbleInvincible.dispose();
     }
 
     int decreaseActiveInvicibles() {

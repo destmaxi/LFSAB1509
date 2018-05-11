@@ -151,24 +151,11 @@ public abstract class AbstractPlayScreen extends Screen {
     }
 
     int calculateStandardWidth(int width) {
-        int standardWidth;
-
-        if (width <= 480)
-            standardWidth = 480;
-        else if (width <= 600)
-            standardWidth = 600;
-        else if (width <= 840)
-            standardWidth = 840;
-        else if (width <= 960)
-            standardWidth = 960;
-        else if (width <= 1280)
-            standardWidth = 1280;
-        else if (width <= 1440)
-            standardWidth = 1440;
-        else
-            standardWidth = 1600;
-
-        return standardWidth;
+        int[] widths = {480, 600, 840, 960, 1280, 1440};
+        for (int w : widths)
+            if (width <= w)
+                return w;
+        return 1600;
     }
 
     void checkCamReposition(Marble marble) {
@@ -301,23 +288,20 @@ public abstract class AbstractPlayScreen extends Screen {
 
         game.spriteBatch.begin();
 
-        for (Vector2 backgroundPosition : backgroundPositions)
-            game.spriteBatch.draw(background, backgroundPosition.x, backgroundPosition.y);
-
-        for (Obstacle obstacle : obstacles)
-            obstacle.render(game.spriteBatch);
-
-        for (Bonus bonus : bonuses)
-            bonus.render(game.spriteBatch);
-
+        renderBackgrounds();
+        renderSprites();
         renderMarbles();
-
         renderLoseWin();
 
         game.spriteBatch.end();
 
         scoreStage.act();
         scoreStage.draw();
+    }
+
+    private void renderBackgrounds() {
+        for (Vector2 backgroundPosition : backgroundPositions)
+            game.spriteBatch.draw(background, backgroundPosition.x, backgroundPosition.y);
     }
 
     void renderLoseWin(Texture loseWinImage) {
@@ -330,6 +314,14 @@ public abstract class AbstractPlayScreen extends Screen {
     void renderMarbles() {
         for (Marble marble : marbles)
             marble.render(game.spriteBatch);
+    }
+
+    private void renderSprites() {
+        for (Obstacle obstacle : obstacles)
+            obstacle.render(game.spriteBatch);
+
+        for (Bonus bonus : bonuses)
+            bonus.render(game.spriteBatch);
     }
 
     void sendInHole(Obstacle obstacle, Marble marble) {

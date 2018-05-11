@@ -49,13 +49,11 @@ public class OptionScreen extends AbstractMenuScreen {
         });
 
         Label musicLabel = new Label(game.i18n.format("music_level"), game.tableSkin);
-
         Slider musicSlider = new Slider(0f, 1f, .05f, false, game.tableSkin);
         musicSlider.setValue(game.user.getMusicLevel());
         musicSlider.addListener(new MusicListener(soundManager, musicSlider, game));
 
         Label soundLabel = new Label(game.i18n.format("sound_level"), game.tableSkin);
-
         Slider soundSlider = new Slider(0f, 1f, .05f, false, game.tableSkin);
         soundSlider.setValue(game.user.getSoundLevel());
         soundSlider.addListener(new SoundListener(soundManager, soundSlider, game));
@@ -121,9 +119,8 @@ public class OptionScreen extends AbstractMenuScreen {
                 Gdx.input.setOnscreenKeyboardVisible(false);
                 if (object.equals(true))
                     return validateUserName(usernameField, usernameButton);
-                else {
+                else
                     return true;
-                }
             }
         });
         editUsernameDialog.show(stage);
@@ -138,8 +135,8 @@ public class OptionScreen extends AbstractMenuScreen {
             return true;
         } else {
             spawnErrorDialog(game.i18n.format("error_username_default"), User.getUsernameError(newUsername));
-            usernameField.setText(username);
             usernameButton.setText(username);
+            usernameField.setText(username);
             return false;
         }
     }
@@ -151,9 +148,9 @@ public class OptionScreen extends AbstractMenuScreen {
         private SoundManager soundManager;
 
         MusicListener(SoundManager soundManager, Slider musicSlider, GravityRun game) {
-            this.soundManager = soundManager;
-            this.musicSlider = musicSlider;
             this.game = game;
+            this.musicSlider = musicSlider;
+            this.soundManager = soundManager;
         }
 
         @Override
@@ -173,8 +170,8 @@ public class OptionScreen extends AbstractMenuScreen {
         }
 
         private void setVolume() {
-            soundManager.setMusicLevel(musicSlider.getValue());
             game.user.setMusicLevel(musicSlider.getValue());
+            soundManager.setMusicLevel(musicSlider.getValue());
         }
 
     }
@@ -198,10 +195,9 @@ public class OptionScreen extends AbstractMenuScreen {
 
         @Override
         public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+            game.user.setSoundLevel(soundSlider.getValue());
             soundManager.setSoundLevel(soundSlider.getValue());
             soundManager.gotBonus();
-            soundManager.setSoundLevel(soundSlider.getValue());
-            game.user.setSoundLevel(soundSlider.getValue());
         }
 
     }

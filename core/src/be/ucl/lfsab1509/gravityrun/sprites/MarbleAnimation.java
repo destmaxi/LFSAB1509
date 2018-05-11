@@ -42,34 +42,18 @@ public class MarbleAnimation {
     }
 
     private int getMarble(float z) {
-        int marble;
         if (z == 0)
-            marble = 8;
-        else if (z < Marble.JUMP_HEIGHT * -1.75f)
-            marble = 0;
-        else if (z < Marble.JUMP_HEIGHT * -1.5f)
-            marble = 1;
-        else if (z < Marble.JUMP_HEIGHT * -1.25f)
-            marble = 2;
-        else if (z < Marble.JUMP_HEIGHT * -1f)
-            marble = 3;
-        else if (z < Marble.JUMP_HEIGHT * -.75f)
-            marble = 4;
-        else if (z < Marble.JUMP_HEIGHT * -.5f)
-            marble = 5;
-        else if (z < Marble.JUMP_HEIGHT * -.25f)
-            marble = 6;
-        else if (z < Marble.JUMP_HEIGHT * -0f)
-            marble = 7;
-        else if (z <= Marble.JUMP_HEIGHT * .25f)
-            marble = 9;
-        else if (z <= Marble.JUMP_HEIGHT * .5f)
-            marble = 10;
-        else if (z <= Marble.JUMP_HEIGHT * .75f)
-            marble = 11;
-        else
-            marble = 12;
-        return marble;
+            return  8;
+
+        for (int i = -7; i <= 0; i++)
+            if (z < i * .25f * Marble.JUMP_HEIGHT)
+                return 7 + i;
+
+        for (int i = 0; i < 3; i++)
+            if (z <= i * .25f * Marble.JUMP_HEIGHT)
+                return 9 + i;
+
+        return 12;
     }
 
     public void update(float dt) {

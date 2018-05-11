@@ -292,16 +292,12 @@ public class Marble {
         if (myMarble)
             gyroY = Gdx.input.getGyroscopeY();
 
-        if ((blockedOnRight && gyroY > 0) || (blockedOnLeft && gyroY < 0))
-            position.add(0, difficulty * MOVEMENT * speed * slowDown * dt, 0);
-        else if ((blockedOnLeft && gyroY < 0) && blockedOnTop)
-            position.add(0, 0, 0);
-        else if ((blockedOnRight && gyroY > 0) && blockedOnTop)
-            position.add(0, 0, 0);
-        else if (blockedOnTop)
-            position.add(gyroY * width / 75, 0, 0);
-        else
-            position.add(gyroY * width / 75, difficulty * MOVEMENT * speed * slowDown * dt, 0);
+        float x = 0f, y = 0f;
+        if (!(blockedOnRight && gyroY > 0 || blockedOnLeft && gyroY < 0))
+            x = gyroY * width / 75;
+        if (!blockedOnTop)
+            y = difficulty * MOVEMENT * speed * slowDown * dt;
+        position.add(x, y, 0);
     }
 
     private void updateSpeed() {

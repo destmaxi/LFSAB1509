@@ -168,9 +168,7 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
     }
 
     public void applyMessage(String[] message) {
-        int messagetype = getIntegerFromStr(message[0]);
-
-        switch (messagetype) {
+        switch (getIntegerFromStr(message[0])) {
             case ACK_DEAD:
                 ackDiedReceved = true;
                 break;

@@ -28,8 +28,8 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
     @Override
     public void applyMessage(String[] message) {
         super.applyMessage(message);
-        int messageType = getIntegerFromStr(message[0]);
-        switch (messageType) {
+
+        switch (getIntegerFromStr(message[0])) {
             case LOST_LIFE:
                 playerMarble.addMarbleLife(-1);
                 break;
@@ -47,8 +47,8 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
                 setOpponentLives(message);
                 break;
             case SLOWDOWN:
-                Bonus slowdown = new SlowDown(0, 0, this, new Random(), slowDownImage);
-                ((SlowDown) slowdown).activateSlowdown(playerMarble);
+                SlowDown slowdown = new SlowDown(0, 0, this, new Random(), slowDownImage);
+                slowdown.activateSlowdown(playerMarble);
                 playerMarble.addCaughtBonuses(slowdown);
                 break;
         }

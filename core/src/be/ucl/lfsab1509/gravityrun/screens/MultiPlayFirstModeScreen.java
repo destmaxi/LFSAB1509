@@ -44,9 +44,8 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
     @Override
     public void applyMessage(String[] message) {
         super.applyMessage(message);
-        int messageType = getIntegerFromStr(message[0]);
 
-        switch (messageType) {
+        switch (getIntegerFromStr(message[0])) {
             case INIT_RANDOMS:
                 initRandoms(message);
                 break;

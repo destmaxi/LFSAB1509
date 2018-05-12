@@ -1,5 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
+import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.screens.AbstractPlayScreen;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -29,7 +30,7 @@ public class Wall extends Obstacle {
         if (!(overlaps(marble) && marble.isInWall())) {
             marble.setInWall(false);
 
-            if (!marble.isInvincible() && overlaps(marble)) {
+            if (!marble.isInvincible() && overlaps(marble) && !GravityRun.cheat) {
                 marble.setBlockedOnLeft(marbleCenterX > rightBound);
                 marble.setBlockedOnRight(marbleCenterX < leftBound);
                 marble.setBlockedOnTop(marbleCenterY < bottomBound);

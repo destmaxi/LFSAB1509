@@ -1,5 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
+import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.screens.AbstractPlayScreen;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -22,7 +23,7 @@ public class Hole extends Obstacle {
 
     @Override
     public boolean collides(Marble marble) {
-        if (overlaps(marble) && marble.getCenterPosition().z == 0) {
+        if (overlaps(marble) && marble.getCenterPosition().z == 0 && !GravityRun.cheat) {
             marble.setInHole();
             playScreen.getSoundManager().marbleBreak(marble.isDead());
             marble.setLives(0);

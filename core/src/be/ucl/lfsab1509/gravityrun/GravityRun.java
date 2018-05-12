@@ -38,11 +38,13 @@ public class GravityRun extends Game {
     public SpriteBatch spriteBatch;
     private TextureAtlas skinTextureAtlas;
     public User user;
+    public static boolean cheat = false;
 
     public GravityRun(BluetoothManager bluetoothManager, SensorHelper sensorHelper) {
         super();
         this.bluetoothManager = bluetoothManager;
         this.sensorHelper = sensorHelper;
+        cheat = false;
     }
 
     @Override

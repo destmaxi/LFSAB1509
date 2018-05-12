@@ -45,9 +45,19 @@ public class GyroscopeOrientationProvider implements OrientationProvider {
     }
 
     @Override
+    public void pauseSensors() {
+        gyroscopeSensorEventListener.pause();
+    }
+
+    @Override
     public void resetOrientation() {
         //System.arraycopy(NO_ROTATION_VECTOR, 0, gyroscopeBasedRotationVector, 0, gyroscopeBasedRotationVector.length);
         System.arraycopy(NO_ROTATION_MATRIX, 0, gyroscopeBasedRotationMatrix, 0, gyroscopeBasedRotationMatrix.length);
+    }
+
+    @Override
+    public void resumeSensors() {
+        gyroscopeSensorEventListener.resume();
     }
 
     @Override

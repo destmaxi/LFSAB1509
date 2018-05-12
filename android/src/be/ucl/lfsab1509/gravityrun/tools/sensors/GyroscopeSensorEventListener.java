@@ -2,10 +2,10 @@ package be.ucl.lfsab1509.gravityrun.tools.sensors;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
+import android.hardware.SensorManager;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 class GyroscopeSensorEventListener implements SensorEventListener {
@@ -13,12 +13,14 @@ class GyroscopeSensorEventListener implements SensorEventListener {
     private long lastGyroscopeTimeStamp;
     private List<OrientationProvider> orientationProviders;
     private Sensor sensor;
+    private SensorManager sensorManager;
 
-    GyroscopeSensorEventListener(Sensor gyroscope) {
+    GyroscopeSensorEventListener(SensorManager sensorManager, Sensor gyroscope) {
         rawGyroscopeVector = new float[] {0.0f, 0.0f, 0.0f};
         lastGyroscopeTimeStamp = System.nanoTime();
         orientationProviders = new ArrayList<>();
         sensor = gyroscope;
+        this.sensorManager = sensorManager;
     }
 
     @Override
@@ -42,6 +44,16 @@ class GyroscopeSensorEventListener implements SensorEventListener {
         } else {
             Log.d("RotationEventListener", "Wrong length of event values");
         }
+    }
+
+    @Override
+    public void pause() {
+        sensorManager.unregisterListener(this);
+    }
+
+    @Override
+    public void resume() {
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME);
     }
 
     @Override

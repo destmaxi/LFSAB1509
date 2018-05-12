@@ -2,10 +2,10 @@ package be.ucl.lfsab1509.gravityrun.tools.sensors;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
+import android.hardware.SensorManager;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 class GravitySensorEventListener implements SensorEventListener {
@@ -13,12 +13,14 @@ class GravitySensorEventListener implements SensorEventListener {
     long lastGravityTimeStamp;
     List<OrientationProvider> orientationProviders;
     private Sensor sensor;
+    private SensorManager sensorManager;
 
-    GravitySensorEventListener(Sensor gravitySensor) {
+    GravitySensorEventListener(SensorManager sensorManager, Sensor gravitySensor) {
         this.rawGravityVector = new float[3];
         lastGravityTimeStamp = System.nanoTime();
         orientationProviders = new ArrayList<>();
         sensor = gravitySensor;
+        this.sensorManager = sensorManager;
     }
 
     @Override
@@ -43,6 +45,16 @@ class GravitySensorEventListener implements SensorEventListener {
         } else {
             Log.d("GravityEventListener", "Wrong length of event.values");
         }
+    }
+
+    @Override
+    public void pause() {
+        sensorManager.unregisterListener(this);
+    }
+
+    @Override
+    public void resume() {
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME);
     }
 
     @Override

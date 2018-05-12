@@ -1,6 +1,9 @@
 package be.ucl.lfsab1509.gravityrun.tools.sensors;
 
+import android.hardware.SensorManager;
+
 public class GravityOrientationProvider implements OrientationProvider {
+    private SensorManager sensorManager;
     private long lastGravityTimeStamp;
     float[] normalizedGravityVector; // 2
     float[] normalizedGravityVelocityVector; // 2
@@ -34,8 +37,18 @@ public class GravityOrientationProvider implements OrientationProvider {
     }
 
     @Override
+    public void pauseSensors() {
+        gravitySensorEventListener.pause();
+    }
+
+    @Override
     public void resetOrientation() {
         // do nothing as we have no choice
+    }
+
+    @Override
+    public void resumeSensors() {
+        gravitySensorEventListener.resume();
     }
 
     @Override

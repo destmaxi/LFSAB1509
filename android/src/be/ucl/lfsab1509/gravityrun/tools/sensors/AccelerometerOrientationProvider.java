@@ -17,9 +17,19 @@ class AccelerometerOrientationProvider extends GravityOrientationProvider {
     }
 
     @Override
+    public void pauseSensors() {
+        accelerometerSensorEventListener.pause();
+    }
+
+    @Override
     public void resetOrientation() {
         // nothing to do special
         super.resetOrientation();
+    }
+
+    @Override
+    public void resumeSensors() {
+        accelerometerSensorEventListener.resume();
     }
 
     @Override

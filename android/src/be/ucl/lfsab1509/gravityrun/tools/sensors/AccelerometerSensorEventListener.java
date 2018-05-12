@@ -6,7 +6,6 @@ import android.hardware.SensorManager;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 class AccelerometerSensorEventListener implements SensorEventListener {
@@ -14,12 +13,14 @@ class AccelerometerSensorEventListener implements SensorEventListener {
     private long lastAccelerationTimestamp;
     private List<OrientationProvider> orientationProviders;
     private Sensor sensor;
+    private SensorManager sensorManager;
 
-    AccelerometerSensorEventListener(Sensor accelerometer) {
+    AccelerometerSensorEventListener(SensorManager sensorManager, Sensor accelerometer) {
         rawAcceleration = new float[] {0.0f, 0.0f, SensorManager.GRAVITY_EARTH};
         lastAccelerationTimestamp = System.nanoTime();
         orientationProviders = new ArrayList<>();
         sensor = accelerometer;
+        this.sensorManager = sensorManager;
     }
 
     @Override
@@ -39,6 +40,16 @@ class AccelerometerSensorEventListener implements SensorEventListener {
         } else {
             Log.d("AccelerometerListener", "Wrong length of event.values");
         }
+    }
+
+    @Override
+    public void pause() {
+        sensorManager.unregisterListener(this);
+    }
+
+    @Override
+    public void resume() {
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME);
     }
 
     @Override

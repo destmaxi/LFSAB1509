@@ -14,7 +14,7 @@ import java.util.List;
 
 public class AndroidSensorHelper implements SensorHelper {
 
-    private SensorManager sensorManager;
+    SensorManager sensorManager;
 
     private Sensor accelerometerSensor;
     private Sensor magnetoSensor;
@@ -70,19 +70,19 @@ public class AndroidSensorHelper implements SensorHelper {
         System.out.println("AndroidSensorHelper.AndroidSensorHelper  " + gyroscopeSensor + magnetoSensor);
 
         if (gyroscopeSensor != null) {
-            gyroscopeSensorEventListener = new GyroscopeSensorEventListener(gyroscopeSensor);
+            gyroscopeSensorEventListener = new GyroscopeSensorEventListener(sensorManager, gyroscopeSensor);
             sensorEventListeners.add(gyroscopeSensorEventListener);
             gyroscopeOrientationProvider = new GyroscopeOrientationProvider(gyroscopeSensorEventListener);
             orientationProviders.add(gyroscopeOrientationProvider);
         }
         if (gravitySensor != null) {
-            GravitySensorEventListener gravitySensorEventListener = new GravitySensorEventListener(gravitySensor);
+            GravitySensorEventListener gravitySensorEventListener = new GravitySensorEventListener(sensorManager, gravitySensor);
             sensorEventListeners.add(gravitySensorEventListener);
             gravityOrientationProvider = new GravityOrientationProvider(gravitySensorEventListener);
             orientationProviders.add(gravityOrientationProvider);
         }
         if (accelerometerSensor != null) {
-            AccelerometerSensorEventListener accelerometerSensorEventListener = new AccelerometerSensorEventListener(accelerometerSensor);
+            AccelerometerSensorEventListener accelerometerSensorEventListener = new AccelerometerSensorEventListener(sensorManager, accelerometerSensor);
             sensorEventListeners.add(accelerometerSensorEventListener);
             accelerometerOrientationProvider = new AccelerometerOrientationProvider(accelerometerSensorEventListener);
             orientationProviders.add(accelerometerOrientationProvider);
@@ -95,6 +95,9 @@ public class AndroidSensorHelper implements SensorHelper {
             rotationVectorSensorEventListener = new RotationVectorSensorEventListener();
             //orientationProviders.add(rotationVectorSensorEventListener);
         }*/
+
+        // Empty OrientationProvider, to prevent NullPointerException and IndexOutOfRangeException
+        orientationProviders.add(new DummyOrientationProvider());
         currentOrientationProvider = 0;
 
         resumeSensors();
@@ -102,16 +105,18 @@ public class AndroidSensorHelper implements SensorHelper {
 
     @Override
     public void resumeSensors() {
-        for (SensorEventListener listener : sensorEventListeners)
+        getCurrentOrientationProvider().resumeSensors();
+        /*for (SensorEventListener listener : sensorEventListeners)
             if (listener != null)
-                sensorManager.registerListener(listener, listener.getSensor(), SensorManager.SENSOR_DELAY_GAME);
+                sensorManager.registerListener(listener, listener.getSensor(), SensorManager.SENSOR_DELAY_GAME);*/
     }
 
     @Override
     public void pauseSensors() {
-        for (SensorEventListener listener : sensorEventListeners)
+        getCurrentOrientationProvider().pauseSensors();
+        /*for (SensorEventListener listener : sensorEventListeners)
             if (listener != null)
-                sensorManager.unregisterListener(listener);
+                sensorManager.unregisterListener(listener);*/
     }
 
     @Override
@@ -149,7 +154,9 @@ public class AndroidSensorHelper implements SensorHelper {
 
     @Override
     public void setOrientationProvider(int index) {
+        pauseSensors();
         currentOrientationProvider = index;
+        resumeSensors();
     }
 
     static void computeVelocity(float[] oldVector, float[] newVector, float dt, float[] ret) {

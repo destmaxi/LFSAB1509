@@ -13,7 +13,11 @@ interface OrientationProvider {
 
     float[] getVelocityVector();
 
+    void pauseSensors();
+
     void resetOrientation();
+
+    void resumeSensors();
 
     void update();
 }

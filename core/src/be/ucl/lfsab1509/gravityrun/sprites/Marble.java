@@ -1,8 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import be.ucl.lfsab1509.gravityrun.tools.SensorHelper;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -11,8 +9,6 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
-
-import static javax.swing.text.html.HTML.Tag.HEAD;
 
 public class Marble {
 

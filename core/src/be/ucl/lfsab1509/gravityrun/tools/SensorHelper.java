@@ -1,31 +1,8 @@
 package be.ucl.lfsab1509.gravityrun.tools;
 
+import java.util.List;
+
 public interface SensorHelper {
-    /**
-     * Choix du capteur pour déterminer l'orientation de l'appareil.
-     *
-     * - ORIENTATION : utilisation des capteurs liés à l'orientation, en particulier le capteur du rotation vector et de la rotation matrix.
-     * - GRAVITY : utilisation du capteur déterminant l'orientation de la gravité, qui lui-même tire parti de l'accéléromètre, du magnétomètre et éventuellement du gyroscope.
-     *   Avantages : logiquement, il est plus stable que les autres.
-     *   Inconvénients : si l'accélération subie par l'appareil est significative et dure suffisament longtemps, l'axe de la gravité sera temporairement fortement déréglé.
-     */
-    enum OrientationSensorType {
-        ORIENTATION,
-        GRAVITY;
-    }
-
-    /**
-     * Choix du capteur pour la mesure de l'accélération angulaire, pour le gyroscope.
-     *
-     * - GYROSCOPE : utiliser directement les données du gyroscope. Le gyroscope peut être absent sur certaines plateformes, et sa précision/calibration peut varier.
-     * - ORIENTATION_DERIVED : utiliser les données du capteur pour l'orientation, en dérivant les données.
-     */
-    enum GyroscopeSensorType {
-        GYROSCOPE,
-        ORIENTATION_DERIVED;
-    }
-
-    float getGyroscopeY();
 
     /**
      * Retourne un vecteur de taille 2 représentant la direction de la gravité par rapport à l'appareil.
@@ -41,6 +18,9 @@ public interface SensorHelper {
 
     /**
      * Retourne un vecteur de taille 2 représentant la vitesse du changement du vecteur retourné par {@link SensorHelper#getGravityDirectionVector()}.
+     * La valeur en 0 est positive si le téléphone tourne dans le sens horlogique par rapport à un utilisateur placé en dessous du téléphone,
+     * bouton home visible et situé plus bas que le haut parleur de l'appareil (bref, la position normale pour utiliser un téléphone).
+     * La valeur en 1 est positive si le téléphone s'incline "en tombant" (le bouton home se rapproche, le haut parleur s'éloigne).
      *
      * @return Voir la description...
      */
@@ -65,7 +45,10 @@ public interface SensorHelper {
      */
     void resumeSensors();
 
-    void setOrientationSensorType(OrientationSensorType type);
+    List<String> getOrientationProviders();
 
-    void setGyroscopeSensorType(GyroscopeSensorType type);
+    int getOrientationProvider();
+
+    void setOrientationProvider(int index);
+
 }

@@ -1,7 +1,5 @@
 package be.ucl.lfsab1509.gravityrun.tools.sensors;
 
-import java.util.Arrays;
-
 public class GravityOrientationProvider implements OrientationProvider {
     private long lastGravityTimeStamp;
     float[] normalizedGravityVector; // 2
@@ -53,5 +51,10 @@ public class GravityOrientationProvider implements OrientationProvider {
         AndroidSensorHelper.computeVelocity(normalizedGravityVector, newNormalizedGravityVector, (dt * NS2S), normalizedGravityVelocityVector);
         //System.out.println("GravityOrientationProvider.updateValues + " + dt + " " + Arrays.toString(normalizedGravityVelocityVector) + " " + Arrays.toString(newNormalizedGravityVector) + " " + Arrays.toString(normalizedGravityVector) + " " + lastGravityTimeStamp);
         System.arraycopy(newNormalizedGravityVector, 0, normalizedGravityVector, 0, newNormalizedGravityVector.length);
+    }
+
+    @Override
+    public String toString() {
+        return "Gravity";
     }
 }

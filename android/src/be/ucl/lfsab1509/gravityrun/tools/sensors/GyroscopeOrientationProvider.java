@@ -2,10 +2,7 @@ package be.ucl.lfsab1509.gravityrun.tools.sensors;
 
 import android.hardware.SensorManager;
 
-import java.util.Arrays;
-
 public class GyroscopeOrientationProvider implements OrientationProvider {
-    private static final float SPEED_CORRECTION = 10f;
     private final float MIN_MAGNITUDE;
     private boolean validTimestamp = false;
     private float[] lastGyroscopeVector;
@@ -41,9 +38,9 @@ public class GyroscopeOrientationProvider implements OrientationProvider {
 
     @Override
     public float[] getVelocityVector() {
-        float[] ret = new float[3];
-        for (int i = 0; i < 3; i++)
-            ret[i] = -lastGyroscopeVector[i] * SPEED_CORRECTION;
+        float[] ret = new float[2];
+        ret[0] = lastGyroscopeVector[1];
+        ret[1] = lastGyroscopeVector[0];
         return ret;
     }
 
@@ -74,7 +71,7 @@ public class GyroscopeOrientationProvider implements OrientationProvider {
         float thetaHalf = omegaMagnitude * dt / 2;
         float sinThetaHalf = (float) Math.sin(thetaHalf);
         float cosThetaHalf = (float) Math.cos(thetaHalf);
-        System.out.println("GyroscopeOrientationProvider.update : " + omegaX + " " + omegaY + " " + omegaZ + " " + omegaMagnitude + " " + thetaHalf + " " + sinThetaHalf + " " + cosThetaHalf + " " + dt);
+        //System.out.println("GyroscopeOrientationProvider.update : " + omegaX + " " + omegaY + " " + omegaZ + " " + omegaMagnitude + " " + thetaHalf + " " + sinThetaHalf + " " + cosThetaHalf + " " + dt);
         lastDeltaRotationVector[0] = sinThetaHalf * omegaX;
         lastDeltaRotationVector[1] = sinThetaHalf * omegaY;
         lastDeltaRotationVector[2] = sinThetaHalf * omegaZ;
@@ -86,5 +83,10 @@ public class GyroscopeOrientationProvider implements OrientationProvider {
         //AndroidSensorHelper.rotationMatrixToVector(gyroscopeBasedRotationMatrix, gyroscopeBasedRotationVector);
         lastGyroscopeTimeStamp = currentTimestamp;
         //System.out.println("GyroscopeOrientationProvider.update " + Arrays.toString(gyroscopeBasedRotationMatrix) /*+ "   " + Arrays.toString(gyroscopeBasedRotationVector)*/);
+    }
+
+    @Override
+    public String toString() {
+        return "Gyroscope";
     }
 }

@@ -14,11 +14,6 @@ import java.util.List;
 
 public class AndroidSensorHelper implements SensorHelper {
 
-    private static final long DELAY_JUMP = 800;
-    private static final double JUMP_MIN_GYROSCOPE = 5.0 * Math.PI / 180.0;
-
-    private OrientationSensorType orientationSensorType;
-    private GyroscopeSensorType gyroscopeSensorType;
     private SensorManager sensorManager;
 
     private Sensor accelerometerSensor;
@@ -56,8 +51,6 @@ public class AndroidSensorHelper implements SensorHelper {
     }*/
 
     public AndroidSensorHelper(AndroidApplication activity) {
-        this.orientationSensorType = OrientationSensorType.GRAVITY;
-        this.gyroscopeSensorType = GyroscopeSensorType.GYROSCOPE;
         this.orientationProviders = new ArrayList<>();
         this.sensorEventListeners = new ArrayList<>();
 
@@ -76,12 +69,12 @@ public class AndroidSensorHelper implements SensorHelper {
         System.out.println("AndroidSensorHelper.AndroidSensorHelper: " + rotationSensor + /*gameRotationSensor +*/ geomagneticRotationSensor);
         System.out.println("AndroidSensorHelper.AndroidSensorHelper  " + gyroscopeSensor + magnetoSensor);
 
-        /*if (gyroscopeSensor != null) {
+        if (gyroscopeSensor != null) {
             gyroscopeSensorEventListener = new GyroscopeSensorEventListener(gyroscopeSensor);
             sensorEventListeners.add(gyroscopeSensorEventListener);
             gyroscopeOrientationProvider = new GyroscopeOrientationProvider(gyroscopeSensorEventListener);
             orientationProviders.add(gyroscopeOrientationProvider);
-        }*/
+        }
         if (gravitySensor != null) {
             GravitySensorEventListener gravitySensorEventListener = new GravitySensorEventListener(gravitySensor);
             sensorEventListeners.add(gravitySensorEventListener);
@@ -132,12 +125,6 @@ public class AndroidSensorHelper implements SensorHelper {
     }
 
     @Override
-    public float getGyroscopeY() {
-        return getVelocityVector()[1];
-        //return gyroscopeSensorEventListener.getGyroscopeY();
-    }
-
-    @Override
     public boolean hasJumped() {
         return (Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE));// || rawGyroscopeVector[0] > 2);
     }
@@ -147,21 +134,22 @@ public class AndroidSensorHelper implements SensorHelper {
     }
 
     @Override
-    public void setOrientationSensorType(OrientationSensorType type) {
-        this.orientationSensorType = type;
+    public List<String> getOrientationProviders() {
+        List<String> list = new ArrayList<>();
+        for (OrientationProvider orientationProvider : orientationProviders) {
+            list.add(orientationProvider.toString());
+        }
+        return list;
     }
 
     @Override
-    public void setGyroscopeSensorType(GyroscopeSensorType type) {
-        this.gyroscopeSensorType = type;
+    public int getOrientationProvider() {
+        return currentOrientationProvider;
     }
 
-    public GyroscopeSensorType getGyroscopeSensorType() {
-        return gyroscopeSensorType;
-    }
-
-    public OrientationSensorType getOrientationSensorType() {
-        return orientationSensorType;
+    @Override
+    public void setOrientationProvider(int index) {
+        currentOrientationProvider = index;
     }
 
     static void computeVelocity(float[] oldVector, float[] newVector, float dt, float[] ret) {

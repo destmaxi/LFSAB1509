@@ -1,9 +1,7 @@
 package be.ucl.lfsab1509.gravityrun.tools.sensors;
 
-import java.util.Arrays;
-
 class AccelerometerOrientationProvider extends GravityOrientationProvider {
-    private static float alpha = 0.8f;
+    private static float alpha = 0.75f;
 
     private long lastAccelerometerTimestamp;
     private float[] rawAccelerometerVector;
@@ -33,5 +31,10 @@ class AccelerometerOrientationProvider extends GravityOrientationProvider {
             gravityAcceleration[i] = alpha * gravityAcceleration[i] + (1 - alpha) * currentAccelerometer[i];
         //System.out.println("AccelerometerOrientationProvider.update : calling updateValues " + Arrays.toString(gravityAcceleration) + Arrays.toString(currentAccelerometer) + " " + currentTimestamp);
         updateValues(gravityAcceleration, currentTimestamp);
+    }
+
+    @Override
+    public String toString() {
+        return "Accelerometer";
     }
 }

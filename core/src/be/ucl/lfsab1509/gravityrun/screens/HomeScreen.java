@@ -123,6 +123,8 @@ public class HomeScreen extends AbstractMenuScreen {
         table.row();
 
         initStage(table);
+
+        game.gpgs.signInSilently();
     }
 
     @Override

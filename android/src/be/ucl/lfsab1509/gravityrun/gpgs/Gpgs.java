@@ -33,8 +33,6 @@ public class Gpgs extends GpgsMultiplayer implements IGpgs {
         this.context = context;
         this.mGoogleSignInClient = GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
         this.errorCallback = errorCallback;
-
-        signInSilently();
     }
 
     public void setStartGameCallbask(StartGameCallback startGameCallbask) {

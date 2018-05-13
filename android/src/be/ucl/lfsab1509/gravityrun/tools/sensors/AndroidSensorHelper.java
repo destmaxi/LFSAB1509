@@ -14,41 +14,17 @@ import java.util.List;
 
 public class AndroidSensorHelper implements SensorHelper {
 
-    SensorManager sensorManager;
-
-    private Sensor accelerometerSensor;
-    private Sensor magnetoSensor;
-    //private Sensor orientationSensor;
-    private Sensor gyroscopeSensor;
-    private Sensor gravitySensor;
-    private Sensor rotationSensor; // requires API 18
-    //private Sensor gameRotationSensor;
-    private Sensor geomagneticRotationSensor; // requires API 19
+    private SensorManager sensorManager;
 
     private List<SensorEventListener> sensorEventListeners;
     private List<OrientationProvider> orientationProviders;
     private int currentOrientationProvider;
 
-    private GravitySensorEventListener gravitySensorEventListener;
-    //private RotationVectorSensorEventListener rotationVectorSensorEventListener;
     private GyroscopeSensorEventListener gyroscopeSensorEventListener;
 
     private GravityOrientationProvider gravityOrientationProvider;
     private GyroscopeOrientationProvider gyroscopeOrientationProvider;
     private AccelerometerOrientationProvider accelerometerOrientationProvider;
-
-    /*static class RotationVectorSensorEventListener implements SensorEventListener {
-        @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
-            // Nothing to do in our case
-        }
-
-        @Override
-        public void onSensorChanged(SensorEvent event) {
-            //
-            //System.out.println("RotationVectorSensorEventListener.onSensorChanged: got accuracy " + event.accuracy + ", timestamp " + event.timestamp + ", values " + Arrays.toString(event.values));
-        }
-    }*/
 
     public AndroidSensorHelper(AndroidApplication activity) {
         this.orientationProviders = new ArrayList<>();
@@ -57,13 +33,13 @@ public class AndroidSensorHelper implements SensorHelper {
         this.sensorManager = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
         assert sensorManager != null;
 
-        this.gravitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
-        this.rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
-        this.gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        this.accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        this.magnetoSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        //this.gameRotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
-        this.geomagneticRotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR);
+        Sensor gravitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
+        Sensor rotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR); // requires API 18
+        Sensor gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        Sensor magnetoSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        //Sensor gameRotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
+        Sensor geomagneticRotationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GEOMAGNETIC_ROTATION_VECTOR); // requires API 19
 
         System.out.println("AndroidSensorHelper.AndroidSensorHelper: initialized " + gravitySensor + accelerometerSensor);
         System.out.println("AndroidSensorHelper.AndroidSensorHelper: " + rotationSensor + /*gameRotationSensor +*/ geomagneticRotationSensor);
@@ -91,10 +67,6 @@ public class AndroidSensorHelper implements SensorHelper {
         for (OrientationProvider orientationProvider : orientationProviders)
             sb.append(orientationProvider.toString());
         System.out.println("AndroidSensorHelper.AndroidSensorHelper " + sb.toString());
-        /*if (rotationSensor != null) {
-            rotationVectorSensorEventListener = new RotationVectorSensorEventListener();
-            //orientationProviders.add(rotationVectorSensorEventListener);
-        }*/
 
         // Empty OrientationProvider, to prevent NullPointerException and IndexOutOfRangeException
         orientationProviders.add(new DummyOrientationProvider());
@@ -106,17 +78,11 @@ public class AndroidSensorHelper implements SensorHelper {
     @Override
     public void resumeSensors() {
         getCurrentOrientationProvider().resumeSensors();
-        /*for (SensorEventListener listener : sensorEventListeners)
-            if (listener != null)
-                sensorManager.registerListener(listener, listener.getSensor(), SensorManager.SENSOR_DELAY_GAME);*/
     }
 
     @Override
     public void pauseSensors() {
         getCurrentOrientationProvider().pauseSensors();
-        /*for (SensorEventListener listener : sensorEventListeners)
-            if (listener != null)
-                sensorManager.unregisterListener(listener);*/
     }
 
     @Override
@@ -131,7 +97,7 @@ public class AndroidSensorHelper implements SensorHelper {
 
     @Override
     public boolean hasJumped() {
-        return (Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE));// || rawGyroscopeVector[0] > 2);
+        return (Gdx.input.justTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE));
     }
 
     private OrientationProvider getCurrentOrientationProvider() {
@@ -165,64 +131,23 @@ public class AndroidSensorHelper implements SensorHelper {
         }
     }
 
-    static void applyRotationVectorChange(float[] prevR, float[] delta, float[] newR) {
-        float[] prevRmatrix = new float[9];
-        float[] deltaMatrix = new float[9];
-        float[] newRmatrix = new float[9];
-        SensorManager.getRotationMatrixFromVector(prevRmatrix, prevR);
-        SensorManager.getRotationMatrixFromVector(deltaMatrix, delta);
-        matrixMatrixMultiplication(prevRmatrix, deltaMatrix, 3, 3, newRmatrix);
-        rotationMatrixToVector(newRmatrix, newR);
-    }
-
-    static void matrixMatrixMultiplication(float[] A, float[] B, int row, int column, float[] C) {
-        int rc = A.length / row;
-        if (B.length != rc * column)
+    static void matrixMatrixMultiplication(float[] A, float[] B, float[] C) {
+        if (B.length != 9 || A.length != 9)
             throw new IllegalArgumentException("Wrong size of matrices");
-        for (int r = 0; r < row; r++) {
-            for (int c = 0; c < column; c++) {
+        for (int r = 0; r < 3; r++) {
+            for (int c = 0; c < 3; c++) {
                 float acc = 0.0f;
-                for (int i = 0; i < rc; i++)
-                    acc += A[r * rc + i] * B[i * rc + c];
-                C[r * column + c] = acc;
+                for (int i = 0; i < 3; i++)
+                    acc += A[3 * r + i] * B[3 * i + c];
+                C[3 * r + c] = acc;
             }
-        }
-    }
-
-    static void rotationMatrixToVector(float[] matrix, float[] vector) {
-        // vector : 0 is real, 1, 2, 3 is complex
-        if (matrix.length == 9) {
-            vector[3] = 0.5f * (float)(Math.sqrt(1 + matrix[0] + matrix[4] + matrix[8]));
-            float inv4qr = 1.0f / (4*vector[0]);
-            vector[0] = (matrix[7] - matrix[5]) * inv4qr;
-            vector[1] = (matrix[2] - matrix[6]) * inv4qr;
-            vector[2] = (matrix[3] - matrix[1]) * inv4qr;
-        } else {
-            vector[3] = 0.5f * (float)(Math.sqrt(1 + matrix[0] + matrix[5] + matrix[10]));
-            float inv4qr = 1.0f / (4*vector[0]);
-            vector[0] = (matrix[9] - matrix[6]) * inv4qr;
-            vector[1] = (matrix[2] - matrix[8]) * inv4qr;
-            vector[2] = (matrix[4] - matrix[1]) * inv4qr;
-        }
-    }
-
-    static float[] matrixVectorMultiplication(float[] R, float[] v) {
-        if (R.length == 9 && v.length == 3) {
-            return new float[] {
-                    R[0] * v[0] + R[1] * v[1] + R[2] * v[2],
-                    R[3] * v[0] + R[4] * v[1] + R[5] * v[2],
-                    R[6] * v[0] + R[7] * v[1] + R[8] * v[2]
-            };
-        } else {
-            // TODO généraliser
-            return new float[] {0.0f, 0.0f, 0.0f};
         }
     }
 
     static void normalizeVector(float[] rawVector, float[] normalizedVector) {
         float magnitude = 0.0f;
-        for (int i = 0; i < rawVector.length; i++)
-            magnitude += rawVector[i]*rawVector[i];
+        for (float aRawVector : rawVector)
+            magnitude += aRawVector * aRawVector;
         magnitude = (float) Math.sqrt(magnitude);
         for (int i = 0; i < normalizedVector.length; i++)
             normalizedVector[i] = rawVector[i] / magnitude;

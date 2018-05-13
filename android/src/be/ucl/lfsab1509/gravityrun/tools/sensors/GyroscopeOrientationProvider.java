@@ -89,7 +89,7 @@ public class GyroscopeOrientationProvider implements OrientationProvider {
         float[] deltaRotationMatrix = new float[9];
         SensorManager.getRotationMatrixFromVector(deltaRotationMatrix, lastDeltaRotationVector);
         //System.out.println("GyroscopeOrientationProvider.update : " + Arrays.toString(lastDeltaRotationVector) + " " + Arrays.toString(deltaRotationMatrix) + " " + Arrays.toString(gyroscopeBasedRotationMatrix));
-        AndroidSensorHelper.matrixMatrixMultiplication(gyroscopeBasedRotationMatrix, deltaRotationMatrix, 3, 3, gyroscopeBasedRotationMatrix);
+        AndroidSensorHelper.matrixMatrixMultiplication(gyroscopeBasedRotationMatrix, deltaRotationMatrix, gyroscopeBasedRotationMatrix);
         //AndroidSensorHelper.rotationMatrixToVector(gyroscopeBasedRotationMatrix, gyroscopeBasedRotationVector);
         lastGyroscopeTimeStamp = currentTimestamp;
         //System.out.println("GyroscopeOrientationProvider.update " + Arrays.toString(gyroscopeBasedRotationMatrix) /*+ "   " + Arrays.toString(gyroscopeBasedRotationVector)*/);

@@ -64,8 +64,8 @@ project(":android") {
         compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        compile "com.google.android.gms:play-services-auth:15.0.0"
-        compile "com.google.android.gms:play-services-games:15.0.0"
+        compile "com.google.android.gms:play-services-auth:15.0.1"
+        compile "com.google.android.gms:play-services-games:15.0.1"
 
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"

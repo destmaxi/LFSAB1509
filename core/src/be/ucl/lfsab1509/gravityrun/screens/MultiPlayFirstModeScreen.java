@@ -139,7 +139,7 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
         if (opponentCaughtBonusIds.contains(bonusId)) {
             randomBonus.nextInt();  // FIXME qu'est-ce que c'est que ce random non utilisé ?
             bonus = new EmptyBonus(position, offset, newLifeImage);
-            opponentCaughtBonusIds.remove(bonusId);
+            opponentCaughtBonusIds.remove((Integer)bonusId);
         } else
             bonus = super.newBonus(position, offset);
 
@@ -196,7 +196,7 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
         if (opponentCaughtBonusIds.contains(bonus.getBonusId())) {
             int index = bonuses.indexOf(bonus);
             bonuses.set(index, new EmptyBonus(bonus.getPosition().y, bonus.getOffset(), newLifeImage));
-            opponentCaughtBonusIds.remove(bonus.getBonusId());
+            opponentCaughtBonusIds.remove((Integer)bonus.getBonusId());
         }
     }
 

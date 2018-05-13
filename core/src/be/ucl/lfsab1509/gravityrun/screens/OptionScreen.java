@@ -49,13 +49,13 @@ public class OptionScreen extends AbstractMenuScreen {
             }
         });
 
-        TextButton orientationProviderButton = new TextButton("Orientation Provider", game.tableSkin, "round");
+        /*TextButton orientationProviderButton = new TextButton("Orientation Provider", game.tableSkin, "round");
         orientationProviderButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 popOrientationProviderDialog();
             }
-        });
+        });*/
         /*TextButton cheatButton = new TextButton("Cheat: " + GravityRun.cheat, game.tableSkin, "round");
         cheatButton.addListener(new ClickListener() {
             @Override
@@ -86,8 +86,8 @@ public class OptionScreen extends AbstractMenuScreen {
         table.row();
         table.add(lvlButton).expandX().fillX().maxWidth(containerWidth);
         table.row();
-        table.add(orientationProviderButton);
-        table.row();
+        //table.add(orientationProviderButton);
+        //table.row();
         //table.add(cheatButton);
         //table.row();
         table.add(musicLabel).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
@@ -123,7 +123,7 @@ public class OptionScreen extends AbstractMenuScreen {
         levelDialog.show(stage);
     }
 
-    private void popOrientationProviderDialog() {
+    /*private void popOrientationProviderDialog() {
         java.util.List<String> list = game.sensorHelper.getOrientationProviders();
         List<String> list1 = new List<>(game.tableSkin);
         list1.setItems(new Array<>(list.toArray(new String[0])));
@@ -135,7 +135,7 @@ public class OptionScreen extends AbstractMenuScreen {
             }
         });
         dialog.show(stage);
-    }
+    }*/
 
     private void popUsernameDialog(TextButton usernameButton) {
         Gdx.input.setOnscreenKeyboardVisible(false);

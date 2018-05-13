@@ -22,6 +22,7 @@ public class AndroidLauncher extends AndroidApplication {
 
     public AbstractMultiPlayScreen multiPlayScreen;
     private Gpgs gpgs;
+    private GravityRun gravityRun;
 
     private Handler handler = new Handler() {
         @Override
@@ -68,7 +69,6 @@ public class AndroidLauncher extends AndroidApplication {
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        final GravityRun gravityRun = new GravityRun(bluetoothFragment);
         gpgs = new Gpgs(this, new GpgsMultiplayer.ErrorCallback() {
             @Override
             public void error(String message) {
@@ -76,7 +76,8 @@ public class AndroidLauncher extends AndroidApplication {
             }
         });
 
-        gravityRun.gpgs = gpgs;
+        gravityRun = new GravityRun(bluetoothFragment, gpgs);
+
         multiPlayScreen = new MultiPlayFirstModeScreen(gravityRun, false);
 
         initialize(gravityRun, config);

@@ -57,7 +57,7 @@ class GameOverScreen extends AbstractMenuScreen {
             public void changed(ChangeEvent event, Actor actor) {
                 if (multiplayer) {
                     int lives = game.user.getMultiLives();
-                    int difficulty = game.user.getMulti_IndexSelected();
+                    int difficulty = game.user.getMultiIndexSelected();
                     write("[" + 4 + ":" + lives + ":" + difficulty + ":" + game.user.getMultiMode() + "]#");
                     AbstractMultiPlayScreen abstractMultiPlayScreen = game.user.getMultiMode() == 0
                             ? new MultiPlayFirstModeScreen(game)

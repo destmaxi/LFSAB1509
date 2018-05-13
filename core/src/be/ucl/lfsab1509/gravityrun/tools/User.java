@@ -30,7 +30,7 @@ public class User {
     private boolean firstTime = true;
     private float musicLevel = .8f, soundLevel = .5f;
     private GravityRun game;
-    private int indexSelected = 1, multi_IndexSelected = 1, multiLives = 3, multiMode = 0;
+    private int indexSelected = 1, multiIndexSelected = 1, multiLives = 3, multiMode = 0;
     private String username;
 
     public User(GravityRun gravityRun, String username) {
@@ -119,8 +119,8 @@ public class User {
         return getHighScore(indexSelected);
     }
 
-    public int getMulti_IndexSelected() {
-        return multi_IndexSelected;
+    public int getMultiIndexSelected() {
+        return multiIndexSelected;
     }
 
     public Integer getMultiLives() {
@@ -220,8 +220,8 @@ public class User {
         this.indexSelected = indexSelected;
     }
 
-    public void setMulti_IndexSelected(int multi_IndexSelected) {
-        this.multi_IndexSelected = multi_IndexSelected;
+    public void setMultiIndexSelected(int multiIndexSelected) {
+        this.multiIndexSelected = multiIndexSelected;
     }
 
     public void setMultiLives(int multiLives) {

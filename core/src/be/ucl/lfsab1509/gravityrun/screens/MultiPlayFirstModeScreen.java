@@ -114,7 +114,7 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
 
     @Override
     public void initMarbles() {
-        int level = game.user.getMulti_IndexSelected() + 1;
+        int level = game.user.getMultiIndexSelected() + 1;
 
         playerMarble = isHost()
                 ? new Marble(true, true, level, STANDARD_WIDTH, width / 3, height / 10, marblesImage, marblesInvincibleImage)

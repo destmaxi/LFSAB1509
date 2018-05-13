@@ -35,9 +35,9 @@ public class GravityRun extends Game {
     private TextureAtlas skinTextureAtlas;
     public User user;
 
-    public GravityRun(BluetoothManager bluetoothManager) {
-        super();
+    public GravityRun(BluetoothManager bluetoothManager, IGpgs gpgs) {
         this.bluetoothManager = bluetoothManager;
+        this.gpgs = gpgs;
     }
 
     @Override

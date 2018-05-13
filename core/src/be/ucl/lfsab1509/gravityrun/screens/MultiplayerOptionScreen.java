@@ -51,7 +51,7 @@ public class MultiplayerOptionScreen extends AbstractMenuScreen {
         startGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                write("[4:" + game.user.getMultiLives() + ":" + game.user.getMulti_IndexSelected() + ":" + game.user.getMultiMode() + "]#");
+                write("[4:" + game.user.getMultiLives() + ":" + game.user.getMultiIndexSelected() + ":" + game.user.getMultiMode() + "]#");
                 abstractMultiPlayScreen = (game.user.getMultiMode() == 0)
                         ? new MultiPlayFirstModeScreen(game)
                         : new MultiPlaySecondModeScreen(game);
@@ -96,12 +96,12 @@ public class MultiplayerOptionScreen extends AbstractMenuScreen {
         List<String> levelList = new List<>(game.aaronScoreSkin);
         levelList.setAlignment(Align.center);
         levelList.setItems(game.i18n.format("beginner"), game.i18n.format("inter"), game.i18n.format("expert"));
-        levelList.setSelectedIndex(game.user.getMulti_IndexSelected() - 1);
+        levelList.setSelectedIndex(game.user.getMultiIndexSelected() - 1);
 
         ListDialog levelDialog = new ListDialog(game.i18n.format("select_level"), levelList, new ListResultCallback() {
             @Override
             public void callback(String selected) {
-                game.user.setMulti_IndexSelected(levelList.getSelectedIndex() + 1);
+                game.user.setMultiIndexSelected(levelList.getSelectedIndex() + 1);
                 button.setText(game.user.getLevelDescription());
             }
         });

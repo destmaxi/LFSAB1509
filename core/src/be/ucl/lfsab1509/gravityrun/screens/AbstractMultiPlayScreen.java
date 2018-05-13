@@ -263,7 +263,7 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
     private void saveInUser(String[] message) {
         try {
             game.user.setMultiLives(getIntegerFromStr(message[1]));
-            game.user.setMulti_IndexSelected(getIntegerFromStr(message[2]));
+            game.user.setMultiIndexSelected(getIntegerFromStr(message[2]));
             game.user.setMultiMode(getIntegerFromStr(message[3]));
         } catch (ArrayIndexOutOfBoundsException e) {
             e.printStackTrace();

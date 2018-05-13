@@ -87,14 +87,6 @@ public class HomeScreen extends AbstractMenuScreen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 screenManager.push(new MultiplayerConnectionScreen(game));
-            }
-        });
-
-        TextButton scoreBoardButton = new TextButton(game.i18n.format("my_score"), game.tableSkin, "round");
-        scoreBoardButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                screenManager.push(new ScoreboardScreen(game));
                 /*game.gpgs.setStartGameCallbask(new IGpgs.StartGameCallback() {
                     @Override
                     public void startGame() {
@@ -103,6 +95,14 @@ public class HomeScreen extends AbstractMenuScreen {
                 });
 //                game.gpgs.invitePlayers();
                 canStartMultiplayerGame = true;*/
+            }
+        });
+
+        TextButton scoreBoardButton = new TextButton(game.i18n.format("my_score"), game.tableSkin, "round");
+        scoreBoardButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                screenManager.push(new ScoreboardScreen(game));
             }
         });
 
@@ -179,7 +179,7 @@ public class HomeScreen extends AbstractMenuScreen {
     }
 
     /*private void startMultiplayerGame() {
-        screenManager.push(new PlayScreen(game));
+        screenManager.push(new SoloPlayScreen(game));
     }*/
 
 }

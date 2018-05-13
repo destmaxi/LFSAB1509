@@ -62,6 +62,12 @@ public class GyroscopeOrientationProvider implements OrientationProvider {
 
     @Override
     public void update() {
+        float dt = updateGyroscopeData();
+        updateDeltaRotationVector(dt);
+        updateRotationMatrix();
+    }
+
+    private float updateGyroscopeData() {
         float[] currentGyroscopeVector = gyroscopeSensorEventListener.getRawGyroscopeVector();
         long currentTimestamp = gyroscopeSensorEventListener.getLastGyroscopeTimeStamp();
         System.arraycopy(currentGyroscopeVector, 0, lastGyroscopeVector, 0, currentGyroscopeVector.length);
@@ -71,7 +77,12 @@ public class GyroscopeOrientationProvider implements OrientationProvider {
             validTimestamp = true;
         }
         float dt = (currentTimestamp - lastGyroscopeTimeStamp) * NS2S;
-        float omegaX = currentGyroscopeVector[0], omegaY = currentGyroscopeVector[1], omegaZ = currentGyroscopeVector[2];
+        lastGyroscopeTimeStamp = currentTimestamp;
+        return dt;
+    }
+
+    private void updateDeltaRotationVector(float dt) {
+        float omegaX = lastGyroscopeVector[0], omegaY = lastGyroscopeVector[1], omegaZ = lastGyroscopeVector[2];
         float omegaMagnitude = (float) (Math.sqrt(omegaX*omegaX + omegaY * omegaY + omegaZ * omegaZ));
         if (omegaMagnitude > MIN_MAGNITUDE) {
             omegaX /= omegaMagnitude;
@@ -86,12 +97,14 @@ public class GyroscopeOrientationProvider implements OrientationProvider {
         lastDeltaRotationVector[1] = sinThetaHalf * omegaY;
         lastDeltaRotationVector[2] = sinThetaHalf * omegaZ;
         lastDeltaRotationVector[3] = cosThetaHalf;
+    }
+
+    private void updateRotationMatrix() {
         float[] deltaRotationMatrix = new float[9];
         SensorManager.getRotationMatrixFromVector(deltaRotationMatrix, lastDeltaRotationVector);
         //System.out.println("GyroscopeOrientationProvider.update : " + Arrays.toString(lastDeltaRotationVector) + " " + Arrays.toString(deltaRotationMatrix) + " " + Arrays.toString(gyroscopeBasedRotationMatrix));
         AndroidSensorHelper.matrixMatrixMultiplication(gyroscopeBasedRotationMatrix, deltaRotationMatrix, gyroscopeBasedRotationMatrix);
         //AndroidSensorHelper.rotationMatrixToVector(gyroscopeBasedRotationMatrix, gyroscopeBasedRotationVector);
-        lastGyroscopeTimeStamp = currentTimestamp;
         //System.out.println("GyroscopeOrientationProvider.update " + Arrays.toString(gyroscopeBasedRotationMatrix) /*+ "   " + Arrays.toString(gyroscopeBasedRotationVector)*/);
     }
 

@@ -56,14 +56,14 @@ public class OptionScreen extends AbstractMenuScreen {
                 popOrientationProviderDialog();
             }
         });
-        TextButton cheatButton = new TextButton("Cheat: " + GravityRun.cheat, game.tableSkin, "round");
+        /*TextButton cheatButton = new TextButton("Cheat: " + GravityRun.cheat, game.tableSkin, "round");
         cheatButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 GravityRun.cheat = !GravityRun.cheat;
                 cheatButton.setText("Cheat: " + GravityRun.cheat);
             }
-        });
+        });*/
 
         Label musicLabel = new Label(game.i18n.format("music_level"), game.tableSkin);
         Slider musicSlider = new Slider(0f, 1f, .05f, false, game.tableSkin);
@@ -88,8 +88,8 @@ public class OptionScreen extends AbstractMenuScreen {
         table.row();
         table.add(orientationProviderButton);
         table.row();
-        table.add(cheatButton);
-        table.row();
+        //table.add(cheatButton);
+        //table.row();
         table.add(musicLabel).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
         table.row();
         table.add(musicSlider).expandX().fillX().maxWidth(containerWidth);

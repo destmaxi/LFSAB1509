@@ -22,18 +22,12 @@ public class GravityOrientationProvider implements OrientationProvider {
 
     @Override
     public float[] getGravityDirectionVector() {
-        float[] ret = new float[2];
-        ret[0] = -normalizedGravityVector[0];
-        ret[1] = -normalizedGravityVector[1];
-        return ret;
+        return getLol(normalizedGravityVector);
     }
 
     @Override
     public float[] getVelocityVector() {
-        float[] ret = new float[2];
-        ret[0] = -normalizedGravityVelocityVector[0];
-        ret[1] = -normalizedGravityVelocityVector[1];
-        return ret;
+        return getLol(normalizedGravityVelocityVector);
     }
 
     @Override
@@ -69,5 +63,12 @@ public class GravityOrientationProvider implements OrientationProvider {
     @Override
     public String toString() {
         return "Gravity";
+    }
+
+    private static float[] getLol(float[] vector) {
+        float[] ret = new float[2];
+        ret[0] = -vector[0];
+        ret[1] = -vector[1];
+        return ret;
     }
 }

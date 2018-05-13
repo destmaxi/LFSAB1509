@@ -151,14 +151,23 @@ abstract class AbstractMenuScreen extends Screen {
             return super.show(stage, action);
         }
 
+        void addCancelButton() {
+            TextButton cancelButton = new TextButton(game.i18n.format("cancel"), game.tableSkin, "round");
+            this.button(cancelButton, false);
+        }
+
+        void addOkButton() {
+            TextButton okButton = new TextButton(game.i18n.format("ok"), game.tableSkin, "round");
+            this.button(okButton, true).key(Input.Keys.ENTER, true);
+        }
+
     }
 
     class MessageDialog extends EmptyButtonsDialog {
 
         MessageDialog(String title, Table content, DialogResultMethod resultMethod) {
             super(title, content, resultMethod);
-            TextButton okButton = new TextButton(game.i18n.format("ok"), game.tableSkin, "round");
-            this.button(okButton, true).key(Input.Keys.ENTER, true);
+            addOkButton();
         }
 
     }
@@ -167,8 +176,7 @@ abstract class AbstractMenuScreen extends Screen {
 
         EditDialog(String title, Table content, DialogResultMethod resultMethod) {
             super(title, content, resultMethod);
-            TextButton cancelButton = new TextButton(game.i18n.format("cancel"), game.tableSkin, "round");
-            this.button(cancelButton, false);
+            addCancelButton();
         }
 
     }
@@ -177,8 +185,7 @@ abstract class AbstractMenuScreen extends Screen {
 
         NoOkEditDialog(String title, Table content, DialogResultMethod resultMethod) {
             super(title, content, resultMethod);
-            TextButton cancelButton = new TextButton(game.i18n.format("cancel"), game.tableSkin, "round");
-            this.button(cancelButton, false); // ESCAPE and BACK are also set to false
+            addCancelButton();
         }
 
     }

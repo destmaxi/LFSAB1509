@@ -255,7 +255,7 @@ public abstract class AbstractPlayScreen extends Screen {
                 obstacle = new Hole(position, this, playerMarble, randomObstacle, holeImage);
                 break;
             case 3:
-                obstacle = new LargeHole(position, playerMarble, randomObstacle, this, largeHoleImage);
+                obstacle = new LargeHole(position, playerMarble, this, largeHoleImage);
                 break;
             default:
                 obstacle = new Wall(position, randomObstacle, playerMarble, this, wallImage);

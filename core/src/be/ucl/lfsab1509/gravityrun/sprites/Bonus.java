@@ -14,19 +14,17 @@ public abstract class Bonus extends Sprite {
     public static final int SCORE_BONUS = 3;
     public static final int SLOWDOWN = 2;
 
-    AbstractPlayScreen playScreen;
     private int bonusId, offset;
 
-    Bonus(float y, int offset, Texture texture) {
-        super(0, y, texture);
+    Bonus(float y, int offset, AbstractPlayScreen playScreen, Texture texture) {
+        super(0, y, playScreen, texture);
 
         this.offset = offset;
     }
 
     Bonus(float y, int offset, AbstractPlayScreen playScreen, Random random, Texture texture) {
-        this(y, offset, texture);
+        this(y, offset, playScreen, texture);
 
-        this.playScreen = playScreen;
         position.x = random.nextInt(playScreen.width - texture.getWidth());
         bounds.x = position.x;
     }
@@ -35,9 +33,14 @@ public abstract class Bonus extends Sprite {
 
     public abstract boolean isFinished(Marble marble);
 
+    abstract void onCollide(Marble marble);
+
     @Override
     public boolean collides(Marble marble) {
-        return overlaps(marble);
+        boolean colliding = overlaps(marble);
+        if (colliding)
+            onCollide(marble);
+        return colliding;
     }
 
     public int getBonusId() {

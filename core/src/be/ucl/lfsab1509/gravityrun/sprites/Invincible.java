@@ -14,18 +14,6 @@ public class Invincible extends Bonus {
     }
 
     @Override
-    public boolean collides(Marble marble) {
-        if (overlaps(marble)) {
-            collideTime = 0;
-            marble.increaseActiveInvincibles();
-            marble.setInvincible(true);
-            playScreen.nbInvincible++;
-        }
-
-        return super.collides(marble);
-    }
-
-    @Override
     public int getValue() {
         return INVINCIBLE;
     }
@@ -33,6 +21,14 @@ public class Invincible extends Bonus {
     @Override
     public boolean isFinished(Marble marble) {
         return collideTime >= 3;
+    }
+
+    @Override
+    void onCollide(Marble marble) {
+        collideTime = 0;
+        marble.increaseActiveInvincibles();
+        marble.setInvincible(true);
+        playScreen.nbInvincible++;
     }
 
     @Override

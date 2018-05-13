@@ -8,7 +8,7 @@ import java.util.Random;
 public class Wall extends Obstacle {
 
     public Wall(float y, Random random, Marble marble, AbstractPlayScreen playScreen, Texture texture) {
-        super(y, playScreen, random, texture);
+        super(y, playScreen, texture);
         int x = random.nextBoolean()
                 ? -random.nextInt(2 * marble.getNormalDiameter())
                 : -random.nextInt(2 * marble.getNormalDiameter()) + playScreen.width / 2;

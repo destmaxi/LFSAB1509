@@ -12,14 +12,6 @@ public class NewLife extends Bonus {
     }
 
     @Override
-    public boolean collides(Marble marble) {
-        if (overlaps(marble))
-            playScreen.nbNewLife++;
-
-        return super.collides(marble);
-    }
-
-    @Override
     public int getValue() {
         return NEW_LIFE;
     }
@@ -30,4 +22,8 @@ public class NewLife extends Bonus {
         return true;
     }
 
+    @Override
+    void onCollide(Marble marble) {
+        playScreen.nbNewLife++;
+    }
 }

@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class EmptyBonus extends Bonus {
 
     public EmptyBonus(float y, int offset, Texture texture) {
-        super(y, offset, texture);
+        super(y, offset, null, texture);
     }
 
     @Override
@@ -22,6 +22,11 @@ public class EmptyBonus extends Bonus {
     @Override
     public boolean isFinished(Marble marble) {
         return true;
+    }
+
+    @Override
+    void onCollide(Marble marble) {
+
     }
 
     @Override

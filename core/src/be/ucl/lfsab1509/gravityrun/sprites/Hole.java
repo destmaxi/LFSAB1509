@@ -8,15 +8,15 @@ import java.util.Random;
 public class Hole extends Obstacle {
 
     public Hole(float y, AbstractPlayScreen playScreen, Marble marble, Random random, Texture texture) {
-        this(0, y, playScreen, random, texture);
+        this(0, y, playScreen, texture);
 
         position.x = random.nextInt(playScreen.width - texture.getWidth());
         bounds.set(position.x + marble.getNormalDiameter() / 2, position.y + marble.getNormalDiameter() / 2,
                 texture.getWidth() - marble.getNormalDiameter(), texture.getHeight() - marble.getNormalDiameter());
     }
 
-    Hole(float x, float y, AbstractPlayScreen playScreen, Random random, Texture texture) {
-        super(x, y, playScreen, random, texture);
+    Hole(float x, float y, AbstractPlayScreen playScreen, Texture texture) {
+        super(x, y, playScreen, texture);
     }
 
     @Override

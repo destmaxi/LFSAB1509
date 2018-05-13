@@ -14,18 +14,6 @@ public class SlowDown extends Bonus {
     }
 
     @Override
-    public boolean collides(Marble marble) {
-        if (overlaps(marble)) {
-            collideTime = 0;
-            marble.increaseActiveSlowdowns();
-            marble.setSlowDown(.5f);
-            playScreen.nbSlowDown++;
-        }
-
-        return super.collides(marble);
-    }
-
-    @Override
     public int getValue() {
         return SLOWDOWN;
     }
@@ -33,6 +21,14 @@ public class SlowDown extends Bonus {
     @Override
     public boolean isFinished(Marble marble) {
         return collideTime >= 5;
+    }
+
+    @Override
+    void onCollide(Marble marble) {
+        collideTime = 0;
+        marble.increaseActiveSlowdowns();
+        marble.setSlowDown(.5f);
+        playScreen.nbSlowDown++;
     }
 
     @Override

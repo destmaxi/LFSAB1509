@@ -13,13 +13,6 @@ public class CamReposition extends Bonus {
     }
 
     @Override
-    public boolean collides(Marble marble) {
-        if (overlaps(marble))
-            marble.setRepositioning(.5f);
-        return super.collides(marble);
-    }
-
-    @Override
     public int getValue() {
         return CAM_REPOSITION;
     }
@@ -27,6 +20,11 @@ public class CamReposition extends Bonus {
     @Override
     public boolean isFinished(Marble marble) {
         return playScreen.getCameraPosition().y <= marble.getCenterPosition().y;
+    }
+
+    @Override
+    void onCollide(Marble marble) {
+        marble.setRepositioning(.5f);
     }
 
     @Override

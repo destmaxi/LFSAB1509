@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.Align;
 
 public class HomeScreen extends AbstractMenuScreen {
 
-    private boolean canStartMultiplayerGame = false;
+//    private boolean canStartMultiplayerGame = false;
     private final ImageButton achievementsButton, gpgsButton, leaderboardsButton;
     private Label hyLabel;
     private Texture achievementsImage, gpgsImage, leaderboardsImage;
@@ -24,7 +24,7 @@ public class HomeScreen extends AbstractMenuScreen {
 
         Label title = new Label(game.i18n.format("menu"), game.titleSkin, "title");
 
-        int standardWidth = calculateStandardWidth();
+        int standardWidth = calculateStandardWidth(width);
         achievementsImage = new Texture("drawable-" + standardWidth + "/achievements.png");
         gpgsImage = new Texture("drawable-" + standardWidth + "/gpgs.png");
         leaderboardsImage = new Texture("drawable-" + standardWidth + "/leaderboards.png");
@@ -77,10 +77,19 @@ public class HomeScreen extends AbstractMenuScreen {
         startGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                soundManager.replayGame(); // FIXME le placement de cette instruction laisse à désirer. 20 msec de délai
-                screenManager.push(new PlayScreen(game));
+                soundManager.replayGame();  // FIXME le placement de cette instruction laisse à désirer. 20 msec de délai
+                screenManager.push(new SoloPlayScreen(game));
             }
         });
+
+        TextButton multiplayerButton = new TextButton(game.i18n.format("play_two"), game.tableSkin, "round");
+        multiplayerButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                screenManager.push(new MultiplayerConnectionScreen(game));
+            }
+        });
+
         TextButton scoreBoardButton = new TextButton(game.i18n.format("my_score"), game.tableSkin, "round");
         scoreBoardButton.addListener(new ClickListener() {
             @Override
@@ -96,6 +105,8 @@ public class HomeScreen extends AbstractMenuScreen {
                 canStartMultiplayerGame = true;*/
             }
         });
+
+
         TextButton optionButton = new TextButton(game.i18n.format("option"), game.tableSkin, "round");
         optionButton.addListener(new ClickListener() {
             @Override
@@ -103,7 +114,6 @@ public class HomeScreen extends AbstractMenuScreen {
                 screenManager.push(new OptionScreen(game));
             }
         });
-        // TODO ici, ça prend environ 10ms
 
         hyLabel = new Label("", game.tableSkin);
         hyLabel.setAlignment(Align.center);
@@ -117,9 +127,11 @@ public class HomeScreen extends AbstractMenuScreen {
         table.row();
         table.add(startGameButton).expandX().fillX().padTop(height - containerHeight);
         table.row();
-        table.add(scoreBoardButton).expandX().fillX().padTop(height - containerHeight);
+        table.add(multiplayerButton).expandX().fillX().padTop((height - containerHeight) / 2);
         table.row();
-        table.add(optionButton).expandX().fillX().padTop(height - containerHeight);
+        table.add(scoreBoardButton).expandX().fillX().padTop((height - containerHeight) / 2);
+        table.row();
+        table.add(optionButton).expandX().fillX().padTop((height - containerHeight) / 2);
         table.row();
 
         initStage(table);
@@ -144,10 +156,10 @@ public class HomeScreen extends AbstractMenuScreen {
 
     @Override
     public void render(float dt) {
-        if (canStartMultiplayerGame) {
+        /*if (canStartMultiplayerGame) {
             canStartMultiplayerGame = false;
             startMultiplayerGame();
-        }
+        }*/
 
         super.render(dt);
 
@@ -166,8 +178,8 @@ public class HomeScreen extends AbstractMenuScreen {
         leaderboardsButton.setChecked(game.gpgs.isSignedIn());
     }
 
-    private void startMultiplayerGame() {
+    /*private void startMultiplayerGame() {
         screenManager.push(new PlayScreen(game));
-    }
+    }*/
 
 }

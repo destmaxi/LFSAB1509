@@ -2,34 +2,71 @@ package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
-public class GameOverScreen extends AbstractMenuScreen {
+class GameOverScreen extends AbstractMenuScreen {
 
-    GameOverScreen(GravityRun gravityRun, int finalScore, int difficulty, boolean deadBottom, boolean deadHole, int nbInvincible, int nbNewLife, int nbScoreBonus, int nbSlowDown) {
-        super(gravityRun);
+    private boolean multiplayer;
 
-        int previousHighScore = game.user.getHighScore();
-        boolean isNewHighScore = game.user.addScore(finalScore);
+    GameOverScreen(GravityRun gravityRun, AbstractPlayScreen playScreen) {
+        this(gravityRun, playScreen instanceof AbstractMultiPlayScreen, playScreen.playerMarble.getScore());
+
+        if (multiplayer)
+            return;
+
+        boolean deadBottom = playScreen.deadBottom;
+        boolean deadHole = playScreen.deadHole;
+        int difficulty = playScreen.playerMarble.getDifficulty();
+        int finalScore = playScreen.playerMarble.getScore();
+        int nbInvincible = playScreen.nbInvincible;
+        int nbNewLife = playScreen.nbNewLife;
+        int nbScoreBonus = playScreen.nbScoreBonus;
+        int nbSlowDown = playScreen.nbSlowDown;
 
         submitGpgs(finalScore, difficulty, deadBottom, deadHole, nbInvincible, nbNewLife, nbScoreBonus, nbSlowDown);
 
+    }
+
+    GameOverScreen(GravityRun gravityRun, boolean multiplayer, int finalScore) {
+        super(gravityRun);
+
+        this.multiplayer = multiplayer;
+        int previousHighScore = game.user.getHighScore();
+        boolean isNewHighScore = game.user.addScore(finalScore);
+        game.user.write();
+
         TextButton menuButton = new TextButton(game.i18n.format("menu"), game.tableSkin, "round");
-        menuButton.addListener(new ChangeListener() {
+        menuButton.addListener(new ClickListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
+            public void clicked(InputEvent event, float x, float y) {
                 screenManager.pop();
+                disconnect();
             }
         });
+
         TextButton replayButton = new TextButton(game.i18n.format("replay"), game.tableSkin, "round");
+        replayButton.setVisible(isHost() || !isConnected());
         replayButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                screenManager.set(new PlayScreen(game));
+                if (multiplayer) {
+                    int lives = game.user.getMultiLives();
+                    int difficulty = game.user.getMulti_IndexSelected();
+                    write("[" + 4 + ":" + lives + ":" + difficulty + ":" + game.user.getMultiMode() + "]#");
+                    AbstractMultiPlayScreen abstractMultiPlayScreen = game.user.getMultiMode() == 0
+                            ? new MultiPlayFirstModeScreen(game)
+                            : new MultiPlaySecondModeScreen(game);
+
+                    setMultiPlayScreen(abstractMultiPlayScreen);
+                    screenManager.set(abstractMultiPlayScreen);
+                } else
+                    screenManager.set(new SoloPlayScreen(game));
             }
         });
 
@@ -39,30 +76,19 @@ public class GameOverScreen extends AbstractMenuScreen {
         table.add(title).top();
         table.row();
 
+        Label label1, label2;
         if (isNewHighScore) {
-            Label newHighScoreLabel = new Label(game.i18n.format("new_high_score", finalScore), game.aaronScoreSkin);
-            newHighScoreLabel.setAlignment(Align.center);
-            newHighScoreLabel.setWrap(true);
-            Label previousHighScoreLabel = new Label(game.i18n.format("previous_high_score", previousHighScore), game.aaronScoreSkin);
-            previousHighScoreLabel.setAlignment(Align.center);
-            previousHighScoreLabel.setWrap(true);
-            table.add(newHighScoreLabel).padTop(height - containerHeight).width(containerWidth).expandX();
-            table.row();
-            table.add(previousHighScoreLabel).padTop(height - containerHeight).width(containerWidth).expandX();
-            table.row();
+            label1 = newCenteredLabel(game.i18n.format("new_high_score", finalScore));
+            label2 = newCenteredLabel(game.i18n.format("previous_high_score", previousHighScore));
         } else {
-            Label highScoreLabel = new Label(game.i18n.format("high_score", previousHighScore), game.aaronScoreSkin);
-            highScoreLabel.setAlignment(Align.center);
-            highScoreLabel.setWrap(true);
-            Label scoreLabel = new Label(game.i18n.format("final_score", finalScore), game.aaronScoreSkin);
-            scoreLabel.setAlignment(Align.center);
-            scoreLabel.setWrap(true);
-            table.add(scoreLabel).padTop(height - containerHeight).width(containerWidth).expandX();
-            table.row();
-            table.add(highScoreLabel).padTop(height - containerHeight).width(containerWidth).expandX();
-            table.row();
+            label1 = newCenteredLabel(game.i18n.format("high_score", previousHighScore));
+            label2 = newCenteredLabel(game.i18n.format("final_score", finalScore));
         }
 
+        table.add(label1).padTop(height - containerHeight).width(containerWidth).expandX();
+        table.row();
+        table.add(label2).padTop(height - containerHeight).width(containerWidth).expandX();
+        table.row();
         table.add(replayButton).expandX().fillX().padTop((height - containerHeight) * 2);
         table.row();
         table.add(menuButton).expandX().fillX().padTop(height - containerHeight);
@@ -71,9 +97,46 @@ public class GameOverScreen extends AbstractMenuScreen {
     }
 
     @Override
-    public void hide() {
-        game.user.write();
-        super.hide();
+    public boolean isHost() {
+        return bluetoothManager.isHost();
+    }
+
+    @Override
+    public void render(float dt) {
+        super.render(dt);
+        handelInput();
+        onDisconnect();
+    }
+
+    private void handelInput() {
+        if (MultiplayerConnectionScreen.isClient && MultiplayerConnectionScreen.ready) {
+            AbstractMultiPlayScreen abstractMultiPlayScreen = game.user.getMultiMode() == 0
+                    ? new MultiPlayFirstModeScreen(game)
+                    : new MultiPlaySecondModeScreen(game);
+
+            setMultiPlayScreen(abstractMultiPlayScreen);
+            screenManager.set(abstractMultiPlayScreen);
+        }
+    }
+
+    private Label newCenteredLabel(String labelText) {
+        Label label = new Label(labelText, game.aaronScoreSkin);
+        label.setAlignment(Align.center);
+        label.setWrap(true);
+        return label;
+    }
+
+    private void onDisconnect() {
+        if (!multiplayer || isConnected())
+            return;
+
+        MultiplayerConnectionScreen.ready = false;
+        setMultiPlayScreen(new MultiPlayFirstModeScreen(game, false));
+
+        while (!(screenManager.peek() instanceof HomeScreen))
+            screenManager.pop();
+
+        ((AbstractMenuScreen) screenManager.peek()).spawnErrorDialog(game.i18n.format("error_connection"), game.i18n.format("error_connection_lost"));
     }
 
     private void submitGpgs(int score, int difficulty, boolean deadBottom, boolean deadHole, int nbInvincible, int nbNewLife, int nbScoreBonus, int nbSlowDown) {

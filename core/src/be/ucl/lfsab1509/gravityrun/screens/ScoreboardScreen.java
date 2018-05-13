@@ -27,23 +27,22 @@ class ScoreboardScreen extends AbstractMenuScreen {
             listWidget[level] = new List(game.tableScoreBoardSkin);
             Array<String> array = new Array<>(HIGH_SCORE_COUNT);
             ArrayList<Integer> list = game.user.getHighScores(level, HIGH_SCORE_COUNT);
-            for (int i = 0; i < HIGH_SCORE_COUNT; i++) {
+            for (int i = 0; i < HIGH_SCORE_COUNT; i++)
                 array.add(i + ".  " + list.get(i));
-            }
             listWidget[level].setItems(array);
         }
 
         Table table = new Table();
         table.add(title).colspan(5).expandX();
-        table.row();//.expandX().expandY();
-        table.add(beginnerLabel).expandY().colspan(3).fillX().left();
-        table.add(listWidget[0]).expandY().colspan(2).center();
-        table.row();//.colspan(5);
-        table.add(intermediateLabel).expandY().colspan(3).fillX().left();
-        table.add(listWidget[1]).expandY().colspan(2).center();
-        table.row();//.colspan(5);
-        table.add(expertLabel).expandY().colspan(3).fillX().left();
-        table.add(listWidget[2]).expandY().colspan(2).center();
+        table.row();
+        table.add(beginnerLabel).colspan(3).expandY().fillX().left().padTop((height - containerHeight) / 2);
+        table.add(listWidget[0]).center().colspan(2).expandY().padTop((height - containerHeight) / 2);
+        table.row();
+        table.add(intermediateLabel).colspan(3).expandY().fillX().left().padTop((height - containerHeight) / 2);
+        table.add(listWidget[1]).center().colspan(2).expandY().padTop((height - containerHeight) / 2);
+        table.row();
+        table.add(expertLabel).colspan(3).expandY().fillX().left().padTop((height - containerHeight) / 2);
+        table.add(listWidget[2]).center().colspan(2).expandY().padTop((height - containerHeight) / 2);
 
         initStage(table);
     }

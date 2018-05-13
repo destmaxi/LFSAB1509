@@ -8,7 +8,7 @@ public class MarbleAnimation {
 
     private static final float CYCLE_TIME = 1;
     private static final int FRAME_COUNT = 5;
-    private static final int MARBLE_COUNT = 5;
+    private static final int MARBLE_COUNT = 8 + 1 + 4;
     private static final float MAX_FRAME_TIME = CYCLE_TIME / FRAME_COUNT;
 
     private Array<Array<TextureRegion>> frames;
@@ -19,29 +19,16 @@ public class MarbleAnimation {
         TextureRegion region = new TextureRegion(marbles);
         frames = new Array<>();
         for (int i = 0; i < MARBLE_COUNT; i++) {
-            frames.add(new Array<TextureRegion>());
+            frames.add(new Array<>());
             for (int j = 0; j < FRAME_COUNT; j++) {
-                int diameter = (int) ((8 + i) * standardWidth / 80);
-                int x = (int) ((i * (i + 15)) * standardWidth / 160);
+                int diameter = (int) (i * standardWidth / 80);
+                int x = (int) ((i * (i - 1)) * standardWidth / 160);
                 int y = j * diameter;
                 frames.get(i).add(new TextureRegion(region, x, y, diameter, diameter));
             }
         }
         currentFrameTime = 0;
         frame = 0;
-    }
-
-    public void update(float dt, boolean gameOver) {
-        if (!gameOver)
-            currentFrameTime += dt;
-        if (currentFrameTime > MAX_FRAME_TIME) {
-            frame = (frame + 1) % FRAME_COUNT;
-            currentFrameTime = 0;
-        }
-    }
-
-    public void dispose() {
-
     }
 
     int getDiameter(float z) {
@@ -55,18 +42,26 @@ public class MarbleAnimation {
     }
 
     private int getMarble(float z) {
-        int marble;
         if (z == 0)
-            marble = 0;
-        else if (z <= Marble.JUMP_HEIGHT * .25f)
-            marble = 1;
-        else if (z <= Marble.JUMP_HEIGHT * .5f)
-            marble = 2;
-        else if (z <= Marble.JUMP_HEIGHT * .75f)
-            marble = 3;
-        else
-            marble = 4;
-        return marble;
+            return 8;
+
+        for (int i = -7; i <= 0; i++)
+            if (z < i * .25f * Marble.JUMP_HEIGHT)
+                return 7 + i;
+
+        for (int i = 0; i < 3; i++)
+            if (z <= i * .25f * Marble.JUMP_HEIGHT)
+                return 9 + i;
+
+        return 12;
+    }
+
+    public void update(float dt) {
+        currentFrameTime += dt;
+        if (currentFrameTime > MAX_FRAME_TIME) {
+            frame = (frame + 1) % FRAME_COUNT;
+            currentFrameTime = 0;
+        }
     }
 
 }

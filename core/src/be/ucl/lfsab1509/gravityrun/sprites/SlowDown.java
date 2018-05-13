@@ -1,44 +1,52 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
-import be.ucl.lfsab1509.gravityrun.screens.PlayScreen;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Rectangle;
+import be.ucl.lfsab1509.gravityrun.screens.AbstractPlayScreen;
+import com.badlogic.gdx.graphics.Texture;
+
+import java.util.Random;
 
 public class SlowDown extends Bonus {
 
-    private static int activeSlowDowns = 0;
+    private float collideTime;
 
-    public SlowDown(float y, int offset, int standardWidth) {
-        super(y, offset, "drawable-" + standardWidth + "/slowdown.png");
+    public SlowDown(float y, int offset, AbstractPlayScreen playScreen, Random random, Texture texture) {
+        super(y, offset, playScreen, random, texture);
     }
 
     @Override
-    public boolean collidesMarble() {
-        if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
-            activeSlowDowns++;
+    public boolean collides(Marble marble) {
+        if (overlaps(marble)) {
             collideTime = 0;
+            marble.increaseActiveSlowdowns();
             marble.setSlowDown(.5f);
-            PlayScreen.nbSlowDown++;
-            return true;
+            playScreen.nbSlowDown++;
         }
-        return false;
+
+        return super.collides(marble);
     }
 
     @Override
-    public boolean isFinished() {
+    public int getValue() {
+        return SLOWDOWN;
+    }
+
+    @Override
+    public boolean isFinished(Marble marble) {
         return collideTime >= 5;
     }
 
     @Override
-    public void update(float dt) {
+    public void update(float dt, Marble marble) {
         collideTime += dt;
 
-        if (collideTime >= 5 && --activeSlowDowns == 0)
+        if (!marble.isDead() && collideTime >= 5 && marble.decreaseActiveSlowdowns() == 0)
             marble.setSlowDown(1f);
     }
 
-    public static void resetBonus() {
-        activeSlowDowns = 0;
+    public void activateSlowdown(Marble marble) {
+        collideTime = 0;
+        marble.increaseActiveSlowdowns();
+        marble.setSlowDown(1.5f);
     }
 
 }

@@ -1,46 +1,48 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
-import be.ucl.lfsab1509.gravityrun.screens.PlayScreen;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Rectangle;
+import be.ucl.lfsab1509.gravityrun.screens.AbstractPlayScreen;
+import com.badlogic.gdx.graphics.Texture;
+
+import java.util.Random;
 
 public class Invincible extends Bonus {
 
-    private static int activeInvincibles = 0;
+    private float collideTime;
 
-    public Invincible(float y, int offset, int standardWidth) {
-        super(y, offset, "drawable-" + standardWidth + "/invincible.png");
+    public Invincible(float y, int offset, AbstractPlayScreen playScreen, Random random, Texture texture) {
+        super(y, offset, playScreen, random, texture);
     }
 
     @Override
-    public boolean collidesMarble() {
-        if (Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
-            activeInvincibles++;
+    public boolean collides(Marble marble) {
+        if (overlaps(marble)) {
             collideTime = 0;
+            marble.increaseActiveInvincibles();
             marble.setInvincible(true);
-            PlayScreen.nbInvincible++;
-            return true;
+            playScreen.nbInvincible++;
         }
-        return false;
+
+        return super.collides(marble);
     }
 
     @Override
-    public boolean isFinished() {
+    public int getValue() {
+        return INVINCIBLE;
+    }
+
+    @Override
+    public boolean isFinished(Marble marble) {
         return collideTime >= 3;
     }
 
     @Override
-    public void update(float dt) {
+    public void update(float dt, Marble marble) {
         collideTime += dt;
 
-        if (collideTime >= 3 && --activeInvincibles == 0) {
+        if (!marble.isDead() && collideTime >= 3 && marble.decreaseActiveInvicibles() == 0) {
             marble.setInvincible(false);
             marble.setInWall(true);
         }
-    }
-
-    public static void resetBonus() {
-        activeInvincibles = 0;
     }
 
 }

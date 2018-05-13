@@ -1,6 +1,7 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
+import be.ucl.lfsab1509.gravityrun.tools.User;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -9,19 +10,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-import java.util.ArrayList;
-
 public class FirstScreen extends AbstractMenuScreen {
 
     public FirstScreen(GravityRun gravityRun) {
         super(gravityRun);
 
         String username = game.i18n.format("username");
+
         Label title = new Label(game.i18n.format("welcome"), game.titleSkin, "title");
 
-        final TextField usernameField = new TextField(username, game.tableSkin);
-        usernameField.setText(username);
+        TextField usernameField = new TextField(username, game.tableSkin);
         usernameField.setMessageText(game.i18n.format("username"));
+        usernameField.setText(username);
         usernameField.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -38,7 +38,8 @@ public class FirstScreen extends AbstractMenuScreen {
                 }
             }
         });
-        final TextButton startButton = new TextButton(game.i18n.format("start"), game.tableSkin, "round");
+
+        TextButton startButton = new TextButton(game.i18n.format("start"), game.tableSkin, "round");
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -58,27 +59,11 @@ public class FirstScreen extends AbstractMenuScreen {
         initStage(table);
     }
 
-    private void initUser(String username) {
-        ArrayList<Integer> arrayList = new ArrayList<>();
-        for (int i = 0; i < 3; i++)
-            arrayList.add(0);
-
-        game.user.setUsername(username);
-        game.user.setFirstTimeTrue();
-        game.user.setBeginnerScoreList(new ArrayList<>());
-        game.user.setIntermediateScoreList(new ArrayList<>());
-        game.user.setExpertScoreList(new ArrayList<>());
-        game.user.setIndexSelected(1);
-        game.user.setHighScoreList(arrayList);
-
-        game.user.write();
-    }
-
     private void validateUsername(String username) {
-        if (!game.user.checkUsername(username))
-            spawnErrorDialog(game.i18n.format("error_username_default"), game.user.getUsernameError(username));
+        if (!User.checkUsername(username))
+            spawnErrorDialog(game.i18n.format("error_username_default"), User.getUsernameError(username));
         else {
-            initUser(username);
+            game.user = new User(game, username);
             screenManager.set(new HomeScreen(game));
         }
     }

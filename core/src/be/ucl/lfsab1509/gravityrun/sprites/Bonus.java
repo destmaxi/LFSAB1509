@@ -1,64 +1,59 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
-import be.ucl.lfsab1509.gravityrun.GravityRun;
-
+import be.ucl.lfsab1509.gravityrun.screens.AbstractPlayScreen;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Shape2D;
-import com.badlogic.gdx.math.Vector2;
 
 import java.util.Random;
 
-public abstract class Bonus {
+public abstract class Bonus extends Sprite {
 
-    static Marble marble;
+    static final int CAM_REPOSITION = 4;
+    static final int EMPTY_BONUS = 5;
+    static final int INVINCIBLE = 6;
+    public static final int NEW_LIFE = 1;
+    public static final int SCORE_BONUS = 3;
+    public static final int SLOWDOWN = 2;
 
-    float collideTime;
-    private int offset;
-    Shape2D bounds;
-    private Texture bonusTexture;
-    private Vector2 position;
+    AbstractPlayScreen playScreen;
+    private int bonusId, offset;
 
-    Bonus(float y, int offset, String path) {
+    Bonus(float y, int offset, Texture texture) {
+        super(0, y, texture);
+
         this.offset = offset;
-        Random random = new Random();
+    }
 
-        bonusTexture = new Texture(path);
-        position = new Vector2(random.nextInt(GravityRun.WIDTH - bonusTexture.getWidth()), y);
-        bounds = new Rectangle(position.x, position.y, bonusTexture.getWidth(), bonusTexture.getHeight());    }
+    Bonus(float y, int offset, AbstractPlayScreen playScreen, Random random, Texture texture) {
+        this(y, offset, texture);
 
-    public void dispose() {
-        bonusTexture.dispose();
+        this.playScreen = playScreen;
+        position.x = random.nextInt(playScreen.width - texture.getWidth());
+        bounds.x = position.x;
+    }
+
+    public abstract int getValue();
+
+    public abstract boolean isFinished(Marble marble);
+
+    @Override
+    public boolean collides(Marble marble) {
+        return overlaps(marble);
+    }
+
+    public int getBonusId() {
+        return bonusId;
     }
 
     public int getOffset() {
         return offset;
     }
 
-    public Vector2 getPosition() {
-        return position;
+    public void setBonusId(int bonusId) {
+        this.bonusId = bonusId;
     }
 
-    public static void initMarble(Marble marble1) {
-        marble = marble1;
+    public void update(float dt, Marble marble) {
+
     }
-
-    public boolean isOutOfScreen(float screenCenterY) {
-        float screenBottom = screenCenterY - GravityRun.HEIGHT / 2;
-        float bonusTop = position.y + bonusTexture.getHeight();
-
-        return screenBottom >= bonusTop;
-    }
-
-    public void render(SpriteBatch spriteBatch) {
-        spriteBatch.draw(bonusTexture, position.x, position.y);
-    }
-
-    public abstract boolean collidesMarble();
-
-    public abstract boolean isFinished();
-
-    public abstract void update(float dt);
 
 }

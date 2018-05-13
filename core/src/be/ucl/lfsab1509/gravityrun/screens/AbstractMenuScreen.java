@@ -3,9 +3,10 @@ package be.ucl.lfsab1509.gravityrun.screens;
 import be.ucl.lfsab1509.gravityrun.GravityRun;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -32,11 +33,12 @@ public abstract class AbstractMenuScreen extends Screen {
     @Override
     public void render(float dt) {
         if (clickedBack() && openDialogs == 0) {
+            System.out.println("clickedBack");
             screenManager.pop();
             return;
         }
 
-        stage.act(Gdx.graphics.getDeltaTime());
+        stage.act(dt);
         stage.draw();
     }
 
@@ -46,12 +48,18 @@ public abstract class AbstractMenuScreen extends Screen {
         soundManager.replayMenu();
     }
 
+    private static Table embedTable(List<String> list) {
+        Table table = new Table();
+        table.add(list);
+        return table;
+    }
+
     void initStage(Table table) {
         Container<Table> tableContainer = new Container<>();
-        tableContainer.setSize(containerWidth, containerHeight);
-        tableContainer.setPosition((width - containerWidth) / 2, (height - containerHeight) / 2);
-        tableContainer.top().fillX();
         tableContainer.setActor(table);
+        tableContainer.setPosition((width - containerWidth) / 2, (height - containerHeight) / 2);
+        tableContainer.setSize(containerWidth, containerHeight);
+        tableContainer.top().fillX();
 
         stage.addActor(tableContainer);
     }
@@ -73,36 +81,50 @@ public abstract class AbstractMenuScreen extends Screen {
     }
 
     public interface DialogResultMethod {
-        /**
-         * Action à effectuer lors de la sortie de la boîte de dialogue (appui sur un bouton ou sur une touche).
-         *
-         * @param object la valeur de sortie associée à l'évènement. Peut être {@code null} si aucune valeur n'a été associée.
-         * @return true si la boîte de dialogue peut se fermer, false sinon.
-         */
+
         boolean result(Object object);
+
     }
 
-    /**
-     * Fenêtre de dialogue comportant uniquement un content et aucun bouton pour en sortir.
-     * Les seuls moyens d'en sortir sont le bouton BACK et la touche ESCAPE.
-     * Toute autre méthode doit être ajoutée explicitement.
-     */
+    public interface ListResultCallback {
+
+        void callback(String selected);
+
+    }
+
     class EmptyButtonsDialog extends Dialog {
+
         private DialogResultMethod resultMethod;
 
         EmptyButtonsDialog(String title, Table content, DialogResultMethod resultMethod) {
             super(title, game.tableSkin);
             this.resultMethod = resultMethod;
-            this.getContentTable().add(content);
+            this.getContentTable().add(content).width(0.8f * width).pad(width / 40f); // FIXME rendre le padding dépendante de la résolution de l'écran
+            this.getButtonTable().add(new Actor()).expandX(); // parce qu'il en faut au moins un.
             this.key(Input.Keys.BACK, false).key(Input.Keys.ESCAPE, false);
             this.setModal(true);
             this.setMovable(false);
         }
 
         @Override
+        public Dialog button(Button button, Object object) {
+            getButtonTable().add(button);
+            // gros hack : on ajoute des acteurs vides entre les boutons pour que seuls les acteurs vides expand,
+            // tous de la même manière, de sorte à avoir des espacements égaux entre boutons.
+            getButtonTable().add(new Actor()).expandX();
+            setObject(button, object);
+            return this;
+        }
+
+        @Override
         public void hide(Action action) {
             openDialogs--;
             super.hide(action);
+        }
+
+        void requestHide() {
+            resultMethod.result(false); // discard return value as we won't use it
+            hide();
         }
 
         @Override
@@ -115,33 +137,84 @@ public abstract class AbstractMenuScreen extends Screen {
         @Override
         public Dialog show(Stage stage, Action action) {
             openDialogs++;
+            this.addListener(new EventListener() {
+                private final float MARGIN = width / 20; // FIXME la rendre dépendante de la résolution de l'écran
+
+                @Override
+                public boolean handle(Event event) {
+                    if (!(event instanceof InputEvent))
+                        return false;
+
+                    InputEvent inputEvent = (InputEvent) event;
+                    if (inputEvent.getType() != InputEvent.Type.touchDown)
+                        return false;
+
+                    Vector2 position = inputEvent.toCoordinates(event.getListenerActor(), new Vector2());
+                    if (isOutsideOfDialog(position.x, position.y)) {
+                        EmptyButtonsDialog.this.requestHide();
+                        return true;
+                    } else
+                        return false;
+                }
+
+                private boolean isOutsideOfDialog(float x, float y) {
+                    return (x < -MARGIN) || (x > EmptyButtonsDialog.this.getWidth() + MARGIN)
+                            || (y < -MARGIN) || (y > EmptyButtonsDialog.this.getHeight() + MARGIN);
+                }
+            });
             return super.show(stage, action);
         }
+
     }
 
-    /**
-     * Fenêtre de dialogue comportant, en plus de {@link EmptyButtonsDialog}, un bouton "Ok"
-     * et la touche "ENTER" permettant de confirmer les changements au lieu de les ignorer ;
-     * ils sont tous les deux associés à la valeur {@code true}.
-     */
     class MessageDialog extends EmptyButtonsDialog {
+
         MessageDialog(String title, Table content, DialogResultMethod resultMethod) {
             super(title, content, resultMethod);
-            TextButton okButton = new TextButton(game.i18n.format("ok"), game.aaronScoreSkin, "round");
+            TextButton okButton = new TextButton(game.i18n.format("ok"), game.tableSkin, "round");
             this.button(okButton, true).key(Input.Keys.ENTER, true);
         }
+
     }
 
-    /**
-     * Fenêtre de dialogue comportant, en plus de {@link EmptyButtonsDialog}, un bouton "Annuler"
-     * permettant de quitter la fenêtre dans sauver les changements, et associé à la valeur {@code false}.
-     */
     class EditDialog extends MessageDialog {
+
         EditDialog(String title, Table content, DialogResultMethod resultMethod) {
             super(title, content, resultMethod);
-            TextButton cancelButton = new TextButton(game.i18n.format("cancel"), game.aaronScoreSkin, "round");
+            TextButton cancelButton = new TextButton(game.i18n.format("cancel"), game.tableSkin, "round");
             this.button(cancelButton, false);
         }
+
+    }
+
+    class NoOkEditDialog extends EmptyButtonsDialog {
+
+        NoOkEditDialog(String title, Table content, DialogResultMethod resultMethod) {
+            super(title, content, resultMethod);
+            TextButton cancelButton = new TextButton(game.i18n.format("cancel"), game.tableSkin, "round");
+            this.button(cancelButton, false); // ESCAPE and BACK are also set to false
+        }
+
+    }
+
+    class ListDialog extends NoOkEditDialog {
+
+        ListDialog(String title, List<String> list, ListResultCallback listResultCallback) {
+            super(title, embedTable(list), new DialogResultMethod() {
+                @Override
+                public boolean result(Object object) {
+                    return true;
+                }
+            });
+            list.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    listResultCallback.callback(list.getSelected());
+                    ListDialog.this.requestHide();
+                }
+            });
+        }
+
     }
 
 }

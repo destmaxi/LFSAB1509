@@ -4,10 +4,7 @@ import be.ucl.lfsab1509.gravityrun.screens.AbstractMenuScreen;
 import be.ucl.lfsab1509.gravityrun.screens.FirstScreen;
 import be.ucl.lfsab1509.gravityrun.screens.HomeScreen;
 import be.ucl.lfsab1509.gravityrun.screens.ScreenManager;
-import be.ucl.lfsab1509.gravityrun.tools.IGpgs;
-import be.ucl.lfsab1509.gravityrun.tools.Skin;
-import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
-import be.ucl.lfsab1509.gravityrun.tools.User;
+import be.ucl.lfsab1509.gravityrun.tools.*;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -17,26 +14,31 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.I18NBundle;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 public class GravityRun extends Game {
 
     public static float DENSITY;
     public static int HEIGHT;
-    public static final String TITLE = "Gravity Run";
+    public static final int MULTI_HEIGHT = 800;
+    public static final int MULTI_WIDTH = 480;
     public static int WIDTH;
-    public Skin aaronScoreSkin, labelScoreBoardSkin, tableScoreBoardSkin, tableSkin, titleSkin;
-    private TextureAtlas skinTextureAtlas;
 
-    public ArrayList<Integer> scoreList;
+    public BluetoothManager bluetoothManager;
     public I18NBundle i18n;
     public IGpgs gpgs;
     public Preferences preferences;
     public ScreenManager screenManager;
+    public Skin aaronScoreSkin, labelScoreBoardSkin, tableScoreBoardSkin, tableSkin, titleSkin;
     public SoundManager soundManager;
     public SpriteBatch spriteBatch;
+    private TextureAtlas skinTextureAtlas;
     public User user;
+
+    public GravityRun(BluetoothManager bluetoothManager) {
+        super();
+        this.bluetoothManager = bluetoothManager;
+    }
 
     @Override
     public void create() {
@@ -48,21 +50,25 @@ public class GravityRun extends Game {
 
         initializeSkins();
 
-        i18n = I18NBundle.createBundle(Gdx.files.internal("strings/string"));
+        i18n = I18NBundle.createBundle(Gdx.files.internal("strings/strings"));
         screenManager = new ScreenManager(this);
-        soundManager = new SoundManager();
         spriteBatch = new SpriteBatch();
+
+        I18NBundle.setExceptionOnMissingKey(false);
+        User.i18n = i18n;
 
         preferences = Gdx.app.getPreferences("Player");
         preferences.flush();
 
         Map<String, ?> map = preferences.get();
 
-        if (!preferences.getBoolean(User.FIRSTTIME)) {
-            user = new User(this);
+        if (!preferences.getBoolean(User.KEY_FIRSTTIME)) {
+            user = null;
+            soundManager = new SoundManager();
             screenManager.push(new FirstScreen(this));
         } else {
             user = new User(this, map);
+            soundManager = new SoundManager(user.getSoundLevel(), user.getMusicLevel());
             screenManager.push(new HomeScreen(this));
         }
     }

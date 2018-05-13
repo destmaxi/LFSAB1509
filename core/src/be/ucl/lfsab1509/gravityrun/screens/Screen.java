@@ -1,14 +1,16 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
+import be.ucl.lfsab1509.gravityrun.tools.BluetoothManager;
 import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
-public abstract class Screen implements com.badlogic.gdx.Screen {
+public abstract class Screen extends BluetoothManager implements com.badlogic.gdx.Screen {
 
-    float height, width;
+    BluetoothManager bluetoothManager;
     GravityRun game;
+    public int height, width;
     ScreenManager screenManager;
     SoundManager soundManager;
 
@@ -16,8 +18,24 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
         game = gravityRun;
         height = GravityRun.HEIGHT;
         width = GravityRun.WIDTH;
+        bluetoothManager = game.bluetoothManager;
         screenManager = game.screenManager;
         soundManager = game.soundManager;
+    }
+
+    @Override
+    public void connect(int devicePosition) {
+        bluetoothManager.connect(devicePosition);
+    }
+
+    @Override
+    public void disconnect() {
+        bluetoothManager.disconnect();
+    }
+
+    @Override
+    public void discoverDevices() {
+        bluetoothManager.discoverDevices();
     }
 
     @Override
@@ -26,8 +44,28 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
     }
 
     @Override
+    public void enableBluetooth() {
+        bluetoothManager.enableBluetooth();
+    }
+
+    @Override
+    public void getPairedDevices() {
+        bluetoothManager.getPairedDevices();
+    }
+
+    @Override
     public void hide() {
 
+    }
+
+    @Override
+    public boolean isConnected() {
+        return bluetoothManager.isConnected();
+    }
+
+    @Override
+    public boolean isHost() {
+        return false;
     }
 
     @Override
@@ -51,27 +89,37 @@ public abstract class Screen implements com.badlogic.gdx.Screen {
     }
 
     @Override
+    public void setMultiPlayScreen(AbstractMultiPlayScreen multiPlayScreen) {
+        bluetoothManager.setMultiPlayScreen(multiPlayScreen);
+    }
+
+    @Override
     public void show() {
 
     }
 
-    int calculateStandardWidth() {
-        int standardWidth;
-        if (width <= 480)
-            standardWidth = 480;
-        else if (width <= 600)
-            standardWidth = 600;
-        else if (width <= 840)
-            standardWidth = 840;
-        else if (width <= 960)
-            standardWidth = 960;
-        else if (width <= 1280)
-            standardWidth = 1280;
-        else if (width <= 1440)
-            standardWidth = 1440;
-        else
-            standardWidth = 1600;
-        return standardWidth;
+    @Override
+    public void startHost() {
+        bluetoothManager.startHost();
+    }
+
+    @Override
+    public boolean supportDeviceBluetooth() {
+        return bluetoothManager.supportDeviceBluetooth();
+    }
+
+    @Override
+    public void write(String string) {
+        bluetoothManager.write(string);
+    }
+
+
+    int calculateStandardWidth(int width) {
+        int[] widths = {480, 600, 840, 960, 1280, 1440};
+        for (int w : widths)
+            if (width <= w)
+                return w;
+        return 1600;
     }
 
     boolean clickedBack() {

@@ -1,49 +1,52 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
-import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.screens.PlayScreen;
-import be.ucl.lfsab1509.gravityrun.tools.SoundManager;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Rectangle;
+import be.ucl.lfsab1509.gravityrun.screens.AbstractPlayScreen;
+import com.badlogic.gdx.graphics.Texture;
+
+import java.util.Random;
 
 public class Wall extends Obstacle {
 
-    public Wall(float y, int standardWidth, int marbleWidth) {
-        super(y, "drawable-" + standardWidth + "/wall.png");
-        setX(random.nextBoolean()
-                ? -random.nextInt(2 * marbleWidth)
-                : -random.nextInt(2 * marbleWidth) + GravityRun.WIDTH / 2);
+    public Wall(float y, Random random, Marble marble, AbstractPlayScreen playScreen, Texture texture) {
+        super(y, playScreen, random, texture);
+        int x = random.nextBoolean()
+                ? -random.nextInt(2 * marble.getNormalDiameter())
+                : -random.nextInt(2 * marble.getNormalDiameter()) + playScreen.width / 2;
+
+        bounds.x = x;
+        position.x = x;
     }
 
     @Override
-    public void collides(Marble marble, SoundManager soundManager) {
+    public boolean collides(Marble marble) {
         float marbleCenterX = marble.getCenterPosition().x;
         float marbleCenterY = marble.getCenterPosition().y;
 
         float bottomBound = position.y;
         float leftBound = position.x;
-        float rightBound = position.x + obstacleTexture.getWidth();
+        float rightBound = position.x + texture.getWidth();
 
-        if (!Intersector.overlaps(marble.getBounds(), (Rectangle) bounds) || !marble.isInWall()) {
+        if (!(overlaps(marble) && marble.isInWall())) {
             marble.setInWall(false);
 
-            if (!marble.isInvincible() && Intersector.overlaps(marble.getBounds(), (Rectangle) bounds)) {
+            if (!marble.isInvincible() && overlaps(marble)) {
                 marble.setBlockedOnLeft(marbleCenterX > rightBound);
                 marble.setBlockedOnRight(marbleCenterX < leftBound);
                 marble.setBlockedOnTop(marbleCenterY < bottomBound);
-                PlayScreen.isCollideWall = true;
+                marble.setCollidingWall(true);
                 if (!marble.isLifeLost()) {
-                    marble.setMarbleLife(marble.getMarbleLife() - 1);
+                    marble.addMarbleLife(-1);
                     marble.setLifeLost(true);
                 }
             } else {
                 marble.setBlockedOnLeft(false);
                 marble.setBlockedOnRight(false);
                 marble.setBlockedOnTop(false);
-                PlayScreen.isCollideWall = false;
+                marble.setCollidingWall(false);
                 marble.setLifeLost(false);
             }
         }
+        return false;
     }
 
 }

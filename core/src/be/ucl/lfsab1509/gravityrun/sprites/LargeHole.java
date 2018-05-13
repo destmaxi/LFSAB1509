@@ -1,14 +1,18 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
-import com.badlogic.gdx.math.Rectangle;
+import be.ucl.lfsab1509.gravityrun.screens.AbstractPlayScreen;
 
-public class LargeHole extends Obstacle {
+import com.badlogic.gdx.graphics.Texture;
 
-    public LargeHole(float y, int standardWidth, int marbleWidth) {
-        super(y, "drawable-" + standardWidth + "/largehole.png");
+import java.util.Random;
 
-        bounds = new Rectangle(position.x + marbleWidth / 2, position.y + marbleWidth / 2,
-                obstacleTexture.getWidth() - marbleWidth, obstacleTexture.getHeight() - marbleWidth);
+public class LargeHole extends Hole {
+
+    public LargeHole(float y, Marble marble, Random random, AbstractPlayScreen playScreen, Texture texture) {
+        super(0, y, playScreen, random, texture);
+
+        bounds.set(position.x, position.y + marble.getNormalDiameter() / 2,
+                texture.getWidth(), texture.getHeight() - marble.getNormalDiameter());
     }
 
 }

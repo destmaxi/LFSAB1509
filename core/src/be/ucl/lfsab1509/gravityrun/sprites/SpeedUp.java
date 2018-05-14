@@ -6,7 +6,9 @@ import java.util.Random;
 
 import be.ucl.lfsab1509.gravityrun.screens.AbstractPlayScreen;
 
-public class SpeedUp extends SlowDown {
+public class SpeedUp extends Bonus {
+
+    private float collideTime;
 
     public SpeedUp(float y, int offset, AbstractPlayScreen playScreen, Random random, Texture texture) {
         super(y, offset, playScreen, random, texture);
@@ -18,10 +20,16 @@ public class SpeedUp extends SlowDown {
     }
 
     @Override
+    public boolean isFinished(Marble marble) {
+        return collideTime >= 3;
+    }
+
+    @Override
     void onCollide(Marble marble) {
         collideTime = 0;
+        marble.setInvincible(true);
         marble.increaseActiveSpeedUps();
-        marble.setSpeedUp(1.25f);
+        marble.setSpeedUp(2f);
         playScreen.nbSpeedUp++;
     }
 
@@ -29,8 +37,13 @@ public class SpeedUp extends SlowDown {
     public void update(float dt, Marble marble) {
         collideTime += dt;
 
-        if (!marble.isDead() && collideTime >= 5 && marble.decreaseActiveSpeedUps() == 0)
+        marble.getCenterPosition().z = Marble.JUMP_HEIGHT;
+
+        if (!marble.isDead() && collideTime >= 3 && marble.decreaseActiveSpeedUps() == 0) {
+            marble.setInvincible(false);
             marble.setSpeedUp(1f);
+            marble.setInWall(true);
+        }
     }
 
     public void activateSpeedUp(Marble marble) {

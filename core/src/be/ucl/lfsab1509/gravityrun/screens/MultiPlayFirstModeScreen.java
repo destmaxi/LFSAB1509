@@ -10,11 +10,11 @@ import java.util.Random;
 
 public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
 
-    private static final int INIT_RANDOMS = 3;
-    private static final int OPPONENT_CAUGHT_BONUS = 2;
-    private static final int OPPONENT_MARBLE_INHOLE = 14;
-    private static final int POSITION_OPPONENT_MARBLE = 5;
-    private static final int REPOSITION_OPPONENT_MARBLE = 1;
+    private static final int INIT_RANDOMS = 11;
+    private static final int OPPONENT_CAUGHT_BONUS = 12;
+    private static final int OPPONENT_MARBLE_INHOLE = 13;
+    private static final int POSITION_OPPONENT_MARBLE = 14;
+    private static final int REPOSITION_OPPONENT_MARBLE = 15;
 
     private ArrayList<Integer> opponentCaughtBonusIds;
     private boolean gotSeed = false, initialized, positionRecover = false;
@@ -170,8 +170,6 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
 
         if (opponentMarble.isDead() && playerMarble.isDead())
             gameOver = true;
-        else
-            won = opponentMarble.isDead();
     }
 
     @Override

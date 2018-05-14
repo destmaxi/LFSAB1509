@@ -21,4 +21,5 @@ public class NewLife extends Bonus {
         marble.addMarbleLife(1);
         playScreen.nbNewLife++;
     }
+
 }

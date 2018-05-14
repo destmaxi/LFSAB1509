@@ -21,4 +21,5 @@ public class ScoreBonus extends Bonus {
         marble.addScoreBonus();
         playScreen.nbScoreBonus++;
     }
+
 }

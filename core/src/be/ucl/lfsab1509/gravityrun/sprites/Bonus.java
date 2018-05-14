@@ -8,26 +8,20 @@ import java.util.Random;
 
 public abstract class Bonus extends Sprite {
 
-    static final int CAM_REPOSITION = 4;
-    static final int EMPTY_BONUS = 5;
-    static final int INVINCIBLE = 6;
-    public static final int NEW_LIFE = 1;
-    public static final int SCORE_BONUS = 3;
-    public static final int SLOWDOWN = 2;
-    public static final int SPEED_UP = 4;
+    static final int CAM_REPOSITION = 1;
+    static final int INVINCIBLE = 2;
+    public static final int NEW_LIFE = 3;
+    public static final int SCORE_BONUS = 4;
+    public static final int SLOW_DOWN = 5;
+    public static final int SPEED_UP = 6;
 
     private boolean renderable = true;
     private int bonusId, offset;
 
-    Bonus(float y, int offset, AbstractPlayScreen playScreen, Texture texture) {
+    Bonus(float y, int offset, AbstractPlayScreen playScreen, Random random, Texture texture) {
         super(0, y, playScreen, texture);
 
         this.offset = offset;
-    }
-
-    Bonus(float y, int offset, AbstractPlayScreen playScreen, Random random, Texture texture) {
-        this(y, offset, playScreen, texture);
-
         position.x = random.nextInt(playScreen.width - texture.getWidth());
         bounds.x = position.x;
     }

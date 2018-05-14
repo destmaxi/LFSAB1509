@@ -1,10 +1,9 @@
 package be.ucl.lfsab1509.gravityrun.sprites;
 
+import be.ucl.lfsab1509.gravityrun.screens.AbstractPlayScreen;
 import com.badlogic.gdx.graphics.Texture;
 
 import java.util.Random;
-
-import be.ucl.lfsab1509.gravityrun.screens.AbstractPlayScreen;
 
 public class SpeedUp extends Bonus {
 
@@ -51,4 +50,5 @@ public class SpeedUp extends Bonus {
         marble.increaseActiveSpeedUps();
         marble.setSpeedUp(.5f);
     }
+
 }

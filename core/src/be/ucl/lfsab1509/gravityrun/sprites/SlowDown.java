@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class SlowDown extends Bonus {
 
-    float collideTime;
+    private float collideTime;
 
     public SlowDown(float y, int offset, AbstractPlayScreen playScreen, Random random, Texture texture) {
         super(y, offset, playScreen, random, texture);
@@ -15,7 +15,7 @@ public class SlowDown extends Bonus {
 
     @Override
     public int getValue() {
-        return SLOWDOWN;
+        return SLOW_DOWN;
     }
 
     @Override

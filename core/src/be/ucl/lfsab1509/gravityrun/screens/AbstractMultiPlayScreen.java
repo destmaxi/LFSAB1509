@@ -13,26 +13,26 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
 
-    static final int ACK_DEAD = 9;
+    static final int ACK_DEAD = 1;
     private static final long COUNTDOWN = 3000L;
-    private static final int END_GAME = 10;
-    static final int GAME_INFO = 4;
-    private static final int INIT_MSG = 0;
-    private static final int INIT_SYNCH_MSG = 7;
-    static final int OPPONENT_DEAD = 8;
-    static final int OPPONENT_LIVES = 13;
-    private static final int START_TIME = 12;
-    private static final int SYNC_TIME = 11;
+    private static final int END_GAME = 2;
+    static final int GAME_INFO = 3;
+    private static final int INIT_MSG = 4;
+    private static final int INIT_SYNC_MSG = 5;
+    static final int OPPONENT_DEAD = 6;
+    static final int OPPONENT_LIVES = 7;
+    private static final int START_TIME = 8;
+    private static final int SYNC_TIME = 9;
 
-    boolean initDone = false, opponentReady = false, won = false;
+    boolean initDone = false, opponentReady = false;
     private boolean ackDiedReceved = false, startMultiPlayState;
     Label opponentLivesLabel, opponentScoreLabel;
     private Label countDownLabel;
     private long hostTimeStamp1, startTime = Long.MAX_VALUE;
     private Long countDown = 0L;
     private Stage countDownStage;
-    Texture ripImage, youWinImage;
-    private Texture opponentLivesImage;
+    Texture youWinImage;
+    private Texture opponentLivesImage, ripImage;
 
     AbstractMultiPlayScreen(GravityRun gravityRun, boolean startMultiPlayState) {
         super(gravityRun);
@@ -86,13 +86,13 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
             return;
 
         if (!opponentReady) {
-            write("[0]#");
+            write("[" + INIT_MSG + "]#");
             return;
         }
 
         if (isHost() && !initialized) {
             hostTimeStamp1 = System.currentTimeMillis();
-            write("[" + INIT_SYNCH_MSG + "]#");
+            write("[" + INIT_SYNC_MSG + "]#");
             initialized = true;
         }
 
@@ -182,7 +182,7 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
             case INIT_MSG:
                 initializeGame();
                 break;
-            case INIT_SYNCH_MSG:
+            case INIT_SYNC_MSG:
                 write("[" + SYNC_TIME + ":" + System.currentTimeMillis() + "]#");
                 break;
             case START_TIME:

@@ -28,7 +28,7 @@ class ScoreboardScreen extends AbstractMenuScreen {
             Array<String> array = new Array<>(HIGH_SCORE_COUNT);
             ArrayList<Integer> list = game.user.getHighScores(level, HIGH_SCORE_COUNT);
             for (int i = 0; i < HIGH_SCORE_COUNT; i++)
-                array.add(i + ".  " + list.get(i));
+                array.add((i+1) + ".  " + list.get(i));
             listWidget[level].setItems(array);
         }
 

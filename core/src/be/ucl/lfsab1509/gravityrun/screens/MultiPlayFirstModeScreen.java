@@ -53,7 +53,7 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
                 break;
             case OPPONENT_DEAD:
                 opponentMarble.setDead();
-                write("[" + ACK_DEAD + "]#");
+                write(ACK_DEAD);
                 break;
             case OPPONENT_LIVES:
                 setOpponentMarbleLives(message);
@@ -72,9 +72,10 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
 
     @Override
     void bonusCollides(Bonus bonus, int i, Marble marble) {
-        write("[" + OPPONENT_CAUGHT_BONUS + ":" + bonus.getBonusId() + "]");
+        write(OPPONENT_CAUGHT_BONUS,
+                bonus.getBonusId());
         if (bonus instanceof CamReposition)
-            write("[" + REPOSITION_OPPONENT_MARBLE + "]#");
+            write(REPOSITION_OPPONENT_MARBLE);
 
         super.bonusCollides(bonus, i, marble);
     }
@@ -108,7 +109,8 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
             initBonuses();
             gotSeed = false;
         } else if (isHost() && !initialized) {
-            write("[" + INIT_RANDOMS + ":" + seed + "]#");
+            write(INIT_RANDOMS,
+                    seed);
             initialized = true;
             gotSeed = true;
         }
@@ -151,7 +153,7 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
     @Override
     void sendInHole(Obstacle obstacle, Marble marble) {
         if (obstacle instanceof Hole && obstacle.collides(marble))
-            write("[" + OPPONENT_MARBLE_INHOLE + "]#");
+            write(OPPONENT_MARBLE_INHOLE);
     }
 
     @Override
@@ -185,10 +187,19 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
     public void updateMarbles(float dt) {
         super.updateMarbles(dt);
 
-        if (!playerMarble.isDead()) {
-            String marbleUpdate = "[" + POSITION_OPPONENT_MARBLE + ":" + playerMarble.getGyroY() + ":" + playerMarble.getSlowDown() + ":" + playerMarble.isBlockedOnLeft() + ":" + playerMarble.isBlockedOnRight() + ":" + playerMarble.isBlockedOnTop() + ":" + playerMarble.getCenterPosition().z + ":" + playerMarble.getSpeed() + ":" + playerMarble.getScore() + ":" + playerMarble.isInvincible() + ":" + playerMarble.getCenterPosition().x + ":" + playerMarble.getCenterPosition().y + "]#";
-            write(marbleUpdate);
-        }
+        if (!playerMarble.isDead())
+            write(POSITION_OPPONENT_MARBLE,
+                    playerMarble.getGyroY(),
+                    playerMarble.getSlowDown(),
+                    playerMarble.isBlockedOnLeft(),
+                    playerMarble.isBlockedOnRight(),
+                    playerMarble.isBlockedOnTop(),
+                    playerMarble.getCenterPosition().z,
+                    playerMarble.getSpeed(),
+                    playerMarble.getScore(),
+                    playerMarble.isInvincible(),
+                    playerMarble.getCenterPosition().x,
+                    playerMarble.getCenterPosition().y);
     }
 
     @Override

@@ -77,7 +77,7 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
     @Override
     void handleEndGame() {
         MultiplayerConnectionScreen.ready = false;
-        write("[" + END_GAME + "]#");
+        write(END_GAME);
     }
 
     @Override
@@ -86,13 +86,13 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
             return;
 
         if (!opponentReady) {
-            write("[" + INIT_MSG + "]#");
+            write(INIT_MSG);
             return;
         }
 
         if (isHost() && !initialized) {
             hostTimeStamp1 = System.currentTimeMillis();
-            write("[" + INIT_SYNC_MSG + "]#");
+            write(INIT_SYNC_MSG);
             initialized = true;
         }
 
@@ -158,14 +158,15 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
             return;
 
         if (!ackDiedReceved)
-            write("[" + OPPONENT_DEAD + "]#");
+            write(OPPONENT_DEAD);
     }
 
     @Override
     void updateMarbles(float dt) {
         super.updateMarbles(dt);
 
-        write("[" + OPPONENT_LIVES + ":" + playerMarble.getLives() + "]#");
+        write(OPPONENT_LIVES,
+                playerMarble.getLives());
     }
 
     public void applyMessage(String[] message) {
@@ -183,7 +184,8 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
                 initializeGame();
                 break;
             case INIT_SYNC_MSG:
-                write("[" + SYNC_TIME + ":" + System.currentTimeMillis() + "]#");
+                write(SYNC_TIME,
+                        System.currentTimeMillis());
                 break;
             case START_TIME:
                 setStartTime(message);
@@ -232,7 +234,7 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
     private void initializeGame() {
         if (startMultiPlayState && !opponentReady) {
             opponentReady = true;
-            write("[" + INIT_MSG + "]#");
+            write(INIT_MSG);
         } else
             MultiplayerConnectionScreen.setReady(true);
     }
@@ -289,7 +291,8 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
         }
         long clientStartTime = clientTimestamp + COUNTDOWN;
         startTime = hostTimestamp2 + COUNTDOWN;
-        write("[" + START_TIME + ":" + clientStartTime + "]#");
+        write(START_TIME,
+                clientStartTime);
     }
 
 }

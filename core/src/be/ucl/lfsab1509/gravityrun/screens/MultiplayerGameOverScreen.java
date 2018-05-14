@@ -37,7 +37,11 @@ class MultiplayerGameOverScreen extends AbstractGameOverScreen {
 
     @Override
     void replayGame() {
-        write("[" + AbstractMultiPlayScreen.GAME_INFO + ":" + game.user.getMultiLives() + ":" + game.user.getMultiIndexSelected() + ":" + game.user.getMultiMode() + "]#");
+        write(AbstractMultiPlayScreen.GAME_INFO,
+                game.user.getMultiLives(),
+                game.user.getMultiIndexSelected(),
+                game.user.getMultiMode());
+
         AbstractMultiPlayScreen multiPlayScreen = game.user.getMultiMode() == 0
                 ? new MultiPlayFirstModeScreen(game)
                 : new MultiPlaySecondModeScreen(game);

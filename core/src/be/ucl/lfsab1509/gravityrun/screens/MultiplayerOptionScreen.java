@@ -51,8 +51,12 @@ public class MultiplayerOptionScreen extends AbstractMenuScreen {
         startGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                write("[" + AbstractMultiPlayScreen.GAME_INFO + ":" + game.user.getMultiLives() + ":" + game.user.getMultiIndexSelected() + ":" + game.user.getMultiMode() + "]#");
-                abstractMultiPlayScreen = (game.user.getMultiMode() == 0)
+                write(AbstractMultiPlayScreen.GAME_INFO,
+                        game.user.getMultiLives(),
+                        game.user.getMultiIndexSelected(),
+                        game.user.getMultiMode());
+
+                abstractMultiPlayScreen = game.user.getMultiMode() == 0
                         ? new MultiPlayFirstModeScreen(game)
                         : new MultiPlaySecondModeScreen(game);
 

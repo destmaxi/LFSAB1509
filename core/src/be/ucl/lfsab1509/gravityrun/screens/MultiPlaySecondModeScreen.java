@@ -40,7 +40,7 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
                 break;
             case OPPONENT_DEAD:
                 opponentDead = true;
-                write("[" + ACK_DEAD + "]");
+                write(ACK_DEAD);
                 break;
             case OPPONENT_LIVES:
                 setOpponentLives(message);
@@ -67,16 +67,16 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
     void bonusCollides(Bonus bonus, int i, Marble marble) {
         switch (bonus.getValue()) {
             case Bonus.NEW_LIFE:
-                write("[" + LOST_LIFE + "]#");
+                write(LOST_LIFE);
                 break;
             case Bonus.SCORE_BONUS:
-                write("[" + LOST_SCORE_BONUS + "]#");
+                write(LOST_SCORE_BONUS);
                 break;
             case Bonus.SLOW_DOWN:
-                write("[" + SPEED_UP + "]#");
+                write(SPEED_UP);
                 break;
             case Bonus.SPEED_UP:
-                write("[" + SLOW_DOWN + "]#");
+                write(SLOW_DOWN);
                 break;
         }
 
@@ -137,7 +137,8 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
         super.updateMarbles(dt);
 
         if (!playerMarble.isDead())
-            write("[" + OPPONENT_SCORE + ":" + playerMarble.getScore() + "]#");
+            write(OPPONENT_SCORE,
+                    playerMarble.getScore());
     }
 
     @Override

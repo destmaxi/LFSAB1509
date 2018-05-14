@@ -108,12 +108,19 @@ public abstract class Screen extends BluetoothManager implements com.badlogic.gd
         return bluetoothManager.supportDeviceBluetooth();
     }
 
+    public void write(Integer code, Object... messages) {
+        StringBuilder stringBuilder = new StringBuilder("[").append(code);
+        for (Object m : messages)
+            stringBuilder.append(':').append(m.toString());
+        stringBuilder.append("]#");
+        write(stringBuilder.toString());
+    }
+
     @Override
     public void write(String string) {
         bluetoothManager.write(string);
     }
-
-
+    
     int calculateStandardWidth(int width) {
         int[] widths = {480, 600, 840, 960, 1280, 1440};
         for (int w : widths)

@@ -100,6 +100,8 @@ public abstract class AbstractPlayScreen extends Screen {
         camera.position.y = height / 10;
     }
 
+    abstract void handleEndGame();
+
     public abstract void initGame(float dt);
 
     public abstract void initMarbles();
@@ -179,14 +181,6 @@ public abstract class AbstractPlayScreen extends Screen {
 
     public SoundManager getSoundManager() {
         return soundManager;
-    }
-
-    void handleEndGame() {
-        if (!gameOver)
-            return;
-
-        soundManager.replayMenu();
-        screenManager.set(new GameOverScreen(game, this));//playerMarble.getScore(), this instanceof AbstractMultiPlayScreen));
     }
 
     void handleInput() {

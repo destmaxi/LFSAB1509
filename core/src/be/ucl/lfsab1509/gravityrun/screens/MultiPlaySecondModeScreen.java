@@ -71,6 +71,16 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
     }
 
     @Override
+    void handleEndGame() {
+        if (!gameOver)
+            return;
+
+        super.handleEndGame();
+
+        screenManager.set(new MultiplayerGameOverScreen(game, playerMarble.getScore(), opponentScore));
+    }
+
+    @Override
     public void initGame(float dt) {
         super.initGame(dt);
 

@@ -40,6 +40,15 @@ public class SoloPlayScreen extends AbstractPlayScreen {
     }
 
     @Override
+    void handleEndGame() {
+        if (!gameOver)
+            return;
+
+        soundManager.replayMenu();
+        screenManager.set(new SoloGameOverScreen(game, this));
+    }
+
+    @Override
     void handleInput() {
         super.handleInput();
 

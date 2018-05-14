@@ -2,6 +2,7 @@ package be.ucl.lfsab1509.gravityrun.sprites;
 
 import be.ucl.lfsab1509.gravityrun.screens.AbstractPlayScreen;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.Random;
 
@@ -14,6 +15,7 @@ public abstract class Bonus extends Sprite {
     public static final int SCORE_BONUS = 3;
     public static final int SLOWDOWN = 2;
 
+    private boolean renderable = true;
     private int bonusId, offset;
 
     Bonus(float y, int offset, AbstractPlayScreen playScreen, Texture texture) {
@@ -31,8 +33,6 @@ public abstract class Bonus extends Sprite {
 
     public abstract int getValue();
 
-    public abstract boolean isFinished(Marble marble);
-
     abstract void onCollide(Marble marble);
 
     @Override
@@ -43,7 +43,13 @@ public abstract class Bonus extends Sprite {
         return colliding;
     }
 
-    public int getBonusId() {
+    @Override
+    public void render(SpriteBatch spriteBatch) {
+        if (renderable)
+            super.render(spriteBatch);
+    }
+
+    public Integer getBonusId() {
         return bonusId;
     }
 
@@ -51,8 +57,16 @@ public abstract class Bonus extends Sprite {
         return offset;
     }
 
+    public boolean isFinished(Marble marble) {
+        return true;
+    }
+
     public void setBonusId(int bonusId) {
         this.bonusId = bonusId;
+    }
+
+    public void stopRender() {
+        renderable = false;
     }
 
     public void update(float dt, Marble marble) {

@@ -17,13 +17,8 @@ public class ScoreBonus extends Bonus {
     }
 
     @Override
-    public boolean isFinished(Marble marble) {
-        marble.addScoreBonus();
-        return true;
-    }
-
-    @Override
     void onCollide(Marble marble) {
+        marble.addScoreBonus();
         playScreen.nbScoreBonus++;
     }
 }

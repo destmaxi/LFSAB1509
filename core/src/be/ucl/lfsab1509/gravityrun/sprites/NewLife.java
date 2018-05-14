@@ -17,13 +17,8 @@ public class NewLife extends Bonus {
     }
 
     @Override
-    public boolean isFinished(Marble marble) {
-        marble.addMarbleLife(1);
-        return true;
-    }
-
-    @Override
     void onCollide(Marble marble) {
+        marble.addMarbleLife(1);
         playScreen.nbNewLife++;
     }
 }

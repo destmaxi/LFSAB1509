@@ -135,9 +135,8 @@ public abstract class AbstractPlayScreen extends Screen {
 
     void bonusCollides(Bonus bonus, int i, Marble marble) {
         marble.addCaughtBonuses(bonus);
-        Bonus emptyBonus = new EmptyBonus(bonus.getPosition().y, bonus.getOffset(), newLifeImage);
-        emptyBonus.setBonusId(bonus.getBonusId());
-        bonuses.set(i, emptyBonus);
+        bonus.stopRender();
+        setBonus(i, bonuses, bonus);
 
         soundManager.gotBonus();
     }
@@ -146,7 +145,7 @@ public abstract class AbstractPlayScreen extends Screen {
         updateOpponentCaughtBonus(bonus);
 
         if (bonus.isOutOfScreen(camera.position.y, height))
-            setBonus(i, bonus);
+            setBonus(i, bonuses, bonus);
 
         if (bonus.collides(marble))
             bonusCollides(bonus, i, marble);
@@ -227,9 +226,6 @@ public abstract class AbstractPlayScreen extends Screen {
     Bonus newBonus(float position, int offset) {
         Bonus bonus;
         switch (randomBonus.nextInt(10)) {
-            case 0:
-                bonus = new EmptyBonus(position, offset, newLifeImage);
-                break;
             case 2:
                 bonus = new CamReposition(position, offset, this, randomBonus, camRepositionImage);
                 break;
@@ -322,7 +318,7 @@ public abstract class AbstractPlayScreen extends Screen {
 
     }
 
-    private void setBonus(int index, Bonus bonus) {
+    private void setBonus(int index, ArrayList<Bonus> bonuses, Bonus bonus) {
         int offset = randomBonus.nextInt(OBSTACLE_SPACING - STANDARD_WIDTH / 10);
         float position = bonus.getPosition().y - bonus.getOffset() + offset + (OBSTACLE_SPACING + OBSTACLE_HEIGHT) * OBSTACLE_COUNT;
         bonuses.set(index, newBonus(position, offset));

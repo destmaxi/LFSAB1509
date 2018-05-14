@@ -20,7 +20,7 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
     private ArrayList<Integer> opponentCaughtBonusIds;
     private boolean gotSeed = false, initialized, positionRecover = false;
     private float opponentMarblePositionUpdateTime;
-    private int bonusId;
+    private Integer bonusId = 0;
     private long seed;
     private Marble opponentMarble;
     private Texture opponentMarblesImage, opponentMarblesInvincibleImage;
@@ -134,17 +134,8 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
 
     @Override
     Bonus newBonus(float position, int offset) {
-        Bonus bonus;
-
-        if (opponentCaughtBonusIds.contains(bonusId)) {
-            randomBonus.nextInt();  // FIXME qu'est-ce que c'est que ce random non utilisé ?
-            bonus = new EmptyBonus(position, offset, newLifeImage);
-            opponentCaughtBonusIds.remove((Integer)bonusId);
-        } else
-            bonus = super.newBonus(position, offset);
-
+        Bonus bonus = super.newBonus(position, offset);
         bonus.setBonusId(bonusId++);
-
         return bonus;
     }
 
@@ -194,9 +185,8 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
     @Override
     public void updateOpponentCaughtBonus(Bonus bonus) {
         if (opponentCaughtBonusIds.contains(bonus.getBonusId())) {
-            int index = bonuses.indexOf(bonus);
-            bonuses.set(index, new EmptyBonus(bonus.getPosition().y, bonus.getOffset(), newLifeImage));
-            opponentCaughtBonusIds.remove((Integer)bonus.getBonusId());
+            bonus.stopRender();
+            opponentCaughtBonusIds.remove(bonus.getBonusId());
         }
     }
 

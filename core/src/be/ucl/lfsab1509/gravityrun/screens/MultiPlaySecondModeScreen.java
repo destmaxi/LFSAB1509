@@ -30,7 +30,8 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
 
         switch (getIntegerFromStr(message[0])) {
             case LOST_LIFE:
-                playerMarble.addMarbleLife(-1);
+                if (!playerMarble.isInvincible())
+                    playerMarble.addMarbleLife(-1);
                 break;
             case LOST_SCORE_BONUS:
                 playerMarble.decreaseScoreBonus();

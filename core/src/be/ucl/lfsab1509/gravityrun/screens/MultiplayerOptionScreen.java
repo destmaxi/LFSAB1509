@@ -86,12 +86,6 @@ public class MultiplayerOptionScreen extends AbstractMenuScreen {
     }
 
     @Override
-    public void show() {
-        super.show();
-        startHost();
-    }
-
-    @Override
     public void render(float dt) {
         super.render(dt);
         handleInput();

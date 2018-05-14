@@ -31,7 +31,7 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
     private long hostTimeStamp1, startTime = Long.MAX_VALUE;
     private Long countDown = 0L;
     private Stage countDownStage;
-    Texture youWinImage;
+    Texture ripImage, youWinImage;
     private Texture opponentLivesImage;
 
     AbstractMultiPlayScreen(GravityRun gravityRun, boolean startMultiPlayState) {
@@ -104,6 +104,7 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
     void initializeTextures() {
         super.initializeTextures();
         opponentLivesImage = new Texture("drawable-" + calculateStandardWidth(GravityRun.WIDTH) + "/opponentlives.png");
+        ripImage = new Texture("drawable-" + calculateStandardWidth(width) + "/rip.png");
         youWinImage = new Texture("drawable-" + calculateStandardWidth(width) + "/youwin.png");
     }
 
@@ -130,6 +131,12 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
         }
 
         super.render();
+    }
+
+    @Override
+    void renderLoseWin() {
+        if (playerMarble.isDead())
+            renderLoseWin(ripImage);
     }
 
     @Override

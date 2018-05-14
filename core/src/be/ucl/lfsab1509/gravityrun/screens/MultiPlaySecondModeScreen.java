@@ -113,7 +113,10 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
 
     @Override
     void renderLoseWin() {
-        renderLoseWin(won ? youWinImage : youLoseImage);
+        if (gameOver)
+            renderLoseWin(playerMarble.getScore() >= opponentScore ? youWinImage : youLoseImage);
+        else
+            super.renderLoseWin();
     }
 
     @Override

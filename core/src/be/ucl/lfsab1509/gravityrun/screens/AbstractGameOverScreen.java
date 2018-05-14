@@ -13,10 +13,12 @@ import be.ucl.lfsab1509.gravityrun.GravityRun;
 
 public abstract class AbstractGameOverScreen extends AbstractMenuScreen {
 
-    Label label1, label2;
+    Label label1, label2, title;
 
     AbstractGameOverScreen(GravityRun gravityRun) {
         super(gravityRun);
+
+        title = new Label("", game.titleSkin, "title");
 
         TextButton menuButton = new TextButton(game.i18n.format("menu"), game.tableSkin, "round");
         menuButton.addListener(new ClickListener() {
@@ -34,8 +36,6 @@ public abstract class AbstractGameOverScreen extends AbstractMenuScreen {
                 replayGame();
             }
         });
-
-        Label title = new Label(game.i18n.format("game_over"), game.titleSkin, "title");
 
         Table table = new Table();
         table.add(title).top();

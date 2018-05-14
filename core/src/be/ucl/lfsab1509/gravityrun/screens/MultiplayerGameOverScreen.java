@@ -7,6 +7,8 @@ class MultiplayerGameOverScreen extends AbstractGameOverScreen {
     MultiplayerGameOverScreen(GravityRun gravityRun, int myFinalScore, int opponentFinalScore) {
         super(gravityRun);
 
+        title.setText(game.i18n.format(myFinalScore >= opponentFinalScore ? "winner" : "game_over"));
+
         label1.setText(game.i18n.format("final_score", myFinalScore));
         label2.setText(game.i18n.format("opponent_final_score", opponentFinalScore));
     }

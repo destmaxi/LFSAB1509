@@ -198,7 +198,7 @@ public abstract class AbstractPlayScreen extends Screen {
         for (int i = 1; i <= OBSTACLE_COUNT; i++) {
             float off = randomBonus.nextFloat();
             int offset = (int) (off * (OBSTACLE_SPACING - STANDARD_WIDTH / 5));
-            bonuses.add(newBonus((i + 1) * (OBSTACLE_SPACING + OBSTACLE_HEIGHT) + OBSTACLE_HEIGHT + offset, offset));
+            bonuses.add(newBonus((i + playerMarble.getDifficulty()) * (OBSTACLE_SPACING + OBSTACLE_HEIGHT) + OBSTACLE_HEIGHT + offset, offset));
         }
     }
 
@@ -221,7 +221,7 @@ public abstract class AbstractPlayScreen extends Screen {
 
     void initObstacles() {
         for (int i = 1; i <= OBSTACLE_COUNT; i++)
-            obstacles.add(newObstacle((i + 1) * (OBSTACLE_SPACING + OBSTACLE_HEIGHT)));
+            obstacles.add(newObstacle((i + playerMarble.getDifficulty()) * (OBSTACLE_SPACING + OBSTACLE_HEIGHT)));
     }
 
     Bonus newBonus(float position, int offset) {

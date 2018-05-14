@@ -7,7 +7,6 @@ import android.os.Message;
 import android.view.WindowManager;
 import android.widget.Toast;
 import be.ucl.lfsab1509.gravityrun.gpgs.Gpgs;
-import be.ucl.lfsab1509.gravityrun.gpgs.GpgsMultiplayer;
 import be.ucl.lfsab1509.gravityrun.screens.AbstractMultiPlayScreen;
 import be.ucl.lfsab1509.gravityrun.screens.MultiPlayFirstModeScreen;
 import be.ucl.lfsab1509.gravityrun.tools.AndroidBluetoothManager;
@@ -70,12 +69,7 @@ public class AndroidLauncher extends AndroidApplication {
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        gpgs = new Gpgs(this, new GpgsMultiplayer.ErrorCallback() {
-            @Override
-            public void error(String message) {
-                gravityRun.errorMessage(message);
-            }
-        });
+        gpgs = new Gpgs(this);
 
         gravityRun = new GravityRun(bluetoothFragment, gpgs, new AndroidSensorHelper(this));
 

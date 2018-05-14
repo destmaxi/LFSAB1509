@@ -4,7 +4,7 @@ public interface IGpgs {
 
     void incrementAchievement(String achievementId, int increment);
 
-    void invitePlayers();
+//    void invitePlayers();
 
     boolean isSignedIn();
 
@@ -12,7 +12,7 @@ public interface IGpgs {
 
     void onResume();
 
-    void setStartGameCallbask(StartGameCallback startGameCallbask);
+//    void setStartGameCallbask(StartGameCallback startGameCallbask);
 
     void signInSilently();
 
@@ -20,11 +20,11 @@ public interface IGpgs {
 
     void showAchievements();
 
-    void showInvitationInbox();
+//    void showInvitationInbox();
 
     void showLeaderboards();
 
-    void startQuickGame(long role);
+//    void startQuickGame(long role);
 
     void startSignInIntent();
 

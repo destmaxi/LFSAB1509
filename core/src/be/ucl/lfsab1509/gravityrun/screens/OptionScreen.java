@@ -31,12 +31,12 @@ public class OptionScreen extends AbstractMenuScreen {
             }
         });
 
-        Label lvlLabel = new Label(game.i18n.format("level_display"), game.tableSkin);
-        TextButton lvlButton = new TextButton(game.user.getLevelDescription(), game.tableSkin, "round");
-        lvlButton.addListener(new ClickListener() {
+        Label levelLabel = new Label(game.i18n.format("level_display"), game.tableSkin);
+        TextButton levelButton = new TextButton(game.user.getLevelDescription(), game.tableSkin, "round");
+        levelButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                popLevelSelectionDialog(lvlButton);
+                popLevelSelectionDialog(levelButton);
             }
         });
 
@@ -82,9 +82,9 @@ public class OptionScreen extends AbstractMenuScreen {
         table.row();
         table.add(usernameButton).expandX().fillX().maxWidth(containerWidth);
         table.row();
-        table.add(lvlLabel).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
+        table.add(levelLabel).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
         table.row();
-        table.add(lvlButton).expandX().fillX().maxWidth(containerWidth);
+        table.add(levelButton).expandX().fillX().maxWidth(containerWidth);
         table.row();
         //table.add(orientationProviderButton);
         //table.row();
@@ -109,9 +109,9 @@ public class OptionScreen extends AbstractMenuScreen {
 
     private void popLevelSelectionDialog(TextButton levelButton) {
         List<String> levelList = new List<>(game.tableSkin);
+        levelList.setAlignment(Align.center);
         levelList.setItems(game.i18n.format("beginner"), game.i18n.format("inter"), game.i18n.format("expert"));
         levelList.setSelectedIndex(game.user.getIndexSelected());
-        levelList.setAlignment(Align.center);
         // FIXME il n'y a pas de manière simple d'agrandir la taille des items dans une List... Peut-être passer à des boutons ? Merci libGDX.
         ListDialog levelDialog = new ListDialog(game.i18n.format("select_level"), levelList, new ListResultCallback() {
             @Override

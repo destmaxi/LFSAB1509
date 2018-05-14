@@ -38,7 +38,7 @@ public class MultiplayerOptionScreen extends AbstractMenuScreen {
         });
 
         Label levelLabel = new Label(game.i18n.format("level_display"), game.tableSkin);
-        TextButton levelButton = new TextButton(game.user.getLevelDescription(), game.tableSkin, "round");
+        TextButton levelButton = new TextButton(game.user.getMultiLevelDescription(), game.tableSkin, "round");
         levelButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -96,13 +96,13 @@ public class MultiplayerOptionScreen extends AbstractMenuScreen {
         List<String> levelList = new List<>(game.aaronScoreSkin);
         levelList.setAlignment(Align.center);
         levelList.setItems(game.i18n.format("beginner"), game.i18n.format("inter"), game.i18n.format("expert"));
-        levelList.setSelectedIndex(game.user.getMultiIndexSelected() - 1);
+        levelList.setSelectedIndex(game.user.getMultiIndexSelected());
 
         ListDialog levelDialog = new ListDialog(game.i18n.format("select_level"), levelList, new ListResultCallback() {
             @Override
             public void callback(String selected) {
-                game.user.setMultiIndexSelected(levelList.getSelectedIndex() + 1);
-                button.setText(game.user.getLevelDescription());
+                game.user.setMultiIndexSelected(levelList.getSelectedIndex());
+                button.setText(game.user.getMultiLevelDescription());
             }
         });
         levelDialog.show(stage);

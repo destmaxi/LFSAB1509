@@ -186,6 +186,10 @@ public class User {
         }
     }
 
+    public String getMultiLevelDescription() {
+        return getLevelDescription(multiIndexSelected);
+    }
+
     public float getMusicLevel() {
         return musicLevel;
     }

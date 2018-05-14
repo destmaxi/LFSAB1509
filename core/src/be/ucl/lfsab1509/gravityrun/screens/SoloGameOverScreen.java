@@ -56,7 +56,7 @@ class SoloGameOverScreen extends AbstractGameOverScreen {
     public boolean isHost() {
         return true;
     }
-    
+
     @Override
     void replayGame() {
         screenManager.set(new SoloPlayScreen(game));

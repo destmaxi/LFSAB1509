@@ -13,6 +13,7 @@ public abstract class Bonus extends Sprite {
     public static final int NEW_LIFE = 1;
     public static final int SCORE_BONUS = 3;
     public static final int SLOWDOWN = 2;
+    public static final int SPEED_UP = 4;
 
     private int bonusId, offset;
 

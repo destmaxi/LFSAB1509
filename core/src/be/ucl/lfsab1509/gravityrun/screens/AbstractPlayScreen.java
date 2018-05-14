@@ -35,13 +35,13 @@ public abstract class AbstractPlayScreen extends Screen {
     private ArrayList<Vector2> backgroundPositions;
     boolean deadBottom = false, endGameReceived = false, gameOver = false, initialized = false;
     public boolean deadHole = false;
-    public int nbInvincible = 0, nbNewLife = 0, nbScoreBonus = 0, nbSlowDown = 0;
+    public int nbInvincible = 0, nbNewLife = 0, nbScoreBonus = 0, nbSlowDown = 0, nbSpeedUp = 0;
     private Label playerLivesLabel, playerScoreLabel;
     Marble playerMarble;
     OrthographicCamera camera;
     Random randomBonus, randomObstacle;
     Stage scoreStage;
-    Texture marblesImage, marblesInvincibleImage, newLifeImage, slowDownImage, youLoseImage;
+    Texture marblesImage, marblesInvincibleImage, newLifeImage, slowDownImage, speedUpImage, youLoseImage;
     private Texture background, camRepositionImage, holeImage, invincibleImage, largeHoleImage, playerLivesImage, scoreBonusImage, wallImage;
     Viewport viewport;
 
@@ -172,6 +172,7 @@ public abstract class AbstractPlayScreen extends Screen {
         playerLivesImage.dispose();
         scoreBonusImage.dispose();
         slowDownImage.dispose();
+        speedUpImage.dispose();
         wallImage.dispose();
     }
 
@@ -209,6 +210,7 @@ public abstract class AbstractPlayScreen extends Screen {
         playerLivesImage = new Texture("drawable-" + calculateStandardWidth(GravityRun.WIDTH) + "/playerlives.png");
         scoreBonusImage = new Texture(basePath + "scorebonus.png");
         slowDownImage = new Texture(basePath + "slowdown.png");
+        speedUpImage = new Texture(basePath + "speedup.png");
         wallImage = new Texture(basePath + "wall.png");
         youLoseImage = new Texture(basePath + "youlose.png");
     }
@@ -223,6 +225,9 @@ public abstract class AbstractPlayScreen extends Screen {
         switch (randomBonus.nextInt(10)) {
             case 0:
                 bonus = new EmptyBonus(position, offset, newLifeImage);
+                break;
+            case 1:
+                bonus = new SpeedUp(position, offset, this, randomBonus, speedUpImage);
                 break;
             case 2:
                 bonus = new CamReposition(position, offset, this, randomBonus, camRepositionImage);

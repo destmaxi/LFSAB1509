@@ -19,8 +19,8 @@ public class Marble {
     private ArrayList<Bonus> caughtBonuses;
     private boolean blockedOnLeft = false, blockedOnRight = false, blockedOnTop = false, dead = false, inHole = false, invincible = false, inWall = false, isCollidingWall = false, lifeLost = false, myMarble;
     private Circle bounds;
-    private float gyroY, repositioning = 1f, slowDown = 1f, speed = 1f;
-    private int activeInvincibles, activeSlowdowns, collidedWall, difficulty, height, lives = 5, score, scoreBonus, width;
+    private float gyroY, repositioning = 1f, slowDown = 1f, speed = 1f, speedUp = 1f;
+    private int activeInvincibles, activeSlowdowns, activeSpeedUps, collidedWall, difficulty, height, lives = 5, score, scoreBonus, width;
     private MarbleAnimation marbleAnimation, marbleAnimationInvincible;
     private SensorHelper sensorHelper;
     private Vector3 position;
@@ -65,6 +65,10 @@ public class Marble {
         return --activeInvincibles;
     }
 
+    int decreaseActiveSpeedUps() {
+        return --activeSpeedUps;
+    }
+
     int decreaseActiveSlowdowns() {
         return --activeSlowdowns;
     }
@@ -91,6 +95,10 @@ public class Marble {
 
     public int getDifficulty() {
         return difficulty;
+    }
+
+    public float getGyroY() {
+        return gyroY;
     }
 
     public Integer getLives() {
@@ -126,11 +134,15 @@ public class Marble {
     }
 
     public float getSpeedFactor() {
-        return difficulty * MOVEMENT * repositioning * slowDown * speed;
+        return difficulty * MOVEMENT * repositioning * slowDown * speed * speedUp;
     }
 
     void increaseActiveInvincibles() {
         activeInvincibles++;
+    }
+
+    void increaseActiveSpeedUps() {
+        activeSpeedUps++;
     }
 
     void increaseActiveSlowdowns() {
@@ -253,6 +265,10 @@ public class Marble {
         this.score = score;
     }
 
+    void setSpeedUp(float speedUp) {
+        this.speedUp = speedUp;
+    }
+
     void setSlowDown(float slowDown) {
         this.slowDown = slowDown;
     }
@@ -282,7 +298,7 @@ public class Marble {
             position.z = JUMP_HEIGHT;
 
         if (position.z > 0 && !dead || (position.z <= 0 && dead && inHole))
-            position.add(0, 0, -10 * difficulty * speed * slowDown);
+            position.add(0, 0, -10 * difficulty * speed * slowDown * speedUp);
         else
             position.z = 0;
     }
@@ -304,7 +320,7 @@ public class Marble {
         if (!(blockedOnRight && gyroY > 0 || blockedOnLeft && gyroY < 0))
             x = gyroY * width / 75;
         if (!blockedOnTop)
-            y = difficulty * MOVEMENT * speed * slowDown * dt;
+            y = difficulty * MOVEMENT * speed * slowDown * speedUp * dt;
         position.add(x, y, 0);
         // cas presque défaut : !((blockedOnRight && gyroY>0)||(blockedOnLeft && gyroY<0)) && !(blockedOnLeft && gyroY<0 && blockedOnTop) && !(blockedOnRight && gyroY>0 && blockedOnTop)
         //position.x = positionX; // should add 0 for the x position

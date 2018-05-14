@@ -31,7 +31,7 @@ class SoloGameOverScreen extends AbstractGameOverScreen {
         game.user.write();
 
         title.setText(game.i18n.format("game_over"));
-        
+
         if (isNewHighScore) {
             label1.setText(game.i18n.format("new_high_score", finalScore));
             label2.setText(game.i18n.format("previous_high_score", previousHighScore));

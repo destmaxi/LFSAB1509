@@ -24,20 +24,26 @@ public class GravityRun extends Game {
     public static final int MULTI_WIDTH = 480;
     public static int WIDTH;
 
+    public static boolean cheat = false;
+
     public BluetoothManager bluetoothManager;
     public I18NBundle i18n;
     public IGpgs gpgs;
     public Preferences preferences;
     public ScreenManager screenManager;
+    public SensorHelper sensorHelper;
     public Skin aaronScoreSkin, labelScoreBoardSkin, tableScoreBoardSkin, tableSkin, titleSkin;
     public SoundManager soundManager;
     public SpriteBatch spriteBatch;
     private TextureAtlas skinTextureAtlas;
     public User user;
 
-    public GravityRun(BluetoothManager bluetoothManager, IGpgs gpgs) {
+    public GravityRun(BluetoothManager bluetoothManager, IGpgs gpgs, SensorHelper sensorHelper) {
         this.bluetoothManager = bluetoothManager;
         this.gpgs = gpgs;
+        this.sensorHelper = sensorHelper;
+
+        cheat = false;
     }
 
     @Override
@@ -77,14 +83,16 @@ public class GravityRun extends Game {
     public void dispose() {
         screenManager.disposeAll();
         soundManager.dispose();
-        spriteBatch.dispose();    // FIXME : already disposed ?
+        spriteBatch.dispose();
         disposeSkins();
     }
 
     @Override
     public void pause() {
         super.pause();
+
         gpgs.onPause();
+        sensorHelper.pauseSensors();
     }
 
     @Override
@@ -98,7 +106,9 @@ public class GravityRun extends Game {
     @Override
     public void resume() {
         super.resume();
+
         gpgs.onResume();
+        sensorHelper.resumeSensors();
     }
 
     public void connect() {

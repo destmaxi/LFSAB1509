@@ -49,8 +49,12 @@ public class User {
     public User(GravityRun gravityRun, Map<String, ?> userMap) {
         game = gravityRun;
         username = userMap.get(KEY_USERNAME).toString();
-        musicLevel = (Float) userMap.get(KEY_MUSIC_LEVEL);
-        soundLevel = (Float) userMap.get(KEY_SOUND_LEVEL);
+        Float musicLevel = (Float) userMap.get(KEY_MUSIC_LEVEL);
+        if (musicLevel != null)
+            this.musicLevel = musicLevel;
+        Float soundLevel = (Float) userMap.get(KEY_SOUND_LEVEL);
+        if (soundLevel != null)
+            this.soundLevel = soundLevel;
 
         Object firstTime1 = userMap.get(KEY_FIRSTTIME);
         if (firstTime1 instanceof Boolean)

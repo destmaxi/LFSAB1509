@@ -117,12 +117,12 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
         int level = game.user.getMultiIndexSelected() + 1;
 
         playerMarble = isHost()
-                ? new Marble(true, true, level, STANDARD_WIDTH, width / 3, height / 10, marblesImage, marblesInvincibleImage)
-                : new Marble(true, true, level, STANDARD_WIDTH, width * 2 / 3, height / 10, marblesImage, marblesInvincibleImage);
+                ? new Marble(true, true, level, STANDARD_WIDTH, width / 3, height / 10, game.sensorHelper, marblesImage, marblesInvincibleImage)
+                : new Marble(true, true, level, STANDARD_WIDTH, width * 2 / 3, height / 10, game.sensorHelper, marblesImage, marblesInvincibleImage);
 
         opponentMarble = isHost()
-                ? new Marble(true, false, level, STANDARD_WIDTH, width * 2 / 3, height / 10, opponentMarblesImage, opponentMarblesInvincibleImage)
-                : new Marble(true, false, level, STANDARD_WIDTH, width / 3, height / 10, opponentMarblesImage, opponentMarblesInvincibleImage);
+                ? new Marble(true, false, level, STANDARD_WIDTH, width * 2 / 3, height / 10, game.sensorHelper, opponentMarblesImage, opponentMarblesInvincibleImage)
+                : new Marble(true, false, level, STANDARD_WIDTH, width / 3, height / 10, game.sensorHelper, opponentMarblesImage, opponentMarblesInvincibleImage);
 
 
         playerMarble.setLives(game.user.getMultiLives());
@@ -139,7 +139,7 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
         if (opponentCaughtBonusIds.contains(bonusId)) {
             randomBonus.nextInt();  // FIXME qu'est-ce que c'est que ce random non utilisé ?
             bonus = new EmptyBonus(position, offset, newLifeImage);
-            opponentCaughtBonusIds.remove(bonusId);
+            opponentCaughtBonusIds.remove((Integer)bonusId);
         } else
             bonus = super.newBonus(position, offset);
 
@@ -185,6 +185,7 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
         super.updateMarbles(dt);
 
         if (!playerMarble.isDead()) {
+            // TODO remplacer Gdx.input.getGyroscopeY() par playerMarble.getPosition().x/width pour savoir comment envoyer
             String marbleUpdate = "[" + POSITION_OPPONENT_MARBLE + ":" + Gdx.input.getGyroscopeY() + ":" + playerMarble.getSlowDown() + ":" + playerMarble.isBlockedOnLeft() + ":" + playerMarble.isBlockedOnRight() + ":" + playerMarble.isBlockedOnTop() + ":" + playerMarble.getCenterPosition().z + ":" + playerMarble.getSpeed() + ":" + playerMarble.getScore() + ":" + playerMarble.isInvincible() + ":" + playerMarble.getCenterPosition().x + ":" + playerMarble.getCenterPosition().y + "]#";
             write(marbleUpdate);
         }
@@ -195,7 +196,7 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
         if (opponentCaughtBonusIds.contains(bonus.getBonusId())) {
             int index = bonuses.indexOf(bonus);
             bonuses.set(index, new EmptyBonus(bonus.getPosition().y, bonus.getOffset(), newLifeImage));
-            opponentCaughtBonusIds.remove(bonus.getBonusId());
+            opponentCaughtBonusIds.remove((Integer)bonus.getBonusId());
         }
     }
 

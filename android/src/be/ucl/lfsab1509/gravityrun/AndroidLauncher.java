@@ -5,14 +5,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.WindowManager;
+import android.widget.Toast;
 import be.ucl.lfsab1509.gravityrun.gpgs.Gpgs;
 import be.ucl.lfsab1509.gravityrun.gpgs.GpgsMultiplayer;
-import android.widget.Toast;
 import be.ucl.lfsab1509.gravityrun.screens.AbstractMultiPlayScreen;
 import be.ucl.lfsab1509.gravityrun.screens.MultiPlayFirstModeScreen;
 import be.ucl.lfsab1509.gravityrun.tools.AndroidBluetoothManager;
 import be.ucl.lfsab1509.gravityrun.tools.BluetoothConstants;
 import be.ucl.lfsab1509.gravityrun.tools.BluetoothFragment;
+import be.ucl.lfsab1509.gravityrun.tools.sensors.AndroidSensorHelper;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.crashlytics.android.Crashlytics;
@@ -76,7 +77,7 @@ public class AndroidLauncher extends AndroidApplication {
             }
         });
 
-        gravityRun = new GravityRun(bluetoothFragment, gpgs);
+        gravityRun = new GravityRun(bluetoothFragment, gpgs, new AndroidSensorHelper(this));
 
         multiPlayScreen = new MultiPlayFirstModeScreen(gravityRun, false);
 

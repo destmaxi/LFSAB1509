@@ -10,7 +10,7 @@ public class UserTest {
 
     @Test
     public void addScoreTest() {
-        User user = new User(new GravityRun(), "JM");
+        User user = new User(new GravityRun(null, null), "JM");
         assertEquals(0, user.getIntermediateScoreList().size());
         assertTrue(user.addScore(42, 1));
         assertEquals(0, user.getBeginnerScoreList().size());

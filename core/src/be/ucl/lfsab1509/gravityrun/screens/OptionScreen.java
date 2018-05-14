@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 
 public class OptionScreen extends AbstractMenuScreen {
 
@@ -48,6 +49,22 @@ public class OptionScreen extends AbstractMenuScreen {
             }
         });
 
+        /*TextButton orientationProviderButton = new TextButton("Orientation Provider", game.tableSkin, "round");
+        orientationProviderButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                popOrientationProviderDialog();
+            }
+        });*/
+        /*TextButton cheatButton = new TextButton("Cheat: " + GravityRun.cheat, game.tableSkin, "round");
+        cheatButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                GravityRun.cheat = !GravityRun.cheat;
+                cheatButton.setText("Cheat: " + GravityRun.cheat);
+            }
+        });*/
+
         Label musicLabel = new Label(game.i18n.format("music_level"), game.tableSkin);
         Slider musicSlider = new Slider(0f, 1f, .05f, false, game.tableSkin);
         musicSlider.setValue(game.user.getMusicLevel());
@@ -61,7 +78,7 @@ public class OptionScreen extends AbstractMenuScreen {
         Table table = new Table();
         table.add(title).expandX();
         table.row();
-        table.add(usernameLabel).expandX().fillX().padTop(height - containerHeight).maxWidth(containerWidth);
+        table.add(usernameLabel).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
         table.row();
         table.add(usernameButton).expandX().fillX().maxWidth(containerWidth);
         table.row();
@@ -69,6 +86,10 @@ public class OptionScreen extends AbstractMenuScreen {
         table.row();
         table.add(lvlButton).expandX().fillX().maxWidth(containerWidth);
         table.row();
+        //table.add(orientationProviderButton);
+        //table.row();
+        //table.add(cheatButton);
+        //table.row();
         table.add(musicLabel).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
         table.row();
         table.add(musicSlider).expandX().fillX().maxWidth(containerWidth);
@@ -101,6 +122,20 @@ public class OptionScreen extends AbstractMenuScreen {
         });
         levelDialog.show(stage);
     }
+
+    /*private void popOrientationProviderDialog() {
+        java.util.List<String> list = game.sensorHelper.getOrientationProviders();
+        List<String> list1 = new List<>(game.tableSkin);
+        list1.setItems(new Array<>(list.toArray(new String[0])));
+        list1.setSelectedIndex(game.sensorHelper.getOrientationProvider());
+        ListDialog dialog = new ListDialog("Orientation Provider select", list1, new ListResultCallback() {
+            @Override
+            public void callback(String selected) {
+                game.sensorHelper.setOrientationProvider(list1.getSelectedIndex());
+            }
+        });
+        dialog.show(stage);
+    }*/
 
     private void popUsernameDialog(TextButton usernameButton) {
         Gdx.input.setOnscreenKeyboardVisible(false);

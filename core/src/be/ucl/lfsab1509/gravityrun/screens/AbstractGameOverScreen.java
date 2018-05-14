@@ -1,5 +1,6 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
+import be.ucl.lfsab1509.gravityrun.GravityRun;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -8,8 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
-
-import be.ucl.lfsab1509.gravityrun.GravityRun;
 
 public abstract class AbstractGameOverScreen extends AbstractMenuScreen {
 
@@ -56,7 +55,9 @@ public abstract class AbstractGameOverScreen extends AbstractMenuScreen {
     }
 
     abstract void backToMenu();
+
     abstract void handleInput();
+
     abstract void replayGame();
 
     @Override

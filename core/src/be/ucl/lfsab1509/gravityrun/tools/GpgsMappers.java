@@ -30,6 +30,9 @@ public class GpgsMappers {
             case "SLOWDOWN_10": gpgsId = "CgkI0ITMmsAMEAIQHA"; break;
             case "SLOWDOWN_50": gpgsId = "CgkI0ITMmsAMEAIQHQ"; break;
             case "SLOWDOWN_100": gpgsId = "CgkI0ITMmsAMEAIQHg"; break;
+            case "SPEEDUP_10": gpgsId = "CgkI0ITMmsAMEAIQHw"; break;
+            case "SPEEDUP_50": gpgsId = "CgkI0ITMmsAMEAIQIA"; break;
+            case "SPEEDUP_100": gpgsId = "CgkI0ITMmsAMEAIQIQ"; break;
             default: gpgsId = null;
         }
         return gpgsId;

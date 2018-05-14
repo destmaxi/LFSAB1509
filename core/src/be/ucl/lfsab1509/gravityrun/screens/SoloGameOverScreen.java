@@ -1,17 +1,8 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Align;
 
 class SoloGameOverScreen extends AbstractGameOverScreen {
-
 
     SoloGameOverScreen(GravityRun gravityRun, AbstractPlayScreen playScreen) {
         super(gravityRun);
@@ -24,7 +15,7 @@ class SoloGameOverScreen extends AbstractGameOverScreen {
         int nbNewLife = playScreen.nbNewLife;
         int nbScoreBonus = playScreen.nbScoreBonus;
         int nbSlowDown = playScreen.nbSlowDown;
-
+        int nbSpeedUp = playScreen.nbSpeedUp;
 
         int previousHighScore = game.user.getHighScore();
         boolean isNewHighScore = game.user.addScore(finalScore);
@@ -40,8 +31,7 @@ class SoloGameOverScreen extends AbstractGameOverScreen {
             label2.setText(game.i18n.format("final_score", finalScore));
         }
 
-        submitGpgs(finalScore, difficulty, deadBottom, deadHole, nbInvincible, nbNewLife, nbScoreBonus, nbSlowDown);
-
+        submitGpgs(finalScore, difficulty, deadBottom, deadHole, nbInvincible, nbNewLife, nbScoreBonus, nbSlowDown, nbSpeedUp);
     }
 
     @Override
@@ -64,7 +54,7 @@ class SoloGameOverScreen extends AbstractGameOverScreen {
         screenManager.set(new SoloPlayScreen(game));
     }
 
-    private void submitGpgs(int score, int difficulty, boolean deadBottom, boolean deadHole, int nbInvincible, int nbNewLife, int nbScoreBonus, int nbSlowDown) {
+    private void submitGpgs(int score, int difficulty, boolean deadBottom, boolean deadHole, int nbInvincible, int nbNewLife, int nbScoreBonus, int nbSlowDown, int nbSpeedUp) {
         if (score >= 1_000)
             game.gpgs.unlockAchievement("SCORE_1_000");
         if (score >= 10_000)
@@ -112,6 +102,13 @@ class SoloGameOverScreen extends AbstractGameOverScreen {
             game.gpgs.unlockAchievement("SLOWDOWN_50");
         if (nbSlowDown >= 100)
             game.gpgs.unlockAchievement("SLOWDOWN_100");
+
+        if (nbSpeedUp >= 10)
+            game.gpgs.unlockAchievement("SPEEDUP_10");
+        if (nbSpeedUp >= 50)
+            game.gpgs.unlockAchievement("SPEEDUP_50");
+        if (nbSpeedUp >= 100)
+            game.gpgs.unlockAchievement("SPEEDUP_100");
 
         game.gpgs.submitScore("LEADERBOARD_" + difficulty, score);
     }

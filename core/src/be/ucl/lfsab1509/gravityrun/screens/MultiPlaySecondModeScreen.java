@@ -4,15 +4,20 @@ import be.ucl.lfsab1509.gravityrun.GravityRun;
 import be.ucl.lfsab1509.gravityrun.sprites.Bonus;
 import be.ucl.lfsab1509.gravityrun.sprites.Marble;
 import be.ucl.lfsab1509.gravityrun.sprites.SlowDown;
+import be.ucl.lfsab1509.gravityrun.sprites.SpeedUp;
 
 import java.util.Random;
+
+import static be.ucl.lfsab1509.gravityrun.sprites.Bonus.NEW_LIFE;
+import static be.ucl.lfsab1509.gravityrun.sprites.Bonus.SCORE_BONUS;
+import static be.ucl.lfsab1509.gravityrun.sprites.Bonus.SPEED_UP;
 
 public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
 
     private static final int LOST_LIFE = 1;
     private static final int LOST_SCORE_BONUS = 3;
     private static final int OPPONENT_SCORE = 5;
-    private static final int SLOWDOWN = 2;
+    private static final int SLOW_DOWN = 2;
 
     private boolean initialized = false, opponentDead = false;
     private Integer opponentLives = 0, opponentScore = 0;
@@ -46,29 +51,46 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
             case OPPONENT_LIVES:
                 setOpponentLives(message);
                 break;
-            case SLOWDOWN:
+            case SLOW_DOWN:
                 SlowDown slowdown = new SlowDown(0, 0, this, new Random(), slowDownImage);
                 slowdown.activateSlowdown(playerMarble);
                 playerMarble.addCaughtBonuses(slowdown);
                 break;
+            case SPEED_UP:
+                SpeedUp speedUp = new SpeedUp(0, 0, this, new Random(), speedUpImage);
+                speedUp.activateSpeedUp(playerMarble);
+                playerMarble.addCaughtBonuses(speedUp);
+
         }
     }
 
     @Override
     void bonusCollides(Bonus bonus, int i, Marble marble) {
         switch (bonus.getValue()) {
-            case Bonus.NEW_LIFE:
+            case NEW_LIFE:
                 write("[" + LOST_LIFE + "]#");
                 break;
-            case Bonus.SCORE_BONUS:
+            case SCORE_BONUS:
                 write("[" + LOST_SCORE_BONUS + "]#");
                 break;
-            case Bonus.SLOWDOWN:
-                write("[" + SLOWDOWN + "]#");
+            case SLOW_DOWN:
+                write("[" + SLOW_DOWN + "]#");
                 break;
+            case SPEED_UP:
+                write("[" + SPEED_UP + "]#");
         }
 
         super.bonusCollides(bonus, i, marble);
+    }
+
+    @Override
+    void handleEndGame() {
+        if (!gameOver)
+            return;
+
+        super.handleEndGame();
+
+        screenManager.set(new MultiplayerGameOverScreen(game, playerMarble.getScore(), opponentScore));
     }
 
     @Override

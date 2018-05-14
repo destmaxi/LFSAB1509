@@ -35,13 +35,13 @@ public abstract class AbstractPlayScreen extends Screen {
     private ArrayList<Vector2> backgroundPositions;
     boolean deadBottom = false, endGameReceived = false, gameOver = false, initialized = false;
     public boolean deadHole = false;
-    public int nbInvincible = 0, nbNewLife = 0, nbScoreBonus = 0, nbSlowDown = 0;
+    public int nbInvincible = 0, nbNewLife = 0, nbScoreBonus = 0, nbSlowDown = 0, nbSpeedUp = 0;
     private Label playerLivesLabel, playerScoreLabel;
     Marble playerMarble;
     OrthographicCamera camera;
     Random randomBonus, randomObstacle;
     Stage scoreStage;
-    Texture marblesImage, marblesInvincibleImage, newLifeImage, slowDownImage, youLoseImage;
+    Texture marblesImage, marblesInvincibleImage, newLifeImage, slowDownImage, speedUpImage, youLoseImage;
     private Texture background, camRepositionImage, holeImage, invincibleImage, largeHoleImage, playerLivesImage, scoreBonusImage, wallImage;
     Viewport viewport;
 
@@ -99,6 +99,8 @@ public abstract class AbstractPlayScreen extends Screen {
 
         camera.position.y = height / 10;
     }
+
+    abstract void handleEndGame();
 
     public abstract void initGame(float dt);
 
@@ -169,6 +171,7 @@ public abstract class AbstractPlayScreen extends Screen {
         playerLivesImage.dispose();
         scoreBonusImage.dispose();
         slowDownImage.dispose();
+        speedUpImage.dispose();
         wallImage.dispose();
     }
 
@@ -178,14 +181,6 @@ public abstract class AbstractPlayScreen extends Screen {
 
     public SoundManager getSoundManager() {
         return soundManager;
-    }
-
-    void handleEndGame() {
-        if (!gameOver)
-            return;
-
-        soundManager.replayMenu();
-        screenManager.set(new GameOverScreen(game, this));//playerMarble.getScore(), this instanceof AbstractMultiPlayScreen));
     }
 
     void handleInput() {
@@ -214,6 +209,7 @@ public abstract class AbstractPlayScreen extends Screen {
         playerLivesImage = new Texture("drawable-" + calculateStandardWidth(GravityRun.WIDTH) + "/playerlives.png");
         scoreBonusImage = new Texture(basePath + "scorebonus.png");
         slowDownImage = new Texture(basePath + "slowdown.png");
+        speedUpImage = new Texture(basePath + "speedup.png");
         wallImage = new Texture(basePath + "wall.png");
         youLoseImage = new Texture(basePath + "youlose.png");
     }
@@ -226,17 +222,20 @@ public abstract class AbstractPlayScreen extends Screen {
     Bonus newBonus(float position, int offset) {
         Bonus bonus;
         switch (randomBonus.nextInt(10)) {
-            case 2:
+            case 0:
                 bonus = new CamReposition(position, offset, this, randomBonus, camRepositionImage);
                 break;
-            case 4:
+            case 2:
                 bonus = new Invincible(position, offset, this, randomBonus, invincibleImage);
                 break;
-            case 6:
+            case 4:
                 bonus = new NewLife(position, offset, this, randomBonus, newLifeImage);
                 break;
-            case 8:
+            case 6:
                 bonus = new SlowDown(position, offset, this, randomBonus, slowDownImage);
+                break;
+            case 8:
+                bonus = new SpeedUp(position, offset, this, randomBonus, speedUpImage);
                 break;
             default:
                 bonus = new ScoreBonus(position, offset, this, randomBonus, scoreBonusImage);

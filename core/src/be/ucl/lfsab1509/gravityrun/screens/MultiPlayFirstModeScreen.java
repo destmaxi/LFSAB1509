@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Texture;
 import java.util.ArrayList;
 import java.util.Random;
 
-//FIXME revenir en arriere quand perdu (sauvegarder obstacle / bonus)
 public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
 
     private static final int INIT_RANDOMS = 3;
@@ -85,6 +84,16 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
         super.disposeTextures();
         opponentMarblesImage.dispose();
         opponentMarblesInvincibleImage.dispose();
+    }
+
+    @Override
+    void handleEndGame() {
+        if (!gameOver)
+            return;
+
+        super.handleEndGame();
+
+        screenManager.set(new MultiplayerGameOverScreen(game, playerMarble.getScore(), opponentMarble.getScore()));
     }
 
     @Override
@@ -176,8 +185,7 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
         super.updateMarbles(dt);
 
         if (!playerMarble.isDead()) {
-            // TODO remplacer Gdx.input.getGyroscopeY() par playerMarble.getPosition().x/width pour savoir comment envoyer
-            String marbleUpdate = "[" + POSITION_OPPONENT_MARBLE + ":" + Gdx.input.getGyroscopeY() + ":" + playerMarble.getSlowDown() + ":" + playerMarble.isBlockedOnLeft() + ":" + playerMarble.isBlockedOnRight() + ":" + playerMarble.isBlockedOnTop() + ":" + playerMarble.getCenterPosition().z + ":" + playerMarble.getSpeed() + ":" + playerMarble.getScore() + ":" + playerMarble.isInvincible() + ":" + playerMarble.getCenterPosition().x + ":" + playerMarble.getCenterPosition().y + "]#";
+            String marbleUpdate = "[" + POSITION_OPPONENT_MARBLE + ":" + playerMarble.getGyroY() + ":" + playerMarble.getSlowDown() + ":" + playerMarble.isBlockedOnLeft() + ":" + playerMarble.isBlockedOnRight() + ":" + playerMarble.isBlockedOnTop() + ":" + playerMarble.getCenterPosition().z + ":" + playerMarble.getSpeed() + ":" + playerMarble.getScore() + ":" + playerMarble.isInvincible() + ":" + playerMarble.getCenterPosition().x + ":" + playerMarble.getCenterPosition().y + "]#";
             write(marbleUpdate);
         }
     }

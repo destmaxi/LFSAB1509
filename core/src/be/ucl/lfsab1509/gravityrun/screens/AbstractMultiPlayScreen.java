@@ -16,7 +16,7 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
     static final int ACK_DEAD = 9;
     private static final long COUNTDOWN = 3000L;
     private static final int END_GAME = 10;
-    private static final int GAME_INFO = 4;
+    static final int GAME_INFO = 4;
     private static final int INIT_MSG = 0;
     private static final int INIT_SYNCH_MSG = 7;
     static final int OPPONENT_DEAD = 8;
@@ -76,13 +76,7 @@ public abstract class AbstractMultiPlayScreen extends AbstractPlayScreen {
 
     @Override
     void handleEndGame() {
-        super.handleEndGame();
-
-        if (!gameOver)
-            return;
-
         MultiplayerConnectionScreen.ready = false;
-        startMultiPlayState = false;
         write("[" + END_GAME + "]#");
     }
 

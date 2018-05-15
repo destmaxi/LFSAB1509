@@ -294,7 +294,7 @@ public class Marble {
     }
 
     private void updateJump() {
-        if (myMarble && sensorHelper.hasJumped() && position.z <= 0)
+        if (myMarble && sensorHelper.hasJumped() && position.z == 0)
             position.z = JUMP_HEIGHT;
 
         if (position.z > 0 && !dead || (position.z <= 0 && dead && inHole))

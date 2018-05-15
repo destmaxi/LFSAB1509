@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.Toast;
+import be.ucl.lfsab1509.gravityrun.R;
 import be.ucl.lfsab1509.gravityrun.tools.GpgsMappers;
 import be.ucl.lfsab1509.gravityrun.tools.IGpgs;
 import com.google.android.gms.auth.api.Auth;
@@ -60,10 +62,9 @@ public class Gpgs implements IGpgs {
                 onConnected(signedInAccount);
             } else {
                 String message = result.getStatus().getStatusMessage();
-                if (message == null || message.isEmpty()) {
+                if (message == null || message.isEmpty())
                     message = "Erreur de connexion";
-                }
-                // toast
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -100,7 +101,7 @@ public class Gpgs implements IGpgs {
         Log.d(TAG, "showAchievements()");
 
         if (!isSignedIn()) {
-//            errorCallback.error("Vous n'êtes pas connecté.");
+            Toast.makeText(context, R.string.error_gpgs_not_connected, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -110,19 +111,20 @@ public class Gpgs implements IGpgs {
                     public void onSuccess(Intent intent) {
                         context.startActivityForResult(intent, RC_ACHIEVEMENT_UI);
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-//                errorCallback.error("Erreur lors de l'affichage des Réussites.");
-            }
-        });
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context, R.string.error_gpgs_achievements, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     public void showLeaderboards() {
         Log.d(TAG, "showLeaderboards()");
 
         if (!isSignedIn()) {
-//            errorCallback.error("Vous n'êtes pas connecté.");
+            Toast.makeText(context, R.string.error_gpgs_not_connected, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -132,12 +134,13 @@ public class Gpgs implements IGpgs {
                     public void onSuccess(Intent intent) {
                         context.startActivityForResult(intent, RC_LEADERBOARD_UI);
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-//                errorCallback.error("Erreur lors de l'affichage des Classements.");
-            }
-        });
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context, "Erreur lors de l'affichage des Classements.", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     public void signInSilently() {
@@ -156,12 +159,7 @@ public class Gpgs implements IGpgs {
                             onDisconnected();
                         }
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-//                errorCallback.error("Erreur lors de la tentative de connexion.");
-            }
-        });
+                });
     }
 
     public void signOut() {
@@ -177,12 +175,13 @@ public class Gpgs implements IGpgs {
                             Log.d(TAG, "signOut(): failure");
                         onDisconnected();
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-//                errorCallback.error("Erreur lors de la tentative de déconnexion.");
-            }
-        });
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context, R.string.error_gpgs_impossible_connection, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     public void startSignInIntent() {

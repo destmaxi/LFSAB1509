@@ -3,5 +3,9 @@
 
     <string name="app_name">Gravity Run</string>
     <string name="searching">Searching ...</string>
+    <string name="error_gpgs_not_connected">You\'re not connected.</string>
+    <string name="error_gpgs_achievements">Unable to display Achievements.</string>
+    <string name="error_gpgs_leaderboards">Unable to display Leaderboards.</string>
+    <string name="error_gpgs_impossible_connection">Unable to connect.</string>
 
 </resources>

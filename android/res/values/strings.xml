@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_id">429552501328</string>
+    <string name="app_id" translatable="false">429552501328</string>
     <string name="app_name">Gravity Run</string>
     <string name="searching">Recherche ...</string>
+    <string name="error_gpgs_not_connected">Vous n\'êtes pas connecté.</string>
+    <string name="error_gpgs_leaderboards">Impossible d\'afficher les Classements.</string>
+    <string name="error_gpgs_achievements">Impossible d\'afficher les Réussites.</string>
+    <string name="error_gpgs_impossible_connection">Impossible de se connecter.</string>
 
 </resources>

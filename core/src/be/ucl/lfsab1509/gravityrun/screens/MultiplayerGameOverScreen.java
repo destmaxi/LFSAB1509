@@ -49,4 +49,5 @@ class MultiplayerGameOverScreen extends AbstractGameOverScreen {
         setMultiPlayScreen(multiPlayScreen);
         screenManager.set(multiPlayScreen);
     }
+
 }

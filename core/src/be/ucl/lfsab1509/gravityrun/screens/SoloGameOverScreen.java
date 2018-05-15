@@ -7,16 +7,7 @@ class SoloGameOverScreen extends AbstractGameOverScreen {
     SoloGameOverScreen(GravityRun gravityRun, AbstractPlayScreen playScreen) {
         super(gravityRun);
 
-        boolean deadBottom = playScreen.deadBottom;
-        boolean deadHole = playScreen.deadHole;
-        int difficulty = playScreen.playerMarble.getDifficulty();
         int finalScore = playScreen.playerMarble.getScore();
-        int nbInvincible = playScreen.nbInvincible;
-        int nbNewLife = playScreen.nbNewLife;
-        int nbScoreBonus = playScreen.nbScoreBonus;
-        int nbSlowDown = playScreen.nbSlowDown;
-        int nbSpeedUp = playScreen.nbSpeedUp;
-
         int previousHighScore = game.user.getHighScore();
         boolean isNewHighScore = game.user.addScore(finalScore);
         game.user.write();
@@ -31,7 +22,7 @@ class SoloGameOverScreen extends AbstractGameOverScreen {
             label2.setText(game.i18n.format("final_score", finalScore));
         }
 
-        submitGpgs(finalScore, difficulty, deadBottom, deadHole, nbInvincible, nbNewLife, nbScoreBonus, nbSlowDown, nbSpeedUp);
+        submitGpgs(playScreen);
     }
 
     @Override
@@ -54,63 +45,34 @@ class SoloGameOverScreen extends AbstractGameOverScreen {
         screenManager.set(new SoloPlayScreen(game));
     }
 
-    private void submitGpgs(int score, int difficulty, boolean deadBottom, boolean deadHole, int nbInvincible, int nbNewLife, int nbScoreBonus, int nbSlowDown, int nbSpeedUp) {
-        if (score >= 1_000)
-            game.gpgs.unlockAchievement("SCORE_1_000");
-        if (score >= 10_000)
-            game.gpgs.unlockAchievement("SCORE_10_000");
-        if (score >= 100_000)
-            game.gpgs.unlockAchievement("SCORE_100_000");
-        if (score >= 1_000_000)
-            game.gpgs.unlockAchievement("SCORE_1_000_000");
+    private void gpgsIncrement(boolean dead, int[] deads, String string) {
+        for (int d : deads)
+            if (dead)
+                game.gpgs.incrementAchievement(string + d, 1);
+    }
 
-        if (deadBottom) {
-            game.gpgs.incrementAchievement("BOTTOM_100", 1);
-            game.gpgs.incrementAchievement("BOTTOM_500", 1);
-            game.gpgs.incrementAchievement("BOTTOM_1000", 1);
-        }
-        if (deadHole) {
-            game.gpgs.incrementAchievement("HOLE_100", 1);
-            game.gpgs.incrementAchievement("HOLE_500", 1);
-            game.gpgs.incrementAchievement("HOLE_1000", 1);
-        }
+    private void gpgsUnlock(int score, int[] scores, String string) {
+        for (int s : scores)
+            if (score >= s)
+                game.gpgs.unlockAchievement(string + s);
+    }
 
-        if (nbInvincible >= 10)
-            game.gpgs.unlockAchievement("INVINCIBLE_10");
-        if (nbInvincible >= 50)
-            game.gpgs.unlockAchievement("INVINCIBLE_50");
-        if (nbInvincible >= 100)
-            game.gpgs.unlockAchievement("INVINCIBLE_100");
+    private void submitGpgs(AbstractPlayScreen playScreen) {
+        int[] scores = {1_000, 10_000, 100_000, 1_000_000};
+        gpgsUnlock(playScreen.playerMarble.getScore(), scores, "SCORE_");
 
-        if (nbNewLife >= 10)
-            game.gpgs.unlockAchievement("NEWLIFE_10");
-        if (nbNewLife >= 50)
-            game.gpgs.unlockAchievement("NEWLIFE_50");
-        if (nbNewLife >= 100)
-            game.gpgs.unlockAchievement("NEWLIFE_100");
+        int[] nbDead = {100, 500, 1000};
+        gpgsIncrement(playScreen.deadBottom, nbDead, "BOTTOM_");
+        gpgsIncrement(playScreen.deadHole, nbDead, "HOLE_");
 
-        if (nbScoreBonus >= 10)
-            game.gpgs.unlockAchievement("SCOREBONUS_10");
-        if (nbScoreBonus >= 50)
-            game.gpgs.unlockAchievement("SCOREBONUS_50");
-        if (nbScoreBonus >= 100)
-            game.gpgs.unlockAchievement("SCOREBONUS_100");
+        int[] nbBonuses = {10, 50, 100};
+        gpgsUnlock(playScreen.nbInvincible, nbBonuses, "INVINCIBLE_");
+        gpgsUnlock(playScreen.nbNewLife, nbBonuses, "NEW_LIFE_");
+        gpgsUnlock(playScreen.nbScoreBonus, nbBonuses, "SCORE_BONUS_");
+        gpgsUnlock(playScreen.nbSlowDown, nbBonuses, "SLOW_DOWN_");
+        gpgsUnlock(playScreen.nbSpeedUp, nbBonuses, "SPEED_UP_");
 
-        if (nbSlowDown >= 10)
-            game.gpgs.unlockAchievement("SLOWDOWN_10");
-        if (nbSlowDown >= 50)
-            game.gpgs.unlockAchievement("SLOWDOWN_50");
-        if (nbSlowDown >= 100)
-            game.gpgs.unlockAchievement("SLOWDOWN_100");
-
-        if (nbSpeedUp >= 10)
-            game.gpgs.unlockAchievement("SPEEDUP_10");
-        if (nbSpeedUp >= 50)
-            game.gpgs.unlockAchievement("SPEEDUP_50");
-        if (nbSpeedUp >= 100)
-            game.gpgs.unlockAchievement("SPEEDUP_100");
-
-        game.gpgs.submitScore("LEADERBOARD_" + difficulty, score);
+        game.gpgs.submitScore("LEADERBOARD_" + playScreen.playerMarble.getDifficulty(), playScreen.playerMarble.getScore());
     }
 
 }

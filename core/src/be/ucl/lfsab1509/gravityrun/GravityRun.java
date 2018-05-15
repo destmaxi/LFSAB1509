@@ -140,6 +140,7 @@ public class GravityRun extends Game {
         float d = DENSITY;
         float width = WIDTH;
 
+        FreeTypeFontGenerator.setMaxTextureSize(4096);
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("arial.ttf"));
         skinTextureAtlas = new TextureAtlas("skin/uiskin.atlas");
 

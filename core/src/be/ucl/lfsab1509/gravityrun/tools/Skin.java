@@ -5,15 +5,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 
 public class Skin extends com.badlogic.gdx.scenes.scene2d.ui.Skin {
 
     private BitmapFont font;
 
     public void createSkin(int size, FreeTypeFontGenerator generator, TextureAtlas atlas) {
-        FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-//        parameter.incremental = true;
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.incremental = false;
         parameter.size = (int) (size * GravityRun.DENSITY);
 
         font = generator.generateFont(parameter);

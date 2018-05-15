@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
 
 public class OptionScreen extends AbstractMenuScreen {
 

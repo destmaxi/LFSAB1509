@@ -7,6 +7,8 @@ import java.util.Random;
 
 public class Invincible extends Bonus {
 
+    private static final float ACTIVE_INVINCIBLE_TIME = 3f;
+
     private float collideTime;
 
     public Invincible(float y, int offset, AbstractPlayScreen playScreen, Random random, Texture texture) {
@@ -20,7 +22,7 @@ public class Invincible extends Bonus {
 
     @Override
     public boolean isFinished(Marble marble) {
-        return collideTime >= 3;
+        return collideTime >= ACTIVE_INVINCIBLE_TIME;
     }
 
     @Override
@@ -35,7 +37,7 @@ public class Invincible extends Bonus {
     public void update(float dt, Marble marble) {
         collideTime += dt;
 
-        if (!marble.isDead() && collideTime >= 3 && marble.decreaseActiveInvicibles() == 0) {
+        if (!marble.isDead() && collideTime >= ACTIVE_INVINCIBLE_TIME && marble.decreaseActiveInvicibles() == 0) {
             marble.setInvincible(false);
             marble.setInWall(true);
         }

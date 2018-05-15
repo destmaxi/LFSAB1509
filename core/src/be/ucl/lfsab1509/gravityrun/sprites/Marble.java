@@ -77,6 +77,10 @@ public class Marble {
         scoreBonus -= 100;
     }
 
+    int getActiveSpeedUps() {
+        return activeSpeedUps;
+    }
+
     Circle getBounds() {
         return bounds;
     }

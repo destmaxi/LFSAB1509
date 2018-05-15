@@ -7,6 +7,12 @@ import java.util.Random;
 
 public class SpeedUp extends Bonus {
 
+    private static final float ACTIVE_ADVERSE_SPEEDUP = 0.5f;
+    private static final float ACTIVE_SPEEDUP = 2f;
+    private static final float ACTIVE_INVINCIBLE_TIME = 4f;
+    private static final float ACTIVE_SPEEDUP_TIME = 3f;
+    private static final float INACTIVE_SPEEDUP = 1f;
+
     private float collideTime;
 
     public SpeedUp(float y, int offset, AbstractPlayScreen playScreen, Random random, Texture texture) {
@@ -20,7 +26,7 @@ public class SpeedUp extends Bonus {
 
     @Override
     public boolean isFinished(Marble marble) {
-        return collideTime >= 3;
+        return collideTime >= ACTIVE_INVINCIBLE_TIME;
     }
 
     @Override
@@ -28,7 +34,7 @@ public class SpeedUp extends Bonus {
         collideTime = 0;
         marble.setInvincible(true);
         marble.increaseActiveSpeedUps();
-        marble.setSpeedUp(2f);
+        marble.setSpeedUp(ACTIVE_SPEEDUP);
         playScreen.nbSpeedUp++;
     }
 
@@ -38,9 +44,12 @@ public class SpeedUp extends Bonus {
 
         marble.getCenterPosition().z = Marble.JUMP_HEIGHT;
 
-        if (!marble.isDead() && collideTime >= 3 && marble.decreaseActiveSpeedUps() == 0) {
+        if (!marble.isDead() && collideTime >= ACTIVE_SPEEDUP_TIME && marble.getActiveSpeedUps() == 1) {
+            marble.setSpeedUp(INACTIVE_SPEEDUP);
+        }
+
+        if (!marble.isDead() && collideTime >= ACTIVE_INVINCIBLE_TIME && marble.decreaseActiveSpeedUps() == 0) {
             marble.setInvincible(false);
-            marble.setSpeedUp(1f);
             marble.setInWall(true);
         }
     }
@@ -48,7 +57,7 @@ public class SpeedUp extends Bonus {
     public void activateSpeedUp(Marble marble) {
         collideTime = 0;
         marble.increaseActiveSpeedUps();
-        marble.setSpeedUp(.5f);
+        marble.setSpeedUp(ACTIVE_ADVERSE_SPEEDUP);
     }
 
 }

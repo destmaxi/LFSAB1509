@@ -22,13 +22,18 @@ public class Hole extends Obstacle {
 
     @Override
     public boolean collides(Marble marble) {
-        if (overlaps(marble) && marble.getCenterPosition().z == 0 && !GravityRun.cheat) {
-            marble.setInHole();
-            playScreen.getSoundManager().marbleBreak(marble.isDead());
-            marble.setLives(0);
-            marble.setDead();
-            playScreen.deadHole = true;
-            return true;
+        if (! (overlaps(marble) && marble.getCenterPosition().z == 0 && marble.isHoleProtected() && !GravityRun.cheat)) {
+            marble.setHoleProtected(false);
+            if (overlaps(marble) && marble.getCenterPosition().z == 0 && !GravityRun.cheat) {
+                marble.setInHole();
+                playScreen.getSoundManager().marbleBreak(marble.isDead());
+                marble.setLives(0);
+                marble.setDead();
+                playScreen.deadHole = true;
+                return true;
+            } else {
+                return false;
+            }
         } else
             return false;
     }

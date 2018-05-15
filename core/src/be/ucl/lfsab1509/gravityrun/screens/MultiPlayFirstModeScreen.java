@@ -59,7 +59,7 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
                 setOpponentMarbleLives(message);
                 break;
             case OPPONENT_MARBLE_INHOLE:
-                opponentMarble.setInHole();
+                opponentMarble.setHoleProtected(false);
                 break;
             case POSITION_OPPONENT_MARBLE:
                 addPositionToOpponentMarble(message);

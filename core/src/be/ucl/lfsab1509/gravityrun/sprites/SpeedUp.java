@@ -14,6 +14,7 @@ public class SpeedUp extends Bonus {
     private static final float INACTIVE_SPEEDUP = 1f;
 
     private float collideTime;
+    private boolean activeSpeedUp = true;
 
     public SpeedUp(float y, int offset, AbstractPlayScreen playScreen, Random random, Texture texture) {
         super(y, offset, playScreen, random, texture);
@@ -33,6 +34,7 @@ public class SpeedUp extends Bonus {
     void onCollide(Marble marble) {
         collideTime = 0;
         marble.setInvincible(true);
+        marble.increaseActiveInvincibles();
         marble.increaseActiveSpeedUps();
         marble.setSpeedUp(ACTIVE_SPEEDUP);
         playScreen.nbSpeedUp++;
@@ -45,14 +47,24 @@ public class SpeedUp extends Bonus {
         if (marble.getSpeedUp() == ACTIVE_SPEEDUP)
             marble.getCenterPosition().z = Marble.JUMP_HEIGHT;
 
-        if (!marble.isDead() && collideTime >= ACTIVE_SPEEDUP_TIME && marble.getActiveSpeedUps() == 1) {
-            marble.setSpeedUp(INACTIVE_SPEEDUP);
+        if (activeSpeedUp && !marble.isDead() && collideTime >= ACTIVE_SPEEDUP_TIME) {
+            activeSpeedUp = false;
+            //System.out.println("SpeedUp.update: deactivating speed up " + marble.getActiveSpeedUps() + " " + marble.getActiveInvincibles() + " " + marble.isHoleProtected() + " " + marble.isInWall() + " " + marble.isInvincible() + " " + marble.getSpeedUp());
+            if (marble.decreaseActiveSpeedUps() == 0) {
+                //System.out.println("SpeedUp.update: deactivating speed up, first case " + marble.getActiveSpeedUps() + " " + marble.getActiveInvincibles() + " " + marble.isHoleProtected() + " " + marble.isInWall() + " " + marble.isInvincible() + " " + marble.getSpeedUp());
+                marble.setSpeedUp(INACTIVE_SPEEDUP);
+                marble.setHoleProtected(true);
+            }
         }
 
-        if (!marble.isDead() && collideTime >= ACTIVE_INVINCIBLE_TIME && marble.decreaseActiveSpeedUps() == 0) {
+        if (!marble.isDead() && collideTime >= ACTIVE_INVINCIBLE_TIME && marble.decreaseActiveInvicibles() == 0) {
+            //System.out.println("SpeedUp.update: deactivating invincible " + marble.getActiveSpeedUps() + " " + marble.getActiveInvincibles() + " " + marble.isHoleProtected() + " " + marble.isInWall() + " " + marble.isInvincible() + " " + marble.getSpeedUp());
             marble.setInvincible(false);
             marble.setInWall(true);
-        }
+            marble.setHoleProtected(false);
+        }/* else if (!marble.isDead() && collideTime >= ACTIVE_INVINCIBLE_TIME) {
+            System.out.println("SpeedUp.update: deactivating, second case " + marble.getActiveSpeedUps() + " " + marble.getActiveInvincibles() + " " + marble.isHoleProtected() + " " + marble.isInWall() + " " + marble.isInvincible() + " " + marble.getSpeedUp());
+        }*/
     }
 
     public void activateSpeedUp(Marble marble) {

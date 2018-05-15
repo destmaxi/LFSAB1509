@@ -17,7 +17,7 @@ public class Marble {
     private static int MOVEMENT;
 
     private ArrayList<Bonus> caughtBonuses;
-    private boolean blockedOnLeft = false, blockedOnRight = false, blockedOnTop = false, dead = false, inHole = false, invincible = false, inWall = false, isCollidingWall = false, lifeLost = false, myMarble;
+    private boolean blockedOnLeft = false, blockedOnRight = false, blockedOnTop = false, dead = false, holeProtected = false, inHole = false, invincible = false, inWall = false, isCollidingWall = false, lifeLost = false, myMarble;
     private Circle bounds;
     private float gyroY, repositioning = 1f, slowDown = 1f, speed = 1f, speedUp = 1f;
     private int activeInvincibles, activeSlowdowns, activeSpeedUps, collidedWall, difficulty, height, lives = 5, score, scoreBonus, width;
@@ -75,6 +75,10 @@ public class Marble {
 
     public void decreaseScoreBonus() {
         scoreBonus -= 100;
+    }
+
+    int getActiveInvincibles() {
+        return activeInvincibles;
     }
 
     int getActiveSpeedUps() {
@@ -181,6 +185,10 @@ public class Marble {
         return invincible;
     }
 
+    boolean isHoleProtected() {
+        return holeProtected;
+    }
+
     boolean isInWall() {
         return inWall;
     }
@@ -246,8 +254,12 @@ public class Marble {
         this.dead = true;
     }
 
-    public void setInHole() {
-        this.inHole = true;
+    public void setHoleProtected(boolean holeProtected) {
+        this.holeProtected = holeProtected;
+    }
+
+    void setInHole() {
+        inHole = true;
     }
 
     public void setInvincible(boolean invincible) {
@@ -283,7 +295,7 @@ public class Marble {
     }
 
     public void update(float dt) {
-        updateJump();
+        updateHeight(dt);
         updatePosition(dt);
 
         if (dead)
@@ -302,12 +314,13 @@ public class Marble {
         bounds.setPosition(position.x, position.y);
     }
 
-    private void updateJump() {
-        if (myMarble && sensorHelper.hasJumped() && position.z == 0)
+    private void updateHeight(float dt) {
+        if (myMarble && sensorHelper.hasJumped() && (position.z == 0 || holeProtected))
             position.z = JUMP_HEIGHT;
 
+        // Deux actions : si on est vivant et qu'on doit descendre, et si on est mort et qu'on chute dans l'application
         if (position.z > 0 && !dead || (position.z <= 0 && dead && inHole))
-            position.add(0, 0, -10 * difficulty * speed * slowDown * speedUp);
+            position.add(0, 0, -10 * /*dt * 60 * */difficulty * speed * slowDown * speedUp);
         else
             position.z = 0;
     }

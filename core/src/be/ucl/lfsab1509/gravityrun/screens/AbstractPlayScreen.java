@@ -221,17 +221,20 @@ public abstract class AbstractPlayScreen extends Screen {
 
     Bonus newBonus(float position, int offset) {
         Bonus bonus;
-        switch (randomBonus.nextInt(10)) {
+        switch (randomBonus.nextInt(20)) {
             case 0:
                 bonus = new CamReposition(position, offset, this, randomBonus, camRepositionImage);
                 break;
             case 2:
+            case 3:
                 bonus = new Invincible(position, offset, this, randomBonus, invincibleImage);
                 break;
             case 4:
+            case 5:
                 bonus = new NewLife(position, offset, this, randomBonus, newLifeImage);
                 break;
             case 6:
+            case 7:
                 bonus = new SlowDown(position, offset, this, randomBonus, slowDownImage);
                 break;
             case 8:

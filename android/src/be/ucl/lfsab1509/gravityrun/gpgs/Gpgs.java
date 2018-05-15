@@ -2,9 +2,11 @@ package be.ucl.lfsab1509.gravityrun.gpgs;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.Toast;
 import be.ucl.lfsab1509.gravityrun.R;
 import be.ucl.lfsab1509.gravityrun.tools.GpgsMappers;
 import be.ucl.lfsab1509.gravityrun.tools.IGpgs;
@@ -18,6 +20,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import static be.ucl.lfsab1509.gravityrun.tools.BluetoothConstants.MESSAGE_TOAST;
+import static be.ucl.lfsab1509.gravityrun.tools.BluetoothConstants.TOAST;
+
 public class Gpgs implements IGpgs {
 
     private static final int RC_SIGN_IN = 9001;
@@ -30,12 +35,14 @@ public class Gpgs implements IGpgs {
     private boolean connected = false;
     private GoogleSignInClient mGoogleSignInClient;
     private GoogleSignInAccount mSignedInAccount = null;
+    private Handler handler;
     private LeaderboardsClient mLeaderboardsClient = null;
 
-    public Gpgs(Activity context) {
+    public Gpgs(Activity context, Handler handler) {
         Log.d(TAG, "Gpgs()");
 
         this.context = context;
+        this.handler = handler;
         this.mGoogleSignInClient = GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN);
     }
 
@@ -64,7 +71,7 @@ public class Gpgs implements IGpgs {
                 String message = result.getStatus().getStatusMessage();
                 if (message == null || message.isEmpty())
                     message = "Erreur de connexion";
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                toast(message);
             }
         }
     }
@@ -101,7 +108,7 @@ public class Gpgs implements IGpgs {
         Log.d(TAG, "showAchievements()");
 
         if (!isSignedIn()) {
-            Toast.makeText(context, R.string.error_gpgs_not_connected, Toast.LENGTH_SHORT).show();
+            toast(R.string.error_gpgs_not_connected);
             return;
         }
 
@@ -115,7 +122,7 @@ public class Gpgs implements IGpgs {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context, R.string.error_gpgs_achievements, Toast.LENGTH_SHORT).show();
+                        toast(R.string.error_gpgs_achievements);
                     }
                 });
     }
@@ -124,7 +131,7 @@ public class Gpgs implements IGpgs {
         Log.d(TAG, "showLeaderboards()");
 
         if (!isSignedIn()) {
-            Toast.makeText(context, R.string.error_gpgs_not_connected, Toast.LENGTH_SHORT).show();
+            toast(R.string.error_gpgs_not_connected);
             return;
         }
 
@@ -138,7 +145,7 @@ public class Gpgs implements IGpgs {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context, "Erreur lors de l'affichage des Classements.", Toast.LENGTH_SHORT).show();
+                        toast(R.string.error_gpgs_leaderboards);
                     }
                 });
     }
@@ -179,7 +186,7 @@ public class Gpgs implements IGpgs {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context, R.string.error_gpgs_impossible_connection, Toast.LENGTH_SHORT).show();
+                        toast(R.string.error_gpgs_connection_impossible);
                     }
                 });
     }
@@ -202,6 +209,18 @@ public class Gpgs implements IGpgs {
 
         if (isSignedIn())
             mAchievementsClient.unlock(GpgsMappers.mapToGpgsAchievement(achievementId));
+    }
+
+    private void toast(int message) {
+        toast(context.getString(message));
+    }
+
+    private void toast(String message) {
+        Message msg = handler.obtainMessage(MESSAGE_TOAST);
+        Bundle bundle = new Bundle();
+        bundle.putString(TOAST, message);
+        msg.setData(bundle);
+        handler.sendMessage(msg);
     }
 
 }

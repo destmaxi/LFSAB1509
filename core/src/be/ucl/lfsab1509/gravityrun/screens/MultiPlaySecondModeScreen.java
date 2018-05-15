@@ -1,10 +1,7 @@
 package be.ucl.lfsab1509.gravityrun.screens;
 
 import be.ucl.lfsab1509.gravityrun.GravityRun;
-import be.ucl.lfsab1509.gravityrun.sprites.Bonus;
-import be.ucl.lfsab1509.gravityrun.sprites.Marble;
-import be.ucl.lfsab1509.gravityrun.sprites.SlowDown;
-import be.ucl.lfsab1509.gravityrun.sprites.SpeedUp;
+import be.ucl.lfsab1509.gravityrun.sprites.*;
 
 import java.util.Random;
 
@@ -15,6 +12,7 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
     private static final int OPPONENT_SCORE = 23;
     private static final int SLOW_DOWN = 24;
     private static final int SPEED_UP = 25;
+    private static final int ZINVINCIBLE = 26;
 
     private boolean initialized = false, opponentDead = false;
     private Integer opponentLives = 0, opponentScore = 0;
@@ -60,12 +58,18 @@ public class MultiPlaySecondModeScreen extends AbstractMultiPlayScreen {
                 speedUp.stopRender();
                 playerMarble.addCaughtBonuses(speedUp);
                 break;
+            case ZINVINCIBLE:
+                playerMarble.setInvincible(false);
+                playerMarble.setInWall(true);
         }
     }
 
     @Override
     void bonusCollides(Bonus bonus, int i, Marble marble) {
         switch (bonus.getValue()) {
+            case Bonus.INVINCIBLE:
+                write(ZINVINCIBLE);
+                break;
             case Bonus.NEW_LIFE:
                 write(LOST_LIFE);
                 break;

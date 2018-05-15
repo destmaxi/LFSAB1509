@@ -9,7 +9,7 @@ import java.util.Random;
 public abstract class Bonus extends Sprite {
 
     static final int CAM_REPOSITION = 1;
-    static final int INVINCIBLE = 2;
+    public static final int INVINCIBLE = 2;
     public static final int NEW_LIFE = 3;
     public static final int SCORE_BONUS = 4;
     public static final int SLOW_DOWN = 5;

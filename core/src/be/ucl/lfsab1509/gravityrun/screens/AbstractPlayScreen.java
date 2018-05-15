@@ -41,8 +41,8 @@ public abstract class AbstractPlayScreen extends Screen {
     OrthographicCamera camera;
     Random randomBonus, randomObstacle;
     Stage scoreStage;
-    Texture marblesImage, marblesInvincibleImage, newLifeImage, slowDownImage, speedUpImage, youLoseImage;
-    private Texture background, camRepositionImage, holeImage, invincibleImage, largeHoleImage, playerLivesImage, scoreBonusImage, wallImage;
+    Texture marblesImage, marblesInvincibleImage, slowDownImage, speedUpImage, youLoseImage;
+    private Texture background, camRepositionImage, holeImage, invincibleImage, largeHoleImage, newLifeImage, playerLivesImage, scoreBonusImage, wallImage;
     Viewport viewport;
 
     AbstractPlayScreen(GravityRun gravityRun) {

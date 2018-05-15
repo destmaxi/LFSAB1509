@@ -250,11 +250,11 @@ public class Marble {
         this.inHole = true;
     }
 
-    void setInvincible(boolean invincible) {
+    public void setInvincible(boolean invincible) {
         this.invincible = invincible;
     }
 
-    void setInWall(boolean inWall) {
+    public void setInWall(boolean inWall) {
         this.inWall = inWall;
     }
 

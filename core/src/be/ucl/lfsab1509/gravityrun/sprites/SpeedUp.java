@@ -42,7 +42,8 @@ public class SpeedUp extends Bonus {
     public void update(float dt, Marble marble) {
         collideTime += dt;
 
-        marble.getCenterPosition().z = Marble.JUMP_HEIGHT;
+        if (marble.getSpeedUp() == ACTIVE_SPEEDUP)
+            marble.getCenterPosition().z = Marble.JUMP_HEIGHT;
 
         if (!marble.isDead() && collideTime >= ACTIVE_SPEEDUP_TIME && marble.getActiveSpeedUps() == 1) {
             marble.setSpeedUp(INACTIVE_SPEEDUP);
@@ -58,6 +59,8 @@ public class SpeedUp extends Bonus {
         collideTime = 0;
         marble.increaseActiveSpeedUps();
         marble.setSpeedUp(ACTIVE_ADVERSE_SPEEDUP);
+        marble.setInvincible(false);
+        marble.setInWall(true);
     }
 
 }

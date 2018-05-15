@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class Marble {
 
     public static final float GRAVITY_COMPENSATION = 1.4f;
+    private static final float GYRO_COMPENSATION = 75;
     static final int JUMP_HEIGHT = 666;
     private static int MOVEMENT;
 
@@ -335,15 +336,15 @@ public class Marble {
             float[] speed1 = sensorHelper.getVelocityVector();
             gyroY = speed1[0];
             //positionX = (GravityRun.WIDTH / 2) * (gravity[0] * GRAVITY_COMPENSATION + 1);
-            //System.out.println("updatePosition " + gravity[0] + " " + gravity[1] + " " + positionX + " " + speed1[0]);
         }
 
-        float x = 0f, y = 0f;
-        if (!(blockedOnRight && gyroY > 0 || blockedOnLeft && gyroY < 0))
-            x = gyroY * width / 75;
+        float deltaX = 0f, deltaY = 0f;
+        if (!((blockedOnRight && gyroY > 0) || (blockedOnLeft && gyroY < 0)))
+            deltaX = gyroY * width / GYRO_COMPENSATION;
         if (!blockedOnTop)
-            y = difficulty * MOVEMENT * speed * slowDown * speedUp * dt;
-        position.add(x, y, 0);
+            deltaY = difficulty * MOVEMENT * speed * slowDown * speedUp * dt;
+        position.add(deltaX, deltaY, 0);
+
         // cas presque défaut : !((blockedOnRight && gyroY>0)||(blockedOnLeft && gyroY<0)) && !(blockedOnLeft && gyroY<0 && blockedOnTop) && !(blockedOnRight && gyroY>0 && blockedOnTop)
         //position.x = positionX; // should add 0 for the x position
         // cas défaut : !((blockedOnRight && gyroY>0)||(blockedOnLeft && gyroY<0)) && !(blockedOnLeft && gyroY<0 && blockedOnTop) && !(blockedOnRight && gyroY>0 && blockedOnTop) && !blockedOnTop

@@ -20,6 +20,20 @@ public class Wall extends Obstacle {
 
     @Override
     public boolean collides(Marble marble) {
+        if (overlaps(marble) && marble.isInWall()) {
+            return false;
+        }
+        marble.setInWall(false);
+
+        if (!marble.isInvincible() && overlaps(marble) && !GravityRun.cheat) {
+            block(marble);
+        } else {
+            unblock(marble);
+        }
+        return false;
+    }
+
+    private void block(Marble marble) {
         float marbleCenterX = marble.getCenterPosition().x;
         float marbleCenterY = marble.getCenterPosition().y;
 
@@ -27,28 +41,22 @@ public class Wall extends Obstacle {
         float leftBound = position.x;
         float rightBound = position.x + texture.getWidth();
 
-        if (overlaps(marble) && marble.isInWall()) {
-            return false;
+        marble.setBlockedOnLeft(marbleCenterX > rightBound);
+        marble.setBlockedOnRight(marbleCenterX < leftBound);
+        marble.setBlockedOnTop(marbleCenterY < bottomBound);
+        marble.setCollidingWall(true);
+        if (!marble.isLifeLost()) {
+            marble.addMarbleLife(-1);
+            marble.setLifeLost(true);
         }
-        marble.setInWall(false);
+    }
 
-        if (!marble.isInvincible() && overlaps(marble) && !GravityRun.cheat) {
-            marble.setBlockedOnLeft(marbleCenterX > rightBound);
-            marble.setBlockedOnRight(marbleCenterX < leftBound);
-            marble.setBlockedOnTop(marbleCenterY < bottomBound);
-            marble.setCollidingWall(true);
-            if (!marble.isLifeLost()) {
-                marble.addMarbleLife(-1);
-                marble.setLifeLost(true);
-            }
-        } else {
-            marble.setBlockedOnLeft(false);
-            marble.setBlockedOnRight(false);
-            marble.setBlockedOnTop(false);
-            marble.setCollidingWall(false);
-            marble.setLifeLost(false);
-        }
-        return false;
+    private void unblock(Marble marble) {
+        marble.setBlockedOnLeft(false);
+        marble.setBlockedOnRight(false);
+        marble.setBlockedOnTop(false);
+        marble.setCollidingWall(false);
+        marble.setLifeLost(false);
     }
 
 }

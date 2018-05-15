@@ -74,6 +74,14 @@ public class OptionScreen extends AbstractMenuScreen {
         soundSlider.setValue(game.user.getSoundLevel());
         soundSlider.addListener(new SoundListener(soundManager, soundSlider, game));
 
+        TextButton creditsButton = new TextButton(game.i18n.format("credits"), game.tableSkin, "round");
+        creditsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                screenManager.push(new CreditsScreen(game));
+            }
+        });
+
         Table table = new Table();
         table.add(title).expandX();
         table.row();
@@ -96,6 +104,8 @@ public class OptionScreen extends AbstractMenuScreen {
         table.add(soundLabel).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
         table.row();
         table.add(soundSlider).expandX().fillX().maxWidth(containerWidth);
+        table.row();
+        table.add(creditsButton);
 
         initStage(table);
     }

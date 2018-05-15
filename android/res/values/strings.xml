@@ -7,6 +7,6 @@
     <string name="error_gpgs_not_connected">Vous n\'êtes pas connecté.</string>
     <string name="error_gpgs_leaderboards">Impossible d\'afficher les Classements.</string>
     <string name="error_gpgs_achievements">Impossible d\'afficher les Réussites.</string>
-    <string name="error_gpgs_impossible_connection">Impossible de se connecter.</string>
+    <string name="error_gpgs_connection_impossible">Impossible de se connecter.</string>
 
 </resources>

@@ -69,7 +69,7 @@ public class AndroidLauncher extends AndroidApplication {
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        gpgs = new Gpgs(this);
+        gpgs = new Gpgs(this, handler);
 
         gravityRun = new GravityRun(bluetoothFragment, gpgs, new AndroidSensorHelper(this));
 

@@ -22,20 +22,25 @@ public class Hole extends Obstacle {
 
     @Override
     public boolean collides(Marble marble) {
-        if (! (overlaps(marble) && marble.getCenterPosition().z == 0 && marble.isHoleProtected() && !GravityRun.cheat)) {
-            marble.setHoleProtected(false);
-            if (overlaps(marble) && marble.getCenterPosition().z == 0 && !GravityRun.cheat) {
-                marble.setInHole();
-                playScreen.getSoundManager().marbleBreak(marble.isDead());
-                marble.setLives(0);
-                marble.setDead();
-                playScreen.deadHole = true;
-                return true;
-            } else {
-                return false;
-            }
-        } else
+        if (overlaps(marble) && marble.isHoleProtected() && !GravityRun.cheat) {
             return false;
+        }
+        marble.setHoleProtected(false);
+        if (overlaps(marble) && !GravityRun.cheat) {
+            playScreen.getSoundManager().marbleBreak(marble.isDead());
+            marble.setInHole();
+            marble.setLives(0);
+            marble.setDead();
+            playScreen.deadHole = true;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    boolean overlaps(Marble marble) {
+        return super.overlaps(marble) && marble.getCenterPosition().z == 0;
     }
 
 }

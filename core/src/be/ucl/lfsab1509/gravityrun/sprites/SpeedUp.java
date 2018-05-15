@@ -44,27 +44,15 @@ public class SpeedUp extends Bonus {
     public void update(float dt, Marble marble) {
         collideTime += dt;
 
-        if (marble.getSpeedUp() == ACTIVE_SPEEDUP)
-            marble.getCenterPosition().z = Marble.JUMP_HEIGHT;
+        updateMarbleHeight(marble);
 
         if (activeSpeedUp && !marble.isDead() && collideTime >= ACTIVE_SPEEDUP_TIME) {
-            activeSpeedUp = false;
-            //System.out.println("SpeedUp.update: deactivating speed up " + marble.getActiveSpeedUps() + " " + marble.getActiveInvincibles() + " " + marble.isHoleProtected() + " " + marble.isInWall() + " " + marble.isInvincible() + " " + marble.getSpeedUp());
-            if (marble.decreaseActiveSpeedUps() == 0) {
-                //System.out.println("SpeedUp.update: deactivating speed up, first case " + marble.getActiveSpeedUps() + " " + marble.getActiveInvincibles() + " " + marble.isHoleProtected() + " " + marble.isInWall() + " " + marble.isInvincible() + " " + marble.getSpeedUp());
-                marble.setSpeedUp(INACTIVE_SPEEDUP);
-                marble.setHoleProtected(true);
-            }
+            disableSpeedUp(marble);
         }
 
         if (!marble.isDead() && collideTime >= ACTIVE_INVINCIBLE_TIME && marble.decreaseActiveInvicibles() == 0) {
-            //System.out.println("SpeedUp.update: deactivating invincible " + marble.getActiveSpeedUps() + " " + marble.getActiveInvincibles() + " " + marble.isHoleProtected() + " " + marble.isInWall() + " " + marble.isInvincible() + " " + marble.getSpeedUp());
-            marble.setInvincible(false);
-            marble.setInWall(true);
-            marble.setHoleProtected(false);
-        }/* else if (!marble.isDead() && collideTime >= ACTIVE_INVINCIBLE_TIME) {
-            System.out.println("SpeedUp.update: deactivating, second case " + marble.getActiveSpeedUps() + " " + marble.getActiveInvincibles() + " " + marble.isHoleProtected() + " " + marble.isInWall() + " " + marble.isInvincible() + " " + marble.getSpeedUp());
-        }*/
+            disableInvincible(marble);
+        }
     }
 
     public void activateSpeedUp(Marble marble) {
@@ -73,6 +61,25 @@ public class SpeedUp extends Bonus {
         marble.setSpeedUp(ACTIVE_ADVERSE_SPEEDUP);
         marble.setInvincible(false);
         marble.setInWall(true);
+    }
+
+    private void disableInvincible(Marble marble) {
+        marble.setInvincible(false);
+        marble.setInWall(true);
+        marble.setHoleProtected(false);
+    }
+
+    private void disableSpeedUp(Marble marble) {
+        activeSpeedUp = false;
+        if (marble.decreaseActiveSpeedUps() == 0) {
+            marble.setSpeedUp(INACTIVE_SPEEDUP);
+            marble.setHoleProtected(true);
+        }
+    }
+
+    private void updateMarbleHeight(Marble marble) {
+        if (marble.getSpeedUp() == ACTIVE_SPEEDUP)
+            marble.getCenterPosition().z = Marble.JUMP_HEIGHT;
     }
 
 }

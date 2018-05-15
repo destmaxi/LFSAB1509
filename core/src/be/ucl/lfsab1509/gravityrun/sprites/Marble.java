@@ -320,7 +320,7 @@ public class Marble {
 
         // Deux actions : si on est vivant et qu'on doit descendre, et si on est mort et qu'on chute dans l'application
         if (position.z > 0 && !dead || (position.z <= 0 && dead && inHole))
-            position.add(0, 0, -10 * /*dt * 60 * */difficulty * speed * slowDown * speedUp);
+            position.add(0, 0, -10 * difficulty * speed * slowDown * speedUp);
         else
             position.z = 0;
     }

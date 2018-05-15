@@ -77,6 +77,10 @@ public class Marble {
         scoreBonus -= 100;
     }
 
+    int getActiveSpeedUps() {
+        return activeSpeedUps;
+    }
+
     Circle getBounds() {
         return bounds;
     }
@@ -135,6 +139,10 @@ public class Marble {
 
     public float getSpeedFactor() {
         return difficulty * MOVEMENT * repositioning * slowDown * speed * speedUp;
+    }
+
+    public float getSpeedUp() {
+        return speedUp;
     }
 
     void increaseActiveInvincibles() {
@@ -219,10 +227,11 @@ public class Marble {
         this.blockedOnTop = blockedOnTop;
     }
 
-    public void setBonusStatus(boolean invincible, float slowDown, float speed) {
+    public void setBonusStatus(boolean invincible, float slowDown, float speed, float speedUp) {
         this.invincible = invincible;
         this.slowDown = slowDown;
         this.speed = speed;
+        this.speedUp = speedUp;
     }
 
     public void setCollidedWall(int collidedWall) {

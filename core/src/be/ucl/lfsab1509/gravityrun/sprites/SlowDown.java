@@ -7,6 +7,11 @@ import java.util.Random;
 
 public class SlowDown extends Bonus {
 
+    private static final float ACTIVE_SLOWDOWN = 0.5f;
+    private static final float ACTIVE_ADVERSE_SLOWNDOWN = 1.5f;
+    private static final float ACTIVE_SLOWDOWN_TIME = 3f;
+    private static final float INACTIVE_SLOWDOWN = 1f;
+
     private float collideTime;
 
     public SlowDown(float y, int offset, AbstractPlayScreen playScreen, Random random, Texture texture) {
@@ -20,14 +25,14 @@ public class SlowDown extends Bonus {
 
     @Override
     public boolean isFinished(Marble marble) {
-        return collideTime >= 5;
+        return collideTime >= ACTIVE_SLOWDOWN_TIME;
     }
 
     @Override
     void onCollide(Marble marble) {
         collideTime = 0;
         marble.increaseActiveSlowdowns();
-        marble.setSlowDown(.5f);
+        marble.setSlowDown(ACTIVE_SLOWDOWN);
         playScreen.nbSlowDown++;
     }
 
@@ -35,14 +40,14 @@ public class SlowDown extends Bonus {
     public void update(float dt, Marble marble) {
         collideTime += dt;
 
-        if (!marble.isDead() && collideTime >= 5 && marble.decreaseActiveSlowdowns() == 0)
-            marble.setSlowDown(1f);
+        if (!marble.isDead() && collideTime >= ACTIVE_SLOWDOWN_TIME && marble.decreaseActiveSlowdowns() == 0)
+            marble.setSlowDown(INACTIVE_SLOWDOWN);
     }
 
     public void activateSlowdown(Marble marble) {
         collideTime = 0;
         marble.increaseActiveSlowdowns();
-        marble.setSlowDown(1.5f);
+        marble.setSlowDown(ACTIVE_ADVERSE_SLOWNDOWN);
     }
 
 }

@@ -199,7 +199,8 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
                     playerMarble.getScore(),
                     playerMarble.isInvincible(),
                     playerMarble.getCenterPosition().x,
-                    playerMarble.getCenterPosition().y);
+                    playerMarble.getCenterPosition().y,
+                    playerMarble.getSpeedUp());
     }
 
     @Override
@@ -228,7 +229,7 @@ public class MultiPlayFirstModeScreen extends AbstractMultiPlayScreen {
         try {
             opponentMarble.addPosition(getFloatFromStr(message[1]), getFloatFromStr(message[6]));
             opponentMarble.setBlockedObstacle(getBooleanFromStr(message[3]), getBooleanFromStr(message[4]), getBooleanFromStr(message[5]));
-            opponentMarble.setBonusStatus(getBooleanFromStr(message[9]), getFloatFromStr(message[2]), getFloatFromStr(message[7]));
+            opponentMarble.setBonusStatus(getBooleanFromStr(message[9]), getFloatFromStr(message[2]), getFloatFromStr(message[7]), getFloatFromStr(message[12]));
             opponentMarble.setScore((int) getFloatFromStr(message[8]));
 
             if (opponentMarblePositionUpdateTime >= 1f) {

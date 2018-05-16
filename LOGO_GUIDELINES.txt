@@ -1,0 +1,21 @@
+Following are the guidelines to draw the logo of gravity run.
+
+Elements:
+	The logo is constituted of three parralel stripes leading to a circle.
+	The center of the circle is inline with the centerline of the center stripe.
+
+Measurement:
+	The reference of length is the width of the stripe and is noted 1U.
+	The stripes are spaced by 1U.
+	The stripes are of arbitrary length.
+	The spacing between the stripes and the circle is of 8/3U.
+	The circle has a diameter of 15.6 U.
+
+Fonts:
+	All caps
+	Bold
+	Libération sans type.
+
+Color:
+	Text and elements are pure black
+	Background is #155aff

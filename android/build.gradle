@@ -50,8 +50,8 @@ android {
         applicationId "be.ucl.lfsab1509.gravityrun"
         minSdkVersion 15 // Jelly Bean 4.1.2 API 16, Kitkat API 19, Lollipop API 20
         targetSdkVersion 27
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "3.0"
     }
 
     buildTypes {

@@ -85,11 +85,11 @@ public class OptionScreen extends AbstractMenuScreen {
         Table table = new Table();
         table.add(title).expandX();
         table.row();
-        table.add(usernameLabel).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
+        table.add(usernameLabel).expandX().fillX().padTop((height - containerHeight) / 3).maxWidth(containerWidth);
         table.row();
         table.add(usernameButton).expandX().fillX().maxWidth(containerWidth);
         table.row();
-        table.add(levelLabel).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
+        table.add(levelLabel).expandX().fillX().padTop((height - containerHeight) / 3).maxWidth(containerWidth);
         table.row();
         table.add(levelButton).expandX().fillX().maxWidth(containerWidth);
         table.row();
@@ -97,15 +97,15 @@ public class OptionScreen extends AbstractMenuScreen {
         //table.row();
         //table.add(cheatButton);
         //table.row();
-        table.add(musicLabel).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
+        table.add(musicLabel).expandX().fillX().padTop((height - containerHeight) / 3).maxWidth(containerWidth);
         table.row();
         table.add(musicSlider).expandX().fillX().maxWidth(containerWidth);
         table.row();
-        table.add(soundLabel).expandX().fillX().padTop((height - containerHeight) / 2).maxWidth(containerWidth);
+        table.add(soundLabel).expandX().fillX().padTop((height - containerHeight) / 3).maxWidth(containerWidth);
         table.row();
         table.add(soundSlider).expandX().fillX().maxWidth(containerWidth);
         table.row();
-        table.add(creditsButton);
+        table.add(creditsButton).expandX().fillX().padTop((height - containerHeight) / 3).maxWidth(containerWidth);
 
         initStage(table);
     }

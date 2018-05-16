@@ -19,6 +19,11 @@ class MultiplayerGameOverScreen extends AbstractGameOverScreen {
     }
 
     @Override
+    void goBack() {
+        disconnect();
+    }
+
+    @Override
     void handleInput() {
         if (MultiplayerConnectionScreen.isClient && MultiplayerConnectionScreen.ready) {
             AbstractMultiPlayScreen abstractMultiPlayScreen = game.user.getMultiMode() == 0

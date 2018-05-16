@@ -34,12 +34,11 @@ public abstract class AbstractMenuScreen extends Screen {
     public void render(float dt) {
         if (clickedBack() && openDialogs == 0) {
             System.out.println("clickedBack");
-            screenManager.pop();
-            return;
+            goBack();
+        } else {
+            stage.act(dt);
+            stage.draw();
         }
-
-        stage.act(dt);
-        stage.draw();
     }
 
     @Override
@@ -52,6 +51,10 @@ public abstract class AbstractMenuScreen extends Screen {
         Table table = new Table();
         table.add(list);
         return table;
+    }
+
+    void goBack() {
+        screenManager.pop();
     }
 
     void initStage(Table table) {
